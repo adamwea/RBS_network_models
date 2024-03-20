@@ -169,52 +169,11 @@ elif cfg.networkType == 'aw':
 		'synMech': 'exc'
 	}
 
-
-	## Cell connectivity rules
-	## Initial Param Grid Search
-	# netParams.connParams['E->all'] = {
-	#   'preConds': {'cellType': 'E'}, 'postConds': {'y': [100,1000]},  #  E -> all (100-1000 um)
-	#   'probability': cfg.probEall,                  # probability of connection
-	#   'weight': str(cfg.weightEall)+'*post_ynorm',         # synaptic weight
-	#   'delay': 'dist_3D/propVelocity',      # transmission delay (ms)
-	#   #'delay': 'dist_3D/propVelocityExcite',      # transmission delay (ms)
-	#   'synMech': 'exc'}                     # synaptic mechanism
-
-	# netParams.connParams['I->E'] = {
-	#   'preConds': {'cellType': 'I'}, 'postConds': {'pop': 'E'},       #  I -> E
-	#   'probability': str(cfg.probIE)+'*exp(-dist_3D/probLengthConst)',   # probability of connection
-	#   'weight': cfg.weightIE,                                      # synaptic weight
-	#   'delay': 'dist_3D/propVelocity',                      # transmission delay (ms)
-	#   #'delay': 'dist_3D/propVelocityInhib',      # transmission delay (ms)
-	#   'synMech': 'inh'}                                     # synaptic mechanism
-	
-
-	# # E -> E recurrent connectivity
-	# netParams.connParams['E->E'] = {
-	# 	'preConds': {'pop': 'E'}, 
-	# 	'postConds': {'pop': 'E'}, 
-	# 	'probability': 0.1,  # adjust as needed
-	# 	'weight': str(cfg.weightEall)+'*post_ynorm',  
-	# 	'delay': 'dist_3D/propVelocity', 
-	# 	'synMech': 'exc'
-	# }
-
-	# # I -> I recurrent connectivity
-	# netParams.connParams['I->I'] = {
-	# 	'preConds': {'pop': 'I'}, 
-	# 	'postConds': {'pop': 'I'}, 
-	# 	'probability': '0.4*exp(-dist_3D/probLengthConst)',  # adjust as needed
-	# 	'weight':  cfg.weightIE,  
-	# 	'delay': 'dist_3D/propVelocity', 
-	# 	'synMech': 'inh'
-    # }
-
-	## Second Pass Param Grid Search, with more respect to distance
-	## Cell connectivity rules
+	# ## Cell connectivity rules
 	netParams.connParams['E->all'] = {
-	  'preConds': {'cellType': 'E'}, 'postConds': {'y': [100,2000]},  #  E -> all (100-2000 um)
-	  'probability': str(cfg.probEall)+'*exp(-dist_3D/probLengthConst)',  # adjust mu and sigma as needed
-	  'weight': str(cfg.weightEall)+'*post_ynorm',         # synaptic weight
+	  'preConds': {'cellType': 'E'}, 'postConds': {'pop': 'I'},  #  E -> all (100-2000 um)
+	  'probability': str(cfg.probEI)+'*exp(-dist_3D/probLengthConst)',  # adjust mu and sigma as needed
+	  'weight': str(cfg.weightEI)+'*post_ynorm',         # synaptic weight
 	  'delay': 'dist_3D/propVelocity',      # transmission delay (ms)	
 	  'synMech': 'exc'}                     # synaptic mechanism
 
@@ -242,14 +201,6 @@ elif cfg.networkType == 'aw':
 		'delay': 'dist_3D/propVelocity', 
 		'synMech': 'inh'
     }
-    
-    
-	
-	#filename = 'aw_grid'
-	#netParams.saveCellParams(fileName = filename)
-	#netParams.filename = 'aw_grid'
-	#netParams.save(filename)
-	#netParams.save(filename+'_netParams.json')
 	
 	
 

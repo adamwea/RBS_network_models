@@ -13,6 +13,9 @@ import matplotlib.pyplot as plt
 from scipy.signal import convolve, find_peaks
 from scipy.stats import norm
 import svgutils.transform as sg
+from scipy.signal import butter, filtfilt
+from scipy import stats
+import cairosvg
 
 ### Figure Functions
 
@@ -42,6 +45,116 @@ def get_batchrun_info(root, file):
     batchrun_folder = os.path.basename(os.path.normpath(root))  
     batch_key = file.split(batchrun_folder)[1].split('data')[0]
     return file_path, batchrun_folder, batch_key
+
+def measure_network_activity(rasterData, min_peak_distance = 1.0, binSize=0.02*1000, gaussianSigma=0.16*1000, thresholdBurst=1.2): #, figSize=(10, 6), saveFig=False, figName='NetworkActivity.png'):
+    try: SpikeTimes = rasterData['spkTimes']
+    except: 
+        try: SpikeTimes = rasterData['spkt']
+        except: print('Error: No spike times found in rasterData')
+
+    relativeSpikeTimes = SpikeTimes
+    relativeSpikeTimes = np.array(relativeSpikeTimes)
+    relativeSpikeTimes = relativeSpikeTimes - relativeSpikeTimes[0]  # Set the first spike time to 0
+
+    # Step 1: Bin all spike times into small time windows
+    timeVector = np.arange(0, max(relativeSpikeTimes) + binSize, binSize)  # Time vector for binning
+    binnedTimes, _ = np.histogram(relativeSpikeTimes, bins=timeVector)  # Bin spike times
+    binnedTimes = np.append(binnedTimes, 0)  # Append 0 to match MATLAB's binnedTimes length
+
+    # Step 2: Smooth the binned spike times with a Gaussian kernel
+    kernelRange = np.arange(-3*gaussianSigma, 3*gaussianSigma + binSize, binSize)  # Range for Gaussian kernel
+    kernel = norm.pdf(kernelRange, 0, gaussianSigma)  # Gaussian kernel
+    kernel *= binSize  # Normalize kernel by bin size
+    firingRate = convolve(binnedTimes, kernel, mode='same') / binSize  # Convolve and normalize by bin size
+
+    # Create a new figure with a specified size (width, height)
+    #plt.figure(figsize=figSize)
+    margin_width = 200
+    # Find the indices of timeVector that correspond to the first and last 100 ms
+    start_index = np.where(timeVector >= margin_width)[0][0]
+    end_index = np.where(timeVector <= max(timeVector) - margin_width)[0][-1]
+    #end_index = np.where(timeVector <= max(timeVector))[0][-1]
+
+    #trim firing rate to the desired time window
+    firingRate = firingRate[start_index:end_index]
+
+    # Calculate Baseline
+    baseline = np.mean(firingRate)
+    # # Define the cutoff frequency and order of the filter
+    # cutoff = 10  # Hz
+    # order = 6
+    # sampling_rate = 1000 / binSize  # Hz
+    # print(sampling_rate)
+
+    # # Normalize the cutoff frequency
+    # normalized_cutoff = cutoff / (0.5 * sampling_rate)
+
+    # # Design the filter
+    # b, a = butter(order, normalized_cutoff, btype='low', analog=False)
+
+    # # Apply the filter to the firing rate
+    # filtered_firingRate = filtfilt(b, a, firingRate)
+
+    # # Calculate the mode of the filtered signal
+    # mode = stats.mode(filtered_firingRate)
+
+    # # The mode function returns an object containing the mode value and the count of that value.
+    # # We only want the mode value, so we extract it like this:
+    # #print('Mode:', mode)
+    # baseline = mode.mode
+
+    # Plot the smoothed network activity
+    # plt.subplot(1, 1, 1)
+    # plt.plot(timeVector[start_index:end_index], firingRate[start_index:end_index], color='black')
+    # plt.xlim([timeVector[0], timeVector[-1]])  # Restrict the plot to the first and last 100 ms
+    # plt.ylim([min(firingRate[start_index:end_index])*0.95, max(firingRate[start_index:end_index])*1.05])  # Set y-axis limits to min and max of firingRate
+    # plt.ylabel('Firing Rate [Hz]')
+    # plt.xlabel('Time [ms]')
+    # plt.title('Network Activity', fontsize=11)
+
+    # Step 3: Peak detection on the smoothed firing rate curve
+    rmsFiringRate = np.sqrt(np.mean(firingRate**2))  # Calculate RMS of the firing rate
+    peaks, properties = find_peaks(firingRate, height=thresholdBurst * rmsFiringRate, distance=min_peak_distance)  # Find peaks above the threshold
+    burstPeakTimes = timeVector[peaks]  # Convert peak indices to times
+    burstPeakValues = properties['peak_heights']  # Get the peak values
+
+    # Get the indices of the valid peaks
+    valid_peak_indices = np.where((burstPeakTimes > timeVector[start_index]) & (burstPeakTimes < timeVector[end_index]))[0]
+
+    # Filter burstPeakTimes and burstPeakValues using the valid peak indices
+    burstPeakTimes = burstPeakTimes[valid_peak_indices]
+    burstPeakValues = burstPeakValues[valid_peak_indices]
+
+    # # Plot the threshold line and burst peaks
+    # plt.plot(np.arange(timeVector[-1]), thresholdBurst * rmsFiringRate * np.ones(np.ceil(timeVector[-1]).astype(int)), color='gray')
+    # plt.plot(burstPeakTimes, burstPeakValues, 'or')  # Plot burst peaks as red circles    
+
+    # if saveFig:
+    #     if isinstance(saveFig, str):
+    #         # plt.savefig(saveFig, dpi=600, bbox_inches='tight')
+    #         # plt.savefig(saveFig.replace('.png', '.svg'), bbox_inches='tight')
+    #         plt.savefig(saveFig, bbox_inches='tight')
+    #     else:
+    #         # plt.savefig(figName, dpi=600, bbox_inches='tight')
+    #         # plt.savefig(figName.replace('.png', '.svg'), bbox_inches='tight')
+    #         plt.savefig(figName, bbox_inches='tight')
+    #plt.show()
+
+    #measure IBI
+    burstPeakTimes = np.array(burstPeakTimes)
+    IBIs = np.diff(burstPeakTimes) #
+    
+    #IBI = IBI / 1000 #convert to seconds
+    measurements = {
+        'burstPeakValues': burstPeakValues,
+        'burstPeakTimes': burstPeakTimes,
+        'IBIs': IBIs,
+        'firingRate': firingRate,
+        'timeVector': timeVector,
+        'baseline': baseline
+    }
+    
+    return measurements 
 
 def plot_network_activity(rasterData, min_peak_distance = 1.0, binSize=0.02*1000, gaussianSigma=0.16*1000, thresholdBurst=1.2, figSize=(10, 6), saveFig=False, figName='NetworkActivity.png'):
     SpikeTimes = rasterData['spkTimes']
@@ -183,27 +296,45 @@ def generate_all_figures(fresh_figs = False, batchLabel = 'batch', batch_path = 
         ## Data
         #load the simulation data     
         sim.loadAll(file_path)
-        
-        #Attempt to generate sample trace for an excititory example neuron
+
+        # Get total time range
+        total_time = sim.allSimData['t'][-1]
+
+        # Calculate the middlemost 1 second
+        start_time = total_time / 2 - 500
+        end_time = total_time / 2 + 500
+
+        # Attempt to generate sample trace for an excitatory example neuron
         try:
             try:
                 assert fresh_figs == False
-                #temp hack
+                # temp hack
                 assert fresh_figs == True
-                assert os.path.exists(sample_trace_path_E)  
-                # sample_trace_E = mpimg.imread(sample_trace_path_E)
-                # assert sample_trace_width / sample_trace_height == sample_trace_E.shape[1] / sample_trace_E.shape[0]
+                assert os.path.exists(sample_trace_path_E)
             except:
                 # Prepare the sample trace
                 sample_trace_E = sim.analysis.plotTraces(
-                    include = [('E', 0), ('I', 0)], 
-                    overlay=True, 
-                    oneFigPer='trace', 
-                    #timeRange=[0, 2000], 
-                    saveFig=sample_trace_path_E, 
-                    showFig=False, 
+                    include=[('E', 0), ('I', 0)],
+                    overlay=True,
+                    oneFigPer='trace',
+                    title='Middlemost 1 second of simulation',
+                    timeRange=[start_time, end_time],
+                    #saveFig=sample_trace_path_E,
+                    showFig=False,
                     figSize=(sample_trace_width, sample_trace_height)
                 )
+                # Add title to the figure
+                fig = sample_trace_E[0]['_trace_soma_voltage']
+                fig.suptitle('Middlemost 1 second of simulation')
+                #move title all the way to the left
+                fig.tight_layout(rect=[0, 0.03, 1, 1])
+                # Save the figure with the title
+                fig.savefig(sample_trace_path_E)
+                #fig.suptitle('Middlemost 1 second of simulation')
+                # Save the figure with the title
+                #fig.savefig(sample_trace_path_E)
+                # redo as png
+                cairosvg.svg2png(url=sample_trace_path_E, write_to=sample_trace_path_E.replace('.svg', '.png'))
         except:
             print(f'Error generating sample trace plot from Data at: {file_path}')
             sample_trace_path_E = None
@@ -239,7 +370,10 @@ def generate_all_figures(fresh_figs = False, batchLabel = 'batch', batch_path = 
                 assert os.path.exists(raster_plot_path) 
                 # raster_plot = mpimg.imread(raster_plot_path)
                 # assert raster_width / raster_height == raster_plot.shape[1] / raster_plot.shape[0]
-            except: sim.analysis.plotRaster(saveFig=raster_plot_path, showFig=False, figSize=(raster_width, raster_height))#, dpi=600)
+            except: 
+                sim.analysis.plotRaster(saveFig=raster_plot_path, showFig=False, figSize=(raster_width, raster_height))#, dpi=600)
+                #redo as png
+                cairosvg.svg2png(url=raster_plot_path, write_to=raster_plot_path.replace('.svg', '.png'))
         except:
             print(f'Error generating raster plot from Data at: {file_path}')
             raster_plot_path = None
@@ -252,7 +386,10 @@ def generate_all_figures(fresh_figs = False, batchLabel = 'batch', batch_path = 
                 assert os.path.exists(locs_path)
                 # locs = mpimg.imread(locs_path)
                 # assert locations_width / locations_height == locs.shape[1] / locs.shape[0]
-            except: sim.analysis.plot2Dnet(saveFig=locs_path, showFig=False, showConns=False, figSize=(locations_width, locations_height))
+            except: 
+                sim.analysis.plot2Dnet(saveFig=locs_path, showFig=False, showConns=False, figSize=(locations_width, locations_height))
+                #redo as png
+                cairosvg.svg2png(url=locs_path, write_to=locs_path.replace('.svg', '.png'))
         except: 
             print(f'Error generating neuron locs plot from Data at: {file_path}')
             locs_path = None
@@ -265,7 +402,10 @@ def generate_all_figures(fresh_figs = False, batchLabel = 'batch', batch_path = 
                 assert os.path.exists(TWODnet_path)
                 # locs = mpimg.imread(TWODnet_path)
                 # assert locations_width / locations_height == TWODnet.shape[1] / TWODnet.shape[0]
-            except: sim.analysis.plot2Dnet(saveFig=TWODnet_path, showFig=False, showConns=True, figSize=(locations_width, locations_height))
+            except: 
+                sim.analysis.plot2Dnet(saveFig=TWODnet_path, showFig=False, showConns=True, figSize=(locations_width, locations_height))
+                #redo as png
+                cairosvg.svg2png(url=TWODnet_path, write_to=TWODnet_path.replace('.svg', '.png'))
         except: 
             print(f'Error generating 2Dnet_conns from Data at: {file_path}')
             TWODnet_path = None
@@ -278,7 +418,10 @@ def generate_all_figures(fresh_figs = False, batchLabel = 'batch', batch_path = 
                 assert os.path.exists(conn_mat_path)
                 # locs = mpimg.imread(conn_mat_path)
                 # assert conn_mat_width / conn_mat_height == conn_mat.shape[0] / conn_mat.shape[1]
-            except: sim.analysis.plotConn(saveFig=conn_mat_path, showFig=False, figSize=(raster_width, raster_height))
+            except: 
+                sim.analysis.plotConn(saveFig=conn_mat_path, showFig=False, figSize=(raster_width, raster_height))
+                #redo as png
+                cairosvg.svg2png(url=conn_mat_path, write_to=conn_mat_path.replace('.svg', '.png'))
         except: 
             print(f'Error generating connectivity matrix from Data at: {file_path}')
             conn_mat_path = None
@@ -304,6 +447,8 @@ def generate_all_figures(fresh_figs = False, batchLabel = 'batch', batch_path = 
                     figSize=(network_activity_width, network_activity_height), 
                     saveFig=network_activity_path
                 )
+                #redo as png
+                cairosvg.svg2png(url=network_activity_path, write_to=network_activity_path.replace('.svg', '.png'))
         except:
             print(f'Error generating network activity plot from Data at: {file_path}')
             network_activity_path = None
@@ -395,6 +540,9 @@ def generate_all_figures(fresh_figs = False, batchLabel = 'batch', batch_path = 
                 # plt.savefig(net_activity_raster_path.replace('.png', '.svg'), bbox_inches='tight')
                 #plt.savefig(net_activity_raster_path, bbox_inches='tight')
                 fig.save(net_activity_raster_path)
+                # Convert SVG to PNG
+                png_path = net_activity_raster_path.replace('.svg', '.png')
+                cairosvg.svg2png(url=net_activity_raster_path, write_to=png_path)
                 return net_activity_raster_path
 
             except:
@@ -455,6 +603,9 @@ def generate_all_figures(fresh_figs = False, batchLabel = 'batch', batch_path = 
 
                 # Save the figure
                 fig.save(conn_summary_fig_path)
+                # Convert SVG to PNG
+                png_path = conn_summary_fig_path.replace('.svg', '.png')
+                cairosvg.svg2png(url=conn_summary_fig_path, write_to=png_path)
                 return conn_summary_fig_path
 
             except:
@@ -519,41 +670,57 @@ def generate_all_figures(fresh_figs = False, batchLabel = 'batch', batch_path = 
 
                 # Save the figure
                 fig.save(param_summary_fig_path)
+                # Convert SVG to PNG
+                png_path = param_summary_fig_path.replace('.svg', '.png')
+                cairosvg.svg2png(url=param_summary_fig_path, write_to=png_path)
+                
                 return param_summary_fig_path
+          
 
             except:
                 print(f'Error generating param_summary figure at: {NetBurst_path}')
                 return None
 
+    def main():
+        #get file info
+        file_path, batchrun_folder, batch_key = get_batchrun_info(root, file)
+        raster_plot_path, sample_trace_path_I, sample_trace_path_E, network_activity_path, TWODnet_path, locs_path, conn_mat_path, NetBurst_path = generate_primary_figures(
+            root, file,  size = size, 
+            net_activity_params = net_activity_params)
+        net_activity_raster_path = generate_net_activity_raster(
+            raster_plot_path, network_activity_path, NetBurst_path, batchrun_folder, batch_key) 
+        # trace_fig_path = generate_trace_fig(
+        #     sample_trace_path_E, sample_trace_path_I, NetBurst_path, batchrun_folder, batch_key)
+        conn_summary_fig_path = generate_conn_summarry_fig(
+            #trace_fig_path, 
+            sample_trace_path_E,
+            conn_mat_path, TWODnet_path, NetBurst_path, batchrun_folder, batch_key)
+        param_summary_fig_path = generate_param_summary_fig(
+            conn_summary_fig_path, net_activity_raster_path, NetBurst_path, batchrun_folder, batch_key)
+    
     #Simulation plots will be saved in the batch folder as png files
     #Get the directory of the current script
     script_dir = os.path.dirname(os.path.realpath(__file__))
     output_path = os.path.dirname(script_dir)
     output_path = f'{output_path}/output' 
-    batch_path = f'{output_path}/{batchLabel}'    
+    if batch_path is None:
+        batch_path = f'{output_path}/{batchLabel}'
+    else:
+        batch_path = batch_path    
     
     #for each file named *_cfg.json in the batch folder, get raster data
     #for file in os.listdir(batch_path):
     #walk through the batch folder and subfolders
-    for root, dirs, files in os.walk(batch_path):
-        for file in files:
-            if file.endswith("_data.json"):
-                    
-                #get file info
-                file_path, batchrun_folder, batch_key = get_batchrun_info(root, file)
-                raster_plot_path, sample_trace_path_I, sample_trace_path_E, network_activity_path, TWODnet_path, locs_path, conn_mat_path, NetBurst_path = generate_primary_figures(
-                    root, file,  size = size, 
-                    net_activity_params = net_activity_params)
-                net_activity_raster_path = generate_net_activity_raster(
-                    raster_plot_path, network_activity_path, NetBurst_path, batchrun_folder, batch_key) 
-                # trace_fig_path = generate_trace_fig(
-                #     sample_trace_path_E, sample_trace_path_I, NetBurst_path, batchrun_folder, batch_key)
-                conn_summary_fig_path = generate_conn_summarry_fig(
-                    #trace_fig_path, 
-                    sample_trace_path_E,
-                    conn_mat_path, TWODnet_path, NetBurst_path, batchrun_folder, batch_key)
-                param_summary_fig_path = generate_param_summary_fig(
-                    conn_summary_fig_path, net_activity_raster_path, NetBurst_path, batchrun_folder, batch_key)
-               
-                
-                #combined_figure_path = f'{NetBurst_path}/{batch_key}_combined_figure.png'  # replace with your actual path
+    # if batchpath is directory
+    if os.path.isdir(batch_path):
+        for root, dirs, files in os.walk(batch_path):
+            for file in files:
+                if file.endswith("_data.json"):
+                    main()
+    #if batchpath is file
+    elif batch_path.endswith("_data.json"):
+        file = batch_path
+        main()
+    #if batchpath is not a valid directory or file
+    else:
+        print(f'Error: {batch_path} is not a valid directory or file')
