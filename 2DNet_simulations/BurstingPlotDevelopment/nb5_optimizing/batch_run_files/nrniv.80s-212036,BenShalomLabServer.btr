@@ -1,0 +1,10 @@
+
+nrniv:212036 terminated with signal 11 at PC=74e91f6453fc SP=74e9111fdd70.  Backtrace:
+/lib/x86_64-linux-gnu/libc.so.6(+0x453fc)[0x74e91f6453fc]
+/lib/x86_64-linux-gnu/libc.so.6(on_exit+0x0)[0x74e91f645610]
+/lib/x86_64-linux-gnu/libinfinipath.so.4(+0x42a7)[0x74e91fc4b2a7]
+/lib/x86_64-linux-gnu/libc.so.6(+0x42520)[0x74e91f642520]
+/lib/x86_64-linux-gnu/libc.so.6(epoll_wait+0x5e)[0x74e91f725e2e]
+/lib/x86_64-linux-gnu/libfabric.so.1(+0x5a522)[0x74e91f905522]
+/lib/x86_64-linux-gnu/libc.so.6(+0x94ac3)[0x74e91f694ac3]
+/lib/x86_64-linux-gnu/libc.so.6(+0x126850)[0x74e91f726850]

@@ -170,7 +170,7 @@ elif cfg.networkType == 'aw':
 	}
 
 	# ## Cell connectivity rules
-	netParams.connParams['E->all'] = {
+	netParams.connParams['E->I'] = {
 	  'preConds': {'cellType': 'E'}, 'postConds': {'pop': 'I'},  #  E -> all (100-2000 um)
 	  'probability': str(cfg.probEI)+'*exp(-dist_3D/probLengthConst)',  # adjust mu and sigma as needed
 	  'weight': str(cfg.weightEI)+'*post_ynorm',         # synaptic weight
