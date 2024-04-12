@@ -1,59 +1,21 @@
-# This file is a *highly* modified version of the file batchRun.py from the NetPyNE tutorial 9.
-
-# General Imports
-import os
-import shutil
-import json
-import pickle
-import glob
+#from netpyne import sim
+import numpy as np
 import sys
-
-
-# NetPyne Imports
-sys.path.insert(0, '/mnt/disk15tb/adam/git_workspace/netpyne_2DNetworkSimulations/netpyne')
-from netpyne import specs
-from netpyne.batch import Batch
-
-'''
-FITNESS
-'''
-##FITNESS FUNCTION TARGETS 
-pops = {}
-#firing rate targets
-pops['rate_targets'] = {}
-pops['rate_targets']['E'] = {'target': 7.5, 'width': 2.5, 'min': 1}
-#pops['rate_targets']['I'] = {'target': 30, 'width': 10, 'min': 2}
-#burst peak targets
-pops['burts_peak_targets'] = {'target': 15, 'width': 10, 'min': 1}
-#burst IBI targets
-pops['IBI_targets'] = {'target': 3000, 'width': 2000 , 'max': 4000} #ms
-#baseline targets
-pops['baseline_targets'] = {'target': 1.5, 'width': 1.5 , 'max': 5} #ms
-#firing rate variance targets
-pops['rate_slope'] = {'target': 0, 'width': 0.5, 'max': 0.5}
-#difference between baseline and threshold
-pops['baseline_diff'] = {'target': 5, 'width': 2.0, 'min': 2}
-#
-pops['burst_peak_variance'] = {'target': 5, 'width': 1.0, 'min': 3}
-#
-pops['burst_peak_frequency'] = {'target':1/3, 'width': 1/3*0.5, 'min': 1/4}    
-
-# fitness function
-fitnessFuncArgs = {}
-fitnessFuncArgs['pops'] = pops
-fitnessFuncArgs['maxFitness'] = 1000
+#sys.path.insert(0, '/mnt/disk15tb/adam/git_workspace/netpyne_2DNetworkSimulations/2DNet_simulations/BurstingPlotDevelopment/nb5_optimizing/batch_run_files')
+from batch_run_tools import measure_network_activity
+#from netpyne import sim
+from scipy.stats import linregress
 
 def fitnessFunc(simData, **kwargs):
-    try: from batch_run_files.plot_config import plot_sim_figs
-    except: from plot_config import plot_sim_figs
-    ##find relevant batch object in call stack
+    
+    '''
+    Functions
+    '''
     # (I dont understand how this works, figure it out later)
     import inspect
-
     def find_batch_object_and_sim_label():
         # Get the current frame
-        current_frame = inspect.currentframe()        
-
+        current_frame = inspect.currentframe()  
         # Iterate through the call stack
         while current_frame:
             caller_frame = inspect.getouterframes(current_frame, 3)#[1][0]
@@ -65,31 +27,27 @@ def fitnessFunc(simData, **kwargs):
                     simLabel = caller_frame[1][0].f_locals['_']
                     batch = caller_frame[2][0].f_locals['batch']
                     return batch, simLabel
-                # if type(obj).__name__ == 'Batch':
-                #     simLabel = obj.cfg.simLabel if obj else None
-                #     return obj, simLabel
-
             # If not, move to the next frame
             current_frame = current_frame.f_back
-
         # If no Batch object is found, print a message and return None
-        #print("Batch object not found in the caller frames.")
+        print("Batch object not found in the caller frames.")
         return None, None
-
+    
+    '''
+    fitnessFunc
+    '''
+    ## import plotting functions
+    # try: from batch_run_files.plot_config import plot_sim_figs
+    # except: from plot_config import plot_sim_figs    
+    
+    ##find relevant batch object in call stack
     # Use the function to get the Batch object and simLabel
     batch, simLabel = find_batch_object_and_sim_label()
-
     # If no simLabel is found, print a message
     assert simLabel is not None, "SimLabel not found in the caller frames."
-    assert batch is not None, "Batch object not found in the caller frames."
-    
-    #from netpyne import sim
-    import numpy as np
-    import sys
-    sys.path.insert(0, '/mnt/disk15tb/adam/git_workspace/netpyne_2DNetworkSimulations/2DNet_simulations/BurstingPlotDevelopment/nb5_optimizing/batch_run_files')
-    from aw_batch_tools import measure_network_activity
-    #from netpyne import sim
-    from scipy.stats import linregress
+    assert batch is not None, "Batch object not found in the caller frames."    
+
+    ## Get the fitness function argumentsS
     #rasterData = sim.analysis.prepareRaster()
     maxFitness = kwargs['maxFitness']
     net_activity_params = {'binSize': .03*1000, 'gaussianSigma': .12*1000, 'thresholdBurst': 1.0}
@@ -446,187 +404,3 @@ def fitnessFunc(simData, **kwargs):
                     json.dump(plot_report, f)
 
     return average_scaled_fitness
-
-''' Evolutionary algorithm optimization of a network using NetPyNE
-To run use: mpiexec -np [num_cores] nrniv -mpi batchRun.py
-
-Note: May or may not include capability for other options in here later.
-'''
-
-import json
-import os
-import pickle
-
-def get_batch_config(batch_config_options = None):
-    #from fitnessFunc_config import fitnessFunc, fitnessFuncArgs
-    
-    if batch_config_options is None:
-        batch_config_options = {
-            "run_path": os.getcwd(),
-            'batchLabel': "unnamed_run",       
-            "method": "evol",
-            "core_num": 1,
-            "nodes": 1,
-           # "pop_per_core": 1,
-           # "duration_seconds": 5,
-            "pop_size": 4,
-            "max_generations": 4,
-            "time_sleep": 5,
-            "maxiter_wait": 40,
-            "skip": True,
-            "num_elites": 1, 
-        }
-    else:
-        assert 'method' in batch_config_options, 'method must be specified in batch_config_options'
-        # assert 'core_num' in batch_config_options, 'core_num must be specified in batch_config_options'
-        # assert 'nodes' in batch_config_options, 'nodes must be specified in batch_config_options'
-        # assert 'pop_per_core' in batch_config_options, 'pop_per_core must be specified in batch_config_options'
-        # assert 'duration_seconds' in batch_config_options, 'duration_seconds must be specified in batch_config_options'
-        assert 'pop_size' in batch_config_options, 'pop_size must be specified in batch_config_options'
-        assert 'max_generations' in batch_config_options, 'max_generations must be specified in batch_config_options'
-        assert 'num_elites' in batch_config_options, 'num_elites must be specified in batch_config_options'
-        # assert 'time_sleep' in batch_config_options, 'time_sleep must be specified in batch_config_options'
-        # assert 'maxiter_wait' in batch_config_options, 'maxiter_wait must be specified in batch_config_options'
-        # assert 'skip' in batch_config_options, 'skip must be specified in batch_config_options'
-    
-    # Extract the parameters
-    pop_size = batch_config_options['pop_size']
-    max_generations = batch_config_options['max_generations']
-    method = batch_config_options['method']
-    run_path =  batch_config_options['run_path']
-    core_num = batch_config_options['core_num']
-    nodes = batch_config_options['nodes']
-    batch_label = batch_config_options['batchLabel']
-    time_sleep = batch_config_options['time_sleep']
-    maxiter_wait = batch_config_options['maxiter_wait']
-    skip = batch_config_options['skip']
-    num_elites = batch_config_options['num_elites']
-    initCfg = None
-    if 'initCfg' in batch_config_options:
-        initCfg = batch_config_options['initCfg']
-
-    assert isinstance(pop_size, int), 'pop_size must be an integer'
-    assert isinstance(max_generations, int), 'max_generations must be an integer'
-    assert method in ['evol', 'grid'], 'method must be either "evol" or "grid"'
-
-    # Save the dictionary as a JSON file
-    #method = 'evol'
-
-    batch_config = {
-        'batchLabel': batch_label,
-        'saveFolder': run_path,
-        'method': method,
-        'runCfg': {
-            'type': 'mpi_bulletin',
-            'script': 'init.py',
-            'mpiCommand': 'mpirun',
-            'nodes': nodes,
-            'coresPerNode': core_num,
-            'allocation': 'default',
-            'reservation': None,
-            'skip': skip,
-        },
-        'evolCfg': {
-            'evolAlgorithm': 'custom',
-            'fitnessFunc': fitnessFunc, # fitness expression (should read simData)
-            'fitnessFuncArgs': {**fitnessFuncArgs, 'pop_size': pop_size},
-            'pop_size': pop_size,
-            'num_elites': num_elites,
-            'mutation_rate': 0.4,
-            'crossover': 0.5,
-            'maximize': False,
-            'max_generations': max_generations,
-            'time_sleep': time_sleep, # wait this time before checking again if sim is completed (for each generation)
-            'maxiter_wait': maxiter_wait, # max number of times to check if sim is completed (for each generation)
-            #effectively 1.5 hours per gen, max
-            'defaultFitness': 1000,
-            'initCfg': initCfg,
-        }
-    }  
-    
-    # # Save the dictionary as a pickle file
-    # with open('batch_config.pickle', 'wb') as f:
-    #     pickle.dump(batch_config, f)
-
-    return batch_config
-
-
-def batchRun(batchLabel = 'batchRun', method = 'evol', skip = True, batch_config = None):
-    
-    #Get batch_config as needed         
-    if batch_config is None:
-        # load some_batch_config.json
-        with open('batch_config_options.json') as f:
-            batch_config_options = json.load(f)
-        batch_config = get_batch_config(batch_config_options = batch_config_options)
-        # Load the dictionary from the JSON file
-        # with open('batch_config.pickle', 'rb') as f:
-        #     batch_config = pickle.load(f)
-        assert 'method' in batch_config, 'method must be specified in batch_config'
-        assert 'skip' in batch_config['runCfg'], 'skip must be specified in batch_config'
-        assert 'batchLabel' in batch_config, 'batchLabel must be specified in batch_config'
-        #after batch_config is loaded, delete it, there's a copy in the batch_run_path
-        #os.remove('batch_config.pickle')
-            
-    #extract_batch params
-    batch_run_path =  batch_config['saveFolder']
-    # Save the dictionary as a pickle file
-    with open(f'{batch_run_path}/batch_config.pickle', 'wb') as f:
-        pickle.dump(batch_config, f)
-
-    #load param_space from batch_run_path json
-    assert os.path.exists(f'{batch_run_path}/param_space.pickle'), 'params.json does not exist in run_path'
-    with open(f'{batch_run_path}/param_space.pickle', 'rb') as f:
-        params = pickle.load(f)   
-
-	# create Batch object with paramaters to modify, and specifying files to use
-    batch = Batch(params=params)
-    batch.method = batch_config['method']
-    batch.batchLabel = batch_config['batchLabel']
-    batch.saveFolder = batch_config['saveFolder'] # = batch_run_path
-
-    #prepare run and evol configuration
-    batch.runCfg = batch_config['runCfg']
-    batch.evolCfg = batch_config['evolCfg']    
-
-    #run batch
-    batch.run()
-
-    # #plot on completion of core run (I'm not exactly sure when this would happen chronologically, but it should would)
-    # try: from batch_run_files.plot_config import plot_sim_figs
-    # except: from plot_config import plot_sim_figs
-
-    # #plot figures
-    # print("Plotting figures with below threshold fitness...")
-    # for root, dirs, files in os.walk(batch_run_path):
-    #     for file in files:
-    #         if file.endswith("Fitness.json"):
-    #             #simLabel = file.split('_Fitness.json')[0]
-    #             net_activity_params = {'binSize': .03*1000, 'gaussianSigma': .12*1000, 'thresholdBurst': 1.0}
-    #             plot_sim_figs(batch_run_path, threshold  = 500, simLabel = None, net_activity_params = net_activity_params)
-
-# Main code
-if __name__ == '__main__':
-    cwd = os.getcwd()
-    print(f'Current working directory: {cwd}')
-    
-    # load some_batch_config.json
-    with open('batch_config_options.json') as f:
-        batch_config_options = json.load(f)
-    batch_config = get_batch_config(batch_config_options = batch_config_options)
-    # Load the dictionary from the JSON file
-    # with open('batch_config.pickle', 'rb') as f:
-    #     batch_config = pickle.load(f)
-    assert 'method' in batch_config, 'method must be specified in batch_config'
-    assert 'skip' in batch_config['runCfg'], 'skip must be specified in batch_config'
-    assert 'batchLabel' in batch_config, 'batchLabel must be specified in batch_config'
-    #after batch_config is loaded, delete it, there's a copy in the batch_run_path
-    #os.remove('batch_config.pickle')
-    
-    batchRun(
-        batchLabel = batch_config['batchLabel'], 
-        #method = 'grid', 
-        method = batch_config['method'],
-        skip = batch_config['runCfg']['skip'],
-        #batch_config = batch_config
-        batch_config = None,        ) 

@@ -60,7 +60,7 @@ def batchRun(batchLabel = 'batchRun', method = 'grid', params=None, skip = False
                 'type': 'mpi_bulletin',#'hpc_slurm',
         'script': 'init.py',
         'skip': skip,
-        'cores': 64,
+        'cores': 16,
 
 
     }
