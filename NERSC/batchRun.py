@@ -183,7 +183,7 @@ def init_batch_cfg():
     batch_run_path = batch_config_options['run_path']
     # Save batch_config in run_path as JSON    
     with open(f'{batch_run_path}/batch_config_options.json', 'w') as f:
-        json.dump(batch_config_options, f, cls = batchcfgEncoder)
+        json.dump(batch_config_options, f, cls = batchcfgEncoder, indent = 4)
     logging.info(f'Batch config options saved in {batch_run_path}/batch_config_options.json')
 
     #Generate batch config from batch_config_options
@@ -193,7 +193,7 @@ def init_batch_cfg():
     batch_run_path =  batch_config['saveFolder']
     # Save batch_config in run_path as JSON    
     with open(f'{batch_run_path}/batch_config.json', 'w') as f:
-        json.dump(batch_config, f, cls = batchcfgEncoder)
+        json.dump(batch_config, f, cls = batchcfgEncoder, indent =4)
     logging.info(f'Batch config saved in {batch_run_path}/batch_config.json')
 
     #Validate batch_config before running
