@@ -1,0 +1,128 @@
+{
+    "simConfig": {
+        "Erhythmic_stimWeight": 0.006576137256502662,
+        "Irhythmic_stimWeight": 0.013126613772797406,
+        "addSynMechs": true,
+        "allowConnsWithWeight0": true,
+        "allowSelfConns": false,
+        "analysis": {},
+        "backupCfgFile": [],
+        "cache_efficient": false,
+        "checkErrors": false,
+        "compactConnFormat": false,
+        "connRandomSecFromList": true,
+        "coreneuron": false,
+        "createNEURONObj": true,
+        "createPyStruct": true,
+        "cvode_active": false,
+        "cvode_atol": 0.001,
+        "distributeSynsUniformly": true,
+        "dt": 0.025,
+        "dump_coreneuron_model": false,
+        "duration": 1000.0,
+        "duration_seconds": 30.0,
+        "filename": "model_output",
+        "gatherOnlySimData": false,
+        "gkbar_E": 0.43864312114527043,
+        "gkbar_I": 1.6840874846865581,
+        "gnabar_E": 1.6412271800624363,
+        "gnabar_I": 1.2787350615287034,
+        "gpu": false,
+        "hParams": {
+            "celsius": 6.3,
+            "clamp_resist": 0.001,
+            "v_init": -65.0
+        },
+        "includeParamsLabel": true,
+        "invertedYCoord": true,
+        "networkType": "pre13Apr24",
+        "oneSynPerNetcon": true,
+        "printPopAvgRates": [
+            100,
+            1000.0
+        ],
+        "printRunTime": false,
+        "printSynsAfterRule": false,
+        "probEE": 0.06888424385365854,
+        "probEI": 0.5767916086542856,
+        "probIE": 0.03566578003796683,
+        "probII": 0.9090087080595874,
+        "probLengthConst": 1382.4019636207013,
+        "propVelocity": 1.0,
+        "pt3dRelativeToCellLocation": true,
+        "rand123GlobalIndex": null,
+        "random123": false,
+        "recordCells": [
+            [
+                "E",
+                [
+                    0
+                ]
+            ],
+            [
+                "I",
+                [
+                    0
+                ]
+            ]
+        ],
+        "recordCellsSpikes": -1,
+        "recordDipole": false,
+        "recordDipolesHNN": false,
+        "recordLFP": [],
+        "recordStep": 0.1,
+        "recordStim": false,
+        "recordTime": true,
+        "recordTraces": {
+            "soma_voltage": {
+                "loc": 0.5,
+                "sec": "soma",
+                "var": "v"
+            }
+        },
+        "rythmic_stiminterval": 2536.4122881383537,
+        "rythmic_stimnoise": 0.5776521180358268,
+        "saveCSV": false,
+        "saveCellConns": true,
+        "saveCellSecs": true,
+        "saveDat": false,
+        "saveDataInclude": [
+            "simData",
+            "simConfig",
+            "netParams",
+            "net"
+        ],
+        "saveDipoleCells": false,
+        "saveDipolePops": false,
+        "saveDpk": false,
+        "saveFolder": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240414_Run6_30sec_test/gen_1",
+        "saveHDF5": false,
+        "saveJson": true,
+        "saveLFPCells": false,
+        "saveLFPPops": false,
+        "saveMat": false,
+        "savePickle": false,
+        "saveTiming": false,
+        "seeds": {
+            "cell": 1,
+            "conn": 1,
+            "loc": 1,
+            "stim": 1
+        },
+        "simLabel": "gen_1_cand_60",
+        "tau1_exc": 0.8,
+        "tau1_inh": 0.8,
+        "tau2_exc": 6.0,
+        "tau2_inh": 9.0,
+        "timestampFilename": false,
+        "timing": true,
+        "tstop": 1000.0,
+        "use_fast_imem": false,
+        "validateNetParams": false,
+        "verbose": false,
+        "weightEE": 0.00643596622809262,
+        "weightEI": 0.08215777725560415,
+        "weightIE": 0.04129486123362465,
+        "weightII": 0.00574349061957345
+    }
+}
