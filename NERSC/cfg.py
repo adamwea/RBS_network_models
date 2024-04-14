@@ -14,7 +14,12 @@ if cfg.networkType == 'pre13Apr24':
 	cfg.verbose = False            # Show detailed messages
 	cfg.recordStep = 0.1             # Step size in ms to save data (eg. V traces, LFP, etc)
 	#cfg.filename = 'aw_net'  # Set file output name
-	cfg.saveDataInclude = ['simData', 'simConfig', 'netParams', 'net']
+	cfg.saveDataInclude = [
+		#'simData', 
+		'simConfig', 
+		'netParams', 
+		#'net'
+  		]
 	cfg.saveJson = True
 	#cfg.savePickle = True
 	cfg.printPopAvgRates = [100, cfg.duration]
@@ -24,7 +29,7 @@ if cfg.networkType == 'pre13Apr24':
 	cfg.recordTraces['soma_voltage'] = { "sec": "soma", "loc": 0.5, "var": "v"}
 	# only record this trace from populations 'M' and 'S'
 	# record from the first cell in populations 'M' and 'S'
-	#cfg.recordCells = [('E', [0]), ('I', [0])]
+	cfg.recordCells = [('E', [0]), ('I', [0])]
 	
 	#Investigate Oscillatory behavior
 	# cfg.recordLFP = [[50, 50, 50]]

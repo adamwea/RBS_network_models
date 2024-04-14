@@ -205,12 +205,20 @@ def init_batch_cfg():
 
 # Main code
 if __name__ == '__main__':
-    ## initialize batch_run_cfg
-    logging.info(f'Initializing batch config')
-    from batch_run_config import *
-    batch_config = init_batch_cfg()
+    
+    # ## Edit Run_Name to a unique name for the batch run ##
+    try: run_name = sys.argv[1] #batch_run_files folder name
+    except: run_name = 'NERSC_Test' ### Change this to a unique name for the batch run
+    
+    print
+    run_batch = False
+    if run_batch is True:    
+        ## initialize batch_run_cfg
+        logging.info(f'Initializing batch config')
+        from batch_run_config import *
+        batch_config = init_batch_cfg()
 
-    #run batch
-    logging.info(f'Running batch: {batch_config["batchLabel"]}')
-    batchRun(batch_config = batch_config)
-    logging.info(f'Batch run completed') 
+        #run batch
+        logging.info(f'Running batch: {batch_config["batchLabel"]}')
+        batchRun(batch_config = batch_config)
+        logging.info(f'Batch run completed') 
