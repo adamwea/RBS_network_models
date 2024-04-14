@@ -2,12 +2,12 @@ from netpyne import specs
 
 cfg = specs.SimConfig()
 
-cfg.networkType = 'aw'#'simple' # 'complex'
+cfg.networkType = 'pre13Apr24' #Network used for grant proposal in 01Apr24
 
 # --------------------------------------------------------
 # awa network
 # --------------------------------------------------------
-if cfg.networkType == 'aw':
+if cfg.networkType == 'pre13Apr24':
 	#seconds = cfg.duration_seconds
 	#cfg.duration = seconds*1e3           # Duration of the simulation, in ms
 	cfg.dt = 0.025                # Internal integration timestep to use

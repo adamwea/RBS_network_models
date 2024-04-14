@@ -364,12 +364,12 @@ def fitnessFunc(simData, **kwargs):
 
     #plot figures
     #gen_number = simLabel.split('_gen')[1].split('_cand')[0]
-    cand_number = int(simLabel.split('_cand_')[1])
-    num_completed_fitness_files = len(glob.glob(f'{output_path}/{gen_folder}/*_Fitness.json'))
-    pop_size = kwargs['pop_size']
-    plot_report_path = f'{output_path}/{gen_folder}/plot_report.json'
-    if not os.path.exists(plot_report_path): # or cand_number == pop_size-1: #this way only the last population process works on plotting
-        if num_completed_fitness_files >= pop_size-1: #and 
+    #cand_number = int(simLabel.split('_cand_')[1])
+    #num_completed_fitness_files = len(glob.glob(f'{output_path}/{gen_folder}/*_Fitness.json'))
+    #pop_size = kwargs['pop_size']
+    #plot_report_path = f'{output_path}/{gen_folder}/plot_report.json'
+    #if not os.path.exists(plot_report_path): # or cand_number == pop_size-1: #this way only the last population process works on plotting
+        #if num_completed_fitness_files >= pop_size-1: #and 
             #os.makedirs(f'{output_path}/{gen_folder}/plots', exist_ok=True)
             #plot_report = {}
             
@@ -385,9 +385,9 @@ def fitnessFunc(simData, **kwargs):
 
             # try:
                 #Generation Complete
-            timeout = 1200 #20 min
-            fitness_thresh = 250
-            print(f"Generation Complete. Plotting figures with below threshold fitness: {fitness_thresh}")
+            #timeout = 1200 #20 min
+            #fitness_thresh = 250
+            #print(f"Generation Complete. Plotting figures with below threshold fitness: {fitness_thresh}")
             # print(f'Plotting...')        
             # try: from batch_run_files.plot_config import plot_sim_figs
             # except: from plot_config import plot_sim_figs

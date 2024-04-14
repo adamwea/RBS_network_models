@@ -30,11 +30,12 @@ else:
 	print('Error, invalid method specified in batch_config')
 
 # --------------------------------------------------------
-# aw network
+# network param types
 # --------------------------------------------------------
-if cfg.networkType == 'aw':
+if cfg.networkType == 'pre13Apr24': #Network used for grant proposal in 01Apr24
 
-	#update last cfg params
+	## Simulation Duration
+ 	#update last cfg params
 	seconds = cfg.duration_seconds
 	cfg.duration = seconds*1e3           # Duration of the simulation, in ms
 
