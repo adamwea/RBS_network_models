@@ -347,7 +347,7 @@ def fitnessFunc(simData, **kwargs):
     #get folder from simLabel
     gen_folder = simLabel.split('_cand')[0]
     with open(f'{output_path}/{gen_folder}/{simLabel}_Fitness.json', 'w') as f:
-        json.dump(fitnessResults, f)
+        json.dump(fitnessResults, f, indent=4)
     print(f'Fitness results saved to {output_path}/{gen_folder}/{simLabel}_Fitness.json')
     
     #plot figures - 24Mar24 - I think this is causing crashes...moving this somewhere else

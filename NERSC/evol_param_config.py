@@ -60,9 +60,11 @@ params['tau1_inh'] = 0.8
 params['tau2_inh'] = 9.0
 
 #Stimulation Params
-params['stimWeight'] = [0, 0.002] 
-params['stim_rate'] = [0, 0.15] 
-params['stim_noise'] = [0.2, 0.6]
+params['Erhythmic_stimWeight'] = [0, 0.02] 
+params['Irhythmic_stimWeight'] = [0, 0.02] 
+#params['rythmic_stimrate'] = [0, 0.15] 
+params['rythmic_stiminterval'] = [0, 5000]  # Interval between spikes (ms)
+params['rythmic_stimnoise'] = [0, 0.6]
 
 # Prepare params for evol batching.
 # If any param is a single value, convert to list with that value twice
@@ -73,6 +75,7 @@ for key, value in params.items():
         params[key] = [value[0], value[0]]
 
 evol_param_space = params
+print(evol_param_space)
 
 def define_population_params(batch_run_path = None):
     '''

@@ -29,9 +29,9 @@ selected_cand_cfg = None
 # selected_cand_cfg = '/mnt/disk15tb/adam/git_workspace/netpyne_2DNetworkSimulations/2DNet_simulations/BurstingPlotDevelopment/nb5.1_optimizing_EEonly/output/24-3-24_5sec_EEsearch/gen_5/gen_5_cand_29_cfg.json'
 
 ## Parallelization Parameters ##
-pop_per_core = 1
-core_num = 4
-num_nodes = 1
+pop_per_core = 4
+core_num = 16
+num_nodes = 4
 pop_size = pop_per_core * core_num
 num_elite_percent = 10/100 # top 10% of the population will be copied to the next generation, this is considered high-medium elitism
 num_elites = int(num_elite_percent * pop_size)
@@ -64,7 +64,8 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 output_path = script_path+'/output'
 
 # Get list of existing runs for the day
-existing_runs = [run for run in os.listdir(output_path) if run.startswith(current_date)]
+try: existing_runs = [run for run in os.listdir(output_path) if run.startswith(current_date)]
+except: existing_runs = []
 
 # Find the highest run number for the day
 if existing_runs:

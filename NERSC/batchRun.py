@@ -106,7 +106,8 @@ def get_batch_config(batch_config_options = None):
             'fitnessFuncArgs': {**fitnessFuncArgs, 'pop_size': pop_size},
             'pop_size': pop_size,
             'num_elites': num_elites,
-            'mutation_rate': 0.4,
+            #'mutation_rate': 0.4,
+            'mutation_rate': 0.7, # using high mutation rate to explore more of the parameter space
             'crossover': 0.5,
             'maximize': False,
             'max_generations': max_generations,
@@ -173,6 +174,7 @@ def init_batch_cfg():
 
     ## Output path
     output_path = f'{script_dir}/output/' 
+    print(f'Output path: {output_path}')
     # Check if the output directory exists, if not, create it
     if not os.path.exists(output_path):
         os.makedirs(output_path)
