@@ -1,7 +1,7 @@
 {
     "simConfig": {
-        "Erhythmic_stimWeight": 0.014798980796188273,
-        "Irhythmic_stimWeight": 1.206816650812126e-05,
+        "Erhythmic_stimWeight": 0.017427090286642546,
+        "Irhythmic_stimWeight": 0.009929631718034139,
         "addSynMechs": true,
         "allowConnsWithWeight0": true,
         "allowSelfConns": false,
@@ -23,10 +23,10 @@
         "duration_seconds": 30.0,
         "filename": "model_output",
         "gatherOnlySimData": false,
-        "gkbar_E": 0.25180672839549506,
-        "gkbar_I": 0.4952003699734911,
-        "gnabar_E": 1.2739839888611282,
-        "gnabar_I": 1.4004864226415392,
+        "gkbar_E": 0.40745260785541226,
+        "gkbar_I": 1.3748946418385828,
+        "gnabar_E": 4.611293512203837,
+        "gnabar_I": 1.0351959304106901,
         "gpu": false,
         "hParams": {
             "celsius": 6.3,
@@ -43,11 +43,11 @@
         ],
         "printRunTime": false,
         "printSynsAfterRule": false,
-        "probEE": 0.4750440202263161,
-        "probEI": 0.4640435705317725,
-        "probIE": 0.6710540432710904,
-        "probII": 0.7936311525566397,
-        "probLengthConst": 595.4992537184357,
+        "probEE": 0.6157333762155797,
+        "probEI": 0.8651994081137064,
+        "probIE": 0.803673708102928,
+        "probII": 0.9029880620037021,
+        "probLengthConst": 1440.5445415317529,
         "propVelocity": 1.0,
         "pt3dRelativeToCellLocation": true,
         "rand123GlobalIndex": null,
@@ -80,8 +80,8 @@
                 "var": "v"
             }
         },
-        "rythmic_stiminterval": 2547.1530253262868,
-        "rythmic_stimnoise": 0.37672422023230173,
+        "rythmic_stiminterval": 142.73456409563124,
+        "rythmic_stimnoise": 0.010856165250061944,
         "saveCSV": false,
         "saveCellConns": true,
         "saveCellSecs": true,
@@ -120,9 +120,9 @@
         "use_fast_imem": false,
         "validateNetParams": false,
         "verbose": false,
-        "weightEE": 0.04232230980510842,
-        "weightEI": 0.08780815962774191,
-        "weightIE": 0.07856691003634764,
-        "weightII": 0.09941314828850337
+        "weightEE": 0.006689320702653373,
+        "weightEI": 0.0519483807363007,
+        "weightIE": 0.006268957031762518,
+        "weightII": 0.04370713245561068
     }
 }

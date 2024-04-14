@@ -39,7 +39,7 @@ num_elites = int(num_elite_percent * pop_size)
 
 ## Overwrite Parameters ##
 overwrite_run = False #True will overwrite any existing run with the same name
-continue_run = False #True will continue most recent run
+continue_run = True #True will continue most recent run
 skip = True #True will skip the simulation if it already exists
 #make sure batch_run_path does not exist. Avoid overwriting data from any Run
 #overwrite_run = True #comment out later, this is for debugging

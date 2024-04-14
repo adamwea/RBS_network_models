@@ -9,38 +9,38 @@ Duration: 1 seconds
 Loading file netParams_popParams.json ... 
 Saving netParams to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240414_Run6_30sec_test/netParams_popParams.json ... 
 
-Start time:  2024-04-14 02:54:28.547243
+Start time:  2024-04-14 03:24:08.013604
 
 Creating network of 2 cell populations on 1 hosts...
   Number of cells on node 0: 400 
   Done; cell creation time = 0.04 s.
 Making connections...
-  Number of connections on node 0: 3229 
-  Done; cell connection time = 1.53 s.
+  Number of connections on node 0: 21748 
+  Done; cell connection time = 3.66 s.
 Adding stims...
   Number of stims on node 0: 400 
   Done; cell stims creation time = 0.05 s.
 Recording 2 traces of 1 types on node 0
 
 Running simulation using NEURON for 30000.0 ms...
-  Done; run time = 243.03 s; real-time ratio: 0.12.
+  Done; run time = 868.25 s; real-time ratio: 0.03.
 
 Gathering data...
-  Done; gather time = 0.20 s.
+  Done; gather time = 0.64 s.
 
 Analyzing...
   Cells: 400
-  Connections: 3629 (9.07 per cell)
-  Spikes: 905151 (75.43 Hz)
+  Connections: 22148 (55.37 per cell)
+  Spikes: 102542 (8.55 Hz)
   Simulated time: 30.0 s; 1 workers
-  Run time: 243.03 s
-   E : 83.519 Hz
-   I : 7.800 Hz
+  Run time: 868.25 s
+   E : 8.437 Hz
+   I : 12.722 Hz
 Saving output as /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240414_Run6_30sec_test/gen_0/gen_0_cand_42_data.json ... 
 Finished saving!
-  Done; saving time = 2.75 s.
+  Done; saving time = 1.77 s.
   Done; plotting time = 0.00 s
 
-Total time = 247.72 s
+Total time = 874.44 s
 first instance of v_init
 first instance of tstop
