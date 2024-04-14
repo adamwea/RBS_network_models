@@ -207,11 +207,13 @@ def init_batch_cfg():
 if __name__ == '__main__':
     
     # ## Edit Run_Name to a unique name for the batch run ##
-    try: run_name = sys.argv[1] #batch_run_files folder name
-    except: run_name = 'NERSC_Test' ### Change this to a unique name for the batch run
-    
-    print
-    run_batch = False
+    try: 
+        run_name = sys.argv[1] #batch_run_files folder name
+        print(sys.argv[1])
+    except: 
+        run_name = 'NERSC_Test' ### Change this to a unique name for the batch run    
+        print('test')
+    run_batch = True
     if run_batch is True:    
         ## initialize batch_run_cfg
         logging.info(f'Initializing batch config')

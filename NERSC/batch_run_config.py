@@ -21,8 +21,10 @@ USER INPUT
 ## Edit params in the batch_run_files folder as needed (with care) ##
 
 # ## Edit Run_Name to a unique name for the batch run ##
-# try: run_name = sys.argv[1] #batch_run_files folder name
-# except: run_name = 'NERSC_Test' ### Change this to a unique name for the batch run
+try: 
+    run_name = sys.argv[1] #batch_run_files folder name
+    print(f'run_name: {run_name}')
+except: run_name = 'NERSC_Test' ### Change this to a unique name for the batch run
 
 ## Batch Params ##
 method = 'evol' #evolutionary algorithm
