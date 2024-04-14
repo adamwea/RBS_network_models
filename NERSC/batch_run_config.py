@@ -20,12 +20,6 @@ USER INPUT
 ## Edit the following parameters as needed ##
 ## Edit params in the batch_run_files folder as needed (with care) ##
 
-# ## Edit Run_Name to a unique name for the batch run ##
-try: 
-    run_name = sys.argv[1] #batch_run_files folder name
-    print(f'run_name: {run_name}')
-except: run_name = 'NERSC_Test' ### Change this to a unique name for the batch run
-
 ## Batch Params ##
 method = 'evol' #evolutionary algorithm
 # method = 'grid' #grid search
@@ -53,41 +47,52 @@ skip = True #True will skip the simulation if it already exists
 '''
 Initialize
 '''
-##Prepare Batch_Run_Folder and Initial Files
-#output_path = nb_path.replace('batch_run_files', 'output')'
+
+import datetime
+
+# Get current date in YYMMDD format
+current_date = datetime.datetime.now().strftime('%y%m%d')
+
+# Edit Run_Name to a unique name for the batch run
+try: 
+    run_name = sys.argv[1] #batch_run_files folder name
+    print(f'run_name: {run_name}')
+except: run_name = 'unnamed_run' ### Change this to a unique name for the batch run
+
+# Prepare Batch_Run_Folder and Initial Files
 script_path = os.path.dirname(os.path.realpath(__file__))
 output_path = script_path+'/output'
-#get unique run path
-i = 0
-first_run = True
-unique_run_path = f'{output_path}/run{i}_{run_name}'
-while os.path.exists(unique_run_path):
-    first_run = False
-    i += 1
-    unique_run_path = f'{output_path}/run{i}_{run_name}'
 
-## Mediate Overwrite
-if first_run is False:
-    assert not (overwrite_run and continue_run), 'overwrite_run and continue_run cannot both be True'
-    #Manage batch_run path
-    if overwrite_run or continue_run:
-        i = i-1
-        run_path = f'{output_path}/run{i}_{run_name}'
-    else:
-        run_path = unique_run_path    
-    #if continue-run is True, skip must be True
-    if continue_run is True:
-        assert skip is True, 'skip must be True if continue_run is True'
-        logger.info(f'Continuing most recent batch_run: {os.path.basename(run_path)}')    
-    #if overwrite-run is True, delete the existing run_path
-    if overwrite_run and os.path.exists(run_path):
-        #assert skip is False, 'skip must be False if overwrite_run is True'
-        shutil.rmtree(run_path)   
-        logger.info(f'Overwriting existing batch_run: {os.path.basename(run_path)}')      
+# Get list of existing runs for the day
+existing_runs = [run for run in os.listdir(output_path) if run.startswith(current_date)]
+
+# Find the highest run number for the day
+if existing_runs:
+    highest_run_number = max(int(run.split('_Run')[1].split('_')[0]) for run in existing_runs)
 else:
-    run_path = unique_run_path
+    highest_run_number = 0
 
-## Create a directory to save the batch_run files
+# Increment the run number for the new run
+new_run_number = highest_run_number + 1
+
+# Update run_name with new format
+run_name = f'{current_date}_Run{new_run_number}_{run_name}'
+
+# Get unique run path
+run_path = f'{output_path}/{run_name}'
+
+# Mediate Overwrite
+if run_name in existing_runs:
+    assert not (overwrite_run and continue_run), 'overwrite_run and continue_run cannot both be True'
+    # Manage batch_run path
+    if overwrite_run or continue_run:
+        if overwrite_run and os.path.exists(run_path):
+            shutil.rmtree(run_path)   
+            logger.info(f'Overwriting existing batch_run: {os.path.basename(run_path)}')      
+    else:
+        assert False, 'Run already exists for today. This Error means something funky is happening'
+
+# Create a directory to save the batch_run files
 if not os.path.exists(run_path):
     os.makedirs(run_path)
 
