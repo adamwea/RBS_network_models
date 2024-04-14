@@ -207,7 +207,8 @@ def init_batch_cfg():
 if __name__ == '__main__':
     
     '''
-    Enter the name of the batch run as sys.arg[1]
+    Enter the name of the batch run as sys.arg[1] default 'unnamed_run'
+    Enter the number of seconds for the simulation as sys.arg[2] default 1 second
     '''
     ##NOTE: this code is just to display the command for the user. 
     ##      Update batch_run_config.py to change the batch run naming code.
@@ -216,7 +217,7 @@ if __name__ == '__main__':
     print(f'run name: {run_name}')
 
     ##Run batch
-    run_batch = False
+    run_batch = True
     if run_batch is True:    
         ## initialize batch_run_cfg
         logging.info(f'Initializing batch config')

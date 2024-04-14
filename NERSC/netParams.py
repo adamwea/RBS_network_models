@@ -36,6 +36,13 @@ if cfg.networkType == 'pre13Apr24': #Network used for grant proposal in 01Apr24
 
 	## Simulation Duration
  	#update last cfg params
+	# try: 
+	# 	sys.argv[2]
+	# 	seconds = int(sys.argv[2])
+	# except: 
+	# 	#sys.argv.append('100')
+	# 	seconds = cfg.duration_seconds
+	# print(f"Duration: {seconds} seconds")
 	seconds = cfg.duration_seconds
 	cfg.duration = seconds*1e3           # Duration of the simulation, in ms
 

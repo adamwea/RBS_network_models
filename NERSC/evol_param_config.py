@@ -2,6 +2,7 @@
 import os
 from netpyne import specs
 from netpyne import sim
+import sys
 
 '''
 Define the parameter space for the evolutionary search
@@ -13,8 +14,15 @@ Modify the following parameters as needed
 '''
 ## Constant Params
 #Prepare constant netparams parameterrs
-params['duration_seconds'] = 1
-params['probLengthConst'] = 500 # length constant for conn probability (um)    
+try: 
+    sys.argv[2]
+    seconds = int(sys.argv[2])
+except: 
+    #sys.argv.append('100')
+    seconds = 1
+print(f"Duration: {seconds} seconds")
+params['duration_seconds'] = seconds
+params['probLengthConst'] = [50, 2000] # length constant for conn probability (um)    
 
 ## General Params
 

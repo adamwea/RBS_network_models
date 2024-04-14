@@ -15,10 +15,10 @@ if cfg.networkType == 'pre13Apr24':
 	cfg.recordStep = 0.1             # Step size in ms to save data (eg. V traces, LFP, etc)
 	#cfg.filename = 'aw_net'  # Set file output name
 	cfg.saveDataInclude = [
-		#'simData', 
+		'simData', 
 		'simConfig', 
 		'netParams', 
-		#'net'
+		'net'
   		]
 	cfg.saveJson = True
 	#cfg.savePickle = True
