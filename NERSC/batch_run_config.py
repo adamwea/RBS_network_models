@@ -31,18 +31,21 @@ selected_cand_cfg = None
 ## Parallelization Parameters ##
 #Cores
 #pop_per_core = 4
-core_num = 16
+core_num = 8 #cores/node
 #pop_size = pop_per_core * core_num
-NERSC_cores_per_node = 64
-pop_size = 64 #keep this value at 64 for now
-num_nodes = 1 #keep this value at 1 for now
+#NERSC_cores_per_node = 64
+pop_size = 4      #128 popsize -> 
+                        #8 cpus/task = (4 cores * 2 Threads)/task. 
+                        #128 pop/4 nodes = 32 pop/node.
+                        #8*cpus/task*32 pop/node = 256 cpus/node  
+num_nodes = 4 #keep this value at 1 for now
 num_elite_percent = 10/100 # top 10% of the population will be copied to the next generation, this is considered high-medium elitism
 num_elites = int(num_elite_percent * pop_size)
 #duration_seconds = 5
 
 ## Overwrite Parameters ##
 overwrite_run = False #True will overwrite any existing run with the same name
-continue_run = True #True will continue most recent run
+continue_run = False #True will continue most recent run
 skip = True #True will skip the simulation if it already exists
 #make sure batch_run_path does not exist. Avoid overwriting data from any Run
 #overwrite_run = True #comment out later, this is for debugging
@@ -133,15 +136,18 @@ batch_config_options = {
     "run_path": run_path,
     'batchLabel': os.path.basename(run_path),
     "method": method,
-    "core_num": core_num,
-    "nodes": num_nodes,
+    "core_num": core_num, #256 cpus/node
+    "nodes": num_nodes, #4 nodes
     "script": initFile,
     #"pop_per_core": 1,
     #"duration_seconds": 5,
-    "pop_size": pop_size,
-    "max_generations": 2000,
+    "pop_size": pop_size,   #128 popsize -> 8 cpus/task = (4 cores * 2 Threads)/task. 
+                            #128 pop/4 nodes = 32 pop/node.
+                            #8*cpus/task*32 pop/node = 256 cpus/node  
+    #"max_generations": 2000,
+    "max_generations" : 5,
     "time_sleep": 10, #seconds
-    "maxiter_wait": 6*40, #6itersx10sec/itersx30sec/min = 30 minutes per gen?
+    "maxiter_wait": 6*20, #15 minutes per gen?
     "skip": skip,
     "num_elites": num_elites,
     "cfgFile": cfgFile,

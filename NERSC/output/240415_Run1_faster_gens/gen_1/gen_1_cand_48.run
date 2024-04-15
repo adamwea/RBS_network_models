@@ -1,0 +1,46 @@
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240415_Run1_faster_gens/gen_1/gen_1_cand_48_cfg.json
+Loading file /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240415_Run1_faster_gens/gen_1/gen_1_cand_48_cfg.json ... 
+Loading simConfig...
+Importing netParams from /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240415_Run1_faster_gens/240415_Run1_faster_gens_netParams.py
+Duration: 1 seconds
+{duration_seconds: [1, 1], probLengthConst: [50, 2000], propVelocity: [1, 1], probIE: [0, 1], probEE: [0, 1], probII: [0, 1], probEI: [0, 1], weightEI: [0.0001, 0.1], weightIE: [0.0001, 0.1], weightEE: [0.0001, 0.1], weightII: [0.0001, 0.1], gnabar_E: [0, 5], gkbar_E: [0, 0.5], gnabar_I: [0, 1.5], gkbar_I: [0.005, 2], tau1_exc: [0.8, 0.8], tau2_exc: [6.0, 6.0], tau1_inh: [0.8, 0.8], tau2_inh: [9.0, 9.0], Erhythmic_stimWeight: [0, 0.02], Irhythmic_stimWeight: [0, 0.02], rythmic_stiminterval: [0, 5000], rythmic_stimnoise: [0, 0.6]}
+Loading file netParams_popParams.json ... 
+Saving netParams to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240415_Run1_faster_gens/netParams_popParams.json ... 
+
+Start time:  2024-04-15 00:34:59.066230
+
+Creating network of 2 cell populations on 1 hosts...
+  Number of cells on node 0: 400 
+  Done; cell creation time = 0.04 s.
+Making connections...
+  Number of connections on node 0: 534 
+  Done; cell connection time = 1.08 s.
+Adding stims...
+  Number of stims on node 0: 400 
+  Done; cell stims creation time = 0.04 s.
+Recording 2 traces of 1 types on node 0
+
+Running simulation using NEURON for 30000.0 ms...
+  Done; run time = 152.31 s; real-time ratio: 0.20.
+
+Gathering data...
+  Done; gather time = 0.09 s.
+
+Analyzing...
+  Cells: 400
+  Connections: 934 (2.33 per cell)
+  Spikes: 1397 (0.12 Hz)
+  Simulated time: 30.0 s; 1 workers
+  Run time: 152.31 s
+   E : 0.000 Hz
+   I : 1.511 Hz
+Saving output as /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240415_Run1_faster_gens/gen_1/gen_1_cand_48_data.json ... 
+Finished saving!
+  Done; saving time = 1.18 s.
+  Done; plotting time = 0.00 s
+
+Total time = 154.76 s
+first instance of v_init
+first instance of tstop

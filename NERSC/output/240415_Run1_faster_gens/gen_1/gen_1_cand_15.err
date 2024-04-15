@@ -1,0 +1,24 @@
+/global/homes/a/adammwea/.conda/envs/2DSims/bin/nrniv:10: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import working_set
+Warning: no DISPLAY environment variable.
+--No graphics will be displayed.
+NEURON -- VERSION 8.2.4 HEAD (1d87d5d39) 2024-02-09
+Duke, Yale, and the BlueBrain Project -- Copyright 1984-2022
+See http://neuron.yale.edu/neuron/credits
+
+Traceback (most recent call last):
+  File "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 8, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/global/homes/a/adammwea/.conda/envs/2DSims/lib/python3.9/site-packages/netpyne/sim/wrappers.py", line 215, in createSimulateAnalyze
+    sim.analyze()
+  File "/global/homes/a/adammwea/.conda/envs/2DSims/lib/python3.9/site-packages/netpyne/sim/wrappers.py", line 140, in analyze
+    sim.saveData()
+  File "/global/homes/a/adammwea/.conda/envs/2DSims/lib/python3.9/site-packages/netpyne/sim/save.py", line 224, in saveData
+    sim.saveJSON(path, dataSave, checkFileTimeout=5)
+  File "/global/homes/a/adammwea/.conda/envs/2DSims/lib/python3.9/site-packages/netpyne/sim/save.py", line 62, in saveJSON
+    fileObj.write(to_unicode(str_))
+OSError: [Errno 122] Disk quota exceeded
+0 /global/homes/a/adammwea/.conda/envs/2DSims/bin/nrniv: can't open simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240415_Run1_faster_gens/gen_1/gen_1_cand_15_cfg.json
+Could not open netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240415_Run1_faster_gens/240415_Run1_faster_gens_netParams.py
+Exception ignored in: <_io.TextIOWrapper name='<stdout>' mode='w' encoding='utf-8'>
+OSError: [Errno 122] Disk quota exceeded

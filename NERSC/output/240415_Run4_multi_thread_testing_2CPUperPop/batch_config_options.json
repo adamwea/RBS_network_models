@@ -1,0 +1,17 @@
+{
+    "run_path": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240415_Run4_multi_thread_testing_2CPUperPop",
+    "batchLabel": "240415_Run4_multi_thread_testing_2CPUperPop",
+    "method": "evol",
+    "core_num": 8,
+    "nodes": 4,
+    "script": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py",
+    "pop_size": 4,
+    "max_generations": 5,
+    "time_sleep": 10,
+    "maxiter_wait": 120,
+    "skip": true,
+    "num_elites": 0,
+    "cfgFile": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/cfg.py",
+    "netParamsFile": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/netParams.py",
+    "initCfg": null
+}

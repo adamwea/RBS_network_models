@@ -1,0 +1,8 @@
+
+Lmod is automatically replacing "cray-mpich/8.1.28" with "openmpi/5.0.0".
+
+Warning: no DISPLAY environment variable.
+--No graphics will be displayed.
+Traceback (most recent call last):
+  File "/global/homes/a/adammwea/.conda/envs/2DSims/lib/python3.9/site-packages/netpyne/batch/utils.py", line 538, in evaluator
+    simData = json.load(file)['simData']
