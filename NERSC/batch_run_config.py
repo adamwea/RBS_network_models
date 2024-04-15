@@ -98,11 +98,12 @@ if overwrite_run or continue_run:
             shutil.rmtree(prev_run_path)
             run_path = prev_run_path   
             logger.info(f'Overwriting existing batch_run: {os.path.basename(run_path)}')
-        elif continue_run:
+        elif continue_run and os.path.exists(prev_run_path):
             run_path = prev_run_path
             logger.info(f'Continuing existing batch_run: {os.path.basename(run_path)}')      
-    else:
-        assert False, 'Run already exists for today. Overwrite and continue options are False. This Error shouldnt happen'
+        else:
+            logger.info(f'Creating new batch_run: {os.path.basename(run_path)}')
+            #assert False, 'Run already exists for today. Overwrite and continue options are False. This Error shouldnt happen'
 
 # Create a directory to save the batch_run files
 if not os.path.exists(run_path):

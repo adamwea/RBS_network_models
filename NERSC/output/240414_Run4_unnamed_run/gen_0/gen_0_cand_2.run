@@ -1,0 +1,43 @@
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /mnt/c/Users/adamm/Documents/.repos/2DNetworkSimulations/NERSC/output/240414_Run4_unnamed_run/gen_0/gen_0_cand_2_cfg.json
+Loading file /mnt/c/Users/adamm/Documents/.repos/2DNetworkSimulations/NERSC/output/240414_Run4_unnamed_run/gen_0/gen_0_cand_2_cfg.json ... 
+Loading simConfig...
+Importing netParams from /mnt/c/Users/adamm/Documents/.repos/2DNetworkSimulations/NERSC/output/240414_Run4_unnamed_run/240414_Run4_unnamed_run_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /mnt/c/Users/adamm/Documents/.repos/2DNetworkSimulations/NERSC/output/240414_Run4_unnamed_run/netParams_popParams.json ... 
+
+Start time:  2024-04-14 00:47:25.888651
+
+Creating network of 2 cell populations on 1 hosts...
+  Number of cells on node 0: 400 
+  Done; cell creation time = 0.04 s.
+Making connections...
+  Number of connections on node 0: 12692 
+  Done; cell connection time = 2.92 s.
+Adding stims...
+  Number of stims on node 0: 800 
+  Done; cell stims creation time = 0.11 s.
+Recording 2 traces of 1 types on node 0
+
+Running simulation using NEURON for 1000.0 ms...
+  Done; run time = 20.29 s; real-time ratio: 0.05.
+
+Gathering data...
+  Done; gather time = 0.34 s.
+
+Analyzing...
+  Cells: 400
+  Connections: 13092 (32.73 per cell)
+  Synaptic contacts: 13492 (33.73 per cell)
+  Spikes: 27189 (67.97 Hz)
+  Simulated time: 1.0 s; 1 workers
+  Run time: 20.29 s
+   E : 93.952 Hz
+   I : 5.367 Hz
+Saving output as /mnt/c/Users/adamm/Documents/.repos/2DNetworkSimulations/NERSC/output/240414_Run4_unnamed_run/gen_0/gen_0_cand_2_data.json ... 
+Finished saving!
+  Done; saving time = 0.01 s.
+  Done; plotting time = 0.00 s
+
+Total time = 23.74 s
