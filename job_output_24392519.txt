@@ -1,0 +1,12 @@
+
+Lmod is automatically replacing "cray-mpich/8.1.28" with "openmpi/5.0.0".
+
+Warning: no DISPLAY environment variable.
+--No graphics will be displayed.
+run name: regular_job_test
+Traceback (most recent call last):
+  File "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/batchRun.py", line 226, in <module>
+    from batch_run_config import *
+  File "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/batch_run_config.py", line 102, in <module>
+    assert False, 'Run already exists for today. Overwrite and continue options are False. This Error shouldnt happen'
+AssertionError: Run already exists for today. Overwrite and continue options are False. This Error shouldnt happen

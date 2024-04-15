@@ -29,10 +29,13 @@ selected_cand_cfg = None
 # selected_cand_cfg = '/mnt/disk15tb/adam/git_workspace/netpyne_2DNetworkSimulations/2DNet_simulations/BurstingPlotDevelopment/nb5.1_optimizing_EEonly/output/24-3-24_5sec_EEsearch/gen_5/gen_5_cand_29_cfg.json'
 
 ## Parallelization Parameters ##
-pop_per_core = 4
+#Cores
+#pop_per_core = 4
 core_num = 16
-num_nodes = 4
-pop_size = pop_per_core * core_num
+#pop_size = pop_per_core * core_num
+NERSC_cores_per_node = 64
+pop_size = 64 #keep this value at 64 for now
+num_nodes = 1 #keep this value at 1 for now
 num_elite_percent = 10/100 # top 10% of the population will be copied to the next generation, this is considered high-medium elitism
 num_elites = int(num_elite_percent * pop_size)
 #duration_seconds = 5
