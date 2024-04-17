@@ -63,7 +63,7 @@ def get_batch_config(batch_config_options = None):
     max_generations = batch_config_options['max_generations']
     method = batch_config_options['method']
     run_path =  batch_config_options['run_path']
-    core_num = batch_config_options['core_num']
+    cores_per_node = batch_config_options['cores_per_node']
     nodes = batch_config_options['nodes']
     batch_label = batch_config_options['batchLabel']
     time_sleep = batch_config_options['time_sleep']
@@ -95,7 +95,7 @@ def get_batch_config(batch_config_options = None):
             'script': script,
             'mpiCommand': 'mpirun',
             'nodes': nodes,
-            'coresPerNode': core_num,
+            'coresPerNode': cores_per_node,
             'allocation': 'default',
             'reservation': None,
             'skip': skip,
