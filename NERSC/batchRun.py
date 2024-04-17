@@ -143,7 +143,7 @@ def batchRun(batch_config = None):
     batch_method = batch_config['method']
     if batch_method == 'evol':
         #define population params held constant across batch of simulations
-        from evol_param_config import evol_param_space
+        from evol_param_setup import evol_param_space
         params = evol_param_space
         # define_population_params(batch_run_path = batch_run_path)
     elif batch_method == 'grid':
@@ -208,25 +208,16 @@ def init_batch_cfg():
 # Main code
 if __name__ == '__main__':
     
-    '''
-    Enter the name of the batch run as sys.arg[1] default 'unnamed_run'
-    Enter the number of seconds for the simulation as sys.arg[2] default 1 second
-    '''
-    ##NOTE: this code is just to display the command for the user. 
-    ##      Update batch_run_config.py to change the batch run naming code.
-    try: run_name = sys.argv[1] #batch_run_files folder name
-    except: run_name = 'unnamed_run' ### Change this to a unique name for the batch run    
-    print(f'run name: {run_name}')
-
     ##Run batch
     run_batch = True
     if run_batch is True:    
-        ## initialize batch_run_cfg
+        
+        ## Initialize batch_run_cfg
         logging.info(f'Initializing batch config')
-        from batch_run_config import *
+        from batch_config_setup import *
         batch_config = init_batch_cfg()
 
-        #run batch
+        ## Run batch
         logging.info(f'Running batch: {batch_config["batchLabel"]}')
         batchRun(batch_config = batch_config)
         logging.info(f'Batch run completed') 

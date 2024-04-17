@@ -2,8 +2,8 @@
 import numpy as np
 import sys
 #sys.path.insert(0, '/mnt/disk15tb/adam/git_workspace/netpyne_2DNetworkSimulations/2DNet_simulations/BurstingPlotDevelopment/nb5_optimizing/batch_run_files')
-from batch_run_tools import measure_network_activity
-from batch_run_tools import find_batch_object_and_sim_label
+from batch_helper_functions import measure_network_activity
+from batch_helper_functions import find_batch_object_and_sim_label
 #from netpyne import sim
 from scipy.stats import linregress
 import os

@@ -4,68 +4,66 @@ import json
 import shutil
 import sys
 import json
+import datetime
 
 ## Logger
 import logging
-#set up logging
 script_dir = os.path.dirname(os.path.realpath(__file__))
 log_file = f'{script_dir}/batchRun.log'
 logging.basicConfig(filename=log_file, level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
-# Define a logger
 logger = logging.getLogger(__name__)
 
 '''
 USER INPUT
 '''
-## Edit the following parameters as needed ##
-## Edit params in the batch_run_files folder as needed (with care) ##
-
+from USER_INPUTS import *
 ## Batch Params ##
-method = 'evol' #evolutionary algorithm
-# method = 'grid' #grid search
+assert USER_method, 'method_user must be specified in USER_INPUTS.py'
+method = USER_method #evolutionary algorithm
 
 ## Selecte a candidate configuration to start the evolution from ##
 selected_cand_cfg = None
 # selected_cand_cfg = '/mnt/disk15tb/adam/git_workspace/netpyne_2DNetworkSimulations/2DNet_simulations/BurstingPlotDevelopment/nb5.1_optimizing_EEonly/output/24-3-24_5sec_EEsearch/gen_5/gen_5_cand_29_cfg.json'
 
 ## Parallelization Parameters ##
-#Cores
-#pop_per_core = 4
-cores_per_node = 256 #cores/node
-#pop_size = pop_per_core * core_num
-#NERSC_cores_per_node = 64
-pop_size = 32      #128 popsize -> 
-                        #8 cpus/task = (4 cores * 2 Threads)/task. 
-                        #128 pop/4 nodes = 32 pop/node.
-                        #8*cpus/task*32 pop/node = 256 cpus/node  
-num_nodes = 2 #keep this value at 1 for now
-num_elite_percent = 10/100 # top 10% of the population will be copied to the next generation, this is considered high-medium elitism
+assert USER_cores_per_node, 'USER_cores_per_node must be specified in USER_INPUTS.py'
+cores_per_node = USER_cores_per_node #cores/node
+assert USER_pop_size, 'USER_pop_size must be specified in USER_INPUTS.py'
+pop_size = USER_pop_size
+assert USER_nodes, 'USER_nodes must be specified in USER_INPUTS.py'
+num_nodes = USER_nodes #keep this value at 1 for now
+
+## Genetic Algorithm Parameters ##
+assert USER_frac_elites, 'USER_frac_elites must be specified in USER_INPUTS.py'
+num_elite_percent = 100*USER_frac_elites # top 10% of the population will be copied to the next generation, this is considered high-medium elitism
 num_elites = int(num_elite_percent * pop_size)
 try: assert num_elites > 0, "num_elites rounded to 0. num_elites must be greater than 0. Setting num_elites = 1."
 except: num_elites = 1
-#duration_seconds = 5
+assert USER_max_generations, 'USER_max_generations must be specified in USER_INPUTS.py'
+max_generations = USER_max_generations
+assert USER_time_sleep, 'USER_time_sleep must be specified in USER_INPUTS.py'
+time_sleep = USER_time_sleep
+assert USER_maxiter_wait_minutes, 'USER_maxiter_wait_minutes must be specified in USER_INPUTS.py'
+maxiter_wait = USER_maxiter_wait_minutes*60/time_sleep
 
 ## Overwrite Parameters ##
-overwrite_run = False #True will overwrite any existing run with the same name
-continue_run = False #True will continue most recent run
-skip = True #True will skip the simulation if it already exists
-#make sure batch_run_path does not exist. Avoid overwriting data from any Run
-#overwrite_run = True #comment out later, this is for debugging
+assert USER_overwrite_run is not None, 'USER_overwrite_run must be specified in USER_INPUTS.py'
+assert USER_continue_run is not None, 'USER_continue_run must be specified in USER_INPUTS.py'
+overwrite_run = USER_overwrite_run #True will overwrite any existing run with the same name
+continue_run = USER_continue_run #True will continue most recent run
+skip = False #True will skip the simulation if it already exists
+if continue_run: skip = True
+
+# Edit Run_Name to a unique name for the batch run
+assert USER_run_label, 'USER_run_label must be specified in USER_INPUTS.py'
+run_label = USER_run_label #batch_run_files folder name
 
 '''
 Initialize
 '''
 
-import datetime
-
 # Get current date in YYMMDD format
 current_date = datetime.datetime.now().strftime('%y%m%d')
-
-# Edit Run_Name to a unique name for the batch run
-try: 
-    run_label = sys.argv[1] #batch_run_files folder name
-    #print(f'run_name: {run_name}')
-except: run_label = 'unnamed_run' ### Change this to a unique name for the batch run
 
 # Prepare Batch_Run_Folder and Initial Files
 script_path = os.path.dirname(os.path.realpath(__file__))
@@ -76,10 +74,8 @@ try: existing_runs = [run for run in os.listdir(output_path) if run.startswith(c
 except: existing_runs = []
 
 # Find the highest run number for the day
-if existing_runs:
-    highest_run_number = max(int(run.split('_Run')[1].split('_')[0]) for run in existing_runs)
-else:
-    highest_run_number = 0
+if existing_runs: highest_run_number = max(int(run.split('_Run')[1].split('_')[0]) for run in existing_runs)
+else: highest_run_number = 0
 
 # Increment the run number for the new run
 new_run_number = highest_run_number + 1
@@ -98,7 +94,6 @@ if overwrite_run or continue_run:
     if prev_run_name in existing_runs:
         assert not (overwrite_run and continue_run), 'overwrite_run and continue_run cannot both be True'
         # Manage batch_run path
-        #if overwrite_run or continue_run:
         if overwrite_run and os.path.exists(prev_run_path):
             shutil.rmtree(prev_run_path)
             run_path = prev_run_path   
@@ -106,9 +101,7 @@ if overwrite_run or continue_run:
         elif continue_run and os.path.exists(prev_run_path):
             run_path = prev_run_path
             logger.info(f'Continuing existing batch_run: {os.path.basename(run_path)}')      
-        else:
-            logger.info(f'Creating new batch_run: {os.path.basename(run_path)}')
-            #assert False, 'Run already exists for today. Overwrite and continue options are False. This Error shouldnt happen'
+        else: logger.info(f'Creating new batch_run: {os.path.basename(run_path)}')
 
 # Create a directory to save the batch_run files
 if not os.path.exists(run_path):
@@ -117,9 +110,9 @@ if not os.path.exists(run_path):
 '''
 Generate Config
 '''
-#these updated params are based on the results from the following path:
-if selected_cand_cfg is not None: 
-    #selected_cand_cfg = 'batch_run_files/evol_params/evol_params_2021-07-07_16-00-00.json'
+## If a candidate configuration is selected, load it
+# example: selected_cand_cfg = 'batch_run_files/evol_params/evol_params_2021-07-07_16-00-00.json'
+if selected_cand_cfg is not None:    
     with open(selected_cand_cfg, 'r') as f:
         initCfg = json.load(f)
 else: initCfg = None
@@ -128,7 +121,6 @@ else: initCfg = None
 initFile = f'{script_path}/init.py'
 cfgFile = f'{script_path}/cfg.py'
 netParamsFile = f'{script_path}/netParams.py'
-
 assert os.path.exists(initFile), f'initFile does not exist: {initFile}'
 assert os.path.exists(cfgFile), f'cfgFile does not exist: {cfgFile}'
 assert os.path.exists(netParamsFile), f'netParamsFile does not exist: {netParamsFile}'
@@ -146,17 +138,12 @@ batch_config_options = {
     "pop_size": pop_size,   #128 popsize -> 8 cpus/task = (4 cores * 2 Threads)/task. 
                             #128 pop/4 nodes = 32 pop/node.
                             #8*cpus/task*32 pop/node = 256 cpus/node  
-    #"max_generations": 2000,
-    "max_generations" : 7,
-    "time_sleep": 10, #seconds
-    "maxiter_wait": 6*20, #15 minutes per gen?
+    "max_generations" : max_generations,
+    "time_sleep": time_sleep, #seconds
+    "maxiter_wait": maxiter_wait, #iterations of time_sleep
     "skip": skip,
     "num_elites": num_elites,
     "cfgFile": cfgFile,
     "netParamsFile": netParamsFile,
     "initCfg": initCfg,
 }
-
-# # Write the dictionary to a JSON file
-# with open("batch_config_options.json", "w") as f:
-#     json.dump(batch_config_options, f)

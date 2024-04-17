@@ -35,4 +35,4 @@ mkdir -p NERSC/output/job_outputs
 srun -n 32 -c 8 --cpu-bind=cores check-hybrid.gnu.pm |sort -k4
 
 # Execute the application and capture all output
-#python3 NERSC/batchRun.py 2node_30sec_test 30
+python3 NERSC/batchRun.py 2node_30sec_test 30
