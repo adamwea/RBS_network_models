@@ -7,11 +7,11 @@ except: USER_run_label = 'debug_run' ### Change this to a unique name for the ba
 
 ##Simulation Duration
 try: USER_seconds = int(sys.argv[2]) ### Change this to the number of seconds for the simulation
-except: USER_seconds = 1
+except: USER_seconds = 5
 
 ## Available Methods
 USER_method = 'evol'
-#method = 'grid'
+#USER_method = 'grid'
 
 ## Fitness Params
 #Set paramaeters for convolving raster data into network activity plot
@@ -20,10 +20,11 @@ USER_raster_convolve_params = {
     'gaussianSigma': .12*1000, 
     'thresholdBurst': 1.0
     }
+USER_plot_fitness_bool = False
 
 ## Evol Params
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
-USER_pop_size = 6
+USER_pop_size = 2
 USER_max_generations = 5
 USER_time_sleep = 10 #seconds between checking for completed simulations
 USER_maxiter_wait_minutes = 20 #Maximum minutes to wait before new simulation starts before killing generation
@@ -36,10 +37,11 @@ option = options[0]
 if option == 'local':
     USER_nodes = 1 #This should be set to the number of nodes available
     USER_runCfg_type = 'mpi_bulletin'
-    USER_cores_per_node_per_sim = 2 #This should be set to the number of cores desired for each simulation
+    USER_cores_per_node_per_sim = 4 #This should be set to the number of cores desired for each simulation
     USER_cores_per_node = USER_cores_per_node_per_sim    
     USER_walltime = None
     USER_email = None
+    USER_custom = None
 elif option == 'NERSC_evol':
     Perlmutter_cores_per_node = 256
     USER_nodes = 1 #This should be set to the number of nodes available    
@@ -51,9 +53,9 @@ elif option == 'NERSC_evol':
     USER_walltime_per_sim = get_walltime_per_sim(USER_walltime_per_gen, USER_pop_size, USER_nodes)
     USER_walltime = USER_walltime_per_sim    
     USER_email = 'amwe@ucdavis.edu'
-    
+    USER_custom = ''    
 else: 
-    print('Invalid option')
+    print('Invalid Parallelization Option')
     sys.exit()
 
 ## Overwrite and Continue
