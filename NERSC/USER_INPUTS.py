@@ -25,7 +25,7 @@ USER_plot_fitness_bool = False
 ## Evol Params
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
 USER_pop_size = 2
-USER_max_generations = 5
+USER_max_generations = 1
 USER_time_sleep = 10 #seconds between checking for completed simulations
 USER_maxiter_wait_minutes = 20 #Maximum minutes to wait before new simulation starts before killing generation
 
@@ -33,7 +33,7 @@ USER_maxiter_wait_minutes = 20 #Maximum minutes to wait before new simulation st
 options = ['local', 'NERSC_evol']
 # 0 - local
 # 1 - NERSC
-option = options[0]
+option = options[1]
 if option == 'local':
     USER_nodes = 1 #This should be set to the number of nodes available
     USER_runCfg_type = 'mpi_bulletin'
