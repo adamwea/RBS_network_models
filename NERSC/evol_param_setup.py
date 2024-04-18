@@ -12,7 +12,7 @@ from USER_INPUTS import *
 from USER_evol_param_space import params
 assert USER_seconds, 'USER_seconds must be specified in USER_INPUTS.py'
 seconds = USER_seconds
-print(f"Duration: {seconds} seconds")
+#print(f"Duration: {seconds} seconds")
 params['duration_seconds'] = seconds
 
 # Prepare params for evol batching.
@@ -24,7 +24,7 @@ for key, value in params.items():
         params[key] = [value[0], value[0]]
 
 evol_param_space = params
-print(evol_param_space)
+#print(evol_param_space)
 
 def define_population_params(batch_run_path = None):
     '''

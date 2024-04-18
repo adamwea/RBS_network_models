@@ -1050,3 +1050,20 @@ def plot_network_activity(rasterData, min_peak_distance = 1.0, binSize=0.02*1000
     #if batchpath is not a valid directory or file
     else:
         print(f'Error: {batch_path} is not a valid directory or file')
+
+def get_walltime_per_sim(USER_walltime_per_gen, USER_pop_size, USER_nodes):
+    USER_walltime_per_gen_hours = int(USER_walltime_per_gen.split(':')[0])
+    USER_walltime_per_gen_hours = USER_walltime_per_gen_hours / USER_nodes
+    USER_walltime_per_gen_minutes = int(USER_walltime_per_gen.split(':')[1])
+    USER_walltime_per_gen_minutes = USER_walltime_per_gen_minutes / USER_nodes
+    USER_walltime_per_gen_seconds = int(USER_walltime_per_gen.split(':')[2])
+    USER_walltime_per_gen_seconds = USER_walltime_per_gen_seconds / USER_nodes
+    
+    USER_walltime_per_gen_seconds += USER_walltime_per_gen_minutes*60
+    USER_walltime_per_gen_seconds += USER_walltime_per_gen_hours*3600
+    USER_walltime_per_sim_seconds = USER_walltime_per_gen_seconds/USER_pop_size
+
+    # Convert back to hh:mm:ss
+    hours, remainder = divmod(USER_walltime_per_sim_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))

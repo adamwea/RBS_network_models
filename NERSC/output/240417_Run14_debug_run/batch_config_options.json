@@ -1,0 +1,17 @@
+{
+    "run_path": "/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240417_Run14_debug_run",
+    "batchLabel": "240417_Run14_debug_run",
+    "method": "evol",
+    "cores_per_node": 32,
+    "nodes": 1,
+    "script": "/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/init.py",
+    "pop_size": 8,
+    "max_generations": 5,
+    "time_sleep": 10,
+    "maxiter_wait": 120.0,
+    "skip": false,
+    "num_elites": 80,
+    "cfgFile": "/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/cfg.py",
+    "netParamsFile": "/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/netParams.py",
+    "initCfg": null
+}

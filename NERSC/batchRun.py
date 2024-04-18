@@ -84,6 +84,10 @@ def get_batch_config(batch_config_options = None):
     # Save the dictionary as a JSON file
     #method = 'evol'
 
+    from USER_INPUTS import USER_runCfg_type
+    from USER_INPUTS import USER_walltime
+    from USER_INPUTS import USER_email
+
     batch_config = {
         'batchLabel': batch_label,
         'saveFolder': run_path,
@@ -91,7 +95,7 @@ def get_batch_config(batch_config_options = None):
         'cfgFile': cfgFile,
         'netParamsFile': netParamsFile,
         'runCfg': {
-            'type': 'mpi_bulletin',
+            'type': USER_runCfg_type,
             'script': script,
             'mpiCommand': 'mpirun',
             'nodes': nodes,
@@ -99,6 +103,8 @@ def get_batch_config(batch_config_options = None):
             'allocation': 'default',
             'reservation': None,
             'skip': skip,
+            'email': USER_email,
+            'walltime': USER_walltime,
         },
         'evolCfg': {
             'evolAlgorithm': 'custom',
@@ -181,7 +187,7 @@ def init_batch_cfg():
     logging.info(f'Output path: {output_path}')
 
     ## Load batch_config_options.json    
-    logging.info(f'Batch config options: {batch_config_options}')
+    #logging.info(f'Batch config options: {batch_config_options}')
     batch_run_path = batch_config_options['run_path']
     # Save batch_config in run_path as JSON    
     with open(f'{batch_run_path}/batch_config_options.json', 'w') as f:
