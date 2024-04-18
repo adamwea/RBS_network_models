@@ -157,6 +157,8 @@ def measure_network_activity(rasterData, min_peak_distance = 1.0, binSize=0.02*1
     # Step 3: Peak detection on the smoothed firing rate curve
     rmsFiringRate = np.sqrt(np.mean(firingRate**2))  # Calculate RMS of the firing rate
     peaks, properties = find_peaks(firingRate, height=thresholdBurst * rmsFiringRate, distance=min_peak_distance)  # Find peaks above the threshold
+    
+    #check if peaks are found
     burstPeakTimes = timeVector[peaks]  # Convert peak indices to times
     burstPeakValues = properties['peak_heights']  # Get the peak values
 

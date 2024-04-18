@@ -13,9 +13,17 @@ except: USER_seconds = 1
 USER_method = 'evol'
 #method = 'grid'
 
+## Fitness Params
+#Set paramaeters for convolving raster data into network activity plot
+USER_raster_convolve_params = {
+    'binSize': .03*1000, 
+    'gaussianSigma': .12*1000, 
+    'thresholdBurst': 1.0
+    }
+
 ## Evol Params
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
-USER_pop_size = 8
+USER_pop_size = 6
 USER_max_generations = 5
 USER_time_sleep = 10 #seconds between checking for completed simulations
 USER_maxiter_wait_minutes = 20 #Maximum minutes to wait before new simulation starts before killing generation
@@ -24,7 +32,7 @@ USER_maxiter_wait_minutes = 20 #Maximum minutes to wait before new simulation st
 options = ['local', 'NERSC_evol']
 # 0 - local
 # 1 - NERSC
-option = options[1]
+option = options[0]
 if option == 'local':
     USER_nodes = 1 #This should be set to the number of nodes available
     USER_runCfg_type = 'mpi_bulletin'
