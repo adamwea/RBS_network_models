@@ -46,14 +46,27 @@ elif option == 'NERSC_evol':
     Perlmutter_cores_per_node = 256
     USER_nodes = 1 #This should be set to the number of nodes available    
     USER_runCfg_type = 'hpc_slurm'
-    USER_cores_per_node_per_sim = int((Perlmutter_cores_per_node*USER_nodes)/USER_pop_size) #This should be set to the number of cores desired for each simulation
-    assert USER_cores_per_node_per_sim <= (Perlmutter_cores_per_node*USER_nodes)/USER_pop_size, 'USER_cores_per_node_per_sim must be less than or equal to Perlmutter_cores_per_node'    
+    #1 Sim per Node
+    USER_cores_per_node_per_sim = Perlmutter_cores_per_node #This should be set to the number of cores desired for each simulation
+    #USER_cores_per_node_per_sim = int((Perlmutter_cores_per_node*USER_nodes)/USER_pop_size) #This should be set to the number of cores desired for each simulation
+    #assert USER_cores_per_node_per_sim <= (Perlmutter_cores_per_node*USER_nodes)/USER_pop_size, 'USER_cores_per_node_per_sim must be less than or equal to Perlmutter_cores_per_node'    
     USER_cores_per_node = USER_cores_per_node_per_sim
     USER_walltime_per_gen = '01:00:00' # set this value to the maxiumum walltime allowed to charge
     USER_walltime_per_sim = get_walltime_per_sim(USER_walltime_per_gen, USER_pop_size, USER_nodes)
     USER_walltime = USER_walltime_per_sim    
     USER_email = 'amwe@ucdavis.edu'
-    USER_custom = ''    
+    USER_custom_slurm = f'''
+module load python
+module load conda
+module load openmpi
+conda activate 2DSims
+export OMP_PLACES=cores
+export OMP_PROC_BIND=spread
+export OMP_NUM_THREADS={USER_cores_per_node_per_sim}
+export OMP_DISPLAY_AFFINITY=true
+export OMP_AFFINITY_FORMAT="host=%H, pid=%P, thread_num=%n, thread affinity=%A"
+
+'''    
 else: 
     print('Invalid Parallelization Option')
     sys.exit()

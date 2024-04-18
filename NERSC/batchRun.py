@@ -87,6 +87,7 @@ def get_batch_config(batch_config_options = None):
     from USER_INPUTS import USER_runCfg_type
     from USER_INPUTS import USER_walltime
     from USER_INPUTS import USER_email
+    from USER_INPUTS import USER_custom_slurm
 
     batch_config = {
         'batchLabel': batch_label,
@@ -105,6 +106,7 @@ def get_batch_config(batch_config_options = None):
             'skip': skip,
             'email': USER_email,
             'walltime': USER_walltime,
+            'custom': USER_custom_slurm,
         },
         'evolCfg': {
             'evolAlgorithm': 'custom',
