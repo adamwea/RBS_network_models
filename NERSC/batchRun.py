@@ -219,7 +219,7 @@ if __name__ == '__main__':
     
     ##Run batch
     run_batch = True
-    if run_batch is True:    
+    if run_batch:    
         
         ## Initialize batch_run_cfg
         logging.info(f'Initializing batch config')

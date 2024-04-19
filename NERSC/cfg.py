@@ -8,6 +8,10 @@ cfg.networkType = 'pre13Apr24' #Network used for grant proposal in 01Apr24
 # awa network
 # --------------------------------------------------------
 if cfg.networkType == 'pre13Apr24':
+	##
+	#cache_efficient - Use CVode cache_efficient option to optimize load when running on many cores (default: False)
+	cfg.cache_efficient = True
+
 	#seconds = cfg.duration_seconds
 	#cfg.duration = seconds*1e3           # Duration of the simulation, in ms
 	cfg.dt = 0.025                # Internal integration timestep to use
