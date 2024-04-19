@@ -30,7 +30,7 @@ USER_time_sleep = 10 #seconds between checking for completed simulations
 USER_maxiter_wait_minutes = 20 #Maximum minutes to wait before new simulation starts before killing generation
 
 ## Parallelization
-options = ['local', 'NERSC_evol']
+options = ['local', 'mpidirect', 'hpc_slurm']
 # 0 - local
 # 1 - NERSC
 option = options[1]
@@ -42,7 +42,19 @@ if option == 'local':
     USER_walltime = None
     USER_email = None
     USER_custom = None
-elif option == 'NERSC_evol':
+elif option == 'mpidirect':
+    USER_allocation = None
+    Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
+    USER_nodes = 1 #This should be set to the number of nodes available    
+    USER_runCfg_type = 'mpidirect'
+    USER_cores_per_node_per_sim = Perlmutter_cores_per_node #This should be set to the number of cores desired for each simulation
+    #USER_cores_per_node_per_sim = int((Perlmutter_cores_per_node*USER_nodes)/USER_pop_size) #This should be set to the number of cores desired for each simulation
+    #assert USER_cores_per_node_per_sim <= (Perlmutter_cores_per_node*USER_nodes)/USER_pop_size, 'USER_cores_per_node_per_sim must be less than or equal to Perlmutter_cores_per_node'    
+    USER_cores_per_node = USER_cores_per_node_per_sim
+    USER_walltime = None    
+    USER_email = None
+    USER_custom_slurm = None
+elif option == 'hpc_slurm':
     USER_allocation = 'm2043' #project ID
     Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
     USER_nodes = 1 #This should be set to the number of nodes available    
