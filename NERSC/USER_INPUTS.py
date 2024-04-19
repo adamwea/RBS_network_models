@@ -24,7 +24,7 @@ USER_plot_fitness_bool = False
 
 ## Evol Params
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
-USER_pop_size = 2
+USER_pop_size = 1
 USER_max_generations = 1
 USER_time_sleep = 10 #seconds between checking for completed simulations
 USER_maxiter_wait_minutes = 20 #Maximum minutes to wait before new simulation starts before killing generation
@@ -43,7 +43,7 @@ if option == 'local':
     USER_email = None
     USER_custom = None
 elif option == 'NERSC_evol':
-    Perlmutter_cores_per_node = 256
+    Perlmutter_cores_per_node = 256 #128 physical cores, 256 hyperthreads
     USER_nodes = 1 #This should be set to the number of nodes available    
     USER_runCfg_type = 'hpc_slurm'
     #1 Sim per Node
@@ -55,18 +55,20 @@ elif option == 'NERSC_evol':
     USER_walltime_per_sim = get_walltime_per_sim(USER_walltime_per_gen, USER_pop_size, USER_nodes)
     USER_walltime = USER_walltime_per_sim    
     USER_email = 'amwe@ucdavis.edu'
-    USER_custom_slurm = f'''
+    USER_custom_slurm = f'''#SBATCH -q debug
+
 module load python
 module load conda
 module load openmpi
 conda activate 2DSims
-export OMP_PLACES=cores
-export OMP_PROC_BIND=spread
-export OMP_NUM_THREADS={USER_cores_per_node_per_sim}
-export OMP_DISPLAY_AFFINITY=true
-export OMP_AFFINITY_FORMAT="host=%H, pid=%P, thread_num=%n, thread affinity=%A"
+'''
+# export OMP_PLACES=cores
+# export OMP_PROC_BIND=spread
+# export OMP_NUM_THREADS={USER_cores_per_node_per_sim}
+# export OMP_DISPLAY_AFFINITY=true
+# export OMP_AFFINITY_FORMAT="host=%H, pid=%P, thread_num=%n, thread affinity=%A"
 
-'''    
+# '''    
 else: 
     print('Invalid Parallelization Option')
     sys.exit()
