@@ -43,6 +43,7 @@ if option == 'local':
     USER_email = None
     USER_custom = None
 elif option == 'NERSC_evol':
+    USER_allocation = 'm2043' #project ID
     Perlmutter_cores_per_node = 256 #128 physical cores, 256 hyperthreads
     USER_nodes = 1 #This should be set to the number of nodes available    
     USER_runCfg_type = 'hpc_slurm'
@@ -51,11 +52,14 @@ elif option == 'NERSC_evol':
     #USER_cores_per_node_per_sim = int((Perlmutter_cores_per_node*USER_nodes)/USER_pop_size) #This should be set to the number of cores desired for each simulation
     #assert USER_cores_per_node_per_sim <= (Perlmutter_cores_per_node*USER_nodes)/USER_pop_size, 'USER_cores_per_node_per_sim must be less than or equal to Perlmutter_cores_per_node'    
     USER_cores_per_node = USER_cores_per_node_per_sim
-    USER_walltime_per_gen = '01:00:00' # set this value to the maxiumum walltime allowed to charge
+    USER_walltime_per_gen = '00:05:00' # set this value to the maxiumum walltime allowed to charge
     USER_walltime_per_sim = get_walltime_per_sim(USER_walltime_per_gen, USER_pop_size, USER_nodes)
     USER_walltime = USER_walltime_per_sim    
     USER_email = 'amwe@ucdavis.edu'
-    USER_custom_slurm = f'''#SBATCH -q debug
+    USER_custom_slurm = f'''
+##Custom SLURM Options
+#SBATCH -q regular
+#SBATCH -C cpu
 
 module load python
 module load conda

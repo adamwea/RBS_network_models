@@ -22,7 +22,7 @@ import os
 import pickle
 
 ## NetPyne Imports
-#sys.path.insert(0, '/mnt/disk15tb/adam/git_workspace/netpyne_2DNetworkSimulations/netpyne')
+#sys.path.insert(0, 'netpyne')
 from netpyne import specs
 from netpyne.batch import Batch
 
@@ -88,6 +88,7 @@ def get_batch_config(batch_config_options = None):
     from USER_INPUTS import USER_walltime
     from USER_INPUTS import USER_email
     from USER_INPUTS import USER_custom_slurm
+    from USER_INPUTS import USER_allocation
 
     batch_config = {
         'batchLabel': batch_label,
@@ -101,7 +102,7 @@ def get_batch_config(batch_config_options = None):
             'mpiCommand': 'mpirun',
             'nodes': nodes,
             'coresPerNode': cores_per_node,
-            'allocation': 'default',
+            'allocation': USER_allocation,
             'reservation': None,
             'skip': skip,
             'email': USER_email,

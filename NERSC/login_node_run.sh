@@ -1,4 +1,4 @@
-module load python/3.9
+#module load python/3.9
 module load conda
 conda activate 2DSims
 

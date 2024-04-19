@@ -10,7 +10,7 @@
 #SBATCH -J 2node_30sec_test
 #SBATCH --mail-user=amwe@ucdavis.edu
 #SBATCH --mail-type=ALL
-#SBATCH -t 02:00:00
+#SBATCH -t 00:30:00
 #SBATCH --ntasks-per-node 32
 #SBATCH --cpus-per-task 8
 #SBATCH --output=NERSC/output/job_outputs/job_output_%j_2node_30sec_test.txt
@@ -32,7 +32,7 @@ export OMP_AFFINITY_FORMAT="host=%H, pid=%P, thread_num=%n, thread affinity=%A"
 mkdir -p NERSC/output/job_outputs
 
 #check alloc
-srun -n 32 -c 8 --cpu-bind=cores check-hybrid.gnu.pm |sort -k4
+#srun -n 32 -c 8 --cpu-bind=cores check-hybrid.gnu.pm |sort -k4
 
 # Execute the application and capture all output
 python3 NERSC/batchRun.py 2node_30sec_test 30
