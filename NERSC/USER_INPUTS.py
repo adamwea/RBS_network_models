@@ -24,7 +24,7 @@ USER_plot_fitness_bool = False
 
 ## Evol Params
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
-USER_pop_size = 32
+USER_pop_size = 8
 USER_max_generations = 5
 USER_time_sleep = 10 #seconds between checking for completed simulations
 USER_maxiter_wait_minutes = 20 #Maximum minutes to wait before new simulation starts before killing generation
@@ -35,6 +35,7 @@ options = ['local', 'mpi_direct', 'hpc_slurm']
 # 1 - NERSC
 option = options[1]
 if option == 'local':
+    USER_mpiCommand = 'mpirun'
     USER_nodes = 1 #This should be set to the number of nodes available
     USER_runCfg_type = 'mpi_bulletin'
     USER_cores_per_node_per_sim = 4 #This should be set to the number of cores desired for each simulation
@@ -43,8 +44,10 @@ if option == 'local':
     USER_email = None
     USER_custom = None
 elif option == 'mpi_direct':
-    USER_allocation = None
-    Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
+    USER_queue = 'debug' #Options: debug, regular, premium
+    USER_mpiCommand = 'mpirun --mca mtl_base_verbose 100'
+    USER_allocation = 'm2043' #project ID
+    Perlmutter_cores_per_node = int(128/USER_pop_size) #128 physical cores, 256 hyperthreads
     USER_nodes = 1 #This should be set to the number of nodes available    
     USER_runCfg_type = 'mpi_direct'
     USER_cores_per_node_per_sim = Perlmutter_cores_per_node #This should be set to the number of cores desired for each simulation
@@ -53,8 +56,11 @@ elif option == 'mpi_direct':
     USER_cores_per_node = USER_cores_per_node_per_sim
     USER_walltime = None    
     USER_email = None
-    USER_custom_slurm = None
+    #USER_custom_slurm = f'srun -n {Perlmutter_cores_per_node*USER_nodes} check-hybrid.gnu.pm | sort -k4,6 #> output.log 2>&1'
+    USER_custom_slurm = f''
+    USER_maxiter_wait_minutes = 5 #Maximum minutes to wait before new simulation starts before killing generation
 elif option == 'hpc_slurm':
+    USER_mpiCommand = 'mpirun'
     USER_allocation = 'm2043' #project ID
     Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
     USER_nodes = 1 #This should be set to the number of nodes available    

@@ -1,0 +1,2487 @@
+Output path: /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/
+Saving batch to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_batch.json ... 
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1150.2001860047874, 1.0, 0.7413900030344556, 0.9198468251601863, 0.4952836345150511, 0.9664929934618196, 0.021717289087779684, 0.02387485664215825, 0.002106476162379771, 0.012309772102379454, 4.334749281597816, 0.21368514609659633, 0.6996517689846156, 1.7506171379260167, 0.8, 6.0, 0.8, 9.0, 0.01577754661268959, 0.013772826398284048, 1221.2220169262482, 0.5178803176389793, 30.0]
+set probLengthConst=1150.2001860047874
+set propVelocity=1.0
+set probIE=0.7413900030344556
+set probEE=0.9198468251601863
+set probII=0.4952836345150511
+set probEI=0.9664929934618196
+set weightEI=0.021717289087779684
+set weightIE=0.02387485664215825
+set weightEE=0.002106476162379771
+set weightII=0.012309772102379454
+set gnabar_E=4.334749281597816
+set gkbar_E=0.21368514609659633
+set gnabar_I=0.6996517689846156
+set gkbar_I=1.7506171379260167
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.01577754661268959
+set Irhythmic_stimWeight=0.013772826398284048
+set rythmic_stiminterval=1221.2220169262482
+set rythmic_stimnoise=0.5178803176389793
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_0_cfg.json ... 
+Submitting job  gen_0_cand_0
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_0_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [329.9124410987538, 1.0, 0.7866635952386107, 0.5691233080062902, 0.31851937810898023, 0.7948269981140278, 0.025450802767646004, 0.08083385914435481, 0.05158101746725521, 0.08195168343293224, 1.1238933198116556, 0.22638307206859976, 1.0512801822741835, 0.21483309879104123, 0.8, 6.0, 0.8, 9.0, 0.009603272013863242, 0.0079981740007278, 2963.2202379323708, 0.2955872140908709, 30.0]
+set probLengthConst=329.9124410987538
+set propVelocity=1.0
+set probIE=0.7866635952386107
+set probEE=0.5691233080062902
+set probII=0.31851937810898023
+set probEI=0.7948269981140278
+set weightEI=0.025450802767646004
+set weightIE=0.08083385914435481
+set weightEE=0.05158101746725521
+set weightII=0.08195168343293224
+set gnabar_E=1.1238933198116556
+set gkbar_E=0.22638307206859976
+set gnabar_I=1.0512801822741835
+set gkbar_I=0.21483309879104123
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.009603272013863242
+set Irhythmic_stimWeight=0.0079981740007278
+set rythmic_stiminterval=2963.2202379323708
+set rythmic_stimnoise=0.2955872140908709
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_1_cfg.json ... 
+Submitting job  gen_0_cand_1
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_1_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1703.9693197111897, 1.0, 0.9217473962951968, 0.33932721701354296, 0.6013346211469511, 0.3927392428944888, 0.07048288353141197, 0.09839433470798568, 0.06205373225547143, 0.00947805412732093, 2.233928629692157, 0.44608462107410796, 0.5026268701251945, 0.9470874338570368, 0.8, 6.0, 0.8, 9.0, 0.0069574405500559735, 0.0038728009224887152, 4121.12678201486, 0.5208181312927154, 30.0]
+set probLengthConst=1703.9693197111897
+set propVelocity=1.0
+set probIE=0.9217473962951968
+set probEE=0.33932721701354296
+set probII=0.6013346211469511
+set probEI=0.3927392428944888
+set weightEI=0.07048288353141197
+set weightIE=0.09839433470798568
+set weightEE=0.06205373225547143
+set weightII=0.00947805412732093
+set gnabar_E=2.233928629692157
+set gkbar_E=0.44608462107410796
+set gnabar_I=0.5026268701251945
+set gkbar_I=0.9470874338570368
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.0069574405500559735
+set Irhythmic_stimWeight=0.0038728009224887152
+set rythmic_stiminterval=4121.12678201486
+set rythmic_stimnoise=0.5208181312927154
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_2_cfg.json ... 
+Submitting job  gen_0_cand_2
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_2_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [96.7133248264649, 1.0, 0.09792288809041494, 0.20375552653933549, 0.46946882908689647, 0.8529315315751694, 0.07379478961706876, 0.06147112120627763, 0.06250110112620454, 0.08007208887105687, 2.4923331055604425, 0.046782467813254625, 0.5742192392874597, 1.5404115216476393, 0.8, 6.0, 0.8, 9.0, 0.009383680565954565, 0.01412162915550578, 1786.0529137122971, 0.3732323396504604, 30.0]
+set probLengthConst=96.7133248264649
+set propVelocity=1.0
+set probIE=0.09792288809041494
+set probEE=0.20375552653933549
+set probII=0.46946882908689647
+set probEI=0.8529315315751694
+set weightEI=0.07379478961706876
+set weightIE=0.06147112120627763
+set weightEE=0.06250110112620454
+set weightII=0.08007208887105687
+set gnabar_E=2.4923331055604425
+set gkbar_E=0.046782467813254625
+set gnabar_I=0.5742192392874597
+set gkbar_I=1.5404115216476393
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.009383680565954565
+set Irhythmic_stimWeight=0.01412162915550578
+set rythmic_stiminterval=1786.0529137122971
+set rythmic_stimnoise=0.3732323396504604
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_3_cfg.json ... 
+Submitting job  gen_0_cand_3
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_3_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [430.8080995342892, 1.0, 0.9989609571242477, 0.6188422496179582, 0.7276695135427973, 0.2431804129142905, 0.051615756074251555, 0.04760237808426201, 0.040862138995281544, 0.0019540831136896633, 1.9962030295318982, 0.445439922807045, 1.2398523241826083, 1.7712502593544772, 0.8, 6.0, 0.8, 9.0, 0.006265575640323356, 0.007777737007130299, 2683.8008658331737, 0.13040340390172603, 30.0]
+set probLengthConst=430.8080995342892
+set propVelocity=1.0
+set probIE=0.9989609571242477
+set probEE=0.6188422496179582
+set probII=0.7276695135427973
+set probEI=0.2431804129142905
+set weightEI=0.051615756074251555
+set weightIE=0.04760237808426201
+set weightEE=0.040862138995281544
+set weightII=0.0019540831136896633
+set gnabar_E=1.9962030295318982
+set gkbar_E=0.445439922807045
+set gnabar_I=1.2398523241826083
+set gkbar_I=1.7712502593544772
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.006265575640323356
+set Irhythmic_stimWeight=0.007777737007130299
+set rythmic_stiminterval=2683.8008658331737
+set rythmic_stimnoise=0.13040340390172603
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_4_cfg.json ... 
+Submitting job  gen_0_cand_4
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_4_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1357.5100315732716, 1.0, 0.5764130543823358, 0.6302291888717585, 0.13221435077859212, 0.14411429588022862, 0.010046982568371013, 0.034661478115504206, 0.015332337339377304, 0.0063842773240584995, 1.8132970935761632, 0.4327720232375379, 0.5761867852547409, 0.9459626534585134, 0.8, 6.0, 0.8, 9.0, 0.003905646592305814, 0.0009365592001512902, 3493.8711403212515, 0.5369765910817313, 30.0]
+set probLengthConst=1357.5100315732716
+set propVelocity=1.0
+set probIE=0.5764130543823358
+set probEE=0.6302291888717585
+set probII=0.13221435077859212
+set probEI=0.14411429588022862
+set weightEI=0.010046982568371013
+set weightIE=0.034661478115504206
+set weightEE=0.015332337339377304
+set weightII=0.0063842773240584995
+set gnabar_E=1.8132970935761632
+set gkbar_E=0.4327720232375379
+set gnabar_I=0.5761867852547409
+set gkbar_I=0.9459626534585134
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.003905646592305814
+set Irhythmic_stimWeight=0.0009365592001512902
+set rythmic_stiminterval=3493.8711403212515
+set rythmic_stimnoise=0.5369765910817313
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_5_cfg.json ... 
+Submitting job  gen_0_cand_5
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_5_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [916.0728314738913, 1.0, 0.8453263450540482, 0.14150132771193347, 0.5140916953866738, 0.3734377527550864, 0.0190126181661946, 0.06911605608124255, 0.05614006117951203, 0.06717473863892677, 3.1883859730286215, 0.4441971940867508, 1.1319480363914347, 1.8876080877423242, 0.8, 6.0, 0.8, 9.0, 0.0009097767259597389, 0.014627309905250754, 4214.092708447699, 0.4055355767653381, 30.0]
+set probLengthConst=916.0728314738913
+set propVelocity=1.0
+set probIE=0.8453263450540482
+set probEE=0.14150132771193347
+set probII=0.5140916953866738
+set probEI=0.3734377527550864
+set weightEI=0.0190126181661946
+set weightIE=0.06911605608124255
+set weightEE=0.05614006117951203
+set weightII=0.06717473863892677
+set gnabar_E=3.1883859730286215
+set gkbar_E=0.4441971940867508
+set gnabar_I=1.1319480363914347
+set gkbar_I=1.8876080877423242
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.0009097767259597389
+set Irhythmic_stimWeight=0.014627309905250754
+set rythmic_stiminterval=4214.092708447699
+set rythmic_stimnoise=0.4055355767653381
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_6_cfg.json ... 
+Submitting job  gen_0_cand_6
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_6_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1782.6483675595773, 1.0, 0.6514351301093055, 0.601870540376124, 0.4190827327891309, 0.23725575539956245, 0.08664791362786563, 0.026471362050881596, 0.041410860751312284, 0.020473589256245973, 1.5204866034491482, 0.4355806196011829, 0.542348061984685, 1.572413953108417, 0.8, 6.0, 0.8, 9.0, 0.011975688959608282, 0.006839670145385508, 173.72107077541054, 0.2894025439340849, 30.0]
+set probLengthConst=1782.6483675595773
+set propVelocity=1.0
+set probIE=0.6514351301093055
+set probEE=0.601870540376124
+set probII=0.4190827327891309
+set probEI=0.23725575539956245
+set weightEI=0.08664791362786563
+set weightIE=0.026471362050881596
+set weightEE=0.041410860751312284
+set weightII=0.020473589256245973
+set gnabar_E=1.5204866034491482
+set gkbar_E=0.4355806196011829
+set gnabar_I=0.542348061984685
+set gkbar_I=1.572413953108417
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.011975688959608282
+set Irhythmic_stimWeight=0.006839670145385508
+set rythmic_stiminterval=173.72107077541054
+set rythmic_stimnoise=0.2894025439340849
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_7_cfg.json ... 
+Submitting job  gen_0_cand_7
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_7_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+Waiting for jobs from generation 0/5 ...
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.081, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 1041.111, Fitness: 2.761
+Calculating baseline fit...
+baseline: 0.068, Fitness: 2.598
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.004, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.935, Fitness: 37.011
+Calculating firing rate fit...
+  E rate=0.0 fit=1000; I rate=2.0 fit=16
+Average Fitness: 364.5078311792578
+Average Scaled Fitness: 363.8716837324553
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_3_Fitness.json
+  Candidate 3 fitness = 363.9
+completed: 1
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 15.691, Fitness: 1.072
+Calculating IBI fit...
+Average IBI: 630.698, Fitness: 3.293
+Calculating baseline fit...
+baseline: 15.583, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: 0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.000, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.478, Fitness: 963.881
+Calculating firing rate fit...
+  E rate=33.0 fit=1000; I rate=25.9 fit=2
+Average Fitness: 495.7142920878137
+Average Scaled Fitness: 495.2094032832293
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_1_Fitness.json
+  Candidate 1 fitness = 495.2
+completed: 2
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 17.612, Fitness: 1.304
+Calculating IBI fit...
+Average IBI: 997.500, Fitness: 2.807
+Calculating baseline fit...
+baseline: 17.353, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.007, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.975, Fitness: 47.119
+Calculating firing rate fit...
+  E rate=47.9 fit=1000; I rate=13.6 fit=5
+Average Fitness: 364.97175467370863
+Average Scaled Fitness: 364.3357784473209
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_4_Fitness.json
+  Candidate 4 fitness = 364.3
+completed: 3
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.038, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 822.500, Fitness: 3.022
+Calculating baseline fit...
+baseline: 0.029, Fitness: 2.667
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.001, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.235, Fitness: 223.053
+Calculating firing rate fit...
+  E rate=0.0 fit=1000; I rate=0.4 fit=1000
+Average Fitness: 461.39166467714716
+Average Scaled Fitness: 460.8525133986412
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_6_Fitness.json
+  Candidate 6 fitness = 460.9
+completed: 4
+completed: 4
+completed: 4
+completed: 4
+completed: 4
+completed: 4
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 15.275, Fitness: 1.451
+Calculating IBI fit...
+Average IBI: 1230.000, Fitness: 2.533
+Calculating baseline fit...
+baseline: 12.322, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: -0.001, Fitness: 1.002
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.042, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.101, Fitness: 1000.000
+Calculating firing rate fit...
+  E rate=31.4 fit=1000; I rate=7.1 fit=10
+Average Fitness: 501.4174084349079
+Average Scaled Fitness: 500.9174795657803
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_5_Fitness.json
+  Candidate 5 fitness = 500.9
+completed: 5
+completed: 5
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 36.710, Fitness: 8.767
+Calculating IBI fit...
+Average IBI: 500.625, Fitness: 3.506
+Calculating baseline fit...
+baseline: 36.680, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: 0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.000, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.648, Fitness: 1000.000
+Calculating firing rate fit...
+  E rate=74.3 fit=1000; I rate=1.6 fit=1000
+Average Fitness: 573.3247475214785
+Average Scaled Fitness: 572.8976103118003
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_0_Fitness.json
+  Candidate 0 fitness = 572.9
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 13.883, Fitness: 1.643
+Calculating IBI fit...
+Average IBI: 3120.000, Fitness: 1.062
+Calculating baseline fit...
+baseline: 8.854, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: -0.001, Fitness: 1.002
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.088, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.067, Fitness: 1000.000
+Calculating firing rate fit...
+  E rate=23.8 fit=673; I rate=7.3 fit=10
+Average Fitness: 477.83356100089617
+Average Scaled Fitness: 477.30992174407237
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_0/gen_0_cand_2_Fitness.json
+  Candidate 2 fitness = 477.3
+completed: 7
+Max iterations reached, the 3 unfinished jobs will be canceled and set to default fitness
+--------------------------------------------------------------------------------
+  Completed a generation  
+--------------------------------------------------------------------------------
+Generation Evaluation      Worst       Best     Median    Average    Std Dev
+---------- ---------- ---------- ---------- ---------- ---------- ----------
+         0          8       1000 363.871683 498.063441 648.148357 276.791557
+
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [281.94854369691916, 1.0, 0.4576405236739453, 0.508595467458767, 0.020738187251549745, 0.9793988849698364, 0.050047451905122574, 0.09012534068648023, 0.09793256256066402, 0.08867584844741154, 0.30411683713481286, 0.3262621524619951, 0.4814899906928627, 1.6255126116502536, 0.8, 6.0, 0.8, 9.0, 0.015662809143958782, 0.013151449858558832, 4862.278065138028, 0.5252090311534044, 30.0]
+set probLengthConst=281.94854369691916
+set propVelocity=1.0
+set probIE=0.4576405236739453
+set probEE=0.508595467458767
+set probII=0.020738187251549745
+set probEI=0.9793988849698364
+set weightEI=0.050047451905122574
+set weightIE=0.09012534068648023
+set weightEE=0.09793256256066402
+set weightII=0.08867584844741154
+set gnabar_E=0.30411683713481286
+set gkbar_E=0.3262621524619951
+set gnabar_I=0.4814899906928627
+set gkbar_I=1.6255126116502536
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.015662809143958782
+set Irhythmic_stimWeight=0.013151449858558832
+set rythmic_stiminterval=4862.278065138028
+set rythmic_stimnoise=0.5252090311534044
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_0_cfg.json ... 
+Submitting job  gen_1_cand_0
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_0_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1050.966568748955, 1.0, 0.7970016079949315, 0.030130472414909293, 0.15973382736772385, 0.05365006674383632, 0.007937790727346797, 0.03159083258072558, 0.09899100387931614, 0.0689514002518008, 3.4450465793457496, 0.1066774678820211, 0.38874753481664925, 1.8726469640317507, 0.8, 6.0, 0.8, 9.0, 0.009248733243484122, 0.0010049561376237136, 4779.084893853807, 0.44109461913729275, 30.0]
+set probLengthConst=1050.966568748955
+set propVelocity=1.0
+set probIE=0.7970016079949315
+set probEE=0.030130472414909293
+set probII=0.15973382736772385
+set probEI=0.05365006674383632
+set weightEI=0.007937790727346797
+set weightIE=0.03159083258072558
+set weightEE=0.09899100387931614
+set weightII=0.0689514002518008
+set gnabar_E=3.4450465793457496
+set gkbar_E=0.1066774678820211
+set gnabar_I=0.38874753481664925
+set gkbar_I=1.8726469640317507
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.009248733243484122
+set Irhythmic_stimWeight=0.0010049561376237136
+set rythmic_stiminterval=4779.084893853807
+set rythmic_stimnoise=0.44109461913729275
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_1_cfg.json ... 
+Submitting job  gen_1_cand_1
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_1_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [972.153270635839, 1.0, 0.4894703405811279, 0.4603140034918576, 0.7062778924812113, 0.8991247706629845, 0.048544421389111636, 0.08839407797279192, 0.0814115159447775, 0.09303123348813393, 2.518961036070664, 0.08476465818434396, 0.2437266128926815, 0.06094392538042717, 0.8, 6.0, 0.8, 9.0, 0.007929621687458185, 0.0024646606407057623, 3814.152080711715, 0.08793670482337163, 30.0]
+set probLengthConst=972.153270635839
+set propVelocity=1.0
+set probIE=0.4894703405811279
+set probEE=0.4603140034918576
+set probII=0.7062778924812113
+set probEI=0.8991247706629845
+set weightEI=0.048544421389111636
+set weightIE=0.08839407797279192
+set weightEE=0.0814115159447775
+set weightII=0.09303123348813393
+set gnabar_E=2.518961036070664
+set gkbar_E=0.08476465818434396
+set gnabar_I=0.2437266128926815
+set gkbar_I=0.06094392538042717
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.007929621687458185
+set Irhythmic_stimWeight=0.0024646606407057623
+set rythmic_stiminterval=3814.152080711715
+set rythmic_stimnoise=0.08793670482337163
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_2_cfg.json ... 
+Submitting job  gen_1_cand_2
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_2_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1913.8791647966113, 1.0, 0.07172729016164059, 0.4234391292519496, 0.30813606259955223, 0.0631692502958714, 0.022868905413794514, 0.024588108992374687, 0.025465522326895963, 0.018772319243635288, 1.6882374725741234, 0.08780439138481583, 1.1587760820933615, 1.773264198423138, 0.8, 6.0, 0.8, 9.0, 0.017832398928399877, 0.018244822186852902, 1403.0494969635906, 0.25716176906269883, 30.0]
+set probLengthConst=1913.8791647966113
+set propVelocity=1.0
+set probIE=0.07172729016164059
+set probEE=0.4234391292519496
+set probII=0.30813606259955223
+set probEI=0.0631692502958714
+set weightEI=0.022868905413794514
+set weightIE=0.024588108992374687
+set weightEE=0.025465522326895963
+set weightII=0.018772319243635288
+set gnabar_E=1.6882374725741234
+set gkbar_E=0.08780439138481583
+set gnabar_I=1.1587760820933615
+set gkbar_I=1.773264198423138
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.017832398928399877
+set Irhythmic_stimWeight=0.018244822186852902
+set rythmic_stiminterval=1403.0494969635906
+set rythmic_stimnoise=0.25716176906269883
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_3_cfg.json ... 
+Submitting job  gen_1_cand_3
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_3_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1848.767823009747, 1.0, 0.6194211723071112, 0.2502131452393518, 0.7211461066846729, 0.5564970748147533, 0.045014250838937016, 0.005070043283681949, 0.09573085031512599, 0.004664706941163518, 0.5062691057119457, 0.44913780655781455, 0.38585740358003195, 0.7774788625121547, 0.8, 6.0, 0.8, 9.0, 0.0006519539278669877, 0.017013774260495725, 2039.9045553812293, 0.4199012630261548, 30.0]
+set probLengthConst=1848.767823009747
+set propVelocity=1.0
+set probIE=0.6194211723071112
+set probEE=0.2502131452393518
+set probII=0.7211461066846729
+set probEI=0.5564970748147533
+set weightEI=0.045014250838937016
+set weightIE=0.005070043283681949
+set weightEE=0.09573085031512599
+set weightII=0.004664706941163518
+set gnabar_E=0.5062691057119457
+set gkbar_E=0.44913780655781455
+set gnabar_I=0.38585740358003195
+set gkbar_I=0.7774788625121547
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.0006519539278669877
+set Irhythmic_stimWeight=0.017013774260495725
+set rythmic_stiminterval=2039.9045553812293
+set rythmic_stimnoise=0.4199012630261548
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_4_cfg.json ... 
+Submitting job  gen_1_cand_4
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_4_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1841.9182367860608, 1.0, 0.19775670188900424, 0.5393370171142984, 0.30576936483267536, 0.13233936690797715, 0.052359334897841774, 0.022431111995928676, 0.0758119413438859, 0.07942956668123798, 3.7468499825548847, 0.021374066198470654, 0.5902827298123441, 0.33934770392066627, 0.8, 6.0, 0.8, 9.0, 0.0035697199443382606, 0.01699548543135024, 4966.401437292989, 0.25523461057990954, 30.0]
+set probLengthConst=1841.9182367860608
+set propVelocity=1.0
+set probIE=0.19775670188900424
+set probEE=0.5393370171142984
+set probII=0.30576936483267536
+set probEI=0.13233936690797715
+set weightEI=0.052359334897841774
+set weightIE=0.022431111995928676
+set weightEE=0.0758119413438859
+set weightII=0.07942956668123798
+set gnabar_E=3.7468499825548847
+set gkbar_E=0.021374066198470654
+set gnabar_I=0.5902827298123441
+set gkbar_I=0.33934770392066627
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.0035697199443382606
+set Irhythmic_stimWeight=0.01699548543135024
+set rythmic_stiminterval=4966.401437292989
+set rythmic_stimnoise=0.25523461057990954
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_5_cfg.json ... 
+Submitting job  gen_1_cand_5
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_5_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1002.3783471683308, 1.0, 0.44501853588402907, 0.2756510708870679, 0.4271196717830887, 0.902757577812824, 0.09430706792512207, 0.029562586405382937, 0.07241395686586322, 0.058322105628054594, 4.56195685661383, 0.13202927254794522, 1.4285089851987909, 0.6629508756497373, 0.8, 6.0, 0.8, 9.0, 0.01434172351506035, 0.01193606753388416, 4868.687089091327, 0.43064226066390265, 30.0]
+set probLengthConst=1002.3783471683308
+set propVelocity=1.0
+set probIE=0.44501853588402907
+set probEE=0.2756510708870679
+set probII=0.4271196717830887
+set probEI=0.902757577812824
+set weightEI=0.09430706792512207
+set weightIE=0.029562586405382937
+set weightEE=0.07241395686586322
+set weightII=0.058322105628054594
+set gnabar_E=4.56195685661383
+set gkbar_E=0.13202927254794522
+set gnabar_I=1.4285089851987909
+set gkbar_I=0.6629508756497373
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.01434172351506035
+set Irhythmic_stimWeight=0.01193606753388416
+set rythmic_stiminterval=4868.687089091327
+set rythmic_stimnoise=0.43064226066390265
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_6_cfg.json ... 
+Submitting job  gen_1_cand_6
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_6_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [834.8325980603611, 1.0, 0.0024756731829565504, 0.8478448434504132, 0.9737838707444841, 0.16002274306432387, 0.0011149850322776447, 0.029718062284370142, 0.003728535335943091, 0.008113510215126542, 3.833424296637595, 0.1704707625910728, 1.3752274172436487, 0.652566481803243, 0.8, 6.0, 0.8, 9.0, 0.001455738088290426, 0.005488368480778633, 1883.734788014138, 0.29406327220994616, 30.0]
+set probLengthConst=834.8325980603611
+set propVelocity=1.0
+set probIE=0.0024756731829565504
+set probEE=0.8478448434504132
+set probII=0.9737838707444841
+set probEI=0.16002274306432387
+set weightEI=0.0011149850322776447
+set weightIE=0.029718062284370142
+set weightEE=0.003728535335943091
+set weightII=0.008113510215126542
+set gnabar_E=3.833424296637595
+set gkbar_E=0.1704707625910728
+set gnabar_I=1.3752274172436487
+set gkbar_I=0.652566481803243
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.001455738088290426
+set Irhythmic_stimWeight=0.005488368480778633
+set rythmic_stiminterval=1883.734788014138
+set rythmic_stimnoise=0.29406327220994616
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_7_cfg.json ... 
+Submitting job  gen_1_cand_7
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_1/gen_1_cand_7_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+Waiting for jobs from generation 1/5 ...
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+Max iterations reached, the 8 unfinished jobs will be canceled and set to default fitness
+--------------------------------------------------------------------------------
+  Completed a generation  
+--------------------------------------------------------------------------------
+Generation Evaluation      Worst       Best     Median    Average    Std Dev
+---------- ---------- ---------- ---------- ---------- ---------- ----------
+         1         16       1000 363.871683 498.063441 648.148357 276.791557
+
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [70.67066827838815, 1.0, 0.016721828941176617, 0.5569527339278327, 0.8104634570720083, 0.549360504088627, 0.08427955178721232, 0.02213467864964669, 0.04290586632377916, 0.08868991212248419, 0.4031462967800048, 0.07057725866711545, 1.4535185116620508, 1.8167839872870413, 0.8, 6.0, 0.8, 9.0, 0.013142638769869566, 0.012176089945126832, 3791.3836492234386, 0.5840621495927603, 30.0]
+set probLengthConst=70.67066827838815
+set propVelocity=1.0
+set probIE=0.016721828941176617
+set probEE=0.5569527339278327
+set probII=0.8104634570720083
+set probEI=0.549360504088627
+set weightEI=0.08427955178721232
+set weightIE=0.02213467864964669
+set weightEE=0.04290586632377916
+set weightII=0.08868991212248419
+set gnabar_E=0.4031462967800048
+set gkbar_E=0.07057725866711545
+set gnabar_I=1.4535185116620508
+set gkbar_I=1.8167839872870413
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.013142638769869566
+set Irhythmic_stimWeight=0.012176089945126832
+set rythmic_stiminterval=3791.3836492234386
+set rythmic_stimnoise=0.5840621495927603
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_0_cfg.json ... 
+Submitting job  gen_2_cand_0
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_0_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1502.8279483195238, 1.0, 0.6237289845464182, 0.9910880015016987, 0.20271319112378308, 0.48186430356343374, 0.08669643698516721, 0.018654628240183185, 0.07138466509882546, 0.010696928472151104, 1.115794202171103, 0.12778086096763255, 1.3114711756354356, 1.9626879443168206, 0.8, 6.0, 0.8, 9.0, 0.0049334177879289745, 0.017322226026844925, 1929.2181748083758, 0.44908627184173877, 30.0]
+set probLengthConst=1502.8279483195238
+set propVelocity=1.0
+set probIE=0.6237289845464182
+set probEE=0.9910880015016987
+set probII=0.20271319112378308
+set probEI=0.48186430356343374
+set weightEI=0.08669643698516721
+set weightIE=0.018654628240183185
+set weightEE=0.07138466509882546
+set weightII=0.010696928472151104
+set gnabar_E=1.115794202171103
+set gkbar_E=0.12778086096763255
+set gnabar_I=1.3114711756354356
+set gkbar_I=1.9626879443168206
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.0049334177879289745
+set Irhythmic_stimWeight=0.017322226026844925
+set rythmic_stiminterval=1929.2181748083758
+set rythmic_stimnoise=0.44908627184173877
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_1_cfg.json ... 
+Submitting job  gen_2_cand_1
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_1_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [154.14122841596406, 1.0, 0.48001212694125894, 0.42497365736720083, 0.10534250432907065, 0.23403338623433784, 0.0066522108031670645, 0.044717923429801756, 0.03030755026094028, 0.09474609708273023, 2.3188781015618405, 0.30551814148233425, 0.7271768862935813, 1.9516851739168726, 0.8, 6.0, 0.8, 9.0, 0.0006674397478575048, 0.0008779394349726498, 3721.498690291158, 0.4469777270218337, 30.0]
+set probLengthConst=154.14122841596406
+set propVelocity=1.0
+set probIE=0.48001212694125894
+set probEE=0.42497365736720083
+set probII=0.10534250432907065
+set probEI=0.23403338623433784
+set weightEI=0.0066522108031670645
+set weightIE=0.044717923429801756
+set weightEE=0.03030755026094028
+set weightII=0.09474609708273023
+set gnabar_E=2.3188781015618405
+set gkbar_E=0.30551814148233425
+set gnabar_I=0.7271768862935813
+set gkbar_I=1.9516851739168726
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.0006674397478575048
+set Irhythmic_stimWeight=0.0008779394349726498
+set rythmic_stiminterval=3721.498690291158
+set rythmic_stimnoise=0.4469777270218337
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_2_cfg.json ... 
+Submitting job  gen_2_cand_2
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_2_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1656.230553118362, 1.0, 0.34745912522712663, 0.8856578898565034, 0.8035021925035978, 0.3174250220208805, 0.030203192457959223, 0.021766359851592112, 0.011085936970365654, 0.000401993556426109, 0.2718648122650891, 0.46488405661489834, 0.3780845890300547, 0.4906638860278226, 0.8, 6.0, 0.8, 9.0, 0.008958693886609847, 0.006580912005223971, 148.1751050606017, 0.5921889287257521, 30.0]
+set probLengthConst=1656.230553118362
+set propVelocity=1.0
+set probIE=0.34745912522712663
+set probEE=0.8856578898565034
+set probII=0.8035021925035978
+set probEI=0.3174250220208805
+set weightEI=0.030203192457959223
+set weightIE=0.021766359851592112
+set weightEE=0.011085936970365654
+set weightII=0.000401993556426109
+set gnabar_E=0.2718648122650891
+set gkbar_E=0.46488405661489834
+set gnabar_I=0.3780845890300547
+set gkbar_I=0.4906638860278226
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.008958693886609847
+set Irhythmic_stimWeight=0.006580912005223971
+set rythmic_stiminterval=148.1751050606017
+set rythmic_stimnoise=0.5921889287257521
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_3_cfg.json ... 
+Submitting job  gen_2_cand_3
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_3_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [88.67885497955436, 1.0, 0.5591399441204679, 0.6201312432434544, 0.9426732288865636, 0.9372423267738066, 0.06918055781117823, 0.05998058266983129, 0.09256689884155886, 0.0977121824835005, 4.155350795132427, 0.2951294555092083, 0.5537200481839764, 0.9807472233019489, 0.8, 6.0, 0.8, 9.0, 0.01301106474728301, 0.006616881799390966, 1057.5707335679494, 0.5989240226955852, 30.0]
+set probLengthConst=88.67885497955436
+set propVelocity=1.0
+set probIE=0.5591399441204679
+set probEE=0.6201312432434544
+set probII=0.9426732288865636
+set probEI=0.9372423267738066
+set weightEI=0.06918055781117823
+set weightIE=0.05998058266983129
+set weightEE=0.09256689884155886
+set weightII=0.0977121824835005
+set gnabar_E=4.155350795132427
+set gkbar_E=0.2951294555092083
+set gnabar_I=0.5537200481839764
+set gkbar_I=0.9807472233019489
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.01301106474728301
+set Irhythmic_stimWeight=0.006616881799390966
+set rythmic_stiminterval=1057.5707335679494
+set rythmic_stimnoise=0.5989240226955852
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_4_cfg.json ... 
+Submitting job  gen_2_cand_4
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_4_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [290.31696502649083, 1.0, 0.9573114870316719, 0.22986478707287025, 0.08724709796160957, 0.9089594049992955, 0.016465534472869366, 0.042363355270964576, 0.06608094984703673, 0.08626873477596864, 1.8001181223041813, 0.16690896335777816, 0.17950123143498697, 1.0173022869197528, 0.8, 6.0, 0.8, 9.0, 0.010238535271002639, 0.01595591663978593, 4512.501565895823, 0.03627240086938319, 30.0]
+set probLengthConst=290.31696502649083
+set propVelocity=1.0
+set probIE=0.9573114870316719
+set probEE=0.22986478707287025
+set probII=0.08724709796160957
+set probEI=0.9089594049992955
+set weightEI=0.016465534472869366
+set weightIE=0.042363355270964576
+set weightEE=0.06608094984703673
+set weightII=0.08626873477596864
+set gnabar_E=1.8001181223041813
+set gkbar_E=0.16690896335777816
+set gnabar_I=0.17950123143498697
+set gkbar_I=1.0173022869197528
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.010238535271002639
+set Irhythmic_stimWeight=0.01595591663978593
+set rythmic_stiminterval=4512.501565895823
+set rythmic_stimnoise=0.03627240086938319
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_5_cfg.json ... 
+Submitting job  gen_2_cand_5
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_5_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [193.22117461192215, 1.0, 0.9995059635571838, 0.6453354845383408, 0.843765781950334, 0.29819348658789974, 0.006707731345413893, 0.013762717213301044, 0.08250860395191129, 0.07502402505203873, 1.3453172061294745, 0.4473702452902679, 1.374897027405426, 1.9740015716434811, 0.8, 6.0, 0.8, 9.0, 0.0035020867061161753, 0.005348319610032108, 4983.977448391721, 0.3534591665348942, 30.0]
+set probLengthConst=193.22117461192215
+set propVelocity=1.0
+set probIE=0.9995059635571838
+set probEE=0.6453354845383408
+set probII=0.843765781950334
+set probEI=0.29819348658789974
+set weightEI=0.006707731345413893
+set weightIE=0.013762717213301044
+set weightEE=0.08250860395191129
+set weightII=0.07502402505203873
+set gnabar_E=1.3453172061294745
+set gkbar_E=0.4473702452902679
+set gnabar_I=1.374897027405426
+set gkbar_I=1.9740015716434811
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.0035020867061161753
+set Irhythmic_stimWeight=0.005348319610032108
+set rythmic_stiminterval=4983.977448391721
+set rythmic_stimnoise=0.3534591665348942
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_6_cfg.json ... 
+Submitting job  gen_2_cand_6
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_6_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [410.8942795982462, 1.0, 0.9989822955770318, 0.20317290487122153, 0.6119737304422652, 0.6732793688877237, 0.09617573902092465, 0.07964564349624648, 0.014797716341520849, 0.00163291246065509, 3.3938822978898076, 0.4693458214870928, 1.4464895554891435, 1.9471794368770903, 0.8, 6.0, 0.8, 9.0, 0.003143466110777099, 0.004259705390408275, 921.7169392976912, 0.5210956331171137, 30.0]
+set probLengthConst=410.8942795982462
+set propVelocity=1.0
+set probIE=0.9989822955770318
+set probEE=0.20317290487122153
+set probII=0.6119737304422652
+set probEI=0.6732793688877237
+set weightEI=0.09617573902092465
+set weightIE=0.07964564349624648
+set weightEE=0.014797716341520849
+set weightII=0.00163291246065509
+set gnabar_E=3.3938822978898076
+set gkbar_E=0.4693458214870928
+set gnabar_I=1.4464895554891435
+set gkbar_I=1.9471794368770903
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.003143466110777099
+set Irhythmic_stimWeight=0.004259705390408275
+set rythmic_stiminterval=921.7169392976912
+set rythmic_stimnoise=0.5210956331171137
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_7_cfg.json ... 
+Submitting job  gen_2_cand_7
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_7_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+Waiting for jobs from generation 2/5 ...
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 4.133, Fitness: 2.965
+Calculating IBI fit...
+Average IBI: 715.500, Fitness: 3.173
+Calculating baseline fit...
+baseline: 3.779, Fitness: 4.570
+Calculating rate slope fit...
+Slope of firing rate: 0.002, Fitness: 1.004
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.028, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.702, Fitness: 9.140
+Calculating firing rate fit...
+  E rate=1.1 fit=13; I rate=0.9 fit=1000
+Average Fitness: 218.19172873064102
+Average Scaled Fitness: 217.40634018804226
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_0_Fitness.json
+  Candidate 0 fitness = 217.4
+completed: 1
+completed: 1
+Calculating net_actiity_metrics...
+Error calculating network activity metrics.
+Error: Error: rasterData has no elements. burstPeak, baseline, slopeFitness, and IBI fitness set to 1000.
+  Candidate 2 fitness = 1000.0
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 12.238, Fitness: 1.318
+Calculating IBI fit...
+Average IBI: 748.889, Fitness: 3.136
+Calculating baseline fit...
+baseline: 12.105, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: 0.001, Fitness: 1.001
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.001, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.941, Fitness: 38.289
+Calculating firing rate fit...
+  E rate=14.3 fit=15; I rate=5.3 fit=12
+Average Fitness: 293.9022106058269
+Average Scaled Fitness: 293.19463402507967
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_4_Fitness.json
+  Candidate 4 fitness = 293.2
+completed: 3
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 26.016, Fitness: 3.010
+Calculating IBI fit...
+Average IBI: 918.000, Fitness: 2.893
+Calculating baseline fit...
+baseline: 25.836, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.001, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.043, Fitness: 70.549
+Calculating firing rate fit...
+  E rate=22.6 fit=427; I rate=0.0 fit=1000
+Average Fitness: 398.71832949060314
+Average Scaled Fitness: 398.1162837781389
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_5_Fitness.json
+  Candidate 5 fitness = 398.1
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.033, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 852.353, Fitness: 3.011
+Calculating baseline fit...
+baseline: 0.024, Fitness: 2.675
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.002, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.169, Fitness: 150.510
+Calculating firing rate fit...
+  E rate=0.0 fit=1000; I rate=0.4 fit=1000
+Average Fitness: 451.0278820870198
+Average Scaled Fitness: 450.4783534908821
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_6_Fitness.json
+  Candidate 6 fitness = 450.5
+completed: 5
+completed: 5
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 22.334, Fitness: 2.082
+Calculating IBI fit...
+Average IBI: 532.857, Fitness: 3.458
+Calculating baseline fit...
+baseline: 22.243, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: 0.000, Fitness: 1.001
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.002, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.443, Fitness: 781.038
+Calculating firing rate fit...
+  E rate=6.8 fit=1; I rate=17.6 fit=3
+Average Fitness: 398.5684171182765
+Average Scaled Fitness: 397.965844632904
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_7_Fitness.json
+  Candidate 7 fitness = 398.0
+completed: 6
+completed: 6
+completed: 6
+completed: 6
+completed: 6
+completed: 6
+completed: 6
+completed: 6
+completed: 6
+completed: 6
+completed: 6
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.835, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 716.923, Fitness: 3.186
+Calculating baseline fit...
+baseline: 0.808, Fitness: 1.586
+Calculating rate slope fit...
+Slope of firing rate: 0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.001, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.339, Fitness: 416.601
+Calculating firing rate fit...
+  E rate=0.0 fit=1000; I rate=6.6 fit=10
+Average Fitness: 418.2245305928952
+Average Scaled Fitness: 417.64216781766544
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_3_Fitness.json
+  Candidate 3 fitness = 417.6
+completed: 7
+completed: 7
+completed: 7
+completed: 7
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 6.847, Fitness: 2.501
+Calculating IBI fit...
+Average IBI: 1365.000, Fitness: 2.475
+Calculating baseline fit...
+baseline: 3.076, Fitness: 2.859
+Calculating rate slope fit...
+Slope of firing rate: -0.001, Fitness: 1.001
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.179, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.101, Fitness: 1000.000
+Calculating firing rate fit...
+  E rate=24.9 fit=1000; I rate=5.7 fit=11
+Average Fitness: 359.21774792468597
+Average Scaled Fitness: 358.57549573051557
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_2/gen_2_cand_1_Fitness.json
+  Candidate 1 fitness = 358.6
+completed: 8
+--------------------------------------------------------------------------------
+  Completed a generation  
+--------------------------------------------------------------------------------
+Generation Evaluation      Worst       Best     Median    Average    Std Dev
+---------- ---------- ---------- ---------- ---------- ---------- ----------
+         2         24 417.642167 217.406340 364.103731 351.388528 61.7002261
+
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1282.3397798497078, 1.0, 0.932393071950068, 0.8419640119310389, 0.9512389614576834, 0.9410768549330345, 0.030664814856216673, 0.04017475907627992, 0.09255021009341469, 0.09788690563092865, 0.4907390036977395, 0.08920082593291302, 0.45075701212841146, 0.3914159809387159, 0.8, 6.0, 0.8, 9.0, 0.010391558736859876, 0.0016456058654885641, 3468.221826106462, 0.2877185279140072, 30.0]
+set probLengthConst=1282.3397798497078
+set propVelocity=1.0
+set probIE=0.932393071950068
+set probEE=0.8419640119310389
+set probII=0.9512389614576834
+set probEI=0.9410768549330345
+set weightEI=0.030664814856216673
+set weightIE=0.04017475907627992
+set weightEE=0.09255021009341469
+set weightII=0.09788690563092865
+set gnabar_E=0.4907390036977395
+set gkbar_E=0.08920082593291302
+set gnabar_I=0.45075701212841146
+set gkbar_I=0.3914159809387159
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.010391558736859876
+set Irhythmic_stimWeight=0.0016456058654885641
+set rythmic_stiminterval=3468.221826106462
+set rythmic_stimnoise=0.2877185279140072
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_0_cfg.json ... 
+Submitting job  gen_3_cand_0
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_0_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [592.3094791044084, 1.0, 0.44191551797880685, 0.7769259848001756, 0.9507511305554266, 0.6945358297456701, 0.0999717735841359, 0.002413510408277541, 0.09756678138720841, 0.09955540758728491, 0.06305066292420652, 0.27209503690195025, 0.9477681762217117, 0.3389901224885046, 0.8, 6.0, 0.8, 9.0, 0.013683317073734108, 0.004638597241504557, 2025.2507678612146, 0.5993347310933086, 30.0]
+set probLengthConst=592.3094791044084
+set propVelocity=1.0
+set probIE=0.44191551797880685
+set probEE=0.7769259848001756
+set probII=0.9507511305554266
+set probEI=0.6945358297456701
+set weightEI=0.0999717735841359
+set weightIE=0.002413510408277541
+set weightEE=0.09756678138720841
+set weightII=0.09955540758728491
+set gnabar_E=0.06305066292420652
+set gkbar_E=0.27209503690195025
+set gnabar_I=0.9477681762217117
+set gkbar_I=0.3389901224885046
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.013683317073734108
+set Irhythmic_stimWeight=0.004638597241504557
+set rythmic_stiminterval=2025.2507678612146
+set rythmic_stimnoise=0.5993347310933086
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_1_cfg.json ... 
+Submitting job  gen_3_cand_1
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_1_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [67.62167453980533, 1.0, 0.2818476932564005, 0.26592069534128937, 0.7842565042011931, 0.3027329578839077, 0.005185412561606137, 0.001438332861340999, 0.06840521851813608, 0.066601887286467, 1.6764535204167483, 0.4813093762392731, 1.1935192380403707, 1.7892609555051353, 0.8, 6.0, 0.8, 9.0, 0.00702667862473134, 0.01926555942868865, 3851.5650375469286, 0.3455821631877103, 30.0]
+set probLengthConst=67.62167453980533
+set propVelocity=1.0
+set probIE=0.2818476932564005
+set probEE=0.26592069534128937
+set probII=0.7842565042011931
+set probEI=0.3027329578839077
+set weightEI=0.005185412561606137
+set weightIE=0.001438332861340999
+set weightEE=0.06840521851813608
+set weightII=0.066601887286467
+set gnabar_E=1.6764535204167483
+set gkbar_E=0.4813093762392731
+set gnabar_I=1.1935192380403707
+set gkbar_I=1.7892609555051353
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.00702667862473134
+set Irhythmic_stimWeight=0.01926555942868865
+set rythmic_stiminterval=3851.5650375469286
+set rythmic_stimnoise=0.3455821631877103
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_2_cfg.json ... 
+Submitting job  gen_3_cand_2
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_2_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1152.8637922678895, 1.0, 0.9040264270771848, 0.8696408371487373, 0.8769501613187565, 0.012777977631147408, 0.04789251067902938, 0.0664734305070589, 0.07429222504106006, 0.0005537421489083655, 1.4500734091447418, 0.21501628876059142, 1.4924955525816503, 0.3059681802553349, 0.8, 6.0, 0.8, 9.0, 0.002467344022086506, 0.008261528666425764, 2610.2576918031746, 0.5901694335990922, 30.0]
+set probLengthConst=1152.8637922678895
+set propVelocity=1.0
+set probIE=0.9040264270771848
+set probEE=0.8696408371487373
+set probII=0.8769501613187565
+set probEI=0.012777977631147408
+set weightEI=0.04789251067902938
+set weightIE=0.0664734305070589
+set weightEE=0.07429222504106006
+set weightII=0.0005537421489083655
+set gnabar_E=1.4500734091447418
+set gkbar_E=0.21501628876059142
+set gnabar_I=1.4924955525816503
+set gkbar_I=0.3059681802553349
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.002467344022086506
+set Irhythmic_stimWeight=0.008261528666425764
+set rythmic_stiminterval=2610.2576918031746
+set rythmic_stimnoise=0.5901694335990922
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_3_cfg.json ... 
+Submitting job  gen_3_cand_3
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_3_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [963.8143760519038, 1.0, 0.7307578115294721, 0.6266335757668909, 0.8244709634947763, 0.9829530144641139, 0.08903035210414956, 0.053579847528985515, 0.05830015149221147, 0.02607696987640755, 0.026543177002404272, 0.07121593785506901, 1.2913358817516658, 1.3755809963841088, 0.8, 6.0, 0.8, 9.0, 0.01302605971199953, 0.012612532005468535, 4120.22077614048, 0.5985107406835403, 30.0]
+set probLengthConst=963.8143760519038
+set propVelocity=1.0
+set probIE=0.7307578115294721
+set probEE=0.6266335757668909
+set probII=0.8244709634947763
+set probEI=0.9829530144641139
+set weightEI=0.08903035210414956
+set weightIE=0.053579847528985515
+set weightEE=0.05830015149221147
+set weightII=0.02607696987640755
+set gnabar_E=0.026543177002404272
+set gkbar_E=0.07121593785506901
+set gnabar_I=1.2913358817516658
+set gkbar_I=1.3755809963841088
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.01302605971199953
+set Irhythmic_stimWeight=0.012612532005468535
+set rythmic_stiminterval=4120.22077614048
+set rythmic_stimnoise=0.5985107406835403
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_4_cfg.json ... 
+Submitting job  gen_3_cand_4
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_4_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [59.3138215123594, 1.0, 0.008836651591552705, 0.010625400368316051, 0.9263010276751388, 0.6506367615175626, 0.0076015906209827705, 0.09015301260438685, 0.041749944698012895, 0.026437448421967186, 2.5887802554364088, 0.46392489065417714, 1.4680744222207316, 0.6999831240707837, 0.8, 6.0, 0.8, 9.0, 0.015932307316245002, 0.01806174157322291, 4997.926235019382, 0.5851377732986075, 30.0]
+set probLengthConst=59.3138215123594
+set propVelocity=1.0
+set probIE=0.008836651591552705
+set probEE=0.010625400368316051
+set probII=0.9263010276751388
+set probEI=0.6506367615175626
+set weightEI=0.0076015906209827705
+set weightIE=0.09015301260438685
+set weightEE=0.041749944698012895
+set weightII=0.026437448421967186
+set gnabar_E=2.5887802554364088
+set gkbar_E=0.46392489065417714
+set gnabar_I=1.4680744222207316
+set gkbar_I=0.6999831240707837
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.015932307316245002
+set Irhythmic_stimWeight=0.01806174157322291
+set rythmic_stiminterval=4997.926235019382
+set rythmic_stimnoise=0.5851377732986075
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_5_cfg.json ... 
+Submitting job  gen_3_cand_5
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_5_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1793.7359655711398, 1.0, 0.9539704886374523, 0.0679748489962344, 0.020372038327765685, 0.07429726767871453, 0.08944221967610345, 0.06363482264450904, 0.03598949457842107, 0.014320431642395728, 0.9534408434072184, 0.24396362444181724, 0.31956184822469913, 1.9977093008612725, 0.8, 6.0, 0.8, 9.0, 0.01439434012109001, 0.012279948961206546, 1795.6998835952634, 0.5992905210270735, 30.0]
+set probLengthConst=1793.7359655711398
+set propVelocity=1.0
+set probIE=0.9539704886374523
+set probEE=0.0679748489962344
+set probII=0.020372038327765685
+set probEI=0.07429726767871453
+set weightEI=0.08944221967610345
+set weightIE=0.06363482264450904
+set weightEE=0.03598949457842107
+set weightII=0.014320431642395728
+set gnabar_E=0.9534408434072184
+set gkbar_E=0.24396362444181724
+set gnabar_I=0.31956184822469913
+set gkbar_I=1.9977093008612725
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.01439434012109001
+set Irhythmic_stimWeight=0.012279948961206546
+set rythmic_stiminterval=1795.6998835952634
+set rythmic_stimnoise=0.5992905210270735
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_6_cfg.json ... 
+Submitting job  gen_3_cand_6
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_6_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [69.2229631273626, 1.0, 0.008877461614832289, 0.12173535983497147, 0.7392640211988242, 0.43262930732557126, 0.040511488172823386, 0.035847295889669596, 0.08310044537181621, 0.04450468099828568, 4.065000750469844, 0.07746800703167031, 1.4670851752901084, 1.879139874073306, 0.8, 6.0, 0.8, 9.0, 0.01937906390513629, 0.0063127722554395665, 1440.7096380211829, 0.4258446718670804, 30.0]
+set probLengthConst=69.2229631273626
+set propVelocity=1.0
+set probIE=0.008877461614832289
+set probEE=0.12173535983497147
+set probII=0.7392640211988242
+set probEI=0.43262930732557126
+set weightEI=0.040511488172823386
+set weightIE=0.035847295889669596
+set weightEE=0.08310044537181621
+set weightII=0.04450468099828568
+set gnabar_E=4.065000750469844
+set gkbar_E=0.07746800703167031
+set gnabar_I=1.4670851752901084
+set gkbar_I=1.879139874073306
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.01937906390513629
+set Irhythmic_stimWeight=0.0063127722554395665
+set rythmic_stiminterval=1440.7096380211829
+set rythmic_stimnoise=0.4258446718670804
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_7_cfg.json ... 
+Submitting job  gen_3_cand_7
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_7_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+Waiting for jobs from generation 3/5 ...
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.393, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 675.000, Fitness: 3.228
+Calculating baseline fit...
+baseline: 0.353, Fitness: 2.148
+Calculating rate slope fit...
+Slope of firing rate: 0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.005, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.168, Fitness: 149.457
+Calculating firing rate fit...
+  E rate=0.8 fit=1000; I rate=0.6 fit=1000
+Average Fitness: 450.83334898024185
+Average Scaled Fitness: 450.2834799283142
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_2_Fitness.json
+  Candidate 2 fitness = 450.3
+There was an exception evaluating candidate 5: 
+ Expecting value: line 1 column 1 (char 0)
+completed: 1
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.113, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 712.683, Fitness: 3.186
+Calculating baseline fit...
+baseline: 0.097, Fitness: 2.548
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.001, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.401, Fitness: 606.927
+Calculating firing rate fit...
+  E rate=0.2 fit=1000; I rate=0.4 fit=1000
+Average Fitness: 516.2372794683209
+Average Scaled Fitness: 515.7530258038267
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_5_Fitness.json
+  Candidate 5 fitness = 515.8
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.097, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 1050.000, Fitness: 2.717
+Calculating baseline fit...
+baseline: 0.083, Fitness: 2.572
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.002, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.934, Fitness: 36.804
+Calculating firing rate fit...
+  E rate=0.0 fit=1000; I rate=1.1 fit=1000
+Average Fitness: 434.72753765087157
+Average Scaled Fitness: 434.1616909237654
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_7_Fitness.json
+  Candidate 7 fitness = 434.2
+completed: 3
+completed: 3
+completed: 3
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.066, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 799.459, Fitness: 3.062
+Calculating baseline fit...
+baseline: 0.053, Fitness: 2.624
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.001, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.268, Fitness: 272.492
+Calculating firing rate fit...
+  E rate=0.0 fit=1000; I rate=0.5 fit=1000
+Average Fitness: 468.45382515946585
+Average Scaled Fitness: 467.9217421798968
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_1_Fitness.json
+  Candidate 1 fitness = 467.9
+completed: 4
+completed: 4
+completed: 4
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 16.001, Fitness: 1.106
+Calculating IBI fit...
+Average IBI: 842.000, Fitness: 3.067
+Calculating baseline fit...
+baseline: 15.883, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.002, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.042, Fitness: 70.105
+Calculating firing rate fit...
+  E rate=3.0 fit=6; I rate=1.5 fit=1000
+Average Fitness: 368.3372625762349
+Average Scaled Fitness: 367.7047432371965
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_6_Fitness.json
+  Candidate 6 fitness = 367.7
+completed: 5
+There was an exception evaluating candidate 4: 
+ Expecting value: line 1 column 1 (char 0)
+completed: 5
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.041, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 972.000, Fitness: 2.843
+Calculating baseline fit...
+baseline: 0.029, Fitness: 2.666
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.001, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.035, Fitness: 67.520
+Calculating firing rate fit...
+  E rate=0.0 fit=1000; I rate=0.4 fit=1000
+Average Fitness: 439.1470214429483
+Average Scaled Fitness: 438.5856036409218
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_4_Fitness.json
+  Candidate 4 fitness = 438.6
+completed: 6
+completed: 6
+completed: 6
+completed: 6
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 7.921, Fitness: 2.132
+Calculating IBI fit...
+Average IBI: 6577.500, Fitness: 251.653
+Calculating baseline fit...
+baseline: 5.997, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: -0.001, Fitness: 1.001
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.066, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.168, Fitness: 1000.000
+Calculating firing rate fit...
+  E rate=29.2 fit=1000; I rate=7.9 fit=9
+Average Fitness: 537.0474879732334
+Average Scaled Fitness: 536.5834996280144
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_3_Fitness.json
+  Candidate 3 fitness = 536.6
+completed: 7
+completed: 7
+completed: 7
+completed: 7
+completed: 7
+completed: 7
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 5.898, Fitness: 2.618
+Calculating IBI fit...
+Average IBI: 2190.000, Fitness: 1.499
+Calculating baseline fit...
+baseline: 2.018, Fitness: 1.413
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.001
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.128, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.067, Fitness: 1000.000
+Calculating firing rate fit...
+  E rate=15.9 fit=29; I rate=5.7 fit=11
+Average Fitness: 289.49889952450883
+Average Scaled Fitness: 288.78707174806743
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_3/gen_3_cand_0_Fitness.json
+  Candidate 0 fitness = 288.8
+completed: 8
+--------------------------------------------------------------------------------
+  Completed a generation  
+--------------------------------------------------------------------------------
+Generation Evaluation      Worst       Best     Median    Average    Std Dev
+---------- ---------- ---------- ---------- ---------- ---------- ----------
+         3         32 397.965844 217.406340 361.223589 331.480198 55.7861363
+
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [210.53415346490323, 1.0, 0.02224078989362556, 0.7250469726082869, 0.9606271021312687, 0.9469011046269976, 0.005589193587464195, 0.005982100856263654, 0.09602274319259153, 0.007237630401641881, 1.2628374625021923, 0.041683816858704745, 0.244888793445667, 1.1712262675762364, 0.8, 6.0, 0.8, 9.0, 0.004735006444852346, 0.014075163313223829, 2975.877151252611, 0.2618636837262416, 30.0]
+set probLengthConst=210.53415346490323
+set propVelocity=1.0
+set probIE=0.02224078989362556
+set probEE=0.7250469726082869
+set probII=0.9606271021312687
+set probEI=0.9469011046269976
+set weightEI=0.005589193587464195
+set weightIE=0.005982100856263654
+set weightEE=0.09602274319259153
+set weightII=0.007237630401641881
+set gnabar_E=1.2628374625021923
+set gkbar_E=0.041683816858704745
+set gnabar_I=0.244888793445667
+set gkbar_I=1.1712262675762364
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.004735006444852346
+set Irhythmic_stimWeight=0.014075163313223829
+set rythmic_stiminterval=2975.877151252611
+set rythmic_stimnoise=0.2618636837262416
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_0_cfg.json ... 
+Submitting job  gen_4_cand_0
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_0_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [75.34926749753551, 1.0, 0.9876005796173346, 0.06631690440538873, 0.8326460485776819, 0.7725065409422809, 0.012880691482328482, 0.029808216609209574, 0.047823736188952706, 0.020770373105740522, 0.2523513115538789, 0.26574139928616597, 0.30802098869361805, 0.41840517186744264, 0.8, 6.0, 0.8, 9.0, 0.016114852992114785, 0.00040512128711441605, 1248.9943514903948, 0.5378045696488523, 30.0]
+set probLengthConst=75.34926749753551
+set propVelocity=1.0
+set probIE=0.9876005796173346
+set probEE=0.06631690440538873
+set probII=0.8326460485776819
+set probEI=0.7725065409422809
+set weightEI=0.012880691482328482
+set weightIE=0.029808216609209574
+set weightEE=0.047823736188952706
+set weightII=0.020770373105740522
+set gnabar_E=0.2523513115538789
+set gkbar_E=0.26574139928616597
+set gnabar_I=0.30802098869361805
+set gkbar_I=0.41840517186744264
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.016114852992114785
+set Irhythmic_stimWeight=0.00040512128711441605
+set rythmic_stiminterval=1248.9943514903948
+set rythmic_stimnoise=0.5378045696488523
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_1_cfg.json ... 
+Submitting job  gen_4_cand_1
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_1_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1470.4569538153476, 1.0, 0.5164422290747154, 0.38403749809687593, 0.9771431358128595, 0.36670345303168617, 0.09602761081700786, 0.016835765680798656, 0.08160765746889036, 0.047490600387050656, 2.6319102810494233, 0.13332163991194662, 0.5068364760904808, 1.9295774830073673, 0.8, 6.0, 0.8, 9.0, 0.00718199925408323, 0.002648168281391392, 4153.256305594601, 0.18339699742009613, 30.0]
+set probLengthConst=1470.4569538153476
+set propVelocity=1.0
+set probIE=0.5164422290747154
+set probEE=0.38403749809687593
+set probII=0.9771431358128595
+set probEI=0.36670345303168617
+set weightEI=0.09602761081700786
+set weightIE=0.016835765680798656
+set weightEE=0.08160765746889036
+set weightII=0.047490600387050656
+set gnabar_E=2.6319102810494233
+set gkbar_E=0.13332163991194662
+set gnabar_I=0.5068364760904808
+set gkbar_I=1.9295774830073673
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.00718199925408323
+set Irhythmic_stimWeight=0.002648168281391392
+set rythmic_stiminterval=4153.256305594601
+set rythmic_stimnoise=0.18339699742009613
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_2_cfg.json ... 
+Submitting job  gen_4_cand_2
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_2_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1392.040648031181, 1.0, 0.6976230898307435, 0.27784617657264843, 0.21203279462814628, 0.8732649457672026, 0.02185153277968871, 0.01769076058856628, 0.0395761095524468, 0.09556997073563134, 1.7738127235521493, 0.4117636435921517, 1.364701387196336, 1.971719031703025, 0.8, 6.0, 0.8, 9.0, 0.012667176877358612, 0.0180694702320876, 1416.8556515562825, 0.19705152704247053, 30.0]
+set probLengthConst=1392.040648031181
+set propVelocity=1.0
+set probIE=0.6976230898307435
+set probEE=0.27784617657264843
+set probII=0.21203279462814628
+set probEI=0.8732649457672026
+set weightEI=0.02185153277968871
+set weightIE=0.01769076058856628
+set weightEE=0.0395761095524468
+set weightII=0.09556997073563134
+set gnabar_E=1.7738127235521493
+set gkbar_E=0.4117636435921517
+set gnabar_I=1.364701387196336
+set gkbar_I=1.971719031703025
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.012667176877358612
+set Irhythmic_stimWeight=0.0180694702320876
+set rythmic_stiminterval=1416.8556515562825
+set rythmic_stimnoise=0.19705152704247053
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_3_cfg.json ... 
+Submitting job  gen_4_cand_3
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_3_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [879.481544847657, 1.0, 0.4120358714408459, 0.1666003144321644, 0.18471499635484936, 0.9769258757011252, 0.03911867532188389, 0.06783169750875573, 0.017046304567517857, 0.08889662525320584, 3.4267564135943536, 0.31997274909022133, 0.06975678949585418, 1.9736697982106457, 0.8, 6.0, 0.8, 9.0, 0.006842392468556833, 0.0011857102486721866, 4590.985715502947, 0.47779739994770826, 30.0]
+set probLengthConst=879.481544847657
+set propVelocity=1.0
+set probIE=0.4120358714408459
+set probEE=0.1666003144321644
+set probII=0.18471499635484936
+set probEI=0.9769258757011252
+set weightEI=0.03911867532188389
+set weightIE=0.06783169750875573
+set weightEE=0.017046304567517857
+set weightII=0.08889662525320584
+set gnabar_E=3.4267564135943536
+set gkbar_E=0.31997274909022133
+set gnabar_I=0.06975678949585418
+set gkbar_I=1.9736697982106457
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.006842392468556833
+set Irhythmic_stimWeight=0.0011857102486721866
+set rythmic_stiminterval=4590.985715502947
+set rythmic_stimnoise=0.47779739994770826
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_4_cfg.json ... 
+Submitting job  gen_4_cand_4
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_4_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1257.2498440865484, 1.0, 0.3303955752146671, 0.972355385850052, 0.00974878862218076, 0.7636385217923982, 0.01736067380376074, 0.010732041632050026, 0.0452485309296783, 0.07485889784058682, 1.148765678919994, 0.20017019563083566, 0.2206341462307584, 0.18344378956904217, 0.8, 6.0, 0.8, 9.0, 0.008532493755224474, 0.014681700993369948, 2137.7785818767134, 0.06512545106879347, 30.0]
+set probLengthConst=1257.2498440865484
+set propVelocity=1.0
+set probIE=0.3303955752146671
+set probEE=0.972355385850052
+set probII=0.00974878862218076
+set probEI=0.7636385217923982
+set weightEI=0.01736067380376074
+set weightIE=0.010732041632050026
+set weightEE=0.0452485309296783
+set weightII=0.07485889784058682
+set gnabar_E=1.148765678919994
+set gkbar_E=0.20017019563083566
+set gnabar_I=0.2206341462307584
+set gkbar_I=0.18344378956904217
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.008532493755224474
+set Irhythmic_stimWeight=0.014681700993369948
+set rythmic_stiminterval=2137.7785818767134
+set rythmic_stimnoise=0.06512545106879347
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_5_cfg.json ... 
+Submitting job  gen_4_cand_5
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_5_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [62.7410882226069, 1.0, 0.9294612844844549, 0.8354620173078781, 0.8786354226067254, 0.3151272578810882, 0.09795800291056958, 0.037507569586877745, 0.04265439328693746, 0.07739001238343202, 2.6318385782231193, 0.014643342220612088, 0.21425348898358065, 0.9693584068952125, 0.8, 6.0, 0.8, 9.0, 0.008200564632666076, 0.00844434009250215, 1114.661150451895, 0.5922956942711077, 30.0]
+set probLengthConst=62.7410882226069
+set propVelocity=1.0
+set probIE=0.9294612844844549
+set probEE=0.8354620173078781
+set probII=0.8786354226067254
+set probEI=0.3151272578810882
+set weightEI=0.09795800291056958
+set weightIE=0.037507569586877745
+set weightEE=0.04265439328693746
+set weightII=0.07739001238343202
+set gnabar_E=2.6318385782231193
+set gkbar_E=0.014643342220612088
+set gnabar_I=0.21425348898358065
+set gkbar_I=0.9693584068952125
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.008200564632666076
+set Irhythmic_stimWeight=0.00844434009250215
+set rythmic_stiminterval=1114.661150451895
+set rythmic_stimnoise=0.5922956942711077
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_6_cfg.json ... 
+Submitting job  gen_4_cand_6
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_6_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [819.7640953419448, 1.0, 0.0011074025972495627, 0.4659204871512935, 0.9791711316321785, 0.07535598450150915, 0.02785012991683975, 0.08031821512054485, 0.09507042518186448, 0.0965313916123168, 4.273861645462954, 0.0704308782976126, 0.09165476022655894, 1.9801586373903084, 0.8, 6.0, 0.8, 9.0, 0.019707216000236175, 0.01760679624786089, 4391.123513610379, 0.1491205834858932, 30.0]
+set probLengthConst=819.7640953419448
+set propVelocity=1.0
+set probIE=0.0011074025972495627
+set probEE=0.4659204871512935
+set probII=0.9791711316321785
+set probEI=0.07535598450150915
+set weightEI=0.02785012991683975
+set weightIE=0.08031821512054485
+set weightEE=0.09507042518186448
+set weightII=0.0965313916123168
+set gnabar_E=4.273861645462954
+set gkbar_E=0.0704308782976126
+set gnabar_I=0.09165476022655894
+set gkbar_I=1.9801586373903084
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.019707216000236175
+set Irhythmic_stimWeight=0.01760679624786089
+set rythmic_stiminterval=4391.123513610379
+set rythmic_stimnoise=0.1491205834858932
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_7_cfg.json ... 
+Submitting job  gen_4_cand_7
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_7_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+Waiting for jobs from generation 4/5 ...
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 6.129, Fitness: 2.429
+Calculating IBI fit...
+Average IBI: 735.385, Fitness: 3.123
+Calculating baseline fit...
+baseline: 5.916, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.003, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.345, Fitness: 433.830
+Calculating firing rate fit...
+  E rate=18.9 fit=96; I rate=0.3 fit=1000
+Average Fitness: 426.91677492233975
+Average Scaled Fitness: 426.3430586266782
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_0_Fitness.json
+  Candidate 0 fitness = 426.3
+completed: 1
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.380, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 858.529, Fitness: 2.979
+Calculating baseline fit...
+baseline: 0.345, Fitness: 2.160
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.001, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.168, Fitness: 149.457
+Calculating firing rate fit...
+  E rate=1.0 fit=1000; I rate=0.9 fit=1000
+Average Fitness: 450.79940028212144
+Average Scaled Fitness: 450.2496360868562
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_1_Fitness.json
+  Candidate 1 fitness = 450.2
+completed: 2
+completed: 2
+Calculating net_actiity_metrics...
+Error calculating network activity metrics.
+Error: zero-size array to reduction operation maximum which has no identity
+  Candidate 6 fitness = 1000.0
+completed: 3
+completed: 3
+completed: 3
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 33.458, Fitness: 6.333
+Calculating IBI fit...
+Average IBI: 578.372, Fitness: 3.381
+Calculating baseline fit...
+baseline: 33.409, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: 0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.000, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.480, Fitness: 972.548
+Calculating firing rate fit...
+  E rate=5.3 fit=2; I rate=0.0 fit=1000
+Average Fitness: 497.77779209538886
+Average Scaled Fitness: 497.27496826960606
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_4_Fitness.json
+  Candidate 4 fitness = 497.3
+completed: 4
+Calculating net_actiity_metrics...
+Error calculating network activity metrics.
+Error: index 0 is out of bounds for axis 0 with size 0
+  Candidate 7 fitness = 1000.0
+completed: 5
+completed: 5
+completed: 5
+completed: 5
+completed: 5
+completed: 5
+completed: 5
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 13.986, Fitness: 1.450
+Calculating IBI fit...
+Average IBI: 4650.000, Fitness: 334.265
+Calculating baseline fit...
+baseline: 11.787, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: -0.001, Fitness: 1.002
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.044, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.135, Fitness: 1000.000
+Calculating firing rate fit...
+  E rate=37.9 fit=1000; I rate=9.7 fit=8
+Average Fitness: 548.6445193476936
+Average Scaled Fitness: 548.1919579743948
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_3_Fitness.json
+  Candidate 3 fitness = 548.2
+completed: 6
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 7.222, Fitness: 2.177
+Calculating IBI fit...
+Average IBI: 940.714, Fitness: 2.855
+Calculating baseline fit...
+baseline: 6.932, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: 0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.010, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.975, Fitness: 47.119
+Calculating firing rate fit...
+  E rate=44.2 fit=1000; I rate=3.6 fit=14
+Average Fitness: 365.7366326123285
+Average Scaled Fitness: 365.10145236163845
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_2_Fitness.json
+  Candidate 2 fitness = 365.1
+completed: 7
+completed: 7
+completed: 7
+completed: 7
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 10.769, Fitness: 1.994
+Calculating IBI fit...
+Average IBI: 2070.000, Fitness: 1.592
+Calculating baseline fit...
+baseline: 4.325, Fitness: 6.577
+Calculating rate slope fit...
+Slope of firing rate: -0.001, Fitness: 1.001
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.180, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.067, Fitness: 1000.000
+Calculating firing rate fit...
+  E rate=32.7 fit=1000; I rate=5.4 fit=12
+Average Fitness: 359.57165817791196
+Average Scaled Fitness: 358.9296595952662
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_4/gen_4_cand_5_Fitness.json
+  Candidate 5 fitness = 358.9
+completed: 8
+--------------------------------------------------------------------------------
+  Completed a generation  
+--------------------------------------------------------------------------------
+Generation Evaluation      Worst       Best     Median    Average    Std Dev
+---------- ---------- ---------- ---------- ---------- ---------- ----------
+         4         40 365.101452 217.406340 358.752577 326.275264 51.0285657
+
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1302.5883426379978, 1.0, 0.977329113402395, 0.5758522255835492, 0.8896093212520944, 0.9690449552300556, 0.09047120067453576, 0.005423740545852948, 0.07424127997250203, 0.031765163887995815, 4.188661216473044, 0.0519442588160795, 0.6202715337772722, 1.425554765466805, 0.8, 6.0, 0.8, 9.0, 0.0016121469390070883, 0.019516853543857054, 509.35199468176165, 0.26214991274675126, 30.0]
+set probLengthConst=1302.5883426379978
+set propVelocity=1.0
+set probIE=0.977329113402395
+set probEE=0.5758522255835492
+set probII=0.8896093212520944
+set probEI=0.9690449552300556
+set weightEI=0.09047120067453576
+set weightIE=0.005423740545852948
+set weightEE=0.07424127997250203
+set weightII=0.031765163887995815
+set gnabar_E=4.188661216473044
+set gkbar_E=0.0519442588160795
+set gnabar_I=0.6202715337772722
+set gkbar_I=1.425554765466805
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.0016121469390070883
+set Irhythmic_stimWeight=0.019516853543857054
+set rythmic_stiminterval=509.35199468176165
+set rythmic_stimnoise=0.26214991274675126
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_0_cfg.json ... 
+Submitting job  gen_5_cand_0
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_0_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [912.5856495140865, 1.0, 0.5300441853603824, 0.9931323622678067, 0.027263012198326192, 0.7920997879813744, 0.05695934612965789, 0.0074149195198332015, 0.015380553631164008, 0.005529125152017582, 0.38361115958104286, 0.003992006810487725, 1.4681934606537699, 1.150572757377924, 0.8, 6.0, 0.8, 9.0, 0.004750624278506111, 0.003702628562391756, 1741.8890497142074, 0.01891713348237572, 30.0]
+set probLengthConst=912.5856495140865
+set propVelocity=1.0
+set probIE=0.5300441853603824
+set probEE=0.9931323622678067
+set probII=0.027263012198326192
+set probEI=0.7920997879813744
+set weightEI=0.05695934612965789
+set weightIE=0.0074149195198332015
+set weightEE=0.015380553631164008
+set weightII=0.005529125152017582
+set gnabar_E=0.38361115958104286
+set gkbar_E=0.003992006810487725
+set gnabar_I=1.4681934606537699
+set gkbar_I=1.150572757377924
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.004750624278506111
+set Irhythmic_stimWeight=0.003702628562391756
+set rythmic_stiminterval=1741.8890497142074
+set rythmic_stimnoise=0.01891713348237572
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_1_cfg.json ... 
+Submitting job  gen_5_cand_1
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_1_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [65.62909563767519, 1.0, 0.01500323616197472, 0.21412873242628955, 0.8906306373739634, 0.6377955391944914, 0.013251743393742826, 0.022376618275126083, 0.07140172191491401, 0.01941311755944297, 0.11814916348195703, 0.09998662566529337, 1.4660889483024329, 1.8427291300104178, 0.8, 6.0, 0.8, 9.0, 0.015688432977132974, 0.013206175891658133, 3816.5427139718176, 0.38030495292021993, 30.0]
+set probLengthConst=65.62909563767519
+set propVelocity=1.0
+set probIE=0.01500323616197472
+set probEE=0.21412873242628955
+set probII=0.8906306373739634
+set probEI=0.6377955391944914
+set weightEI=0.013251743393742826
+set weightIE=0.022376618275126083
+set weightEE=0.07140172191491401
+set weightII=0.01941311755944297
+set gnabar_E=0.11814916348195703
+set gkbar_E=0.09998662566529337
+set gnabar_I=1.4660889483024329
+set gkbar_I=1.8427291300104178
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.015688432977132974
+set Irhythmic_stimWeight=0.013206175891658133
+set rythmic_stiminterval=3816.5427139718176
+set rythmic_stimnoise=0.38030495292021993
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_2_cfg.json ... 
+Submitting job  gen_5_cand_2
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_2_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1472.9839537790801, 1.0, 0.012890789056195178, 0.7149964655326375, 0.4256913339489925, 0.8679893265865062, 0.038148546685047455, 0.03948309591159469, 0.014653848120691579, 0.07526468988597097, 1.88984907499565, 0.00833032828833443, 1.0137375625408276, 0.2659619943499003, 0.8, 6.0, 0.8, 9.0, 0.003165095665283885, 0.013326177091288739, 3396.7674741740007, 0.3204422172052739, 30.0]
+set probLengthConst=1472.9839537790801
+set propVelocity=1.0
+set probIE=0.012890789056195178
+set probEE=0.7149964655326375
+set probII=0.4256913339489925
+set probEI=0.8679893265865062
+set weightEI=0.038148546685047455
+set weightIE=0.03948309591159469
+set weightEE=0.014653848120691579
+set weightII=0.07526468988597097
+set gnabar_E=1.88984907499565
+set gkbar_E=0.00833032828833443
+set gnabar_I=1.0137375625408276
+set gkbar_I=0.2659619943499003
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.003165095665283885
+set Irhythmic_stimWeight=0.013326177091288739
+set rythmic_stiminterval=3396.7674741740007
+set rythmic_stimnoise=0.3204422172052739
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_3_cfg.json ... 
+Submitting job  gen_5_cand_3
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_3_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [54.13933107858708, 1.0, 0.4002320185272588, 0.9971388199973702, 0.179352893019039, 0.9466058561790975, 0.07618722607389528, 0.00748802700529832, 0.030658993405287063, 0.007867609602409996, 4.452406329669442, 0.03121937028538231, 0.7766143947864477, 0.16558787311515677, 0.8, 6.0, 0.8, 9.0, 0.008260476721893242, 0.003837295269197921, 1774.1097096323122, 0.5992389261704401, 30.0]
+set probLengthConst=54.13933107858708
+set propVelocity=1.0
+set probIE=0.4002320185272588
+set probEE=0.9971388199973702
+set probII=0.179352893019039
+set probEI=0.9466058561790975
+set weightEI=0.07618722607389528
+set weightIE=0.00748802700529832
+set weightEE=0.030658993405287063
+set weightII=0.007867609602409996
+set gnabar_E=4.452406329669442
+set gkbar_E=0.03121937028538231
+set gnabar_I=0.7766143947864477
+set gkbar_I=0.16558787311515677
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.008260476721893242
+set Irhythmic_stimWeight=0.003837295269197921
+set rythmic_stiminterval=1774.1097096323122
+set rythmic_stimnoise=0.5992389261704401
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_4_cfg.json ... 
+Submitting job  gen_5_cand_4
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_4_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1802.3067855266952, 1.0, 0.48669624059307903, 0.0339528996025833, 0.4426503520076405, 0.9516037410039972, 0.05380277069400228, 0.04504540174326245, 0.03155588960253975, 0.09778324620195503, 4.525203015361537, 0.1876693403894431, 1.4395525915925507, 1.7265040265212799, 0.8, 6.0, 0.8, 9.0, 0.010417789542928796, 0.018108805219278296, 4679.346897405065, 0.5842540548236601, 30.0]
+set probLengthConst=1802.3067855266952
+set propVelocity=1.0
+set probIE=0.48669624059307903
+set probEE=0.0339528996025833
+set probII=0.4426503520076405
+set probEI=0.9516037410039972
+set weightEI=0.05380277069400228
+set weightIE=0.04504540174326245
+set weightEE=0.03155588960253975
+set weightII=0.09778324620195503
+set gnabar_E=4.525203015361537
+set gkbar_E=0.1876693403894431
+set gnabar_I=1.4395525915925507
+set gkbar_I=1.7265040265212799
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.010417789542928796
+set Irhythmic_stimWeight=0.018108805219278296
+set rythmic_stiminterval=4679.346897405065
+set rythmic_stimnoise=0.5842540548236601
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_5_cfg.json ... 
+Submitting job  gen_5_cand_5
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_5_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [71.37459885788235, 1.0, 0.9657051542334071, 0.9571997462581889, 0.6792746888738377, 0.9564701393707714, 0.02641404761249139, 0.0073049084140917354, 0.040781679284331775, 0.0839584343177702, 0.5573289862129253, 0.06793750598231177, 0.21787138699590622, 0.7360373382180491, 0.8, 6.0, 0.8, 9.0, 0.009635506222345575, 0.0015420149376788753, 4299.964350371037, 0.2895042896021885, 30.0]
+set probLengthConst=71.37459885788235
+set propVelocity=1.0
+set probIE=0.9657051542334071
+set probEE=0.9571997462581889
+set probII=0.6792746888738377
+set probEI=0.9564701393707714
+set weightEI=0.02641404761249139
+set weightIE=0.0073049084140917354
+set weightEE=0.040781679284331775
+set weightII=0.0839584343177702
+set gnabar_E=0.5573289862129253
+set gkbar_E=0.06793750598231177
+set gnabar_I=0.21787138699590622
+set gkbar_I=0.7360373382180491
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.009635506222345575
+set Irhythmic_stimWeight=0.0015420149376788753
+set rythmic_stiminterval=4299.964350371037
+set rythmic_stimnoise=0.2895042896021885
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_6_cfg.json ... 
+Submitting job  gen_5_cand_6
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_6_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'Erhythmic_stimWeight', 'Irhythmic_stimWeight', 'rythmic_stiminterval', 'rythmic_stimnoise', 'duration_seconds'] [1570.4801966782854, 1.0, 0.0021888021289542797, 0.9819927348156885, 0.8823257903739355, 0.247884515634349, 0.06825940774466263, 0.018314496129664484, 0.09743926081937199, 0.06476482796728553, 0.14668928013275317, 0.00904285300594699, 1.47214067124372, 1.9885897002215671, 0.8, 6.0, 0.8, 9.0, 0.005713884947235867, 0.016731553006115955, 4178.274534952149, 0.45749674257838413, 30.0]
+set probLengthConst=1570.4801966782854
+set propVelocity=1.0
+set probIE=0.0021888021289542797
+set probEE=0.9819927348156885
+set probII=0.8823257903739355
+set probEI=0.247884515634349
+set weightEI=0.06825940774466263
+set weightIE=0.018314496129664484
+set weightEE=0.09743926081937199
+set weightII=0.06476482796728553
+set gnabar_E=0.14668928013275317
+set gkbar_E=0.00904285300594699
+set gnabar_I=1.47214067124372
+set gkbar_I=1.9885897002215671
+set tau1_exc=0.8
+set tau2_exc=6.0
+set tau1_inh=0.8
+set tau2_inh=9.0
+set Erhythmic_stimWeight=0.005713884947235867
+set Irhythmic_stimWeight=0.016731553006115955
+set rythmic_stiminterval=4178.274534952149
+set rythmic_stimnoise=0.45749674257838413
+set duration_seconds=30.0
+Saving simConfig to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_7_cfg.json ... 
+Submitting job  gen_5_cand_7
+#!/bin/bash
+
+cd .
+mpirun --mca mtl_base_verbose 100 -n 16 nrniv -python -mpi /global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_7_cfg.json netParams=/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/240419_Run1_mpi_direct_test_netParams.py 
+    
+--------------------------------------------------------------------------------
+Waiting for jobs from generation 5/5 ...
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+completed: 0
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.268, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 907.500, Fitness: 2.926
+Calculating baseline fit...
+baseline: 0.237, Fitness: 2.321
+Calculating rate slope fit...
+Slope of firing rate: 0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.002, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.101, Fitness: 100.144
+Calculating firing rate fit...
+  E rate=0.7 fit=1000; I rate=0.8 fit=1000
+Average Fitness: 443.77010114260094
+Average Scaled Fitness: 443.21326367888497
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_2_Fitness.json
+  Candidate 2 fitness = 443.2
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.081, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 966.207, Fitness: 2.853
+Calculating baseline fit...
+baseline: 0.067, Fitness: 2.600
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.003, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.001, Fitness: 54.927
+Calculating firing rate fit...
+  E rate=0.0 fit=1000; I rate=1.0 fit=1000
+Average Fitness: 437.3400397889233
+Average Scaled Fitness: 436.7768025501578
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_4_Fitness.json
+  Candidate 4 fitness = 436.8
+There was an exception evaluating candidate 6: 
+ Expecting value: line 1 column 1 (char 0)
+completed: 2
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 10.859, Fitness: 1.513
+Calculating IBI fit...
+Average IBI: 660.000, Fitness: 3.255
+Calculating baseline fit...
+baseline: 10.493, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: 0.002, Fitness: 1.003
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.009, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.739, Fitness: 11.370
+Calculating firing rate fit...
+  E rate=8.4 fit=1; I rate=2.2 fit=16
+Average Fitness: 289.42057375972075
+Average Scaled Fitness: 288.7068722819618
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_6_Fitness.json
+  Candidate 6 fitness = 288.7
+completed: 3
+completed: 3
+completed: 3
+completed: 3
+completed: 3
+completed: 3
+completed: 3
+completed: 3
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 3.510, Fitness: 3.157
+Calculating IBI fit...
+Average IBI: 1056.667, Fitness: 2.737
+Calculating baseline fit...
+baseline: 3.309, Fitness: 3.341
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.013, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.939, Fitness: 37.857
+Calculating firing rate fit...
+  E rate=4.7 fit=3; I rate=25.2 fit=2
+Average Fitness: 150.0624221537621
+Average Scaled Fitness: 149.21135150488456
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_1_Fitness.json
+  Candidate 1 fitness = 149.2
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 30.352, Fitness: 4.643
+Calculating IBI fit...
+Average IBI: 631.765, Fitness: 3.334
+Calculating baseline fit...
+baseline: 30.201, Fitness: 1000.000
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.001
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.001, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.605, Fitness: 5.099
+Calculating firing rate fit...
+  E rate=49.2 fit=1000; I rate=4.0 fit=13
+Average Fitness: 360.1172851272095
+Average Scaled Fitness: 359.4763612077964
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_5_Fitness.json
+  Candidate 5 fitness = 359.5
+completed: 5
+completed: 5
+completed: 5
+completed: 5
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 2.593, Fitness: 3.494
+Calculating IBI fit...
+Average IBI: 5400.000, Fitness: 600.648
+Calculating baseline fit...
+baseline: 1.802, Fitness: 1.223
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.001
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.059, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 0.202, Fitness: 1000.000
+Calculating firing rate fit...
+  E rate=7.9 fit=1; I rate=13.6 fit=5
+Average Fitness: 372.7885576391072
+Average Scaled Fitness: 372.1603561574306
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_7_Fitness.json
+  Candidate 7 fitness = 372.2
+completed: 6
+completed: 6
+Calculating net_actiity_metrics...
+Calculating burst peak fit...
+{'pops': {'rate_targets': {'E': {'target': 7.5, 'width': 2.5, 'min': 1}, 'I': {'target': 30, 'width': 10, 'min': 2}}, 'burts_peak_targets': {'target': 15, 'width': 10, 'min': 1}, 'IBI_targets': {'target': 3000, 'width': 2000, 'max': 4000}, 'baseline_targets': {'target': 1.5, 'width': 1.5, 'max': 5}, 'rate_slope': {'target': 0, 'width': 0.5, 'max': 0.5}, 'baseline_diff': {'target': 5, 'width': 2.0, 'min': 2}, 'burst_peak_variance': {'target': 5, 'width': 1.0, 'min': 3}, 'burst_peak_frequency': {'target': 0.3333333333333333, 'width': 0.16666666666666666, 'min': 0.25}}, 'maxFitness': 1000, 'pop_size': 8}
+Average burstPeak: 0.241, Fitness: 1000.000
+Calculating IBI fit...
+Average IBI: 637.105, Fitness: 3.282
+Calculating baseline fit...
+baseline: 0.226, Fitness: 2.338
+Calculating rate slope fit...
+Slope of firing rate: -0.000, Fitness: 1.000
+Calculating baseline diff fit...
+Difference between baseline and threshold: 0.002, Fitness: 1000.000
+Calculating burst frequency fit...
+Frequency of burst peaks: 1.301, Fitness: 332.889
+Calculating firing rate fit...
+  E rate=0.0 fit=1000; I rate=14.8 fit=5
+Average Fitness: 405.9714364106207
+Average Scaled Fitness: 405.37679464581294
+Fitness results saved to /global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test/gen_5/gen_5_cand_0_Fitness.json
+  Candidate 0 fitness = 405.4
+completed: 7
+completed: 7
+Calculating net_actiity_metrics...
+Error calculating network activity metrics.
+Error: zero-size array to reduction operation maximum which has no identity
+  Candidate 3 fitness = 1000.0
+completed: 8
+--------------------------------------------------------------------------------
+  Completed a generation  
+--------------------------------------------------------------------------------
+Generation Evaluation      Worst       Best     Median    Average    Std Dev
+---------- ---------- ---------- ---------- ---------- ---------- ----------
+         5         48 359.476361 149.211351 290.990852 289.285973 70.1617904
+
+Best Solution: 
+[912.5856495140865, 1.0, 0.5300441853603824, 0.9931323622678067, 0.027263012198326192, 0.7920997879813744, 0.05695934612965789, 0.0074149195198332015, 0.015380553631164008, 0.005529125152017582, 0.38361115958104286, 0.003992006810487725, 1.4681934606537699, 1.150572757377924, 0.8, 6.0, 0.8, 9.0, 0.004750624278506111, 0.003702628562391756, 1741.8890497142074, 0.01891713348237572, 30.0] : 149.21135150488456
+--------------------------------------------------------------------------------
+   Completed evolutionary algorithm parameter optimization   
+--------------------------------------------------------------------------------

@@ -99,7 +99,7 @@ def get_batch_config(batch_config_options = None):
         'runCfg': {
             'type': USER_runCfg_type,
             'script': script,
-            'mpiCommand': 'mpirun',
+            'mpiCommand': USER_mpiCommand,
             'nodes': nodes,
             'coresPerNode': cores_per_node,
             'allocation': USER_allocation,
@@ -215,18 +215,33 @@ def init_batch_cfg():
     return batch_config
 
 # Main code
+import time
+import datetime
 if __name__ == '__main__':
     
-    ##Run batch
+    logging.info(f'Batch run script started')
+    logging.info(f'Timer Started: {datetime.datetime.now()}')
+
+    # Start timers
+    start_time_wall = datetime.datetime.now()
+    start_time_cpu = time.process_time()
+
+    # Run batch
     run_batch = True
     if run_batch:    
-        
-        ## Initialize batch_run_cfg
         logging.info(f'Initializing batch config')
         from batch_config_setup import *
         batch_config = init_batch_cfg()
 
-        ## Run batch
         logging.info(f'Running batch: {batch_config["batchLabel"]}')
         batchRun(batch_config = batch_config)
-        logging.info(f'Batch run completed') 
+        logging.info(f'Batch run completed')
+
+    # End timers
+    end_time_wall = datetime.datetime.now()
+    end_time_cpu = time.process_time()
+
+    logging.info(f'Timer Ended: {end_time_wall}')
+    logging.info(f'Total CPU Time: {end_time_cpu - start_time_cpu}')
+    logging.info(f'Total Time Elapsed: {end_time_wall - start_time_wall}')
+    logging.info(f'Estimated Wait Time: {end_time_wall - start_time_wall - datetime.timedelta(seconds=end_time_cpu - start_time_cpu)}')
