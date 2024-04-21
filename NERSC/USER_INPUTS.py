@@ -57,7 +57,7 @@ elif option == 'mpi_direct':
     USER_OMP_threads_per_process = USER_OMP_threads_per_process_per_node*USER_nodes
     USER_mpiCommand = f'mpirun --mca mtl_base_verbose 100 --map-by ppr:{USER_OMP_threads_per_process}:node'
     assert USER_MPI_processes_per_node*USER_OMP_threads_per_process_per_node == Perlmutter_cores_per_node, 'USER_MPI_processes_per_node*USER_OMP_threads_per_process must should be equal to Perlmutter_cores_per_node'
-    JobName = f'MPIsxOMPs_{USER_nodes}_{USER_MPI_processes_per_node}x{USER_OMP_threads_per_process_per_node}'
+    USER_JobName = f'MPIsxOMPs_{USER_nodes}_{USER_MPI_processes_per_node}x{USER_OMP_threads_per_process_per_node}'
     #USER_cores_per_node_per_sim = int(Perlmutter_cores_per_node/USER_pop_size) #128 physical cores, 256 hyperthreads
     #USER_threads_process = 
     #USER_cores_per_sim  = USER_cores_per_node_per_sim * USER_nodes
@@ -66,7 +66,11 @@ elif option == 'mpi_direct':
     #assert USER_cores_per_node_per_sim <= (Perlmutter_cores_per_node*USER_nodes)/USER_pop_size, 'USER_cores_per_node_per_sim must be less than or equal to Perlmutter_cores_per_node'    
 
     #USER_custom_slurm = f'srun -n {Perlmutter_cores_per_node*USER_nodes} check-hybrid.gnu.pm | sort -k4,6 #> output.log 2>&1'
-    USER_custom_slurm = f''
+    USER_custom_slurm = f'''
+export OMP_PROC_BIND=spread
+export KMP_AFFINITY=verbose
+export FI_LOG_LEVEL=debug
+'''
     USER_maxiter_wait_minutes = 5 #Maximum minutes to wait before new simulation starts before killing generation
 elif option == 'hpc_slurm':
     USER_mpiCommand = 'mpirun'
