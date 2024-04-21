@@ -26,8 +26,8 @@ selected_cand_cfg = None
 # selected_cand_cfg = '/mnt/disk15tb/adam/git_workspace/netpyne_2DNetworkSimulations/2DNet_simulations/BurstingPlotDevelopment/nb5.1_optimizing_EEonly/output/24-3-24_5sec_EEsearch/gen_5/gen_5_cand_29_cfg.json'
 
 ## Parallelization Parameters ##
-assert USER_cores_per_node, 'USER_cores_per_node must be specified in USER_INPUTS.py'
-cores_per_node = USER_cores_per_node #cores/node
+assert USER_MPI_processes_per_node, 'USER_cores_per_node must be specified in USER_INPUTS.py'
+cores_per_node = USER_MPI_processes_per_node #cores/node
 assert USER_pop_size, 'USER_pop_size must be specified in USER_INPUTS.py'
 pop_size = USER_pop_size
 assert USER_nodes, 'USER_nodes must be specified in USER_INPUTS.py'

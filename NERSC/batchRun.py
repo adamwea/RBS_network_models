@@ -89,6 +89,8 @@ def get_batch_config(batch_config_options = None):
     from USER_INPUTS import USER_email
     from USER_INPUTS import USER_custom_slurm
     from USER_INPUTS import USER_allocation
+    from USER_INPUTS import USER_MPI_processes_per_node
+    from USER_INPUTS import USER_nodes
 
     batch_config = {
         'batchLabel': batch_label,
@@ -100,8 +102,8 @@ def get_batch_config(batch_config_options = None):
             'type': USER_runCfg_type,
             'script': script,
             'mpiCommand': USER_mpiCommand,
-            'nodes': nodes,
-            'coresPerNode': cores_per_node,
+            'nodes': USER_nodes,
+            'coresPerNode': USER_MPI_processes_per_node,
             'allocation': USER_allocation,
             'reservation': None,
             'skip': skip,
