@@ -6,4 +6,4 @@
 #module load python/3.9
 module load conda
 conda activate 2DSims
-export $(python generate_and_runsbatch.py)
+export $(python NERSC/generate_and_run_sbatch.py)

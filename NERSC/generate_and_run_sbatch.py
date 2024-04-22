@@ -44,8 +44,8 @@ python3 NERSC/batchRun.py {USER_JobName} 30
 job_inputs_dir = "NERSC/job_inputs"
 if not os.path.exists(job_inputs_dir):
     os.makedirs(job_inputs_dir)
-with open(f"NERSC/job_inputs/{datetime_str}_sbatch_jobscript.sh", "w") as f:
+with open(f"NERSC/job_inputs/{datetime_str}_sbatch_jobscript_{USER_JobName}.sh", "w") as f:
     f.write(shell_script)
 
 # Submit the shell script using sbatch
-#ubprocess.run(["sbatch", f'NERSC/job_inputs/{datetime_str}_sbatch_jobscript.sh'])
+subprocess.run(["sbatch", f'NERSC/job_inputs/{datetime_str}_sbatch_jobscript_{USER_JobName}.sh'])
