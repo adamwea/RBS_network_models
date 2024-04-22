@@ -27,7 +27,7 @@ USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction 
 USER_pop_size = 16
 USER_max_generations = 10
 USER_time_sleep = 10 #seconds between checking for completed simulations
-USER_maxiter_wait_minutes = 20 #Maximum minutes to wait before new simulation starts before killing generation
+USER_maxiter_wait_minutes = 30 #Maximum minutes to wait before starting new Generation
 
 ## Parallelization
 options = ['local', 'mpi_direct', 'hpc_slurm']
@@ -72,7 +72,7 @@ export OMP_PROC_BIND=spread
 export KMP_AFFINITY=verbose
 export FI_LOG_LEVEL=debug
 '''
-    USER_maxiter_wait_minutes = 5 #Maximum minutes to wait before new simulation starts before killing generation
+    #USER_maxiter_wait_minutes = 5 #Maximum minutes to wait before new simulation starts before killing generation
 elif option == 'hpc_slurm':
     USER_mpiCommand = 'mpirun'
     USER_allocation = 'm2043' #project ID
