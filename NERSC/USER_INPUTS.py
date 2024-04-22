@@ -24,7 +24,7 @@ USER_plot_fitness_bool = False
 
 ## Evol Params
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
-USER_pop_size = 16
+USER_pop_size = 32
 USER_max_generations = 10
 USER_time_sleep = 10 #seconds between checking for completed simulations
 USER_maxiter_wait_minutes = 30 #Maximum minutes to wait before starting new Generation
@@ -53,8 +53,13 @@ elif option == 'mpi_direct':
     USER_nodes = 1 #This should be set to the number of nodes available
     Perlmutter_cores_per_node = 256 #128 physical cores, 256 hyperthreads
     #Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
-    USER_MPI_processes_per_node = 4
-    USER_OMP_threads_per_process_per_node = 4
+    USER_MPI_processes_per_sim = Perlmutter_cores_per_node//USER_pop_size
+    square_root = int(USER_MPI_processes_per_sim**.5)
+    #if 16 process per sim per node
+    #USER_MPI_processes_per_node = 4
+    #USER_OMP_threads_per_process_per_node = 4
+    USER_MPI_processes_per_node = square_root
+    USER_OMP_threads_per_process_per_node = square_root
     USER_OMP_threads_per_process = USER_OMP_threads_per_process_per_node*USER_nodes
     USER_mpiCommand = f'mpirun --mca mtl_base_verbose 100 --map-by ppr:{USER_OMP_threads_per_process_per_node}:node'
     #assert USER_MPI_processes_per_node*USER_OMP_threads_per_process_per_node == Perlmutter_cores_per_node, 'USER_MPI_processes_per_node*USER_OMP_threads_per_process must should be equal to Perlmutter_cores_per_node'

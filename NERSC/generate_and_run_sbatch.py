@@ -48,4 +48,4 @@ with open(f"NERSC/job_inputs/{datetime_str}_sbatch_jobscript_{USER_JobName}.sh",
     f.write(shell_script)
 
 # Submit the shell script using sbatch
-#subprocess.Popen(["sbatch", f'NERSC/job_inputs/{datetime_str}_sbatch_jobscript_{USER_JobName}.sh',f' 2>&1 | tee NERSC/output/job_outputs/{datetime_str}_bashoutput_{USER_JobName}.txt'])
+subprocess.Popen(["sbatch", f'NERSC/job_inputs/{datetime_str}_sbatch_jobscript_{USER_JobName}.sh',f' 2>&1 | tee NERSC/output/job_outputs/{datetime_str}_bashoutput_{USER_JobName}.txt'])
