@@ -24,7 +24,7 @@ USER_plot_fitness_bool = False
 
 ## Evol Params
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
-USER_pop_size = 32
+USER_pop_size = 4
 USER_max_generations = 10
 USER_time_sleep = 10 #seconds between checking for completed simulations
 USER_maxiter_wait_minutes = 30 #Maximum minutes to wait before starting new Generation
@@ -63,6 +63,9 @@ elif option == 'mpi_direct':
     USER_OMP_threads_per_process = USER_OMP_threads_per_process_per_node*USER_nodes
     USER_mpiCommand = f'mpirun --mca mtl_base_verbose 100 --map-by ppr:{USER_OMP_threads_per_process_per_node}:node'
     #assert USER_MPI_processes_per_node*USER_OMP_threads_per_process_per_node == Perlmutter_cores_per_node, 'USER_MPI_processes_per_node*USER_OMP_threads_per_process must should be equal to Perlmutter_cores_per_node'
+    assert [USER_nodes*Perlmutter_cores_per_node] == [
+        USER_MPI_processes_per_node*USER_OMP_threads_per_process_per_node*USER_pop_size
+        ], 'node/core/process/thread allocation has some error'
     USER_JobName = f'MPIsxOMPs_{USER_nodes}x{USER_MPI_processes_per_node}x{USER_OMP_threads_per_process_per_node}'
     #USER_cores_per_node_per_sim = int(Perlmutter_cores_per_node/USER_pop_size) #128 physical cores, 256 hyperthreads
     #USER_threads_process = 
