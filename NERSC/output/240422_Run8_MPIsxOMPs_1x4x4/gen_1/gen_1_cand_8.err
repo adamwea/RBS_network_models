@@ -1,0 +1,128 @@
+/global/homes/a/adammwea/.conda/envs/2DSims/bin/nrniv:10: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import working_set
+/global/homes/a/adammwea/.conda/envs/2DSims/bin/nrniv:10: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import working_set
+/global/homes/a/adammwea/.conda/envs/2DSims/bin/nrniv:10: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import working_set
+/global/homes/a/adammwea/.conda/envs/2DSims/bin/nrniv:10: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import working_set
+[nid006635:526952] mca: base: components_register: registering framework mtl components
+[nid006635:526952] mca: base: components_register: found loaded component ofi
+[nid006635:526952] mca: base: components_register: component ofi register function successful
+[nid006635:526952] mca: base: components_open: opening mtl components
+[nid006635:526952] mca: base: components_open: found loaded component ofi
+[nid006635:526952] mca: base: components_open: component ofi open function successful
+[nid006635:526952] mca:base:select: Auto-selecting mtl components
+[nid006635:526952] mca:base:select:(  mtl) Querying component [ofi]
+[nid006635:526952] mca:base:select:(  mtl) Query of component [ofi] set priority to 25
+[nid006635:526952] mca:base:select:(  mtl) Selected component [ofi]
+[nid006635:526952] select: initializing mtl component ofi
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable perf_cntr=<not set>
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable hook=<not set>
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable hmem=<not set>
+libfabric:526952:1713814901::core:core:ofi_hmem_init():334<info> Hmem iface FI_HMEM_CUDA not supported
+libfabric:526952:1713814901::core:core:rocr_hmem_dl_init():290<info> Unable to dlopen libhsa-runtime64.so
+libfabric:526952:1713814901::core:core:ofi_hmem_init():334<info> Hmem iface FI_HMEM_ROCR not supported
+libfabric:526952:1713814901::core:core:fi_param_get_():288<info> read string var log_level=debug
+libfabric:526952:1713814901::core:core:ze_hmem_dl_init():474<warn> Failed to dlopen libze_loader.so
+libfabric:526952:1713814901::core:core:ofi_hmem_init():339<warn> Failed to initialize hmem iface FI_HMEM_ZE: No data available
+libfabric:526952:1713814901::core:core:ofi_hmem_init():334<info> Hmem iface FI_HMEM_NEURON not supported
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable hmem_disable_p2p=<not set>
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable mr_cache_max_size=<not set>
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable mr_cache_max_count=<not set>
+libfabric:526952:1713814901::core:core:fi_param_get_():288<info> read string var mr_cache_monitor=userfaultfd
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable mr_cuda_cache_monitor_enabled=<not set>
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable mr_rocr_cache_monitor_enabled=<not set>
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable mr_ze_cache_monitor_enabled=<not set>
+libfabric:526952:1713814901::core:mr:ofi_default_cache_size():82<info> default cache size=1055354976
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable provider=<not set>
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable universe_size=<not set>
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable poll_fairness=<not set>
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable cxi_compat=<not set>
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable provider_path=<not set>
+libfabric:526952:1713814901::core:core:ofi_load_dl_prov():709<info> restricted_dl: setting FI_PROVIDER_PATH to "/opt/cray/libfabric/1.15.2.0/lib64/libfabric"
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable rget_tc=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable rdzv_aligned_sw_rget=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable enable_trig_op_limit=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable disable_non_inject_msg_idc=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable disable_host_register=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable enable_unrestricted_end_ro=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable odp=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable force_odp=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable ats=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable iotlb=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable ats_mlock_mode=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable device_name=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable telemetry=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable telemetry_rgid=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():288<info> read string var rx_match_mode=hybrid
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable rdzv_threshold=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable rdzv_get_min=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable rdzv_eager_size=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable oflow_buf_size=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable oflow_buf_count=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable oflow_buf_min_posted=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable oflow_buf_max_cached=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable safe_devmem_copy_threshold=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable optimized_mrs=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable llring_mode=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable zbcoll_radix=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable cq_policy=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable default_vni=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable eq_ack_batch_size=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable msg_lossless=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable req_buf_size=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable req_buf_min_posted=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable req_buf_max_count=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable req_buf_max_cached=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable hybrid_preemptive=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable hybrid_recv_preemptive=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable fc_retry_usec_delay=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable sw_rx_tx_init_max=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable ctrl_rx_eq_max_size=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable default_cq_size=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable disable_cq_hugetlb=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable disable_eq_hugetlb=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable cq_fill_percent=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable coll_job_id=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable coll_step_id=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable coll_fabric_mgr_url=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable coll_fabric_mgr_token=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable coll_use_dma_put=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable coll_timeout_usec=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable default_tx_size=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable disable_hmem_dev_register=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable force_ze_hmem_support=<not set>
+libfabric:526952:1713814901::cxi:core:fi_param_get_():279<info> variable rdzv_proto=<not set>
+libfabric:526952:1713814901::core:core:ofi_register_provider():468<info> registering provider: cxi (0.1)
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable enable_passthru=<not set>
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable buffer_size=<not set>
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable tx_size=<not set>
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable rx_size=<not set>
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable msg_tx_size=<not set>
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable msg_rx_size=<not set>
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable cm_progress_interval=<not set>
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable cq_eq_fairness=<not set>
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable data_auto_progress=<not set>
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable use_rndv_write=<not set>
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable def_wait_obj=<not set>
+libfabric:526952:1713814901::ofi_rxm:core:fi_param_get_():279<info> variable def_tcp_wait_obj=<not set>
+libfabric:526952:1713814901::core:core:ofi_register_provider():468<info> registering provider: ofi_rxm (115.20)
+libfabric:526952:1713814901::ofi_rxd:core:fi_param_get_():279<info> variable spin_count=<not set>
+libfabric:526952:1713814901::ofi_rxd:core:fi_param_get_():279<info> variable retry=<not set>
+libfabric:526952:1713814901::ofi_rxd:core:fi_param_get_():279<info> variable max_peers=<not set>
+libfabric:526952:1713814901::ofi_rxd:core:fi_param_get_():279<info> variable max_unacked=<not set>
+libfabric:526952:1713814901::core:core:ofi_register_provider():468<info> registering provider: ofi_rxd (115.20)
+libfabric:526952:1713814901::core:core:ofi_register_provider():468<info> registering provider: udp (115.20)
+libfabric:526952:1713814901::tcp:core:fi_param_get_():279<info> variable port_high_range=<not set>
+libfabric:526952:1713814901::tcp:core:fi_param_get_():279<info> variable port_low_range=<not set>
+libfabric:526952:1713814901::tcp:core:fi_param_get_():279<info> variable tx_size=<not set>
+libfabric:526952:1713814901::tcp:core:fi_param_get_():279<info> variable rx_size=<not set>
+libfabric:526952:1713814901::tcp:core:fi_param_get_():279<info> variable nodelay=<not set>
+libfabric:526952:1713814901::tcp:core:fi_param_get_():279<info> variable staging_sbuf_size=<not set>
+libfabric:526952:1713814901::tcp:core:fi_param_get_():279<info> variable prefetch_rbuf_size=<not set>
+libfabric:526952:1713814901::tcp:core:fi_param_get_():279<info> variable zerocopy_size=<not set>
+libfabric:526952:1713814901::core:core:ofi_register_provider():468<info> registering provider: tcp (115.20)
+libfabric:526952:1713814901::core:core:ofi_register_provider():468<info> registering provider: ofi_hook_perf (115.20)
+libfabric:526952:1713814901::core:core:ofi_register_provider():468<info> registering provider: ofi_hook_debug (115.20)
+libfabric:526952:1713814901::core:core:fi_param_get_():279<info> variable hmem=<not set>

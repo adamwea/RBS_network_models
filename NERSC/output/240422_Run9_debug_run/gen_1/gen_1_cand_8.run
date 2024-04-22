@@ -1,0 +1,79 @@
+numprocs=4
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/gen_1/gen_1_cand_8_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/gen_1/gen_1_cand_8_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/240422_Run9_debug_run_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/gen_1/gen_1_cand_8_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/gen_1/gen_1_cand_8_cfg.json ... 
+Loading simConfig...
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/gen_1/gen_1_cand_8_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/gen_1/gen_1_cand_8_cfg.json ... 
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/240422_Run9_debug_run_netParams.py
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/240422_Run9_debug_run_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/gen_1/gen_1_cand_8_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/gen_1/gen_1_cand_8_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/240422_Run9_debug_run_netParams.py
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/netParams_popParams.json ... 
+
+Start time:  2024-04-22 13:02:04.170466
+
+Creating network of 2 cell populations on 4 hosts...
+  Number of cells on node 0: 100 
+  Number of cells on node 2: 100 
+  Number of cells on node 1: 100 
+  Number of cells on node 3: 100 
+  Done; cell creation time = 0.04 s.
+Making connections...
+  Number of connections on node 2: 395 
+  Number of connections on node 0: 428 
+  Number of connections on node 1: 429 
+  Number of connections on node 3: 400 
+  Done; cell connection time = 1.72 s.
+Adding stims...
+  Number of stims on node 1: 100 
+  Number of stims on node 3: 100 
+  Number of stims on node 0: 100 
+  Number of stims on node 2: 100 
+  Done; cell stims creation time = 0.06 s.
+Recording 0 traces of 0 types on node 1
+Recording 0 traces of 0 types on node 2
+Recording 0 traces of 0 types on node 0
+Recording 0 traces of 0 types on node 3
+
+Running simulation using NEURON for 5000.0 ms...
+  Done; run time = 33.46 s; real-time ratio: 0.15.
+
+Gathering data...
+  Done; gather time = 0.64 s.
+
+Analyzing...
+  Cells: 400
+  Connections: 2052 (5.13 per cell)
+  Spikes: 64560 (32.28 Hz)
+  Simulated time: 5.0 s; 4 workers
+  Run time: 33.46 s
+   E : 35.159 Hz
+   I : 13.093 Hz
+Saving output as /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run9_debug_run/gen_1/gen_1_cand_8_data.json ... 
+Finished saving!
+  Done; saving time = 1.06 s.
+  Done; plotting time = 0.00 s
+
+Total time = 37.07 s

@@ -47,17 +47,18 @@ elif option == 'mpi_direct':
     USER_queue = 'debug' #Options: debug, regular, premium
     USER_runCfg_type = 'mpi_direct'    
     USER_allocation = 'm2043' #project ID
-    USER_walltime = "00:45:00"    
+    USER_walltime = "00:30:00"    
     USER_email = "amwe@ucdavis.edu"
 
     USER_nodes = 1 #This should be set to the number of nodes available
     Perlmutter_cores_per_node = 256 #128 physical cores, 256 hyperthreads
-    USER_MPI_processes_per_node = 16
-    USER_OMP_threads_per_process_per_node = 16
+    #Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
+    USER_MPI_processes_per_node = 4
+    USER_OMP_threads_per_process_per_node = 4
     USER_OMP_threads_per_process = USER_OMP_threads_per_process_per_node*USER_nodes
-    USER_mpiCommand = f'mpirun --mca mtl_base_verbose 100 --map-by ppr:{USER_OMP_threads_per_process}:node'
-    assert USER_MPI_processes_per_node*USER_OMP_threads_per_process_per_node == Perlmutter_cores_per_node, 'USER_MPI_processes_per_node*USER_OMP_threads_per_process must should be equal to Perlmutter_cores_per_node'
-    USER_JobName = f'MPIsxOMPs_{USER_nodes}_{USER_MPI_processes_per_node}x{USER_OMP_threads_per_process_per_node}'
+    USER_mpiCommand = f'mpirun --mca mtl_base_verbose 100 --map-by ppr:{USER_OMP_threads_per_process_per_node}:node'
+    #assert USER_MPI_processes_per_node*USER_OMP_threads_per_process_per_node == Perlmutter_cores_per_node, 'USER_MPI_processes_per_node*USER_OMP_threads_per_process must should be equal to Perlmutter_cores_per_node'
+    USER_JobName = f'MPIsxOMPs_{USER_nodes}x{USER_MPI_processes_per_node}x{USER_OMP_threads_per_process_per_node}'
     #USER_cores_per_node_per_sim = int(Perlmutter_cores_per_node/USER_pop_size) #128 physical cores, 256 hyperthreads
     #USER_threads_process = 
     #USER_cores_per_sim  = USER_cores_per_node_per_sim * USER_nodes
