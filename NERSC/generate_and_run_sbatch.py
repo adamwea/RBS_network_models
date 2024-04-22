@@ -48,4 +48,4 @@ with open(f"NERSC/job_inputs/{datetime_str}_sbatch_jobscript.sh", "w") as f:
     f.write(shell_script)
 
 # Submit the shell script using sbatch
-#subprocess.run(["sbatch", "sbatch_script.sh"])
+#ubprocess.run(["sbatch", f'NERSC/job_inputs/{datetime_str}_sbatch_jobscript.sh'])
