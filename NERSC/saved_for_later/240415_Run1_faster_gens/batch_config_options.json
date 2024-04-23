@@ -1,17 +1,3 @@
-{
-    "run_path": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240415_Run1_faster_gens",
-    "batchLabel": "240415_Run1_faster_gens",
-    "method": "evol",
-    "core_num": 256,
-    "nodes": 4,
-    "script": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py",
-    "pop_size": 128,
-    "max_generations": 2000,
-    "time_sleep": 10,
-    "maxiter_wait": 120,
-    "skip": true,
-    "num_elites": 12,
-    "cfgFile": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/cfg.py",
-    "netParamsFile": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/netParams.py",
-    "initCfg": null
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:d2679625e1e9d5bb44660300f15156bbe729d90e1e462dd15e7a7d7bed804113
+size 597

@@ -1,17 +1,3 @@
-{
-    "run_path": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240418_Run3_hpcslurm_NetPyNE_test",
-    "batchLabel": "240418_Run3_hpcslurm_NetPyNE_test",
-    "method": "evol",
-    "cores_per_node": 128,
-    "nodes": 1,
-    "script": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py",
-    "pop_size": 32,
-    "max_generations": 5,
-    "time_sleep": 10,
-    "maxiter_wait": 120.0,
-    "skip": false,
-    "num_elites": 320,
-    "cfgFile": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/cfg.py",
-    "netParamsFile": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/netParams.py",
-    "initCfg": null
-}
+version https://git-lfs.github.com/spec/v1
+oid sha256:cddc9d197b1a6d52f8466c4f5d5b02d3105cd414cb95ab81da983b9487fcff84
+size 623
