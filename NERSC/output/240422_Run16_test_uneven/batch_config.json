@@ -1,0 +1,87 @@
+{
+    "batchLabel": "240422_Run16_test_uneven",
+    "saveFolder": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run16_test_uneven",
+    "method": "evol",
+    "cfgFile": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/cfg.py",
+    "netParamsFile": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/netParams.py",
+    "runCfg": {
+        "type": "mpi_direct",
+        "script": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py",
+        "mpiCommand": "mpirun --mca mtl_base_verbose 100 --map-by ppr:16:node",
+        "nodes": 1,
+        "coresPerNode": 4,
+        "allocation": "m2043",
+        "reservation": null,
+        "skip": false,
+        "email": "amwe@ucdavis.edu",
+        "walltime": "00:30:00",
+        "custom": "\nexport OMP_PROC_BIND=spread\nexport KMP_AFFINITY=verbose\nexport FI_LOG_LEVEL=debug\n"
+    },
+    "evolCfg": {
+        "evolAlgorithm": "custom",
+        "fitnessFunc": "<function fitnessFunc at 0x7f3e7b5c2ca0>",
+        "fitnessFuncArgs": {
+            "pops": {
+                "rate_targets": {
+                    "E": {
+                        "target": 7.5,
+                        "width": 2.5,
+                        "min": 1
+                    },
+                    "I": {
+                        "target": 30,
+                        "width": 10,
+                        "min": 2
+                    }
+                },
+                "burts_peak_targets": {
+                    "target": 15,
+                    "width": 10,
+                    "min": 1
+                },
+                "IBI_targets": {
+                    "target": 3000,
+                    "width": 2000,
+                    "max": 4000
+                },
+                "baseline_targets": {
+                    "target": 1.5,
+                    "width": 1.5,
+                    "max": 5
+                },
+                "rate_slope": {
+                    "target": 0,
+                    "width": 0.5,
+                    "max": 0.5
+                },
+                "baseline_diff": {
+                    "target": 5,
+                    "width": 2.0,
+                    "min": 2
+                },
+                "burst_peak_variance": {
+                    "target": 5,
+                    "width": 1.0,
+                    "min": 3
+                },
+                "burst_peak_frequency": {
+                    "target": 0.3333333333333333,
+                    "width": 0.16666666666666666,
+                    "min": 0.25
+                }
+            },
+            "maxFitness": 1000,
+            "pop_size": 4
+        },
+        "pop_size": 4,
+        "num_elites": 40,
+        "mutation_rate": 0.7,
+        "crossover": 0.5,
+        "maximize": false,
+        "max_generations": 10,
+        "time_sleep": 10,
+        "maxiter_wait": 180.0,
+        "defaultFitness": 1000,
+        "initCfg": null
+    }
+}

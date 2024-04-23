@@ -24,10 +24,11 @@ USER_plot_fitness_bool = False
 
 ## Evol Params
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
-USER_pop_size = 4
+# Population sizes where 256/USER_pop_size is an integer and perfect square: 1, 4, 16, 64, 256, 1024, 4096, 16384, 65536
+USER_pop_size = 32 # Population sizes
 USER_max_generations = 10
 USER_time_sleep = 10 #seconds between checking for completed simulations
-USER_maxiter_wait_minutes = 30 #Maximum minutes to wait before starting new Generation
+USER_maxiter_wait_minutes = 45 #Maximum minutes to wait before starting new Generation
 
 ## Parallelization
 options = ['local', 'mpi_direct', 'hpc_slurm']
@@ -44,28 +45,53 @@ if option == 'local':
     USER_email = None
     USER_custom = None
 elif option == 'mpi_direct':
-    USER_queue = 'debug' #Options: debug, regular, premium
+    USER_queue = 'regular' #Options: debug, regular, premium
     USER_runCfg_type = 'mpi_direct'    
     USER_allocation = 'm2043' #project ID
-    USER_walltime = "00:30:00"    
+    USER_walltime = "04:00:00"    
     USER_email = "amwe@ucdavis.edu"
 
     USER_nodes = 1 #This should be set to the number of nodes available
     Perlmutter_cores_per_node = 256 #128 physical cores, 256 hyperthreads
     #Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
     USER_MPI_processes_per_sim = Perlmutter_cores_per_node//USER_pop_size
+    #assert that USER_MPI_processes_per_sim is a perfect square
+    #assert USER_MPI_processes_per_sim**.5 % 1 == 0, 'USER_MPI_processes_per_sim should be a perfect square. Adjust population size.'
     square_root = int(USER_MPI_processes_per_sim**.5)
     #if 16 process per sim per node
-    #USER_MPI_processes_per_node = 4
-    #USER_OMP_threads_per_process_per_node = 4
-    USER_MPI_processes_per_node = square_root
-    USER_OMP_threads_per_process_per_node = square_root
-    USER_OMP_threads_per_process = USER_OMP_threads_per_process_per_node*USER_nodes
-    USER_mpiCommand = f'mpirun --mca mtl_base_verbose 100 --map-by ppr:{USER_OMP_threads_per_process_per_node}:node'
+    USER_MPI_processes_per_node = 4
+    USER_OMP_threads_per_process_per_node = 16 #ranks
+    #USER_OMP_threads_per_process = 256
+    USER_MPI_processes_per_node = 128//USER_pop_size
+    #USER_MPI_processes_per_node = 32
+    # USER_MPI_processes_per_node = square_root
+    # USER_OMP_threads_per_process_per_node = square_root
+    USER_OMP_threads_per_process = USER_OMP_threads_per_process_per_node*USER_nodes # process
+    USER_OMP_threads_per_process_per_core = 2
+    USER_MPI_rank_per_unit = USER_OMP_threads_per_process_per_core
+    USER_MPI_rank_per_unit = 1
+    #unit = "slot"
+    ppr_unit = "core"
+    bind_unit = "core"
+    #unit = "node"
+    USER_OMP_threads_per_process = '16'
+    USER_mpiCommand = f'''
+    mpirun --mca mtl_base_verbose 100
+    --use-hwthread-cpus
+    --nooversubscribe 
+    --map-by ppr:{USER_MPI_rank_per_unit}:{ppr_unit}    
+    --bind-to {bind_unit}
+    --report-bindings
+    --display-map
+    --display-topo
+    --display-devel-map
+    '''
+    #remove returns from USER_mpiCommand
+    USER_mpiCommand = ' '.join(USER_mpiCommand.split())
     #assert USER_MPI_processes_per_node*USER_OMP_threads_per_process_per_node == Perlmutter_cores_per_node, 'USER_MPI_processes_per_node*USER_OMP_threads_per_process must should be equal to Perlmutter_cores_per_node'
-    assert [USER_nodes*Perlmutter_cores_per_node] == [
-        USER_MPI_processes_per_node*USER_OMP_threads_per_process_per_node*USER_pop_size
-        ], 'node/core/process/thread allocation has some error'
+    # assert [USER_nodes*Perlmutter_cores_per_node] == [
+    #     USER_MPI_processes_per_node*USER_OMP_threads_per_process_per_node*USER_pop_size
+    #     ], 'node/core/process/thread allocation has some error'
     USER_JobName = f'MPIsxOMPs_{USER_nodes}x{USER_MPI_processes_per_node}x{USER_OMP_threads_per_process_per_node}'
     #USER_cores_per_node_per_sim = int(Perlmutter_cores_per_node/USER_pop_size) #128 physical cores, 256 hyperthreads
     #USER_threads_process = 
@@ -79,6 +105,7 @@ elif option == 'mpi_direct':
 export OMP_PROC_BIND=spread
 export KMP_AFFINITY=verbose
 export FI_LOG_LEVEL=debug
+export OMPI_MCA_pml=ob1
 '''
     #USER_maxiter_wait_minutes = 5 #Maximum minutes to wait before new simulation starts before killing generation
 elif option == 'hpc_slurm':

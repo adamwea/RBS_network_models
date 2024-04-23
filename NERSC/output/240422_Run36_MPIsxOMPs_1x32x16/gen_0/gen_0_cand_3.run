@@ -1,0 +1,457 @@
+
+========================   JOB MAP   ========================
+Data for JOB prterun-nid004929-1573105@1 offset 0 Total slots allocated 256
+    Mapping policy: BYCORE:NOOVERSUBSCRIBE  Ranking policy: SLOT Binding policy: CORE
+    Cpu set: N/A  PPR: 1:core  Cpus-per-rank: N/A  Cpu Type: HWT
+
+
+Data for node: nid004929	Num slots: 256	Max slots: 0	Num procs: 32
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 0 Bound: package[0][hwt:0,128]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 1 Bound: package[0][hwt:1,129]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 2 Bound: package[0][hwt:2,130]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 3 Bound: package[0][hwt:3,131]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 4 Bound: package[0][hwt:4,132]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 5 Bound: package[0][hwt:5,133]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 6 Bound: package[0][hwt:6,134]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 7 Bound: package[0][hwt:7,135]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 8 Bound: package[0][hwt:8,136]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 9 Bound: package[0][hwt:9,137]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 10 Bound: package[0][hwt:10,138]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 11 Bound: package[0][hwt:11,139]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 12 Bound: package[0][hwt:12,140]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 13 Bound: package[0][hwt:13,141]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 14 Bound: package[0][hwt:14,142]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 15 Bound: package[0][hwt:15,143]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 16 Bound: package[0][hwt:16,144]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 17 Bound: package[0][hwt:17,145]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 18 Bound: package[0][hwt:18,146]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 19 Bound: package[0][hwt:19,147]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 20 Bound: package[0][hwt:20,148]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 21 Bound: package[0][hwt:21,149]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 22 Bound: package[0][hwt:22,150]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 23 Bound: package[0][hwt:23,151]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 24 Bound: package[0][hwt:24,152]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 25 Bound: package[0][hwt:25,153]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 26 Bound: package[0][hwt:26,154]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 27 Bound: package[0][hwt:27,155]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 28 Bound: package[0][hwt:28,156]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 29 Bound: package[0][hwt:29,157]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 30 Bound: package[0][hwt:30,158]
+        Process jobid: prterun-nid004929-1573105@1 App: 0 Process rank: 31 Bound: package[0][hwt:31,159]
+
+=============================================================
+numprocs=32
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Start time:  2024-04-22 19:26:25.619676
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/240422_Run36_MPIsxOMPs_1x32x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/netParams_popParams.json ... 
+
+Creating network of 2 cell populations on 32 hosts...
+  Number of cells on node 19: 12 
+  Number of cells on node 3: 13 
+  Number of cells on node 27: 12 
+  Number of cells on node 11: 13 
+  Number of cells on node 17: 12 
+  Number of cells on node 13: 13 
+  Number of cells on node 23: 12 
+  Number of cells on node 1: 13 
+  Number of cells on node 21: 12 
+  Number of cells on node 7: 13 
+  Number of cells on node 29: 12 
+  Number of cells on node 5: 13 
+  Number of cells on node 26: 12 
+  Number of cells on node 30: 12 
+  Number of cells on node 6: 13 
+  Number of cells on node 22: 12 
+  Number of cells on node 0: 13 
+  Number of cells on node 18: 12 
+  Number of cells on node 4: 13 
+  Number of cells on node 16: 12 
+  Number of cells on node 10: 13 
+  Number of cells on node 24: 12 
+  Number of cells on node 15: 13 
+  Number of cells on node 31: 12 
+  Number of cells on node 14: 13 
+  Number of cells on node 20: 12 
+  Number of cells on node 8: 13 
+  Number of cells on node 28: 12 
+  Number of cells on node 12: 13 
+  Number of cells on node 9: 13 
+  Number of cells on node 25: 12 
+  Number of cells on node 2: 13 
+  Done; cell creation time = 0.10 s.
+Making connections...
+  Number of connections on node 8: 1340 
+  Number of connections on node 16: 1241 
+  Number of connections on node 12: 1282 
+  Number of connections on node 19: 1259 
+  Number of connections on node 17: 1173 
+  Number of connections on node 24: 1154 
+  Number of connections on node 31: 1107 
+  Number of connections on node 29: 1136 
+  Number of connections on node 28: 1214 
+  Number of connections on node 13: 1302 
+  Number of connections on node 15: 1236 
+  Number of connections on node 7: 1243 
+  Number of connections on node 1: 1310 
+  Number of connections on node 2: 1315 
+  Number of connections on node 25: 1152 
+  Number of connections on node 5: 1241 
+  Number of connections on node 14: 1278 
+  Number of connections on node 27: 1164 
+  Number of connections on node 18: 1199 
+  Number of connections on node 6: 1305 
+  Number of connections on node 10: 1322 
+  Number of connections on node 4: 1332 
+  Number of connections on node 20: 1108 
+  Number of connections on node 21: 1315 
+  Number of connections on node 11: 1339 
+  Number of connections on node 3: 1307 
+  Number of connections on node 30: 1118 
+  Number of connections on node 26: 1214 
+  Number of connections on node 0: 1287 
+  Number of connections on node 22: 1222 
+  Number of connections on node 9: 1237 
+  Number of connections on node 23: 1217 
+  Done; cell connection time = 2.92 s.
+Adding stims...
+  Number of stims on node 9: 13 
+  Number of stims on node 24: 12 
+  Number of stims on node 29: 12 
+  Number of stims on node 25: 12 
+  Number of stims on node 30: 12 
+  Number of stims on node 16: 12 
+  Number of stims on node 0: 13 
+  Number of stims on node 19: 12 
+  Number of stims on node 5: 13 
+  Number of stims on node 3: 13 
+  Number of stims on node 1: 13 
+  Number of stims on node 14: 13 
+  Number of stims on node 11: 13 
+  Number of stims on node 8: 13 
+  Number of stims on node 22: 12 
+  Number of stims on node 6: 13 
+  Number of stims on node 31: 12 
+  Number of stims on node 15: 13 
+  Number of stims on node 10: 13 
+  Number of stims on node 17: 12 
+  Number of stims on node 2: 13 
+  Number of stims on node 21: 12 
+  Number of stims on node 23: 12 
+  Number of stims on node 26: 12 
+  Number of stims on node 27: 12 
+  Number of stims on node 18: 12 
+  Number of stims on node 4: 13 
+  Number of stims on node 7: 13 
+  Number of stims on node 13: 13 
+  Number of stims on node 12: 13 
+  Number of stims on node 28: 12 
+  Number of stims on node 20: 12 
+Recording 0 traces of 0 types on node 20
+Recording 0 traces of 0 types on node 22
+Recording 0 traces of 0 types on node 16
+Recording 0 traces of 0 types on node 24
+Recording 0 traces of 0 types on node 30
+Recording 0 traces of 0 types on node 8
+Recording 0 traces of 0 types on node 14
+Recording 0 traces of 0 types on node 2
+Recording 0 traces of 0 types on node 18
+Recording 0 traces of 0 types on node 6
+Recording 0 traces of 0 types on node 17
+Recording 0 traces of 0 types on node 21
+Recording 0 traces of 0 types on node 26
+Recording 0 traces of 0 types on node 23
+Recording 0 traces of 0 types on node 13
+Recording 0 traces of 0 types on node 31
+Recording 0 traces of 0 types on node 10
+Recording 0 traces of 0 types on node 4
+Recording 0 traces of 0 types on node 5
+Recording 0 traces of 0 types on node 29
+Recording 0 traces of 0 types on node 7
+Recording 0 traces of 0 types on node 1
+  Done; cell stims creation time = 0.14 s.
+Recording 0 traces of 0 types on node 28
+Recording 0 traces of 0 types on node 12
+Recording 0 traces of 0 types on node 27
+Recording 0 traces of 0 types on node 0
+Recording 0 traces of 0 types on node 3
+Recording 0 traces of 0 types on node 11
+Recording 0 traces of 0 types on node 19
+Recording 0 traces of 0 types on node 25
+Recording 0 traces of 0 types on node 9
+Recording 0 traces of 0 types on node 15
+
+Running simulation using NEURON for 30000.0 ms...
+  Done; run time = 468.10 s; real-time ratio: 0.06.
+
+Gathering data...
+  Done; gather time = 1.27 s.
+
+Analyzing...
+  Cells: 400
+  Connections: 40069 (100.17 per cell)
+  Spikes: 100729 (8.39 Hz)
+  Simulated time: 30.0 s; 32 workers
+  Run time: 468.10 s
+   E : 0.000 Hz
+   I : 15.074 Hz
+Saving output as /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run36_MPIsxOMPs_1x32x16/gen_0/gen_0_cand_3_data.json ... 
+Finished saving!
+  Done; saving time = 2.60 s.
+  Done; plotting time = 0.00 s
+
+Total time = 518.67 s

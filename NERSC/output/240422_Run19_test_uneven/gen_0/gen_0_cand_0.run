@@ -1,0 +1,77 @@
+numprocs=4
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/gen_0/gen_0_cand_0_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/gen_0/gen_0_cand_0_cfg.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/gen_0/gen_0_cand_0_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/gen_0/gen_0_cand_0_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/240422_Run19_test_uneven_netParams.py
+Loading simConfig...
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/gen_0/gen_0_cand_0_cfg.json
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/240422_Run19_test_uneven_netParams.py
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/gen_0/gen_0_cand_0_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/240422_Run19_test_uneven_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/netParams_popParams.json ... 
+
+Start time:  2024-04-22 15:19:38.288496
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/gen_0/gen_0_cand_0_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/gen_0/gen_0_cand_0_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/240422_Run19_test_uneven_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/netParams_popParams.json ... 
+
+Creating network of 2 cell populations on 4 hosts...
+  Number of cells on node 2: 100 
+  Number of cells on node 0: 100 
+  Done; cell creation time = 0.02 s.
+Making connections...
+  Number of cells on node 1: 100 
+  Number of cells on node 3: 100 
+  Number of connections on node 1: 7978 
+  Number of connections on node 3: 7929 
+  Number of connections on node 0: 8065 
+  Number of connections on node 2: 8213 
+  Done; cell connection time = 1.68 s.
+Adding stims...
+  Number of stims on node 1: 100 
+  Number of stims on node 0: 100 
+  Number of stims on node 3: 100 
+  Number of stims on node 2: 100 
+  Done; cell stims creation time = 0.02 s.
+Recording 0 traces of 0 types on node 1
+Recording 0 traces of 0 types on node 3
+Recording 0 traces of 0 types on node 2
+Recording 0 traces of 0 types on node 0
+
+Running simulation using NEURON for 30000.0 ms...
+  Done; run time = 382.47 s; real-time ratio: 0.08.
+
+Gathering data...
+  Done; gather time = 1.52 s.
+
+Analyzing...
+  Cells: 400
+  Connections: 32585 (81.46 per cell)
+  Spikes: 890692 (74.22 Hz)
+  Simulated time: 30.0 s; 4 workers
+  Run time: 382.47 s
+   E : 84.476 Hz
+   I : 0.000 Hz
+Saving output as /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run19_test_uneven/gen_0/gen_0_cand_0_data.json ... 
+Finished saving!
+  Done; saving time = 2.55 s.
+  Done; plotting time = 0.00 s
+
+Total time = 388.62 s
