@@ -1,3 +1,13 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:599d9fb1fb1a1cb214da2ebeb22934db53501954d60615ec7d118ece3b4aa6db
-size 521
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "console": "integratedTerminal",
+            "justMyCode": false
+        }
+    ]
+}

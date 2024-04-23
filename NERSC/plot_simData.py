@@ -20,4 +20,5 @@ for root, dirs, files in os.walk(output_path):
                 #print(data_file_path)
             #load the data file using netpyne loadall
             data = netpyne.sim.loadAll(data_file_path)
+            print(data)
             
