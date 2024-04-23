@@ -63,6 +63,7 @@ elif option == 'mpi_direct':
     #USER_OMP_threads_per_process_per_node = 16 #ranks
     #USER_OMP_threads_per_process = 256
     USER_MPI_processes_per_node = 128//USER_pop_size
+    USER_MPI_processes_per_node = 8
     #USER_MPI_processes_per_node = 32
     # USER_MPI_processes_per_node = square_root
     # USER_OMP_threads_per_process_per_node = square_root
@@ -75,8 +76,8 @@ elif option == 'mpi_direct':
     bind_unit = "core"
     #unit = "node"
     #USER_OMP_threads_per_process = '16'
+    #    taskset -c $unused_cores
     USER_mpiCommand = f'''
-    taskset -c $unused_cores
     mpirun --mca mtl_base_verbose 100
     --use-hwthread-cpus
     --nooversubscribe 
