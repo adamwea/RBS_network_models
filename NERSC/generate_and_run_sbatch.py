@@ -18,6 +18,7 @@ sbatch_options = f"""#!/bin/bash
 #SBATCH --mail-type=ALL
 #SBATCH -q {USER_queue}
 #SBATCH -C cpu
+#SBATCH --exclusive
 """
 
 # Define the rest of the shell script
