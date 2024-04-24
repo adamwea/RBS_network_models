@@ -2,12 +2,15 @@ import sys
 from batch_helper_functions import get_walltime_per_sim
 
 ## Run Name
-try: USER_run_label = sys.argv[1] ### Change this to a unique name for the batch run
+i = 0
+#while 'batchRun.py' not in sys.argv[i]: i += 1
+try: USER_run_label = sys.argv[-2] ### Change this to a unique name for the batch run
 except: USER_run_label = 'debug_run' ### Change this to a unique name for the batch run
 
 ##Simulation Duration
-try: USER_seconds = int(sys.argv[2]) ### Change this to the number of seconds for the simulation
+try: USER_seconds = int(sys.argv[-1]) ### Change this to the number of seconds for the simulation
 except: USER_seconds = 5
+#USER_seconds = 30
 
 ## Available Methods
 USER_method = 'evol'
@@ -48,25 +51,57 @@ USER_raster_crop = None
 ## Evol Params
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
 # Population sizes where 256/USER_pop_size is an integer and perfect square: 1, 4, 16, 64, 256, 1024, 4096, 16384, 65536
-USER_pop_size = 16 # Population sizes
+USER_pop_size = 4 # Population sizes
 USER_max_generations = 10
 USER_time_sleep = 10 #seconds between checking for completed simulations
 USER_maxiter_wait_minutes = 45 #Maximum minutes to wait before starting new Generation
 
 ## Parallelization
-options = ['local', 'mpi_direct', 'hpc_slurm']
-# 0 - local
-# 1 - NERSC
-option = options[1]
-if option == 'local':
-    USER_mpiCommand = 'mpirun'
+options = ['mpi_bulletin_Laptop', 
+           'mpi_bulletin_Server', 
+           'mpi_bulletin_NERSC', 
+           'mpi_direct', 
+           'hpc_slurm']
+option = options[0]
+if option == 'mpi_bulletin_Laptop':
+    USER_runCfg_type = 'mpi_bulletin'    
     USER_nodes = 1 #This should be set to the number of nodes available
-    USER_runCfg_type = 'mpi_bulletin'
-    USER_cores_per_node_per_sim = 4 #This should be set to the number of cores desired for each simulation
-    USER_cores_per_node = USER_cores_per_node_per_sim    
+    Laptop_cores_per_node = 8 #8 physical cores, 16 hyperthreads
+    USER_cores_per_node = Laptop_cores_per_node
+    USER_total_cores = Laptop_cores_per_node*USER_nodes
+    USER_JobName = f'mpiexec_test_{USER_nodes}x{USER_cores_per_node}'
+    USER_MPI_run_keep = True
     USER_walltime = None
     USER_email = None
-    USER_custom = None
+    USER_custom_slurm = None
+    USER_allocation = None
+    USER_mpiCommand = None
+elif option == 'mpi_bulletin_Server':
+    USER_runCfg_type = 'mpi_bulletin'    
+    USER_nodes = 1 #This should be set to the number of nodes available
+    Server_cores_per_node = 40 #???8 physical cores, 16 hyperthreads TODO: Find out the number of cores per node
+    USER_cores_per_node = Server_cores_per_node
+    USER_total_cores = Server_cores_per_node*USER_nodes
+    USER_JobName = f'mpiexec_test_{USER_nodes}x{USER_cores_per_node}'
+    USER_MPI_run_keep = True
+    USER_walltime = None
+    USER_email = None
+    USER_custom_slurm = None
+    USER_allocation = None
+    USER_mpiCommand = None
+elif option == 'mpi_bulletin_NERSC':
+    USER_queue = 'debug' #Options: debug, regular, premium
+    USER_runCfg_type = 'mpi_bulletin'    
+    USER_allocation = 'm2043' #project ID
+    USER_walltime = "00:30:00"    
+    USER_email = "amwe@ucdavis.edu"
+    USER_nodes = 1 #This should be set to the number of nodes available
+    Perlmutter_cores_per_node = 256 #128 physical cores, 256 hyperthreads
+    USER_cores_per_node = Perlmutter_cores_per_node
+    USER_total_cores = Perlmutter_cores_per_node*USER_nodes
+    USER_JobName = f'mpiexec_test_{USER_nodes}x{USER_cores_per_node}'
+    USER_MPI_run_keep = True
+    #USER_maxiter_wait_minutes = 5 #Maximum minutes to wait before new simulation starts before killing generation
 elif option == 'mpi_direct':
     USER_queue = 'debug' #Options: debug, regular, premium
     USER_runCfg_type = 'mpi_direct'    

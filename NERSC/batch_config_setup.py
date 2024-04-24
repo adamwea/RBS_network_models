@@ -26,8 +26,8 @@ selected_cand_cfg = None
 # selected_cand_cfg = '/mnt/disk15tb/adam/git_workspace/netpyne_2DNetworkSimulations/2DNet_simulations/BurstingPlotDevelopment/nb5.1_optimizing_EEonly/output/24-3-24_5sec_EEsearch/gen_5/gen_5_cand_29_cfg.json'
 
 ## Parallelization Parameters ##
-assert USER_MPI_processes_per_node, 'USER_cores_per_node must be specified in USER_INPUTS.py'
-cores_per_node = USER_MPI_processes_per_node #cores/node
+assert USER_cores_per_node, 'USER_cores_per_node must be specified in USER_INPUTS.py'
+cores_per_node = USER_cores_per_node #cores/node
 assert USER_pop_size, 'USER_pop_size must be specified in USER_INPUTS.py'
 pop_size = USER_pop_size
 assert USER_nodes, 'USER_nodes must be specified in USER_INPUTS.py'
@@ -61,13 +61,29 @@ run_label = USER_run_label #batch_run_files folder name
 '''
 Initialize
 '''
+import os
 
 # Get current date in YYMMDD format
 current_date = datetime.datetime.now().strftime('%y%m%d')
-
 # Prepare Batch_Run_Folder and Initial Files
 script_path = os.path.dirname(os.path.realpath(__file__))
 output_path = script_path+'/output'
+
+# # Get the PID of the current process
+# pid = os.getpid()
+# if not os.path.exists(f'{output_path}/pids_batch_configs'):
+#     os.makedirs(f'{output_path}/pids_batch_configs')
+# # Write the PID to a file
+# with open(f'{output_path}/pids_batch_configs/pids_batch_config_{current_date}.txt', 'a') as f:
+#     f.write(str(pid) + '\n')
+# # Read the file and get the first PID
+# with open(f'{output_path}/pids_batch_configs/pids_batch_config_{current_date}.txt', 'r') as f:
+#     first_pid = int(f.readline().strip())
+
+#sys.exit()
+
+# Check if the current process is the first process
+# if pid == first_pid:
 
 # Get list of existing runs for the day
 try: existing_runs = [run for run in os.listdir(output_path) if run.startswith(current_date)]
@@ -83,7 +99,9 @@ prev_run_number = new_run_number - 1
 
 # Update run_name with new format
 run_name = f'{current_date}_Run{new_run_number}_{run_label}'
-prev_run_name = f'{current_date}_Run{prev_run_number}_{run_label}'   
+prev_run_name = f'{current_date}_Run{prev_run_number}_{run_label}'
+print(f'Run Name: {run_name}')
+#sys.exit()   
 
 # Get unique run path
 run_path = f'{output_path}/{run_name}'
@@ -94,6 +112,11 @@ if overwrite_run or continue_run:
     if prev_run_name in existing_runs:
         assert not (overwrite_run and continue_run), 'overwrite_run and continue_run cannot both be True'
         # Manage batch_run path
+        if USER_MPI_run_keep and os.path.exists(prev_run_path):
+            #shutil.rmtree(prev_run_path)
+            run_path = prev_run_path
+            logger.info('MPI')   
+            #logger.info(f'Overwriting existing batch_run: {os.path.basename(run_path)}')
         if overwrite_run and os.path.exists(prev_run_path):
             shutil.rmtree(prev_run_path)
             run_path = prev_run_path   

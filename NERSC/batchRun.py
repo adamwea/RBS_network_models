@@ -3,8 +3,8 @@ This file is a *highly* modified version of the file batchRun.py
 from the NetPyNE tutorial 9. 
 
 Evolutionary algorithm optimization of a network using NetPyNE
+
 To run use: mpiexec -np [num_cores] nrniv -mpi batchRun.py
-Note: May or may not include capability for other options in here later.
 '''
 
 '''
@@ -89,7 +89,7 @@ def get_batch_config(batch_config_options = None):
     from USER_INPUTS import USER_email
     from USER_INPUTS import USER_custom_slurm
     from USER_INPUTS import USER_allocation
-    from USER_INPUTS import USER_MPI_processes_per_node
+    from USER_INPUTS import USER_cores_per_node
     from USER_INPUTS import USER_nodes
 
     batch_config = {
@@ -103,7 +103,7 @@ def get_batch_config(batch_config_options = None):
             'script': script,
             'mpiCommand': USER_mpiCommand,
             'nodes': USER_nodes,
-            'coresPerNode': USER_MPI_processes_per_node,
+            'coresPerNode': USER_cores_per_node,
             'allocation': USER_allocation,
             'reservation': None,
             'skip': skip,

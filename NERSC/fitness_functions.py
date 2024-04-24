@@ -322,7 +322,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, batch_saveFolder = None,
                 for k, v in pops_rate.items()
             ]
             rate_fitness = np.mean(popFitness)
-            popInfo = '; '.join(['%s rate=%.1f fit=%1.f'%(p,r,f) for p,r,f in zip(s
+            popInfo = '; '.join(['%s rate=%.1f fit=%1.f'%(p,r,f) for p,r,f in zip(
                 list(simData['popRates'].keys()), 
                 list(simData['popRates'].values()), popFitness)])
             print('  '+popInfo)
@@ -337,7 +337,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, batch_saveFolder = None,
             fitnessVals['rate_fitness'] = rate_fitness
             return fitnessVals
     
-    def fitness_summary_metrics(fitnessVals):s
+    def fitness_summary_metrics(fitnessVals):
         #average fitness
         average_fitness = sum(fitnessVals.values()) / len(fitnessVals)
 
