@@ -236,7 +236,7 @@ def measure_network_activity(
     if plot: 
         assert plotting_params is not None, 'plotting_params must be specified'
         plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTimes, burstPeakValues, thresholdBurst, rmsFiringRate)
-    
+        
     '''
     Network Metric Outputs
     '''

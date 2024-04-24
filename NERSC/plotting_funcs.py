@@ -44,7 +44,96 @@ def plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTime
 
     # Plot the threshold line and burst peaks
     plt.plot(np.arange(timeVector[-1]), thresholdBurst * rmsFiringRate * np.ones(np.ceil(timeVector[-1]).astype(int)), color='gray')
-    plt.plot(burstPeakTimes, burstPeakValues, 'or')  # Plot burst peaks as red circles    
+    plt.plot(burstPeakTimes, burstPeakValues, 'or')  # Plot burst peaks as red circles
+
+    default_name = 'NetworkActivity.png'
+    figname = default_name
+    try: 
+        fitplot = plotting_params['fitplot']
+        if fitplot == 'burst_freq' or fitplot == 'burst_IBI':            
+            x_min, x_max = plt.xlim()
+            y_min, y_max = plt.ylim()
+            x_coord = x_min*1.05
+            y_coord = y_max*0.990
+            decrement = 0.025*(y_max-y_min)
+            targets = plotting_params['targets']['pops']['burst_peak_frequency']
+            for key, target in targets.items():
+                plt.text(x_coord, y_coord, f'{key}: {target}', fontsize=11)
+                y_coord -= decrement  # Adjust this value to change the spacing between lines
+            targets = plotting_params['targets']['pops']['IBI_targets']
+            fitnessVal = plotting_params['fitnessVals']['burst_peak_frequency_fitness']
+            plt.text(x_coord, y_coord, f'Fitness: {fitnessVal}', fontsize=11)
+            y_coord -= decrement
+            #measure frequency of peaks
+            peak_freq = len(burstPeakTimes) / (timeVector[-1] / 1000) #convert to seconds
+            plt.text(x_coord, y_coord, f'Peak Frequency: {peak_freq}', fontsize=11)
+            y_coord -= decrement
+            y_coord -= decrement
+            for key, target in targets.items():
+                plt.text(x_coord, y_coord, f'{key}: {target}', fontsize=11)
+                y_coord -= decrement  # Adjust this value to change the spacing between lines
+            fitnessVal = plotting_params['fitnessVals']['IBI_fitness']
+            plt.text(x_coord, y_coord, f'Fitness: {fitnessVal}', fontsize=11)
+            y_coord -= decrement
+            #measure frequency of peaks
+            IBIs = np.diff(burstPeakTimes) #
+            meanIBI = np.mean(IBIs)
+            plt.text(x_coord, y_coord, f'mean IBI: {meanIBI}', fontsize=11)
+
+            plt.title('Network Activity - Peak Frequency and IBI Fit', fontsize=title_font)
+            #plt.show()
+            figname = 'peakFreqIBIFit.png'
+        elif fitplot == 'burst_peak' or fitplot == 'baseline':
+            
+            #measure frequency of peaks
+            peak_amp = np.mean(burstPeakValues)
+            peak_amp_target = plotting_params['targets']['pops']['burts_peak_targets']['target']
+            #adjust ylim as needed to get peak_amp_target in view
+            if peak_amp_target > max(firingRate)*yhigh100:
+                plt.ylim([min(firingRate)*ylow100, peak_amp_target*1.05])
+            elif peak_amp_target < min(firingRate)*ylow100:
+                plt.ylim([peak_amp_target*0.95, max(firingRate)*yhigh100])
+            #baseline
+            baseline = np.mean(firingRate)
+            baseline_target = plotting_params['targets']['pops']['baseline_targets']['target']
+            #adjust ylim as needed to get baseline_target in view
+            if baseline_target > max(firingRate)*yhigh100:
+                plt.ylim([min(firingRate)*ylow100, baseline_target*1.05])
+            elif baseline_target < min(firingRate)*ylow100:
+                plt.ylim([baseline_target*0.95, max(firingRate)*yhigh100])
+            yhigh100 = plotting_params['yhigh100']
+            x_min, x_max = plt.xlim()
+            y_min, y_max = plt.ylim()
+            x_coord = x_min*1.05
+            y_coord = y_max*0.980
+            decrement = 0.025*(y_max-y_min)
+            targets = plotting_params['targets']['pops']['burts_peak_targets']
+            for key, target in targets.items():
+                plt.text(x_coord, y_coord, f'{key}: {target}', fontsize=11)
+                y_coord -= decrement  # Adjust this value to change the spacing between lines
+            fitnessVal = plotting_params['fitnessVals']['burstAmp_Fitness']
+            plt.text(x_coord, y_coord, f'Fitness: {fitnessVal}', fontsize=11)
+            y_coord -= decrement
+            plt.text(x_coord, y_coord, f'Mean Peak Amplitude: {peak_amp}', fontsize=11)
+            y_coord -= decrement
+            y_coord -= decrement
+            targets = plotting_params['targets']['pops']['baseline_targets']
+            for key, target in targets.items():
+                plt.text(x_coord, y_coord, f'{key}: {target}', fontsize=11)
+                y_coord -= decrement  # Adjust this value to change the spacing between lines
+            fitnessVal = plotting_params['fitnessVals']['baselineFitness']
+            plt.text(x_coord, y_coord, f'Fitness: {fitnessVal}', fontsize=11)
+            y_coord -= decrement
+            plt.text(x_coord, y_coord, f'Baseline (signal mean): {baseline}', fontsize=11)
+            plt.title('Network Activity - Peak Amplitude Fit', fontsize=title_font)
+            #plot horizontal line at target
+            plt.axhline(peak_amp_target, color='r', linestyle='--')
+            plt.axhline(baseline_target, color='b', linestyle='--')
+            #plt.show()
+            figname = 'peakAmpBaselineFit.png'
+        #elif fitplot == 'burst_freq_rms':
+    except:
+        pass
 
     saveFig = plotting_params['saveFig']
     if saveFig:
@@ -55,7 +144,7 @@ def plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTime
         assert simLabel, 'simLabel should be a string'
         job_name = os.path.basename(os.path.dirname(batch_saveFolder))
         gen_folder = simLabel.split('_cand')[0]
-        fig_path = os.path.join(saveFig, f'{job_name}/{gen_folder}/{simLabel}_NetworkActivity.png')
+        fig_path = os.path.join(saveFig, f'{job_name}/{gen_folder}/{simLabel}_{figname}')
         fig_dir = os.path.dirname(fig_path)
         if not os.path.exists(fig_dir):
             os.makedirs(fig_dir)
