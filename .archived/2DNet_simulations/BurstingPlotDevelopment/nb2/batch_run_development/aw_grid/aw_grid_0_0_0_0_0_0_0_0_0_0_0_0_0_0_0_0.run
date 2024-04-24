@@ -1,0 +1,43 @@
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from ./aw_grid/aw_grid_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_cfg.json
+Loading file ./aw_grid/aw_grid_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_cfg.json ... 
+Loading simConfig...
+Importing netParams from ./aw_grid/aw_grid_netParams.py
+Loading file constant_neuron_locs_netParams.json ... 
+Loading netParams...
+
+Start time:  2024-03-10 12:36:22.293923
+
+Creating network of 2 cell populations on 1 hosts...
+  Number of cells on node 0: 400 
+  Done; cell creation time = 0.03 s.
+Making connections...
+  Number of connections on node 0: 82149 
+  Number of synaptic contacts on node 0: 87066 
+  Done; cell connection time = 7.94 s.
+Adding stims...
+  Number of stims on node 0: 400 
+  Done; cell stims creation time = 0.03 s.
+
+Running simulation using NEURON for 2000.0 ms...
+  Done; run time = 670.83 s; real-time ratio: 0.00.
+
+Gathering data...
+  Done; gather time = 1.91 s.
+
+Analyzing...
+  Cells: 400
+  Connections: 82549 (206.37 per cell)
+  Synaptic contacts: 87466 (218.66 per cell)
+  Spikes: 4014 (5.02 Hz)
+  Simulated time: 2.0 s; 1 workers
+  Run time: 670.83 s
+   E : 3.351 Hz
+   I : 7.758 Hz
+Saving output as ./aw_grid/aw_grid_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_0_data.json ... 
+Finished saving!
+  Done; saving time = 2.62 s.
+  Done; plotting time = 0.00 s
+
+Total time = 683.47 s

@@ -1,0 +1,592 @@
+./A.c: ../mod/A.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "A.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./A.o: ./A.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./AMPA.c: ../mod/AMPA.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "AMPA.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./AMPA.o: ./AMPA.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./ar.c: ../mod/ar.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "ar.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./ar.o: ./ar.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./beforestep_py.c: ../mod/beforestep_py.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "beforestep_py.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./beforestep_py.o: ./beforestep_py.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./cadad.c: ../mod/cadad.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "cadad.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./cadad.o: ./cadad.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./cad.c: ../mod/cad.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "cad.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./cad.o: ./cad.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./cadyn.c: ../mod/cadyn.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "cadyn.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./cadyn.o: ./cadyn.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./cagk.c: ../mod/cagk.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "cagk.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./cagk.o: ./cagk.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./cal_mh.c: ../mod/cal_mh.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "cal_mh.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./cal_mh.o: ./cal_mh.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./cal_mig.c: ../mod/cal_mig.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "cal_mig.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./cal_mig.o: ./cal_mig.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./ca.c: ../mod/ca.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "ca.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./ca.o: ./ca.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./canin.c: ../mod/canin.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "canin.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./canin.o: ./canin.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./can_mig.c: ../mod/can_mig.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "can_mig.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./can_mig.o: ./can_mig.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./catcb.c: ../mod/catcb.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "catcb.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./catcb.o: ./catcb.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./cat_mig.c: ../mod/cat_mig.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "cat_mig.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./cat_mig.o: ./cat_mig.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./cat.c: ../mod/cat.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "cat.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./cat.o: ./cat.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./cat_traub.c: ../mod/cat_traub.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "cat_traub.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./cat_traub.o: ./cat_traub.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./dipole.c: ../mod/dipole.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "dipole.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./dipole.o: ./dipole.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./dipole_pp.c: ../mod/dipole_pp.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "dipole_pp.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./dipole_pp.o: ./dipole_pp.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./ElectSyn.c: ../mod/ElectSyn.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "ElectSyn.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./ElectSyn.o: ./ElectSyn.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./expsynstdp.c: ../mod/expsynstdp.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "expsynstdp.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./expsynstdp.o: ./expsynstdp.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./GABAa.c: ../mod/GABAa.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "GABAa.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./GABAa.o: ./GABAa.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./gabab.c: ../mod/gabab.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "gabab.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./gabab.o: ./gabab.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./h_BS.c: ../mod/h_BS.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "h_BS.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./h_BS.o: ./h_BS.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./HCN1.c: ../mod/HCN1.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "HCN1.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./HCN1.o: ./HCN1.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./hh2.c: ../mod/hh2.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "hh2.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./hh2.o: ./hh2.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./hh3.c: ../mod/hh3.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "hh3.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./hh3.o: ./hh3.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./h_harnett.c: ../mod/h_harnett.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "h_harnett.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./h_harnett.o: ./h_harnett.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./hin.c: ../mod/hin.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "hin.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./hin.o: ./hin.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./h_kole.c: ../mod/h_kole.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "h_kole.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./h_kole.o: ./h_kole.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./h_migliore.c: ../mod/h_migliore.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "h_migliore.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./h_migliore.o: ./h_migliore.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./ican_sidi.c: ../mod/ican_sidi.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "ican_sidi.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./ican_sidi.o: ./ican_sidi.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./IC.c: ../mod/IC.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "IC.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./IC.o: ./IC.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./iholmw.c: ../mod/iholmw.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "iholmw.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./iholmw.o: ./iholmw.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./IKsin.c: ../mod/IKsin.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "IKsin.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./IKsin.o: ./IKsin.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./izhi2003a.c: ../mod/izhi2003a.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "izhi2003a.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./izhi2003a.o: ./izhi2003a.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./izhi2003b.c: ../mod/izhi2003b.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "izhi2003b.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./izhi2003b.o: ./izhi2003b.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./izhi2007a.c: ../mod/izhi2007a.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "izhi2007a.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./izhi2007a.o: ./izhi2007a.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./izhi2007b.c: ../mod/izhi2007b.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "izhi2007b.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./izhi2007b.o: ./izhi2007b.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./k2.c: ../mod/k2.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "k2.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./k2.o: ./k2.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kacurrent.c: ../mod/kacurrent.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kacurrent.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kacurrent.o: ./kacurrent.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kahp.c: ../mod/kahp.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kahp.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kahp.o: ./kahp.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./ka.c: ../mod/ka.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "ka.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./ka.o: ./ka.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kap_BS.c: ../mod/kap_BS.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kap_BS.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kap_BS.o: ./kap_BS.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kapcb.c: ../mod/kapcb.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kapcb.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kapcb.o: ./kapcb.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kapin.c: ../mod/kapin.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kapin.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kapin.o: ./kapin.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kBK.c: ../mod/kBK.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kBK.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kBK.o: ./kBK.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kca.c: ../mod/kca.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kca.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kca.o: ./kca.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kc.c: ../mod/kc.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kc.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kc.o: ./kc.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kctin.c: ../mod/kctin.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kctin.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kctin.o: ./kctin.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kdmc_BS.c: ../mod/kdmc_BS.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kdmc_BS.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kdmc_BS.o: ./kdmc_BS.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kdr_BS.c: ../mod/kdr_BS.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kdr_BS.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kdr_BS.o: ./kdr_BS.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kdrcurrent.c: ../mod/kdrcurrent.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kdrcurrent.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kdrcurrent.o: ./kdrcurrent.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kdrin.c: ../mod/kdrin.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kdrin.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kdrin.o: ./kdrin.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./km2.c: ../mod/km2.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "km2.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./km2.o: ./km2.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./km.c: ../mod/km.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "km.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./km.o: ./km.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./kv.c: ../mod/kv.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "kv.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./kv.o: ./kv.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./lfp.c: ../mod/lfp.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "lfp.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./lfp.o: ./lfp.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./mea.c: ../mod/mea.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "mea.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./mea.o: ./mea.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./MyExp2SynBB.c: ../mod/MyExp2SynBB.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "MyExp2SynBB.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./MyExp2SynBB.o: ./MyExp2SynBB.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./MyExp2SynNMDABB.c: ../mod/MyExp2SynNMDABB.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "MyExp2SynNMDABB.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./MyExp2SynNMDABB.o: ./MyExp2SynNMDABB.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./nacurrent.c: ../mod/nacurrent.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "nacurrent.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./nacurrent.o: ./nacurrent.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./naf.c: ../mod/naf.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "naf.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./naf.o: ./naf.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./nafx.c: ../mod/nafx.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "nafx.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./nafx.o: ./nafx.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./nap.c: ../mod/nap.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "nap.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./nap.o: ./nap.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./nax_BS.c: ../mod/nax_BS.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "nax_BS.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./nax_BS.o: ./nax_BS.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./naz.c: ../mod/naz.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "naz.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./naz.o: ./naz.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./Nca.c: ../mod/Nca.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "Nca.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./Nca.o: ./Nca.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./NMDA.c: ../mod/NMDA.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "NMDA.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./NMDA.o: ./NMDA.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./OFThpo.c: ../mod/OFThpo.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "OFThpo.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./OFThpo.o: ./OFThpo.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./OFThresh.c: ../mod/OFThresh.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "OFThresh.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./OFThresh.o: ./OFThresh.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./savedist.c: ../mod/savedist.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "savedist.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./savedist.o: ./savedist.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./vecevent.c: ../mod/vecevent.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "vecevent.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./vecevent.o: ./vecevent.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
+./vecstim.c: ../mod/vecstim.mod
+	@printf " -> $(C_GREEN)NMODL$(C_RESET) $<\\n"
+	(cd "../mod";  MODLUNIT=$(NRNUNITS) $(NOCMODL) "vecstim.mod" -o "/mnt/disk15tb/adam/git_workspace/netpyne/netpyne/tutorials/x86_64")
+
+./vecstim.o: ./vecstim.c
+	@printf " -> $(C_GREEN)Compiling$(C_RESET) $<\\n"
+	$(COMPILE) -I"../mod" $(INCLUDES) -fPIC -c $< -o $@
+
