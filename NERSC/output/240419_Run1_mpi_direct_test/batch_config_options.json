@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:ca3ae5b4e81aed417a457437f0e1c814c82d1e414c3e3a49a6762800dfb2262d
-size 607
+{
+    "run_path": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/output/240419_Run1_mpi_direct_test",
+    "batchLabel": "240419_Run1_mpi_direct_test",
+    "method": "evol",
+    "cores_per_node": 16,
+    "nodes": 1,
+    "script": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/init.py",
+    "pop_size": 8,
+    "max_generations": 5,
+    "time_sleep": 10,
+    "maxiter_wait": 30.0,
+    "skip": false,
+    "num_elites": 80,
+    "cfgFile": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/cfg.py",
+    "netParamsFile": "/global/u2/a/adammwea/2DNetworkSimulations/NERSC/netParams.py",
+    "initCfg": null
+}

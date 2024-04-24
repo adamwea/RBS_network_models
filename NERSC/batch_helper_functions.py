@@ -23,6 +23,28 @@ import shutil
 
 # (I dont understand how this works, figure it out later)
 import inspect
+
+from plotting_funcs import *
+
+#from USER_INPUTS import *
+
+def get_walltime_per_sim(USER_walltime_per_gen, USER_pop_size, USER_nodes):
+    USER_walltime_per_gen_hours = int(USER_walltime_per_gen.split(':')[0])
+    USER_walltime_per_gen_hours = USER_walltime_per_gen_hours / USER_nodes
+    USER_walltime_per_gen_minutes = int(USER_walltime_per_gen.split(':')[1])
+    USER_walltime_per_gen_minutes = USER_walltime_per_gen_minutes / USER_nodes
+    USER_walltime_per_gen_seconds = int(USER_walltime_per_gen.split(':')[2])
+    USER_walltime_per_gen_seconds = USER_walltime_per_gen_seconds / USER_nodes
+    
+    USER_walltime_per_gen_seconds += USER_walltime_per_gen_minutes*60
+    USER_walltime_per_gen_seconds += USER_walltime_per_gen_hours*3600
+    USER_walltime_per_sim_seconds = USER_walltime_per_gen_seconds/USER_pop_size
+
+    # Convert back to hh:mm:ss
+    hours, remainder = divmod(USER_walltime_per_sim_seconds, 3600)
+    minutes, seconds = divmod(remainder, 60)
+    return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
+
 def find_batch_object_and_sim_label():
     # Get the current frame
     current_frame = inspect.currentframe()  
@@ -69,18 +91,88 @@ def move_btr_files():
     except Exception as e:
         print("Failed to move files:", e)
 
-def measure_network_activity(rasterData, min_peak_distance = 1.0, binSize=0.02*1000, gaussianSigma=0.16*1000, thresholdBurst=1.2, crop = None): #, figSize=(10, 6), saveFig=False, figName='NetworkActivity.png'):
+def measure_network_activity(
+        rasterData, min_peak_distance = None, binSize=None, gaussianSigma=None, 
+        thresholdBurst = None, plot=False, plotting_params = None, crop = None): # thresholdBurst=1.2, crop = None): #, figSize=(10, 6), saveFig=False, figName='NetworkActivity.png'):
+    
+    def burstPeakQualityControl(burstPeakTimes, burstPeakValues):
+        # Get the indices of the valid peaks
+        #valid_peak_indices = np.where((burstPeakTimes > timeVector[0]) & (burstPeakTimes < timeVector[-1]))[0]
+        # Filter burstPeakTimes and burstPeakValues using the valid peak indices
+        #burstPeakTimes = burstPeakTimes[valid_peak_indices]
+        #burstPeakValues = burstPeakValues[valid_peak_indices]
+        #remove negative values
+        burstPeakValues = np.array(burstPeakValues)
+        burstPeakTimes = np.array(burstPeakTimes)
+        burstPeakValues = burstPeakValues[burstPeakValues > 0]
+        burstPeakTimes = burstPeakTimes[burstPeakValues > 0]
+        
+        # identify indices of statistical outlier PeakValues in the positive direction
+        z = np.abs(stats.zscore(burstPeakValues))
+        outliers = np.where((z > 3) & (burstPeakValues > np.mean(burstPeakValues)))[0]
+        #check if outliers occur during the first 10% of the simulation
+        if len(outliers) > 0:
+            early_outliers = outliers[outliers < len(burstPeakValues)*0.1]
+            if len(early_outliers) > 0:
+                #identify the latest outlier in the early group
+                latest_early_outlier = early_outliers[-1]
+                #remove values before the latest early outlier
+                burstPeakValues = burstPeakValues[latest_early_outlier+1:]
+                burstPeakTimes = burstPeakTimes[latest_early_outlier+1:]
+        #check if outliers occur during final 10% of sim
+        if len(outliers) > 0:
+            late_outliers = outliers[outliers > len(burstPeakValues)*0.9]
+            if len(late_outliers) > 0:
+                #identify the earliest outlier in the late group
+                earliest_late_outlier = late_outliers[0]
+                #remove values after the earliest late outlier
+                burstPeakValues = burstPeakValues[:earliest_late_outlier-1]
+                burstPeakTimes = burstPeakTimes[:earliest_late_outlier-1]
+        #identify indicies of burstPeakStarts and burstPeakEnds (where signal crosses threshold)
+        burstPeakStarts = []
+        burstPeakEnds = []
+        threshold = thresholdBurst * rmsFiringRate
+        for i in range(1, len(firingRate)):
+            if firingRate[i-1] < threshold and firingRate[i] >= threshold:
+                burstPeakStarts.append(timeVector[i])
+            elif firingRate[i-1] >= threshold and firingRate[i] < threshold:
+                burstPeakEnds.append(timeVector[i])
+        #eliminate any values from burstPeakValues and Times that are not the max value between starts and stops
+        new_burstPeakValues = []
+        new_burstPeakTimes = []
+        for i in range(len(burstPeakStarts)):
+            start = burstPeakStarts[i]
+            end = burstPeakEnds[i]
+            max_value = np.max(firingRate[np.where((timeVector >= start) & (timeVector <= end))])
+            max_index = np.where(firingRate == max_value)[0][0]
+            if max_value in burstPeakValues:
+                new_burstPeakValues.append(max_value)
+                new_burstPeakTimes.append(timeVector[max_index])
+        burstPeakValues = new_burstPeakValues
+        burstPeakTimes = new_burstPeakTimes
+        assert len(burstPeakValues) == len(burstPeakTimes), 'burstPeakValues and burstPeakTimes must be the same length'
+        return burstPeakTimes, burstPeakValues, burstPeakStarts, burstPeakEnds
+    
+    '''
+    Init
+    '''    
+    #Get relative spike times data
     try: SpikeTimes = rasterData['spkTimes']
     except: 
         try: SpikeTimes = rasterData['spkt']
         except: 
             print('Error: No spike times found in rasterData')
             return None
-
     relativeSpikeTimes = SpikeTimes
     relativeSpikeTimes = np.array(relativeSpikeTimes)
     relativeSpikeTimes = relativeSpikeTimes - relativeSpikeTimes[0]  # Set the first spike time to 0
+    assert binSize is not None, 'binSize must be specified'
+    assert gaussianSigma is not None, 'gaussianSigma must be specified'
+    assert thresholdBurst is not None, 'thresholdBurst must be specified'
 
+    '''
+    Convolve Spike Data
+    '''    
     # Step 1: Bin all spike times into small time windows
     timeVector = np.arange(0, max(relativeSpikeTimes) + binSize, binSize)  # Time vector for binning
     binnedTimes, _ = np.histogram(relativeSpikeTimes, bins=timeVector)  # Bin spike times
@@ -91,124 +183,81 @@ def measure_network_activity(rasterData, min_peak_distance = 1.0, binSize=0.02*1
     kernel = norm.pdf(kernelRange, 0, gaussianSigma)  # Gaussian kernel
     kernel *= binSize  # Normalize kernel by bin size
     firingRate = convolve(binnedTimes, kernel, mode='same') / binSize  # Convolve and normalize by bin size
+    
+    # Step 3: Crop signal. Exclude extreeme values at begining and end of simulation
+    # raw_mean = np.mean(firingRate)
+    # base_locs = np.where(np.round(firingRate) == np.round(raw_mean))
+    # base_locs = base_locs[0]
 
-    # # Create a new figure with a specified size (width, height)
-    # #get x locations where firing rate is zero
-    baseline = np.mean(firingRate)
-    base_locs = np.where(np.round(firingRate) == np.round(baseline))
-    base_locs = base_locs[0]
+    # if crop is not None:
+    #     #crop the firing rate
+    #     firingRate = firingRate[crop[0]:crop[1]]
+    #     timeVector = timeVector[crop[0]:crop[1]]
+    # else:
+    #     #crop the firing rate
+    #     firingRate = firingRate[base_locs[0]:base_locs[-1]]
+    #     timeVector = timeVector[base_locs[0]:base_locs[-1]]
 
-    if crop is not None:
-        #crop the firing rate
-        firingRate = firingRate[crop[0]:crop[1]]
-        timeVector = timeVector[crop[0]:crop[1]]
-    else:
-        #crop the firing rate
-        firingRate = firingRate[base_locs[0]:base_locs[-1]]
-        timeVector = timeVector[base_locs[0]:base_locs[-1]]
-    start_index = base_locs[0]
-    end_index = base_locs[-1]
-
-
-    #plt.figure(figsize=figSize)
-    #margin_width = 200
-    # Find the indices of timeVector that correspond to the first and last 100 ms
-    #start_index = np.where(timeVector >= margin_width)[0][0]
-    #end_index = np.where(timeVector <= max(timeVector) - margin_width)[0][-1]
-    #end_index = np.where(timeVector <= max(timeVector))[0][-1]
-
-    # #trim firing rate to the desired time window
-    # firingRate = firingRate[start_index:end_index]
-
-    # Calculate Baseline
-    baseline = np.mean(firingRate)
-    # # Define the cutoff frequency and order of the filter
-    # cutoff = 10  # Hz
-    # order = 6
-    # sampling_rate = 1000 / binSize  # Hz
-    # print(sampling_rate)
-
-    # # Normalize the cutoff frequency
-    # normalized_cutoff = cutoff / (0.5 * sampling_rate)
-
-    # # Design the filter
-    # b, a = butter(order, normalized_cutoff, btype='low', analog=False)
-
-    # # Apply the filter to the firing rate
-    # filtered_firingRate = filtfilt(b, a, firingRate)
-
-    # # Calculate the mode of the filtered signal
-    # mode = stats.mode(filtered_firingRate)
-
-    # # The mode function returns an object containing the mode value and the count of that value.
-    # # We only want the mode value, so we extract it like this:
-    # #print('Mode:', mode)
-    # baseline = mode.mode
-
-    # Plot the smoothed network activity
-    # plt.subplot(1, 1, 1)
-    # plt.plot(timeVector[start_index:end_index], firingRate[start_index:end_index], color='black')
-    # plt.xlim([timeVector[0], timeVector[-1]])  # Restrict the plot to the first and last 100 ms
-    # plt.ylim([min(firingRate[start_index:end_index])*0.95, max(firingRate[start_index:end_index])*1.05])  # Set y-axis limits to min and max of firingRate
-    # plt.ylabel('Firing Rate [Hz]')
-    # plt.xlabel('Time [ms]')
-    # plt.title('Network Activity', fontsize=11)
-
-    # Step 3: Peak detection on the smoothed firing rate curve
+    # Step 4: Peak detection on the smoothed and cropped firing rate curve
     rmsFiringRate = np.sqrt(np.mean(firingRate**2))  # Calculate RMS of the firing rate
     peaks, properties = find_peaks(firingRate, height=thresholdBurst * rmsFiringRate, distance=min_peak_distance)  # Find peaks above the threshold
-    
-    #check if peaks are found
+    #convert peak indices to times
     burstPeakTimes = timeVector[peaks]  # Convert peak indices to times
     burstPeakValues = properties['peak_heights']  # Get the peak values
+    burstPeakTimes, burstPeakValues, burstPeakStarts, burstPeakEnds = burstPeakQualityControl(burstPeakTimes, burstPeakValues)
 
-    # Get the indices of the valid peaks
-    valid_peak_indices = np.where((burstPeakTimes > timeVector[0]) & (burstPeakTimes < timeVector[-1]))[0]
+    ##Adjust lengths of timeVector and firingRate to start with the latest start before earliest peak and earliest end after latest peak
+    #get the latest start before the earliest pe
+    # Find the differences between the first peak time and all start times
+    differences = burstPeakTimes[0] - burstPeakStarts
+    # Only consider start times that are before the first peak time
+    valid_starts = np.where(differences > 0)
+    # Find the start time with the smallest difference
+    start = burstPeakStarts[np.argmin(differences[valid_starts])]
+    start_index = np.where(timeVector == start)[0][0]
+    #get the earliest end after the latest peak
+    differences = burstPeakEnds - burstPeakTimes[-1]
+    #flip order of differences to set end values first
+    differences = differences[::-1]
+    burstPeakEnds_flipped = burstPeakEnds[::-1]
+    # Only consider end times that are after the last peak time
+    valid_ends = np.where(differences > 0)
+    # Find the end time with the smallest difference
+    end = burstPeakEnds_flipped[np.argmin(differences[valid_ends])]
+    end_index = np.where(timeVector == end)[0][0]
+    #crop the firing rate
+    assert start_index < end_index, 'start_index must be less than end_index'
+    firingRate = firingRate[start_index:end_index]
+    timeVector = timeVector[start_index:end_index]
 
-    # Filter burstPeakTimes and burstPeakValues using the valid peak indices
-    burstPeakTimes = burstPeakTimes[valid_peak_indices]
-    burstPeakValues = burstPeakValues[valid_peak_indices]
-
+    '''
+    Optionally Plot
+    '''
+    if plot: 
+        assert plotting_params is not None, 'plotting_params must be specified'
+        plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTimes, burstPeakValues, thresholdBurst, rmsFiringRate)
+    
+    '''
+    Network Metric Outputs
+    '''
+    # Calculate Baseline
+    baseline = np.mean(firingRate)
     #measure frequency of peaks
     peak_freq = len(burstPeakTimes) / (timeVector[-1] / 1000) #convert to seconds
-
     # Calculate peak variance
     peak_variance = np.var(burstPeakValues)
-
     # Calculate the range of burstPeakValues
     value_range = np.max(burstPeakValues) - np.min(burstPeakValues)
-
     # Calculate the maximum possible variance
     max_possible_variance = value_range**2
-
     # Normalize the variance to a 0 to 1 scale
     normalized_peak_variance = peak_variance / max_possible_variance if max_possible_variance != 0 else 0
-
-
-
-    # # Plot the threshold line and burst peaks
-    # plt.plot(np.arange(timeVector[-1]), thresholdBurst * rmsFiringRate * np.ones(np.ceil(timeVector[-1]).astype(int)), color='gray')
-    # plt.plot(burstPeakTimes, burstPeakValues, 'or')  # Plot burst peaks as red circles    
-
-    # if saveFig:
-    #     if isinstance(saveFig, str):
-    #         # plt.savefig(saveFig, dpi=600, bbox_inches='tight')
-    #         # plt.savefig(saveFig.replace('.png', '.svg'), bbox_inches='tight')
-    #         plt.savefig(saveFig, bbox_inches='tight')
-    #     else:
-    #         # plt.savefig(figName, dpi=600, bbox_inches='tight')
-    #         # plt.savefig(figName.replace('.png', '.svg'), bbox_inches='tight')
-    #         plt.savefig(figName, bbox_inches='tight')
-    #plt.show()
-
     #measure IBI
     burstPeakTimes = np.array(burstPeakTimes)
     IBIs = np.diff(burstPeakTimes) #
-
     #measure baseline diff
     height = thresholdBurst * rmsFiringRate
-    baseline_diff = height - baseline
-    
+    baseline_diff = height - baseline    
     #IBI = IBI / 1000 #convert to seconds
     measurements = {
         'burstPeakValues': burstPeakValues,
@@ -220,12 +269,9 @@ def measure_network_activity(rasterData, min_peak_distance = 1.0, binSize=0.02*1
         'baseline_diff': baseline_diff,
         'peak_freq': peak_freq,
         'normalized_peak_variance': normalized_peak_variance,
-        'base_locs': base_locs,
-    }
-    
+        #'base_locs': base_locs,
+    }    
     return measurements 
-
-### Figure Functions
 
 def get_batchrun_info(root, file):
     file_path = os.path.join(root, file)
@@ -236,78 +282,79 @@ def get_batchrun_info(root, file):
         batch_key = file.split(f"{batchrun_folder}/")[1].split('data')[0]
     return file_path, batchrun_folder, batch_key
 
-def plot_network_activity(rasterData, min_peak_distance = 1.0, binSize=0.02*1000, gaussianSigma=0.16*1000, thresholdBurst=1.2, figSize=(10, 6), saveFig=False, timeRange = None, figName='NetworkActivity.png'):
-    SpikeTimes = rasterData['spkTimes']
-    relativeSpikeTimes = SpikeTimes
-    relativeSpikeTimes = np.array(relativeSpikeTimes)
-    relativeSpikeTimes = relativeSpikeTimes - relativeSpikeTimes[0]  # Set the first spike time to 0
+#deprecated
+# def plot_network_activity(rasterData, min_peak_distance = 1.0, binSize=0.02*1000, gaussianSigma=0.16*1000, thresholdBurst=1.2, figSize=(10, 6), saveFig=False, timeRange = None, figName='NetworkActivity.png'):
+#     SpikeTimes = rasterData['spkTimes']
+#     relativeSpikeTimes = SpikeTimes
+#     relativeSpikeTimes = np.array(relativeSpikeTimes)
+#     relativeSpikeTimes = relativeSpikeTimes - relativeSpikeTimes[0]  # Set the first spike time to 0
 
-    # Step 1: Bin all spike times into small time windows
-    timeVector = np.arange(0, max(relativeSpikeTimes) + binSize, binSize)  # Time vector for binning
-    binnedTimes, _ = np.histogram(relativeSpikeTimes, bins=timeVector)  # Bin spike times
-    binnedTimes = np.append(binnedTimes, 0)  # Append 0 to match MATLAB's binnedTimes length
+#     # Step 1: Bin all spike times into small time windows
+#     timeVector = np.arange(0, max(relativeSpikeTimes) + binSize, binSize)  # Time vector for binning
+#     binnedTimes, _ = np.histogram(relativeSpikeTimes, bins=timeVector)  # Bin spike times
+#     binnedTimes = np.append(binnedTimes, 0)  # Append 0 to match MATLAB's binnedTimes length
 
-    # Step 2: Smooth the binned spike times with a Gaussian kernel
-    kernelRange = np.arange(-3*gaussianSigma, 3*gaussianSigma + binSize, binSize)  # Range for Gaussian kernel
-    kernel = norm.pdf(kernelRange, 0, gaussianSigma)  # Gaussian kernel
-    kernel *= binSize  # Normalize kernel by bin size
-    firingRate = convolve(binnedTimes, kernel, mode='same') / binSize  # Convolve and normalize by bin size
+#     # Step 2: Smooth the binned spike times with a Gaussian kernel
+#     kernelRange = np.arange(-3*gaussianSigma, 3*gaussianSigma + binSize, binSize)  # Range for Gaussian kernel
+#     kernel = norm.pdf(kernelRange, 0, gaussianSigma)  # Gaussian kernel
+#     kernel *= binSize  # Normalize kernel by bin size
+#     firingRate = convolve(binnedTimes, kernel, mode='same') / binSize  # Convolve and normalize by bin size
 
-    # Create a new figure with a specified size (width, height)
-    plt.figure(figsize=figSize)
-    #margin_width = 200
-    assert timeRange is not None, 'timeRange must be specified'
-    #margin_width = timeRange[0]
-    # Find the indices of timeVector that correspond to the first and last 100 ms
-    #start_index = np.where(timeVector >= margin_width)[0][0]
-    #end_index = np.where(timeVector <= max(timeVector) - margin_width)[0][-1]
-    #end_index = np.where(timeVector <= max(timeVector))[0][-1]
+#     # Create a new figure with a specified size (width, height)
+#     plt.figure(figsize=figSize)
+#     #margin_width = 200
+#     assert timeRange is not None, 'timeRange must be specified'
+#     #margin_width = timeRange[0]
+#     # Find the indices of timeVector that correspond to the first and last 100 ms
+#     #start_index = np.where(timeVector >= margin_width)[0][0]
+#     #end_index = np.where(timeVector <= max(timeVector) - margin_width)[0][-1]
+#     #end_index = np.where(timeVector <= max(timeVector))[0][-1]
 
-    debinned_timeRange = [int(timeRange[0]/binSize), int(timeRange[1]/binSize)]
-    timeVector = timeVector[debinned_timeRange[0]:debinned_timeRange[1]]
-    firingRate = firingRate[debinned_timeRange[0]:debinned_timeRange[1]]
+#     debinned_timeRange = [int(timeRange[0]/binSize), int(timeRange[1]/binSize)]
+#     timeVector = timeVector[debinned_timeRange[0]:debinned_timeRange[1]]
+#     firingRate = firingRate[debinned_timeRange[0]:debinned_timeRange[1]]
 
-    # Plot the smoothed network activity
-    plt.subplot(1, 1, 1)
-    plt.plot(timeVector, firingRate, color='black')
-    plt.xlim([timeVector[0], timeVector[-1]])  # Restrict the plot to the first and last 100 ms
-    #plt.xlim([timeVector[start_index], timeVector[end_index]])  # Restrict the plot to the first and last 100 ms
-    #plt.ylim([min(firingRate[start_index:end_index])*0.95, max(firingRate[start_index:end_index])*1.05])  # Set y-axis limits to min and max of firingRate
+#     # Plot the smoothed network activity
+#     plt.subplot(1, 1, 1)
+#     plt.plot(timeVector, firingRate, color='black')
+#     plt.xlim([timeVector[0], timeVector[-1]])  # Restrict the plot to the first and last 100 ms
+#     #plt.xlim([timeVector[start_index], timeVector[end_index]])  # Restrict the plot to the first and last 100 ms
+#     #plt.ylim([min(firingRate[start_index:end_index])*0.95, max(firingRate[start_index:end_index])*1.05])  # Set y-axis limits to min and max of firingRate
     
-    # restrict y range 1.5 to 5
-    plt.ylim([1, 5.25])  # Set y-axis limits to min and max of firingRate
+#     # restrict y range 1.5 to 5
+#     plt.ylim([1, 5.25])  # Set y-axis limits to min and max of firingRate
     
-    plt.ylabel('Firing Rate [Hz]')
-    plt.xlabel('Time [ms]')
-    plt.title('Network Activity', fontsize=11)
+#     plt.ylabel('Firing Rate [Hz]')
+#     plt.xlabel('Time [ms]')
+#     plt.title('Network Activity', fontsize=11)
 
-    # Step 3: Peak detection on the smoothed firing rate curve
-    rmsFiringRate = np.sqrt(np.mean(firingRate**2))  # Calculate RMS of the firing rate
-    peaks, properties = find_peaks(firingRate, height=thresholdBurst * rmsFiringRate, distance=min_peak_distance)  # Find peaks above the threshold
-    burstPeakTimes = timeVector[peaks]  # Convert peak indices to times
-    burstPeakValues = properties['peak_heights']  # Get the peak values
+#     # Step 3: Peak detection on the smoothed firing rate curve
+#     rmsFiringRate = np.sqrt(np.mean(firingRate**2))  # Calculate RMS of the firing rate
+#     peaks, properties = find_peaks(firingRate, height=thresholdBurst * rmsFiringRate, distance=min_peak_distance)  # Find peaks above the threshold
+#     burstPeakTimes = timeVector[peaks]  # Convert peak indices to times
+#     burstPeakValues = properties['peak_heights']  # Get the peak values
 
-    # Get the indices of the valid peaks
-    valid_peak_indices = np.where((burstPeakTimes > timeVector[0]) & (burstPeakTimes < timeVector[-1]))[0]
+#     # Get the indices of the valid peaks
+#     valid_peak_indices = np.where((burstPeakTimes > timeVector[0]) & (burstPeakTimes < timeVector[-1]))[0]
 
-    # Filter burstPeakTimes and burstPeakValues using the valid peak indices
-    burstPeakTimes = burstPeakTimes[valid_peak_indices]
-    burstPeakValues = burstPeakValues[valid_peak_indices]
+#     # Filter burstPeakTimes and burstPeakValues using the valid peak indices
+#     burstPeakTimes = burstPeakTimes[valid_peak_indices]
+#     burstPeakValues = burstPeakValues[valid_peak_indices]
 
-    # Plot the threshold line and burst peaks
-    plt.plot(np.arange(timeVector[-1]), thresholdBurst * rmsFiringRate * np.ones(np.ceil(timeVector[-1]).astype(int)), color='gray')
-    plt.plot(burstPeakTimes, burstPeakValues, 'or')  # Plot burst peaks as red circles    
+#     # Plot the threshold line and burst peaks
+#     plt.plot(np.arange(timeVector[-1]), thresholdBurst * rmsFiringRate * np.ones(np.ceil(timeVector[-1]).astype(int)), color='gray')
+#     plt.plot(burstPeakTimes, burstPeakValues, 'or')  # Plot burst peaks as red circles    
 
-    if saveFig:
-        if isinstance(saveFig, str):
-            # plt.savefig(saveFig, dpi=600, bbox_inches='tight')
-            # plt.savefig(saveFig.replace('.png', '.svg'), bbox_inches='tight')
-            plt.savefig(saveFig, bbox_inches='tight')
-        else:
-            # plt.savefig(figName, dpi=600, bbox_inches='tight')
-            # plt.savefig(figName.replace('.png', '.svg'), bbox_inches='tight')
-            plt.savefig(figName, bbox_inches='tight')
-    #plt.show()
+#     if saveFig:
+#         if isinstance(saveFig, str):
+#             # plt.savefig(saveFig, dpi=600, bbox_inches='tight')
+#             # plt.savefig(saveFig.replace('.png', '.svg'), bbox_inches='tight')
+#             plt.savefig(saveFig, bbox_inches='tight')
+#         else:
+#             # plt.savefig(figName, dpi=600, bbox_inches='tight')
+#             # plt.savefig(figName.replace('.png', '.svg'), bbox_inches='tight')
+#             plt.savefig(figName, bbox_inches='tight')
+#     #plt.show()
             
 # def generate_all_figures(fresh_figs = False, batchLabel = 'batch', batch_path = None, size = 6, net_activity_params = {'binSize': 3, 'gaussianSigma': 12, 'thresholdBurst': 1.0}, simLabel = None, raster_activity_timeRange = None):
         
@@ -1053,19 +1100,3 @@ def plot_network_activity(rasterData, min_peak_distance = 1.0, binSize=0.02*1000
     else:
         print(f'Error: {batch_path} is not a valid directory or file')
 
-def get_walltime_per_sim(USER_walltime_per_gen, USER_pop_size, USER_nodes):
-    USER_walltime_per_gen_hours = int(USER_walltime_per_gen.split(':')[0])
-    USER_walltime_per_gen_hours = USER_walltime_per_gen_hours / USER_nodes
-    USER_walltime_per_gen_minutes = int(USER_walltime_per_gen.split(':')[1])
-    USER_walltime_per_gen_minutes = USER_walltime_per_gen_minutes / USER_nodes
-    USER_walltime_per_gen_seconds = int(USER_walltime_per_gen.split(':')[2])
-    USER_walltime_per_gen_seconds = USER_walltime_per_gen_seconds / USER_nodes
-    
-    USER_walltime_per_gen_seconds += USER_walltime_per_gen_minutes*60
-    USER_walltime_per_gen_seconds += USER_walltime_per_gen_hours*3600
-    USER_walltime_per_sim_seconds = USER_walltime_per_gen_seconds/USER_pop_size
-
-    # Convert back to hh:mm:ss
-    hours, remainder = divmod(USER_walltime_per_sim_seconds, 3600)
-    minutes, seconds = divmod(remainder, 60)
-    return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))

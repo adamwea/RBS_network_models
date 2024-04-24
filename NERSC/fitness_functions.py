@@ -13,7 +13,7 @@ import json
 # Import USER_INPUTS
 from USER_INPUTS import *
 
-def fitnessFunc(simData, **kwargs):   
+def fitnessFunc(simData, plot = False, simLabel = None, batch_saveFolder = None, fitness_save_path = None, **kwargs):   
     maxFitness = kwargs['maxFitness']
     ''' subfuncs '''
     def get_network_activity_metrics(fitnessVals, plot = False):
@@ -30,13 +30,20 @@ def fitnessFunc(simData, **kwargs):
             thresholdBurst = net_activity_params['thresholdBurst']
             assert len(rasterData['spkt']) > 0, 'Error: rasterData has no elements. burstPeak, baseline, slopeFitness, and IBI fitness set to 1000.'                       
             # Generate the network activity plot with a size of (10, 5)
+            plotting_params = None
+            if plot:
+                assert USER_plotting_params is not None, 'USER_plotting_params must be set in USER_INPUTS.py'
+                plotting_params = USER_plotting_params['NetworkActivity']
+                plotting_params['simLabel'] = simLabel
+                plotting_params['batch_saveFolder'] = batch_saveFolder
             net_metrics = measure_network_activity(
                 rasterData, 
                 binSize=binSize, 
                 gaussianSigma=gaussianSigma, 
-                thresholdBurst=thresholdBurst, 
-                #figSize=(network_activity_width, network_activity_height), 
-                #saveFig=network_activity_path
+                thresholdBurst=thresholdBurst,
+                plot=plot,
+                plotting_params = plotting_params,
+                crop = USER_raster_crop 
             )
         except Exception as e:
             print(f'Error calculating network activity metrics.')
@@ -293,40 +300,40 @@ def fitnessFunc(simData, **kwargs):
 
         return average_fitness, avg_scaled_fitness
     
-    def get_fitness(simData, **kwargs):
+    def get_fitness(simData, plot = False, **kwargs):
         '''init'''
         maxFitness = kwargs['maxFitness']
         fitnessVals = {}
         ## Get the fitness function arguments
-        output_path = batch.saveFolder
+        output_path = batch_saveFolder
         print(f'Calculating net_actiity_metrics...')
         assert USER_plot_fitness_bool is not None, 'USER_plot_fitness_bool must be set in USER_INPUTS.py'
-        fitnessVals, net_activity_metrics = get_network_activity_metrics(fitnessVals, plot = USER_plot_fitness_bool)
+        fitnessVals, net_activity_metrics = get_network_activity_metrics(fitnessVals, plot = plot)
         if net_activity_metrics == {}:
             return maxFitness
 
         ## Get the fitness values
         # Get burst peak fitness, optionally plot
         print('Calculating burst peak fit...')
-        fitnessVals = fit_burst_peak(net_activity_metrics, fitnessVals, plot = USER_plot_fitness_bool, **kwargs)
+        fitnessVals = fit_burst_peak(net_activity_metrics, fitnessVals, plot = plot, **kwargs)
         # Get IBI fitness, optionally plot
         print('Calculating IBI fit...')
-        fitnessVals = fit_IBI(net_activity_metrics, fitnessVals, plot = USER_plot_fitness_bool, **kwargs)
+        fitnessVals = fit_IBI(net_activity_metrics, fitnessVals, plot = plot, **kwargs)
         # Get baseline fitness, optionally plot
         print('Calculating baseline fit...')
-        fitnessVals = fit_baseline(net_activity_metrics, fitnessVals, plot = USER_plot_fitness_bool, **kwargs)
+        fitnessVals = fit_baseline(net_activity_metrics, fitnessVals, plot = plot, **kwargs)
         # Get rate slope fitness, optionally plot
         print('Calculating rate slope fit...')
-        fitnessVals = fit_rate_slope(net_activity_metrics, fitnessVals, plot = USER_plot_fitness_bool, **kwargs)
+        fitnessVals = fit_rate_slope(net_activity_metrics, fitnessVals, plot = plot, **kwargs)
         #Get baseline fitness, optionally plot
         print('Calculating baseline diff fit...')
-        fitnessVals = fit_baseline_diff(net_activity_metrics, fitnessVals, plot = USER_plot_fitness_bool, **kwargs)
+        fitnessVals = fit_baseline_diff(net_activity_metrics, fitnessVals, plot = plot, **kwargs)
         # Get burst freq fitness, optionally plot
         print('Calculating burst frequency fit...')
-        fitnessVals = fit_burst_freuqency(net_activity_metrics, fitnessVals, plot = USER_plot_fitness_bool, **kwargs)       
+        fitnessVals = fit_burst_freuqency(net_activity_metrics, fitnessVals, plot = plot, **kwargs)       
         # Get firing rate fitness, optionally plot
         print('Calculating firing rate fit...')
-        fitnessVals = fit_firing_rate(net_activity_metrics, fitnessVals, simData, plot = USER_plot_fitness_bool, **kwargs)
+        fitnessVals = fit_firing_rate(net_activity_metrics, fitnessVals, simData, plot = plot, **kwargs)
 
         # Get the fitness summary metrics        
         average_fitness, avg_scaled_fitness = fitness_summary_metrics(fitnessVals)
@@ -349,8 +356,15 @@ def fitnessFunc(simData, **kwargs):
         ##save fitness results to file        
         #get folder from simLabel
         gen_folder = simLabel.split('_cand')[0]
-        with open(f'{output_path}/{gen_folder}/{simLabel}_Fitness.json', 'w') as f:
-            json.dump(fitnessResults, f, indent=4)
+        if fitness_save_path is None:
+            #typical case, during simulations
+            with open(f'{output_path}/{gen_folder}/{simLabel}_Fitness.json', 'w') as f:
+                json.dump(fitnessResults, f, indent=4)
+        else:
+            #while plotting
+            with open(f'{fitness_save_path}/{simLabel}_Fitness.json', 'w') as f:
+                json.dump(fitnessResults, f, indent=4)
+
         print(f'Fitness results saved to {output_path}/{gen_folder}/{simLabel}_Fitness.json')
                 
         return avg_scaled_fitness
@@ -360,10 +374,13 @@ def fitnessFunc(simData, **kwargs):
     '''    
     ##find relevant batch object in call stack
     # Use the function to get the Batch object and simLabel
-    batch, simLabel = find_batch_object_and_sim_label()
-    assert simLabel is not None, "SimLabel not found in the caller frames."
-    assert batch is not None, "Batch object not found in the caller frames."
+    if batch_saveFolder is None and simLabel is None:
+        batch, simLabel = find_batch_object_and_sim_label()
+        batch_saveFolder = batch.saveFolder
+    assert simLabel is not None, "SimLabel undefined."
+    assert batch_saveFolder is not None, "Batch save folder undefined."
 
     ##get fitness
-    avg_scaled_fitness = get_fitness(simData, **kwargs)
+    if plot is None: plot = USER_plot_fitness_bool
+    avg_scaled_fitness = get_fitness(simData, plot = plot, **kwargs)
     return avg_scaled_fitness

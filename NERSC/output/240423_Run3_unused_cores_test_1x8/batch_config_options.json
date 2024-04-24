@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:5597f0452a688aaca1cb032df66e59d4e2c7f16033617b689b5615da287aae09
-size 630
+{
+    "run_path": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240423_Run3_unused_cores_test_1x8",
+    "batchLabel": "240423_Run3_unused_cores_test_1x8",
+    "method": "evol",
+    "cores_per_node": 8,
+    "nodes": 1,
+    "script": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py",
+    "pop_size": 16,
+    "max_generations": 10,
+    "time_sleep": 10,
+    "maxiter_wait": 270.0,
+    "skip": false,
+    "num_elites": 160,
+    "cfgFile": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/cfg.py",
+    "netParamsFile": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/netParams.py",
+    "initCfg": null
+}

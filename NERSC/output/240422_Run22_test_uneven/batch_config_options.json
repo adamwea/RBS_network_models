@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:3181cae1f5eeb9a270873424262b7f35bfee3b442769d86b33852ec17951667b
-size 612
+{
+    "run_path": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run22_test_uneven",
+    "batchLabel": "240422_Run22_test_uneven",
+    "method": "evol",
+    "cores_per_node": 256,
+    "nodes": 1,
+    "script": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py",
+    "pop_size": 4,
+    "max_generations": 10,
+    "time_sleep": 10,
+    "maxiter_wait": 180.0,
+    "skip": false,
+    "num_elites": 40,
+    "cfgFile": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/cfg.py",
+    "netParamsFile": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/netParams.py",
+    "initCfg": null
+}

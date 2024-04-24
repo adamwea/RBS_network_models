@@ -13,6 +13,29 @@ except: USER_seconds = 5
 USER_method = 'evol'
 #USER_method = 'grid'
 
+##Plotting Params
+USER_plot_fitness_bool = True
+USER_plotting_path = 'NERSC/plots/'
+#USER_plotting_path = lse
+#USER_ploting_path = None #prevent plotting even if USER_plot_fitness_bool = True
+USER_figsize = (10, 10)
+# Network Activity Plotting Params
+USER_plotting_params = {
+    'NetworkActivity': {
+        'figsize': USER_figsize,
+        #'ylim': [1, 5.25], # Set y-axis limits to min and max of firingRate
+        #limits (will override modifiers)
+        #'ylim': None,
+        'ylim': [0, 20], # Set y-axis limits to min and max of firingRate
+        'xlim': None,
+        #range mods
+        'yhigh100': 1.05, #high modifier limit for y axis
+        'ylow100': 0.95, #low modifier limit for y axis
+        'saveFig': USER_plotting_path,
+        'title_font': 11
+        }
+    }
+
 ## Fitness Params
 #Set paramaeters for convolving raster data into network activity plot
 USER_raster_convolve_params = {
@@ -20,7 +43,7 @@ USER_raster_convolve_params = {
     'gaussianSigma': .12*1000, 
     'thresholdBurst': 1.0
     }
-USER_plot_fitness_bool = False
+USER_raster_crop = None
 
 ## Evol Params
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.

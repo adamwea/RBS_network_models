@@ -1,3 +1,17 @@
-version https://git-lfs.github.com/spec/v1
-oid sha256:35766f0bc8e9665c8fcd4e9268a54f8dbd0d9499acf1366e333ab47b4bcb83a2
-size 702
+{
+    "run_path": "/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240420_Run5_debug_run",
+    "batchLabel": "240420_Run5_debug_run",
+    "method": "evol",
+    "cores_per_node": 32,
+    "nodes": 1,
+    "script": "/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/init.py",
+    "pop_size": 16,
+    "max_generations": 10,
+    "time_sleep": 10,
+    "maxiter_wait": 30.0,
+    "skip": false,
+    "num_elites": 160,
+    "cfgFile": "/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/cfg.py",
+    "netParamsFile": "/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/netParams.py",
+    "initCfg": null
+}
