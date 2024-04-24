@@ -61,29 +61,31 @@ run_label = USER_run_label #batch_run_files folder name
 '''
 Initialize
 '''
-import os
+# from mpi4py import MPI
+# # Initialize the MPI environment
+# comm = MPI.COMM_WORLD
+# # Get the rank of the current process
+# rank = comm.Get_rank()
+# # Finalize the MPI environment
+# MPI.Finalize()
+# print("Rank:", rank)
+import time
+# Get the rank of the current process
+rank = os.environ.get('OMPI_COMM_WORLD_RANK')
+
+# Check if the environment variable is set
+if rank is not None:
+    rank = int(rank)  # Convert the rank to an integer
+    logger.info(f"I am process: {rank}")
+else:
+    logger.info("OMPI_COMM_WORLD_RANK is not set")
+    rank = 0
 
 # Get current date in YYMMDD format
 current_date = datetime.datetime.now().strftime('%y%m%d')
 # Prepare Batch_Run_Folder and Initial Files
 script_path = os.path.dirname(os.path.realpath(__file__))
 output_path = script_path+'/output'
-
-# # Get the PID of the current process
-# pid = os.getpid()
-# if not os.path.exists(f'{output_path}/pids_batch_configs'):
-#     os.makedirs(f'{output_path}/pids_batch_configs')
-# # Write the PID to a file
-# with open(f'{output_path}/pids_batch_configs/pids_batch_config_{current_date}.txt', 'a') as f:
-#     f.write(str(pid) + '\n')
-# # Read the file and get the first PID
-# with open(f'{output_path}/pids_batch_configs/pids_batch_config_{current_date}.txt', 'r') as f:
-#     first_pid = int(f.readline().strip())
-
-#sys.exit()
-
-# Check if the current process is the first process
-# if pid == first_pid:
 
 # Get list of existing runs for the day
 try: existing_runs = [run for run in os.listdir(output_path) if run.startswith(current_date)]
@@ -100,23 +102,26 @@ prev_run_number = new_run_number - 1
 # Update run_name with new format
 run_name = f'{current_date}_Run{new_run_number}_{run_label}'
 prev_run_name = f'{current_date}_Run{prev_run_number}_{run_label}'
-print(f'Run Name: {run_name}')
+#print(f'Run Name: {run_name}')
 #sys.exit()   
 
 # Get unique run path
 run_path = f'{output_path}/{run_name}'
 prev_run_path = f'{output_path}/{prev_run_name}'
 
+#logger.info(f'Rank: {rank}')
+#logger.info(f'Run Path: {run_path}')
+#logger.info(f'Previous Run Path: {prev_run_path}')
 # Mediate Overwrite
 if overwrite_run or continue_run:
     if prev_run_name in existing_runs:
         assert not (overwrite_run and continue_run), 'overwrite_run and continue_run cannot both be True'
         # Manage batch_run path
-        if USER_MPI_run_keep and os.path.exists(prev_run_path):
-            #shutil.rmtree(prev_run_path)
-            run_path = prev_run_path
-            logger.info('MPI')   
-            #logger.info(f'Overwriting existing batch_run: {os.path.basename(run_path)}')
+        # if USER_MPI_run_keep and os.path.exists(prev_run_path):
+        #     #shutil.rmtree(prev_run_path)
+        #     run_path = prev_run_path
+        #     logger.info('MPI')   
+        #     #logger.info(f'Overwriting existing batch_run: {os.path.basename(run_path)}')
         if overwrite_run and os.path.exists(prev_run_path):
             shutil.rmtree(prev_run_path)
             run_path = prev_run_path   
@@ -124,11 +129,19 @@ if overwrite_run or continue_run:
         elif continue_run and os.path.exists(prev_run_path):
             run_path = prev_run_path
             logger.info(f'Continuing existing batch_run: {os.path.basename(run_path)}')      
-        else: logger.info(f'Creating new batch_run: {os.path.basename(run_path)}')
+else: logger.info(f'Creating new batch_run: {os.path.basename(run_path)}')
 
 # Create a directory to save the batch_run files
-if not os.path.exists(run_path):
+#logger.info(f'Run Path: {run_path}')
+if not os.path.exists(run_path) and rank == 0:
     os.makedirs(run_path)
+else:
+    # Wait for the directory to be created by rank 0
+    if not os.path.exists(run_path):
+        logger.info(f'Rank {rank} waiting for run_path to be created: {run_path}')
+        while not os.path.exists(run_path):
+            time.sleep(1)
+#sys.exit()
 
 '''
 Generate Config
