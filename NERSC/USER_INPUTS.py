@@ -51,8 +51,8 @@ USER_raster_crop = None
 ## Evol Params
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
 # Population sizes where 256/USER_pop_size is an integer and perfect square: 1, 4, 16, 64, 256, 1024, 4096, 16384, 65536
-USER_pop_size = 4 # Population sizes
-USER_max_generations = 10
+USER_pop_size = 128 # Population sizes
+USER_max_generations = 15
 USER_time_sleep = 10 #seconds between checking for completed simulations
 USER_maxiter_wait_minutes = 45 #Maximum minutes to wait before starting new Generation
 
@@ -62,7 +62,7 @@ options = ['mpi_bulletin_Laptop',
            'mpi_bulletin_NERSC', 
            'mpi_direct', 
            'hpc_slurm']
-option = options[0]
+option = options[2]
 if option == 'mpi_bulletin_Laptop':
     USER_runCfg_type = 'mpi_bulletin'    
     USER_nodes = 1 #This should be set to the number of nodes available
@@ -96,11 +96,12 @@ elif option == 'mpi_bulletin_NERSC':
     USER_walltime = "00:30:00"    
     USER_email = "amwe@ucdavis.edu"
     USER_nodes = 1 #This should be set to the number of nodes available
-    Perlmutter_cores_per_node = 256 #128 physical cores, 256 hyperthreads
+    #Perlmutter_cores_per_node = 256 #128 physical cores, 256 hyperthreads
+    Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
     USER_cores_per_node = Perlmutter_cores_per_node
     USER_total_cores = Perlmutter_cores_per_node*USER_nodes
-    USER_JobName = f'mpiexec_test_{USER_nodes}x{USER_cores_per_node}'
-    USER_MPI_run_keep = True
+    USER_JobName = f'128popevol_{USER_nodes}x{USER_cores_per_node}'
+    #USER_MPI_run_keep = True
     #USER_maxiter_wait_minutes = 5 #Maximum minutes to wait before new simulation starts before killing generation
 elif option == 'mpi_direct':
     USER_queue = 'debug' #Options: debug, regular, premium

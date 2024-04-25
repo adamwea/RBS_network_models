@@ -5,10 +5,11 @@ from USER_INPUTS import *
 import datetime
 
 # get sys arguments
-option = sys.argv[1]
-assert option in ['mpidirect', 'mpi_bulletin'], 'option must be either "mpidirect" or "mpibulletin"'
+#option = sys.argv[1]
+options = ['mpidirect', 'mpi_bulletin'] #, 'option must be either "mpidirect" or "mpibulletin"'
+option = 'mpi_bulletin'
 
-if option == 'mpibulletin':
+if option == 'mpi_bulletin':
     datetime_str = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")    
 
     #prepare mpiexec command
@@ -18,37 +19,35 @@ if option == 'mpibulletin':
     display_topo = "--display-topo"
     display_devel_map = "--display-devel-map"
     mpiexec_flags = f"{mtl_base_verbose} {report_bindings} {display_map} {display_topo} {display_devel_map}"
-    mpiexec_command = f"mpiexec {mpiexec_flags} --use-hwthread-cpus -np {USER_total_cores} nrniv -mpi NERSC/batchRun.py {USER_JobName} {USER_seconds}"
+    mpiexec_command = f"mpiexec --use-hwthread-cpus -np {USER_total_cores} nrniv -mpi NERSC/batchRun.py {USER_JobName} {USER_seconds}"
     
     # Define the sbatch options using the variables from user_inputs.py
     sbatch_options = f"""#!/bin/bash
-    #SBATCH --job-name={USER_JobName}
-    #SBATCH -A {USER_allocation}
-    #SBATCH -t {USER_walltime}
-    #SBATCH --nodes={USER_nodes}
-    #SBATCH --output=NERSC/output/job_outputs/job_output_%j_{USER_JobName}.txt
-    #SBATCH --error=NERSC/output/job_outputs/job_error_%j_{USER_JobName}.txt
-    #SBATCH --mail-user={USER_email}
-    #SBATCH --mail-type=ALL
-    #SBATCH -q {USER_queue}
-    #SBATCH -C cpu
+#SBATCH --job-name={USER_JobName}
+#SBATCH -A {USER_allocation}
+#SBATCH -t {USER_walltime}
+#SBATCH --nodes={USER_nodes}
+#SBATCH --output=NERSC/output/job_outputs/job_output_%j_{USER_JobName}.txt
+#SBATCH --error=NERSC/output/job_outputs/job_error_%j_{USER_JobName}.txt
+#SBATCH --mail-user={USER_email}
+#SBATCH --mail-type=ALL
+#SBATCH -q {USER_queue}
+#SBATCH -C cpu
     """
 
     # Define the rest of the shell script
     #To run use: mpiexec -np [num_cores] nrniv -mpi batchRun.py
+    #    export OMP_PROC_BIND=spread
+    # export KMP_AFFINITY=verbose
+    # export FI_LOG_LEVEL=debug
     shell_script = f"""{sbatch_options}
-    export OMP_PROC_BIND=spread
-    export KMP_AFFINITY=verbose
-    export FI_LOG_LEVEL=debug
-
-    module load python
-    module load conda
-    module load openmpi
-    conda activate 2DSims
-
-    mkdir -p NERSC/output/job_outputs 
-
-    {mpiexec_command}
+module load python
+module load conda
+module load openmpi
+conda activate 2DSims
+mkdir -p NERSC/output/job_outputs
+cd NERSC
+{mpiexec_command}
     """
 
     # Write the shell script to a file

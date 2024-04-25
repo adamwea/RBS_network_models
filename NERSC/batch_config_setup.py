@@ -5,6 +5,7 @@ import shutil
 import sys
 import json
 import datetime
+import time
 
 ## Logger
 import logging
@@ -61,18 +62,8 @@ run_label = USER_run_label #batch_run_files folder name
 '''
 Initialize
 '''
-# from mpi4py import MPI
-# # Initialize the MPI environment
-# comm = MPI.COMM_WORLD
-# # Get the rank of the current process
-# rank = comm.Get_rank()
-# # Finalize the MPI environment
-# MPI.Finalize()
-# print("Rank:", rank)
-import time
 # Get the rank of the current process
 rank = os.environ.get('OMPI_COMM_WORLD_RANK')
-
 # Check if the environment variable is set
 if rank is not None:
     rank = int(rank)  # Convert the rank to an integer
@@ -109,19 +100,9 @@ prev_run_name = f'{current_date}_Run{prev_run_number}_{run_label}'
 run_path = f'{output_path}/{run_name}'
 prev_run_path = f'{output_path}/{prev_run_name}'
 
-#logger.info(f'Rank: {rank}')
-#logger.info(f'Run Path: {run_path}')
-#logger.info(f'Previous Run Path: {prev_run_path}')
-# Mediate Overwrite
 if overwrite_run or continue_run:
     if prev_run_name in existing_runs:
         assert not (overwrite_run and continue_run), 'overwrite_run and continue_run cannot both be True'
-        # Manage batch_run path
-        # if USER_MPI_run_keep and os.path.exists(prev_run_path):
-        #     #shutil.rmtree(prev_run_path)
-        #     run_path = prev_run_path
-        #     logger.info('MPI')   
-        #     #logger.info(f'Overwriting existing batch_run: {os.path.basename(run_path)}')
         if overwrite_run and os.path.exists(prev_run_path):
             shutil.rmtree(prev_run_path)
             run_path = prev_run_path   
@@ -131,8 +112,6 @@ if overwrite_run or continue_run:
             logger.info(f'Continuing existing batch_run: {os.path.basename(run_path)}')      
 else: logger.info(f'Creating new batch_run: {os.path.basename(run_path)}')
 
-# Create a directory to save the batch_run files
-#logger.info(f'Run Path: {run_path}')
 if not os.path.exists(run_path) and rank == 0:
     os.makedirs(run_path)
 else:

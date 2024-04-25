@@ -6,4 +6,4 @@
 #module load python/3.9
 module load conda
 conda activate 2DSims
-export $(python3 NERSC/generate_and_run_sbatch.py mpi_bulletin)
+export $(python3 NERSC/generate_and_run_sbatch.py)
