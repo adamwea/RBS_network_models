@@ -7,7 +7,7 @@ pops['rate_targets'] = {}
 pops['rate_targets']['E'] = {'target': 7.5, 'width': 2.5, 'min': 1}
 pops['rate_targets']['I'] = {'target': 30, 'width': 10, 'min': 2}
 #burst peak targets
-pops['burts_peak_targets'] = {'target': 15, 'width': 10, 'min': 1}
+pops['burts_peak_targets'] = {'target': 15, 'width': 5, 'min': 1}
 #burst IBI targets
 pops['IBI_targets'] = {'target': 3000, 'width': 2000 , 'max': 4000} #ms
 #baseline targets

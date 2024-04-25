@@ -18,8 +18,9 @@ if option == 'mpi_bulletin':
     display_map = "--display-map"
     display_topo = "--display-topo"
     display_devel_map = "--display-devel-map"
+    hw_threads = '--use-hwthread-cpus'
     mpiexec_flags = f"{mtl_base_verbose} {report_bindings} {display_map} {display_topo} {display_devel_map}"
-    mpiexec_command = f"mpiexec --use-hwthread-cpus -np {USER_total_cores} nrniv -mpi NERSC/batchRun.py {USER_JobName} {USER_seconds}"
+    mpiexec_command = f"mpiexec --use-hwthread-cpus -np {USER_total_cores} -bind-to hwthread nrniv -mpi batchRun.py {USER_JobName} {USER_seconds}"
     
     # Define the sbatch options using the variables from user_inputs.py
     sbatch_options = f"""#!/bin/bash
@@ -33,6 +34,7 @@ if option == 'mpi_bulletin':
 #SBATCH --mail-type=ALL
 #SBATCH -q {USER_queue}
 #SBATCH -C cpu
+#SBATCH --exclusive
     """
 
     # Define the rest of the shell script
@@ -41,11 +43,13 @@ if option == 'mpi_bulletin':
     # export KMP_AFFINITY=verbose
     # export FI_LOG_LEVEL=debug
     shell_script = f"""{sbatch_options}
-module load python
 module load conda
-module load openmpi
 conda activate 2DSims
+module load openmpi
 mkdir -p NERSC/output/job_outputs
+
+export OMP_PROC_BIND=spread
+export OMP_PLACES=threads
 cd NERSC
 {mpiexec_command}
     """

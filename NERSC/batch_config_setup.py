@@ -64,6 +64,8 @@ Initialize
 '''
 # Get the rank of the current process
 rank = os.environ.get('OMPI_COMM_WORLD_RANK')
+if rank is None: rank = os.environ.get('OMPI_COMM_WORLD_LOCAL_RANK')
+if rank is None: rank = os.environ.get('OMPI_COMM_WORLD_NODE_RANK')
 # Check if the environment variable is set
 if rank is not None:
     rank = int(rank)  # Convert the rank to an integer
@@ -109,10 +111,10 @@ if overwrite_run or continue_run:
             logger.info(f'Overwriting existing batch_run: {os.path.basename(run_path)}')
         elif continue_run and os.path.exists(prev_run_path):
             run_path = prev_run_path
-            logger.info(f'Continuing existing batch_run: {os.path.basename(run_path)}')      
-else: logger.info(f'Creating new batch_run: {os.path.basename(run_path)}')
+            logger.info(f'Continuing existing batch_run: {os.path.basename(run_path)}')
 
 if not os.path.exists(run_path) and rank == 0:
+    logger.info(f'Creating new batch_run: {os.path.basename(run_path)}')
     os.makedirs(run_path)
 else:
     # Wait for the directory to be created by rank 0

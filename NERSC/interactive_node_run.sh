@@ -12,4 +12,4 @@ mkdir -p NERSC/output/job_outputs
 # Execute the application and capture all output
 #    mpiexec_command = f"mpiexec {mpiexec_flags} --use-hwthread-cpus -np {USER_total_cores} nrniv -mpi NERSC/batchRun.py {USER_JobName} {USER_seconds}"
 cd NERSC
-mpiexec --use-hwthread-cpus -np 256 nrniv -mpi batchRun.py scaling_up 30
+mpiexec --use-hwthread-cpus -np 128 nrniv -mpi batchRun.py scaling_up 5
