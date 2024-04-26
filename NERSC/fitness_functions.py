@@ -464,7 +464,7 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
         gen_folder = simLabel.split('_cand')[0]
         if fitness_save_path is None and data_file_path is None:
             #typical case, during simulations
-            with open(f'{output_path}/{simLabel}_Fitness.json', 'w') as f:
+            with open(f'{output_path}/{gen_folder}/{simLabel}_Fitness.json', 'w') as f:
                 json.dump(fitnessResults, f, indent=4)
             print(f'Fitness results saved to {output_path}/{simLabel}_Fitness.json')
         elif fitness_save_path is None and data_file_path is not None:
