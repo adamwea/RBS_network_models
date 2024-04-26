@@ -151,24 +151,24 @@ for root, dirs, files in os.walk(output_path):
                 #surpress all print statements
                 blockPrint()
 
-from PyPDF2 import PdfFileMerger
-import os
+# from PyPDF2 import PdfFileMerger
+# import os
 
-# Create a PDF merger
-merger = PdfFileMerger()
+# # Create a PDF merger
+# merger = PdfFileMerger()
 
-# Walk through the output directory
-for root, dirs, files in os.walk(output_path):
-    # Sort the files to ensure they're merged in the correct order
-    files.sort()
-    for file in files:
-        if file.endswith('.pdf'):
-            # Merge the PDFs
-            merger.append(os.path.join(root, file))
+# # Walk through the output directory
+# for root, dirs, files in os.walk(output_path):
+#     # Sort the files to ensure they're merged in the correct order
+#     files.sort()
+#     for file in files:
+#         if file.endswith('.pdf'):
+#             # Merge the PDFs
+#             merger.append(os.path.join(root, file))
 
-# Save the merged PDF
-merger.write(os.path.join(output_path, "data.pdf"))
-merger.close()          
+# # Save the merged PDF
+# merger.write(os.path.join(output_path, "data.pdf"))
+# merger.close()          
             
 
             
