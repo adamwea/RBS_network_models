@@ -227,6 +227,10 @@ def measure_network_activity(
     end_index = np.where(timeVector == end)[0][0]
     #crop the firing rate
     assert start_index < end_index, 'start_index must be less than end_index'
+    
+    #for later, get len timeVector for comparison after crop
+    og_timeVector_len = len(timeVector)
+
     firingRate = firingRate[start_index:end_index]
     timeVector = timeVector[start_index:end_index]
 
@@ -259,8 +263,9 @@ def measure_network_activity(
     height = thresholdBurst * rmsFiringRate
     baseline_diff = height - baseline    
     #IBI = IBI / 1000 #convert to seconds
+    sustained_osci100 = (len(timeVector)/og_timeVector_len)*100
     measurements = {
-        'burstPeakValues': burstPeakValues,
+        'burstPeakValues': burstPeakValues-(thresholdBurst * rmsFiringRate),
         'burstPeakTimes': burstPeakTimes,
         'IBIs': IBIs,
         'firingRate': firingRate,
@@ -269,6 +274,8 @@ def measure_network_activity(
         'baseline_diff': baseline_diff,
         'peak_freq': peak_freq,
         'normalized_peak_variance': normalized_peak_variance,
+        'threshold': thresholdBurst * rmsFiringRate,
+        'sustain': sustained_osci100,
         #'base_locs': base_locs,
     }    
     return measurements 

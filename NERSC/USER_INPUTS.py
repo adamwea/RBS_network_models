@@ -18,12 +18,16 @@ USER_method = 'evol'
 
 ##Plotting Params
 USER_plot_fitness_bool = True
+USER_plot_NetworkActivity = False
 USER_plotting_path = 'NERSC/plots/'
 #USER_plotting_path = lse
 #USER_ploting_path = None #prevent plotting even if USER_plot_fitness_bool = True
 USER_figsize = (10, 10)
 # Network Activity Plotting Params
 USER_plotting_params = {
+    'fresh_plots': True,
+    'saveFig': USER_plotting_path,
+    'figsize': USER_figsize,
     'NetworkActivity': {
         'figsize': USER_figsize,
         #'ylim': [1, 5.25], # Set y-axis limits to min and max of firingRate

@@ -13,7 +13,7 @@ import json
 # Import USER_INPUTS
 from USER_INPUTS import *
 
-def fitnessFunc(simData, plot = False, simLabel = None, batch_saveFolder = None, fitness_save_path = None, **kwargs):   
+def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_file_path = None, batch_saveFolder = None, fitness_save_path = None, **kwargs):   
     maxFitness = kwargs['maxFitness']
     ''' subfuncs '''
     def get_network_activity_metrics(fitnessVals, plot = False):
@@ -36,6 +36,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, batch_saveFolder = None,
                 plotting_params = USER_plotting_params['NetworkActivity']
                 plotting_params['simLabel'] = simLabel
                 plotting_params['batch_saveFolder'] = batch_saveFolder
+                plotting_params['fresh_plots'] = USER_plotting_params['fresh_plots']
             net_metrics = measure_network_activity(
                 rasterData, 
                 binSize=binSize, 
@@ -54,9 +55,10 @@ def fitnessFunc(simData, plot = False, simLabel = None, batch_saveFolder = None,
             fitnessVals['IBI_fitness'] = maxFitness
             fitnessVals['baselineFitness'] = maxFitness
             fitnessVals['slopeFitness'] = maxFitness
-            fitnessVals['baseline_diff_fitness'] = maxFitness
+            #fitnessVals['baseline_diff_fitness'] = maxFitness
             fitnessVals['burst_peak_frequency_fitness'] = maxFitness
             fitnessVals['rate_fitness'] = maxFitness
+            fitnessVals['sustain_oscillation_fitness'] = maxFitness
             
             return fitnessVals, net_activity_metrics            
         
@@ -64,11 +66,14 @@ def fitnessFunc(simData, plot = False, simLabel = None, batch_saveFolder = None,
         net_activity_metrics['burstPeakValues'] = net_metrics['burstPeakValues']
         net_activity_metrics['IBIs'] = net_metrics['IBIs']
         net_activity_metrics['baseline'] = net_metrics['baseline']
-        net_activity_metrics['baselineDiff'] = net_metrics['baseline_diff']
+        #net_activity_metrics['baselineDiff'] = net_metrics['baseline_diff']
         net_activity_metrics['normalizedPeakVariance'] = net_metrics['normalized_peak_variance']
         net_activity_metrics['peakFreq'] = net_metrics['peak_freq']
         net_activity_metrics['firingRate'] = net_metrics['firingRate']
         net_activity_metrics['burstPeakTimes'] = net_metrics['burstPeakTimes']
+        net_activity_metrics['timeVector'] = net_metrics['timeVector']
+        net_activity_metrics['threshold'] = net_metrics['threshold']
+        net_activity_metrics['sustained_oscillation'] = net_metrics['sustain']
 
         return fitnessVals, net_activity_metrics
 
@@ -127,30 +132,61 @@ def fitnessFunc(simData, plot = False, simLabel = None, batch_saveFolder = None,
             fitnessVals['burst_peak_frequency_fitness'] = maxFitness
             return fitnessVals
         
-    def fit_baseline_diff(net_activity_metrics, fitnessVals, plot = False, **kwargs):
+    def fit_sustain(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         ##
         try:
             #baseline_diff Fitness
             pops = kwargs['pops']
-            baseline_diff_target = pops['baseline_diff']
+            #baseline_diff_target = pops['baseline_diff']
             maxFitness = kwargs['maxFitness']
-            baseline_diff = net_activity_metrics['baselineDiff']
+            #baseline_diff = net_activity_metrics['baselineDiff']
+            sustained_osci100 = net_activity_metrics['sustained_oscillation']
+            sustained_osci_target = pops['sustained_osci']
 
             # Calculate the fitness as the absolute difference between the baseline and the target baseline
-            baseline_diff_fitness = min(np.exp(baseline_diff_target['target'] - baseline_diff) / baseline_diff_target['width'], maxFitness) if baseline_diff > baseline_diff_target['min'] else maxFitness
+            sustain_fit = min(np.exp((sustained_osci_target['target'] - sustained_osci100) / sustained_osci_target['width']), maxFitness
+                             ) if sustained_osci100 > sustained_osci_target['min'] else maxFitness
 
             # Print the baseline_diff and its fitness
-            print('Difference between baseline and threshold: %.3f, Fitness: %.3f' % (baseline_diff, baseline_diff_fitness))
-            fitnessVals['baseline_diff_fitness'] = baseline_diff_fitness
+            print('Sustain Duration: %.3f, Fitness: %.3f' % (sustained_osci100, sustain_fit))
+            fitnessVals['sustain_fit'] = sustain_fit
             #if plot: plot_baseline_diff(fitnessVals)
             return fitnessVals
         except Exception as e:
-            print(f'Error calculating baseline_diff fitness.')
+            print(f'Error calculating thresh fitness.')
             print(f'Error: {e}')
             # Set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
-            baseline_diff_fitness = maxFitness
-            fitnessVals['baseline_diff_fitness'] = baseline_diff_fitness
+            fitnessVals['sustain_fit'] = maxFitness
+            return fitnessVals
+        
+    def fit_thresh(net_activity_metrics, fitnessVals, plot = False, **kwargs):
+        ##
+        try:
+            #baseline_diff Fitness
+            pops = kwargs['pops']
+            #baseline_diff_target = pops['baseline_diff']
+            maxFitness = kwargs['maxFitness']
+            #baseline_diff = net_activity_metrics['baselineDiff']
+            thresh = net_activity_metrics['threshold']
+            thresh_target = pops['thresh_target']
+
+            # Calculate the fitness as the absolute difference between the baseline and the target baseline
+            thresh_fit = min(np.exp((thresh_target['target'] - thresh)/ 
+                             thresh_target['width']), maxFitness
+                             ) if thresh > thresh_target['min'] and thresh < thresh_target['max'] else maxFitness
+
+            # Print the baseline_diff and its fitness
+            print('Thresh: %.3f, Fitness: %.3f' % (thresh, thresh_fit))
+            fitnessVals['thresh'] = thresh_fit
+            #if plot: plot_baseline_diff(fitnessVals)
+            return fitnessVals
+        except Exception as e:
+            print(f'Error calculating thresh fitness.')
+            print(f'Error: {e}')
+            # Set fitness values to maxFitness
+            maxFitness = kwargs['maxFitness']
+            fitnessVals['thresh'] = maxFitness
             return fitnessVals
 
     def fit_rate_slope(net_activity_metrics, fitnessVals, plot = False, **kwargs):
@@ -373,32 +409,35 @@ def fitnessFunc(simData, plot = False, simLabel = None, batch_saveFolder = None,
         output_path = batch_saveFolder
         print(f'Calculating net_actiity_metrics...')
         assert USER_plot_fitness_bool is not None, 'USER_plot_fitness_bool must be set in USER_INPUTS.py'
-        fitnessVals, net_activity_metrics = get_network_activity_metrics(fitnessVals, plot = plot)
+        fitnessVals, net_activity_metrics = get_network_activity_metrics(fitnessVals, plot = USER_plot_NetworkActivity)
         if net_activity_metrics == {}:
             return maxFitness
 
         ## Get the fitness values
         # Get burst peak fitness, optionally plot
         print('Calculating burst peak fit...')
-        fitnessVals = fit_burst_peak(net_activity_metrics, fitnessVals, plot = plot, **kwargs)
+        fitnessVals = fit_burst_peak(net_activity_metrics, fitnessVals, plot = None, **kwargs)
         # Get burst freq fitness, optionally plot
         print('Calculating burst frequency fit...')
-        fitnessVals = fit_burst_freq(net_activity_metrics, fitnessVals, plot = plot, **kwargs)       
+        fitnessVals = fit_burst_freq(net_activity_metrics, fitnessVals, plot = None, **kwargs)       
         # Get IBI fitness, optionally plot
         print('Calculating IBI fit...')
-        fitnessVals = fit_IBI(net_activity_metrics, fitnessVals, plot = plot, **kwargs)
+        fitnessVals = fit_IBI(net_activity_metrics, fitnessVals, plot = None, **kwargs)
         # Get baseline fitness, optionally plot
         print('Calculating baseline fit...')
-        fitnessVals = fit_baseline(net_activity_metrics, fitnessVals, plot = plot, **kwargs)
+        fitnessVals = fit_baseline(net_activity_metrics, fitnessVals, plot = None, **kwargs)
         # Get rate slope fitness, optionally plot
         print('Calculating rate slope fit...')
-        fitnessVals = fit_rate_slope(net_activity_metrics, fitnessVals, plot = plot, **kwargs)
+        fitnessVals = fit_rate_slope(net_activity_metrics, fitnessVals, plot = None, **kwargs)
         #Get baseline fitness, optionally plot
-        print('Calculating baseline diff fit...')
-        fitnessVals = fit_baseline_diff(net_activity_metrics, fitnessVals, plot = plot, **kwargs)        
+        print('Calculating thresh fit...')
+        fitnessVals = fit_thresh(net_activity_metrics, fitnessVals, plot = None, **kwargs) 
+        #Get baseline fitness, optionally plot
+        print('Calculating sustain fit...')
+        fitnessVals = fit_sustain(net_activity_metrics, fitnessVals, plot = None, **kwargs)        
         # Get firing rate fitness, optionally plot
         print('Calculating firing rate fit...')
-        fitnessVals = fit_firing_rate(net_activity_metrics, fitnessVals, simData, plot = plot, **kwargs)
+        fitnessVals = fit_firing_rate(net_activity_metrics, fitnessVals, simData, plot = None, **kwargs)
 
         # Get the fitness summary metrics        
         average_fitness, avg_scaled_fitness = fitness_summary_metrics(fitnessVals)
@@ -420,19 +459,152 @@ def fitnessFunc(simData, plot = False, simLabel = None, batch_saveFolder = None,
 
         ##save fitness results to file        
         #get folder from simLabel
+        if 'overnight' in data_file_path:
+            print('overnight')
         gen_folder = simLabel.split('_cand')[0]
-        if fitness_save_path is None:
+        if fitness_save_path is None and data_file_path is None:
             #typical case, during simulations
             with open(f'{output_path}/{simLabel}_Fitness.json', 'w') as f:
                 json.dump(fitnessResults, f, indent=4)
-        else:
-            #while plotting
-            with open(f'{fitness_save_path}/{simLabel}_Fitness.json', 'w') as f:
+            print(f'Fitness results saved to {output_path}/{simLabel}_Fitness.json')
+        elif fitness_save_path is None and data_file_path is not None:
+            #during re-eval of fitness without plotting
+            with open(data_file_path.replace('_data', '_Fitness'), 'w') as f:
                 json.dump(fitnessResults, f, indent=4)
+            print(f'Fitness results saved to {data_file_path.replace("_data", "_Fitness")}')
+        else:
+            assert data_file_path is not None, 'data_file_path must be specified to save fitness results'
+            #while plotting
+            with open(data_file_path.replace('_data', '_Fitness'), 'w') as f:
+                json.dump(fitnessResults, f, indent=4)
+            print(f'Fitness results saved to {data_file_path.replace("_data", "_Fitness")}')
+            # with open(f'{fitness_save_path}/{simLabel}_Fitness.json', 'w') as f:
+            #     json.dump(fitnessResults, f, indent=4)
 
-        print(f'Fitness results saved to {output_path}/{gen_folder}/{simLabel}_Fitness.json')
-                
+        #print(f'Fitness results saved to {output_path}/{gen_folder}/{simLabel}_Fitness.json')
+        if plot: plot_fitness(fitnessVals, simData, net_activity_metrics, **kwargs)
         return avg_scaled_fitness
+    
+    def plot_fitness(fitnessVals, simData, net_activity_metrics, **kwargs):
+        def plot_network_activity_fitness(net_activity_metrics):
+            #net_activity_metrics = net_activity_metrics
+            rasterData = simData
+            assert USER_raster_convolve_params, 'USER_raster_convolve_params needs to be specified in USER_INPUTS.py'
+            net_activity_params = USER_raster_convolve_params #{'binSize': .03*1000, 'gaussianSigma': .12*1000, 'thresholdBurst': 1.0}
+            binSize = net_activity_params['binSize']
+            gaussianSigma = net_activity_params['gaussianSigma']
+            thresholdBurst = net_activity_params['thresholdBurst']
+            assert len(rasterData['spkt']) > 0, 'Error: rasterData has no elements. burstPeak, baseline, slopeFitness, and IBI fitness set to 1000.'                       
+            # Generate the network activity plot with a size of (10, 5)
+            plotting_params = None
+            if plot:
+                assert USER_plotting_params is not None, 'USER_plotting_params must be set in USER_INPUTS.py'
+                plotting_params = USER_plotting_params['NetworkActivity']
+                plotting_params['simLabel'] = simLabel
+                plotting_params['batch_saveFolder'] = batch_saveFolder
+                #prep to plot fitplot
+                below_baseline_target = kwargs['pops']['baseline_targets']['target'] * 0.95
+                above_amplitude_target = kwargs['pops']['burts_peak_targets']['target']
+                max_fire_rate = max(net_activity_metrics['firingRate'])
+                min_fire_rate = min(net_activity_metrics['firingRate'])
+                yhigh = max(above_amplitude_target, max_fire_rate) * 1.05
+                ylow = min(below_baseline_target, min_fire_rate) * 0.95
+                plotting_params['ylim'] = [ylow, yhigh]
+                plotting_params['fitnessVals'] = fitnessVals
+                plotting_params['targets'] = kwargs
+                plotting_params['fitplot'] = True
+                plotting_params['net_activity_metrics'] = net_activity_metrics
+                plotting_params['fresh_plots'] = USER_plotting_params['fresh_plots']
+            net_metrics = measure_network_activity(
+                rasterData, 
+                binSize=binSize, 
+                gaussianSigma=gaussianSigma, 
+                thresholdBurst=thresholdBurst,
+                plot=plot,
+                plotting_params = plotting_params,
+                crop = USER_raster_crop,
+            )
+        def plot_raster():
+            #Attempt to generate the raster plot
+            assert sim_obj is not None, 'sim_obj must be defined to generate raster plot'
+            figname = 'raster_plot.png'
+            #rasterData = sim_obj.analysis.prepareRaster()
+            timeVector = net_activity_metrics['timeVector']
+            timeRange = [timeVector[0], timeVector[-1]]
+            #raster_plot_path = f'{batch_saveFolder}/{simLabel}_raster_plot.svg'
+            job_name = os.path.basename(os.path.dirname(batch_saveFolder))
+            gen_folder = simLabel.split('_cand')[0]
+            saveFig = USER_plotting_params['saveFig']
+            fig_path = os.path.join(saveFig, f'{job_name}/{gen_folder}/{simLabel}_{figname}')
+            USER_fresh_plots = USER_plotting_params['fresh_plots']
+            if os.path.exists(fig_path) and USER_fresh_plots: pass
+            elif os.path.exists(fig_path) and not USER_fresh_plots: 
+                print(f'File {fig_path} already exists and USER_fresh_plots is set to False. Skipping plot.')
+                return
+            elif os.path.exists(fig_path) is False: pass
+            else: raise ValueError(f'Idk how we got here. Logically.')
+            
+            try:
+                sim_obj.analysis.plotRaster(saveFig=fig_path, 
+                                            #timeRange = raster_activity_timeRange,
+                                            timeRange = timeRange,
+                                            showFig=False,
+                                            labels = None, 
+                                            figSize=USER_plotting_params['figsize'])#, dpi=600)
+                # #redo as png
+                # cairosvg.svg2png(url=raster_plot_path, write_to=raster_plot_path.replace('.svg', '.png'))
+            except:
+                print(f'Error generating raster plot from Data at: {data_file_path}')
+                # raster_plot_path = None
+                pass
+        def plot_trace_example():
+            # Attempt to generate sample trace for an excitatory example neuron
+            try:
+                figname = 'sample_trace.png'
+                job_name = os.path.basename(os.path.dirname(batch_saveFolder))
+                gen_folder = simLabel.split('_cand')[0]
+                saveFig = USER_plotting_params['saveFig']
+                fig_path = os.path.join(saveFig, f'{job_name}/{gen_folder}/{simLabel}_{figname}')
+                USER_fresh_plots = USER_plotting_params['fresh_plots']
+                if os.path.exists(fig_path) and USER_fresh_plots: pass
+                elif os.path.exists(fig_path) and not USER_fresh_plots: 
+                    print(f'File {fig_path} already exists and USER_fresh_plots is set to False. Skipping plot.')
+                    return
+                elif os.path.exists(fig_path) is False: pass
+                else: raise ValueError(f'Idk how we got here. Logically.')
+
+                timeVector = net_activity_metrics['timeVector']
+                timeRange = [timeVector[0], timeVector[-1]]
+                # Prepare the sample trace
+                sample_trace_E = sim_obj.analysis.plotTraces(
+                    include=[('E', 0), ('I', 0)],
+                    overlay=True,
+                    oneFigPer='trace',
+                    title='Middlemost 1 second of simulation',
+                    timeRange=timeRange,
+                    #saveFig=sample_trace_path_E,
+                    showFig=False,
+                    figSize=USER_plotting_params['figsize']
+                )
+                # Add title to the figure
+                fig = sample_trace_E[0]['_trace_soma_voltage']
+                fig.suptitle('Middlemost 1 second of simulation')
+                #move title all the way to the left
+                fig.tight_layout(rect=[0, 0.03, 1, 1])
+                # Save the figure with the title
+                fig.savefig(fig_path)
+                #fig.suptitle('Middlemost 1 second of simulation')
+                # Save the figure with the title
+                #fig.savefig(sample_trace_path_E)
+                # redo as png
+                #cairosvg.svg2png(url=sample_trace_path_E, write_to=sample_trace_path_E.replace('.svg', '.png'))
+            except:
+                print(f'Error generating sample trace plot from Data at: {data_file_path}')
+                #sample_trace_path_E = None
+                pass
+        plot_network_activity_fitness(net_activity_metrics)
+        plot_raster()
+        plot_trace_example()
     
     '''
     Get Fitness (Main Fitness Function)
