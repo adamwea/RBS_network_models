@@ -66,7 +66,7 @@ options = ['mpi_bulletin_Laptop',
            'mpi_bulletin_NERSC', 
            'mpi_direct', 
            'hpc_slurm']
-option = options[0]
+option = options[2]
 if option == 'mpi_bulletin_Laptop':
     USER_pop_size = 4
     USER_runCfg_type = 'mpi_bulletin'    
@@ -95,18 +95,19 @@ elif option == 'mpi_bulletin_Server':
     USER_allocation = None
     USER_mpiCommand = None
 elif option == 'mpi_bulletin_NERSC':
+    USER_pop_size = 100 # Population sizes
     USER_queue = 'regular' #Options: debug, regular, premium
     USER_runCfg_type = 'mpi_bulletin'    
     USER_allocation = 'm2043' #project ID
-    USER_walltime = "07:00:00"    
+    USER_walltime = "15:00:00"    
     USER_email = "amwe@ucdavis.edu"
-    USER_nodes = 2 #This should be set to the number of nodes available
+    USER_nodes = 1 #This should be set to the number of nodes available
     #Perlmutter_cores_per_node = 256 #128 physical cores, 256 hyperthreads
     Perlmutter_cores_per_node = 100 #128 physical cores, 256 hyperthreads
     USER_cores_per_node = Perlmutter_cores_per_node
     #USER_cpus_per_task = 2
     USER_total_cores = Perlmutter_cores_per_node*USER_nodes
-    USER_JobName = f'Apr25overnight_{USER_nodes}x{USER_cores_per_node}'
+    USER_JobName = f'26AprSAFE_{USER_nodes}x{USER_cores_per_node}'
     #USER_MPI_run_keep = True
     USER_custom_slurm = None
     USER_mpiCommand = None
