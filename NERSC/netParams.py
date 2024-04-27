@@ -83,17 +83,17 @@ if cfg.networkType == 'pre13Apr24': #Network used for grant proposal in 01Apr24
 									#'weight': cfg.inh_synaptic_weight, # Inhibitory synaptic weight (mS/cm^2)
 									'e': -75}  # GABA synaptic mechanism 
 	
-	## Stimulation parameters	
-	# Define a new stimulation source that provides rhythmic stimulation
-	netParams.stimSourceParams['rhythmic'] = {
-		'type': 'NetStim', 
-		'interval': cfg.rythmic_stiminterval,  # Interval between spikes (ms)
-		#'interval' : 'uniform(20, 100)',  # Interval between spikes (ms)
-		#'interval': 1000.0/cfg.rythmic_stimrate,  # Interval in ms (1 Hz = 1000 ms)
-		'number': 100000,  # Number of spikes (use a large number)
-		'start': 1,  # Start time of the first spike
-		'noise': cfg.rythmic_stimnoise  # Noise percentage (0 for no noise)
-	}
+	# ## Stimulation parameters	
+	# # Define a new stimulation source that provides rhythmic stimulation
+	# netParams.stimSourceParams['rhythmic'] = {
+	# 	'type': 'NetStim', 
+	# 	'interval': cfg.rythmic_stiminterval,  # Interval between spikes (ms)
+	# 	#'interval' : 'uniform(20, 100)',  # Interval between spikes (ms)
+	# 	#'interval': 1000.0/cfg.rythmic_stimrate,  # Interval in ms (1 Hz = 1000 ms)
+	# 	'number': 100000,  # Number of spikes (use a large number)
+	# 	'start': 1,  # Start time of the first spike
+	# 	'noise': cfg.rythmic_stimnoise  # Noise percentage (0 for no noise)
+	# }
 
 	# Connect the rhythmic stimulation source to the 'E' population
 	netParams.stimTargetParams['rhythmic->E'] = {

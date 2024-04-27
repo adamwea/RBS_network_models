@@ -66,8 +66,9 @@ options = ['mpi_bulletin_Laptop',
            'mpi_bulletin_NERSC', 
            'mpi_direct', 
            'hpc_slurm']
-option = options[2]
+option = options[0]
 if option == 'mpi_bulletin_Laptop':
+    USER_pop_size = 4
     USER_runCfg_type = 'mpi_bulletin'    
     USER_nodes = 1 #This should be set to the number of nodes available
     Laptop_cores_per_node = 8 #8 physical cores, 16 hyperthreads

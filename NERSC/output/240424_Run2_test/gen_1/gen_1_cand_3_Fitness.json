@@ -1,11 +1,32 @@
 {
-    "burstAmp_Fitness": 1000.0,
-    "burst_peak_frequency_fitness": 5.891937586728057,
-    "IBI_fitness": 2.555385161069778,
-    "baselineFitness": 2.9324860897790317,
-    "slopeFitness": 1.0011242591656226,
-    "thresh": 1000,
-    "rate_fitness": 1000.0,
+    "burst_peak_frequency_fitness": {
+        "Value": 0.628930817610063,
+        "Fit": 5.891937586728057
+    },
+    "IBI_fitness": {
+        "Value": 1125.0,
+        "Fit": 2.555385161069778
+    },
+    "baseline_fitness": {
+        "Value": 0.42414944193411763,
+        "Fit": 2.9324860897790317
+    },
+    "slopeFitness": {
+        "Value": -0.0005618138297800653,
+        "Fit": 1.0011242591656226
+    },
+    "thresh": {
+        "Value": 0.39541556536425687,
+        "Fit": 1000
+    },
+    "sustain_oscillation_fitness": {
+        "Value": 68.45238095238095,
+        "Fit": 1000
+    },
+    "rate_fitness": {
+        "Value": 0.9146825396825398,
+        "Fit": 1000.0
+    },
     "maxFitness": 1000,
     "average_fitness": 430.3401332995346,
     "average_scaled_fitness": 429.7692614738742

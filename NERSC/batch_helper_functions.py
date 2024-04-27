@@ -108,26 +108,29 @@ def measure_network_activity(
         burstPeakTimes = burstPeakTimes[burstPeakValues > 0]
         
         # identify indices of statistical outlier PeakValues in the positive direction
-        z = np.abs(stats.zscore(burstPeakValues))
-        outliers = np.where((z > 3) & (burstPeakValues > np.mean(burstPeakValues)))[0]
-        #check if outliers occur during the first 10% of the simulation
-        if len(outliers) > 0:
-            early_outliers = outliers[outliers < len(burstPeakValues)*0.1]
-            if len(early_outliers) > 0:
-                #identify the latest outlier in the early group
-                latest_early_outlier = early_outliers[-1]
-                #remove values before the latest early outlier
-                burstPeakValues = burstPeakValues[latest_early_outlier+1:]
-                burstPeakTimes = burstPeakTimes[latest_early_outlier+1:]
-        #check if outliers occur during final 10% of sim
-        if len(outliers) > 0:
-            late_outliers = outliers[outliers > len(burstPeakValues)*0.9]
-            if len(late_outliers) > 0:
-                #identify the earliest outlier in the late group
-                earliest_late_outlier = late_outliers[0]
-                #remove values after the earliest late outlier
-                burstPeakValues = burstPeakValues[:earliest_late_outlier-1]
-                burstPeakTimes = burstPeakTimes[:earliest_late_outlier-1]
+        outliers_bool = False
+        if outliers_bool:
+            z = np.abs(stats.zscore(burstPeakValues))
+            outliers = np.where((z > 3) & (burstPeakValues > np.mean(burstPeakValues)))[0]
+            #check if outliers occur during the first 10% of the simulation
+            if len(outliers) > 0:
+                early_outliers = outliers[outliers < len(burstPeakValues)*0.1]
+                if len(early_outliers) > 0:
+                    #identify the latest outlier in the early group
+                    latest_early_outlier = early_outliers[-1]
+                    #remove values before the latest early outlier
+                    burstPeakValues = burstPeakValues[latest_early_outlier+1:]
+                    burstPeakTimes = burstPeakTimes[latest_early_outlier+1:]
+            #check if outliers occur during final 10% of sim
+            if len(outliers) > 0:
+                late_outliers = outliers[outliers > len(burstPeakValues)*0.9]
+                if len(late_outliers) > 0:
+                    #identify the earliest outlier in the late group
+                    earliest_late_outlier = late_outliers[0]
+                    #remove values after the earliest late outlier
+                    burstPeakValues = burstPeakValues[:earliest_late_outlier-1]
+                    burstPeakTimes = burstPeakTimes[:earliest_late_outlier-1]
+                    
         #identify indicies of burstPeakStarts and burstPeakEnds (where signal crosses threshold)
         burstPeakStarts = []
         burstPeakEnds = []

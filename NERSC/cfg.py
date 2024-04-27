@@ -33,7 +33,7 @@ if cfg.networkType == 'pre13Apr24':
 	cfg.recordTraces['soma_voltage'] = { "sec": "soma", "loc": 0.5, "var": "v"}
 	# only record this trace from populations 'M' and 'S'
 	# record from the first cell in populations 'M' and 'S'
-	#cfg.recordCells = [('E', [0]), ('I', [0])]
+	cfg.recordCells = [('E', [0]), ('I', [0])]
 	
 	#Investigate Oscillatory behavior
 	# cfg.recordLFP = [[50, 50, 50]]

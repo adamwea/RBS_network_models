@@ -25,15 +25,15 @@ params['gnabar_I'] = [0, 1.5]
 params['gkbar_I'] = [0.005, 2] 
 
 #Hold these constant for now
-# params['tau1_exc'] = [0.5, 1.5] 
-# params['tau2_exc'] = [3.0, 10.0] 
-# params['tau1_inh'] = [0.05, 0.2] 
-# params['tau2_inh'] = [5.0, 15.0]
+params['tau1_exc'] = [0.5, 1.5] 
+params['tau2_exc'] = [3.0, 10.0] 
+params['tau1_inh'] = [0.05, 1] 
+params['tau2_inh'] = [5.0, 15.0]
 #default values for now
-params['tau1_exc'] = 0.8
-params['tau2_exc'] = 6.0
-params['tau1_inh'] = 0.8
-params['tau2_inh'] = 9.0
+# params['tau1_exc'] = 0.8
+# params['tau2_exc'] = 6.0
+# params['tau1_inh'] = 0.8
+# params['tau2_inh'] = 9.0
 
 #Stimulation Params
 params['Erhythmic_stimWeight'] = [0, 0.02] 

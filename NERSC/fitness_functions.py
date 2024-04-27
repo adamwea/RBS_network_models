@@ -51,14 +51,14 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
             print(f'Error: {e}')
             #set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
-            fitnessVals['burstAmp_Fitness'] = maxFitness
-            fitnessVals['IBI_fitness'] = maxFitness
-            fitnessVals['baselineFitness'] = maxFitness
-            fitnessVals['slopeFitness'] = maxFitness
-            #fitnessVals['baseline_diff_fitness'] = maxFitness
-            fitnessVals['burst_peak_frequency_fitness'] = maxFitness
-            fitnessVals['rate_fitness'] = maxFitness
-            fitnessVals['sustain_oscillation_fitness'] = maxFitness
+            fitnessVals['burstAmp_Fitness'] = {'Value': None, 'Fit': maxFitness}
+            fitnessVals['IBI_fitness'] = {'Value': None, 'Fit': maxFitness}
+            fitnessVals['baselineFitness'] = {'Value': None, 'Fit': maxFitness}
+            fitnessVals['slopeFitness'] = {'Value': None, 'Fit': maxFitness}
+            #fitnessVals['baseline_diff_fitness'] = {'Value': None, 'Fit': maxFitness}
+            fitnessVals['burst_peak_frequency_fitness'] = {'Value': None, 'Fit': maxFitness}
+            fitnessVals['rate_fitness'] = {'Value': None, 'Fit': maxFitness}
+            fitnessVals['sustain_oscillation_fitness'] = {'Value': None, 'Fit': maxFitness}
             
             return fitnessVals, net_activity_metrics            
         
@@ -121,7 +121,7 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
                 abs(pops_frequency['target'] - burst_peak_frequency) / pops_frequency['width']), maxFitness) if burst_peak_frequency > pops_frequency['min'] else maxFitness
             # Print the frequency and its fitness
             print('Frequency of burst peaks: %.3f, Fitness: %.3f' % (burst_peak_frequency, burst_peak_frequency_fitness))
-            fitnessVals['burst_peak_frequency_fitness'] = burst_peak_frequency_fitness
+            fitnessVals['burst_peak_frequency_fitness'] = {'Value': burst_peak_frequency, 'Fit': burst_peak_frequency_fitness}
             #if plot: plot_burst_freq(fitnessVals)
             return fitnessVals
         except Exception as e:
@@ -129,66 +129,57 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
             print(f'Error: {e}')
             # Set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
-            fitnessVals['burst_peak_frequency_fitness'] = maxFitness
+            fitnessVals['burst_peak_frequency_fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
         
     def fit_sustain(net_activity_metrics, fitnessVals, plot = False, **kwargs):
-        ##
         try:
-            #baseline_diff Fitness
+            # Sustain Fitness
             pops = kwargs['pops']
-            #baseline_diff_target = pops['baseline_diff']
             maxFitness = kwargs['maxFitness']
-            #baseline_diff = net_activity_metrics['baselineDiff']
             sustained_osci100 = net_activity_metrics['sustained_oscillation']
             sustained_osci_target = pops['sustained_osci']
 
-            # Calculate the fitness as the absolute difference between the baseline and the target baseline
+            # Calculate the fitness as the absolute difference between the sustain duration and the target sustain duration
             sustain_fit = min(np.exp((sustained_osci_target['target'] - sustained_osci100) / sustained_osci_target['width']), maxFitness
                              ) if sustained_osci100 > sustained_osci_target['min'] else maxFitness
 
-            # Print the baseline_diff and its fitness
+            # Print the sustain duration and its fitness
             print('Sustain Duration: %.3f, Fitness: %.3f' % (sustained_osci100, sustain_fit))
-            fitnessVals['sustain_fit'] = sustain_fit
-            #if plot: plot_baseline_diff(fitnessVals)
+            fitnessVals['sustain_oscillation_fitness'] = {'Value': sustained_osci100, 'Fit': sustain_fit}
+            #if plot: plot_sustain(fitnessVals)
             return fitnessVals
         except Exception as e:
-            print(f'Error calculating thresh fitness.')
+            print(f'Error calculating sustain fitness.')
             print(f'Error: {e}')
             # Set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
-            fitnessVals['sustain_fit'] = maxFitness
+            fitnessVals['sustain_oscillation_fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
         
     def fit_thresh(net_activity_metrics, fitnessVals, plot = False, **kwargs):
-        ##
         try:
-            #baseline_diff Fitness
             pops = kwargs['pops']
-            #baseline_diff_target = pops['baseline_diff']
             maxFitness = kwargs['maxFitness']
-            #baseline_diff = net_activity_metrics['baselineDiff']
             thresh = net_activity_metrics['threshold']
             thresh_target = pops['thresh_target']
 
-            # Calculate the fitness as the absolute difference between the baseline and the target baseline
+            # Calculate the fitness as the absolute difference between the threshold and the target threshold
             thresh_fit = min(np.exp((thresh_target['target'] - thresh)/ 
                              thresh_target['width']), maxFitness
                              ) if thresh > thresh_target['min'] and thresh < thresh_target['max'] else maxFitness
 
-            # Print the baseline_diff and its fitness
+            # Print the threshold and its fitness
             print('Thresh: %.3f, Fitness: %.3f' % (thresh, thresh_fit))
-            fitnessVals['thresh'] = thresh_fit
-            #if plot: plot_baseline_diff(fitnessVals)
+            fitnessVals['thresh'] = {'Value': thresh, 'Fit': thresh_fit}
             return fitnessVals
         except Exception as e:
             print(f'Error calculating thresh fitness.')
             print(f'Error: {e}')
             # Set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
-            fitnessVals['thresh'] = maxFitness
+            fitnessVals['thresh'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
-
     def fit_rate_slope(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         try:
             # Firing rate fitness
@@ -208,15 +199,14 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
 
             # Print the slope and its fitness
             print('Slope of firing rate: %.3f, Fitness: %.3f' % (slope, slopeFitness))
-            fitnessVals['slopeFitness'] = slopeFitness
+            fitnessVals['slopeFitness'] = {'Value': slope, 'Fit': slopeFitness}
             return fitnessVals
         except Exception as e:
             print(f'Error calculating firing rate slope fitness.')
             print(f'Error: {e}')
             # Set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
-            slopeFitness = maxFitness 
-            fitnessVals['slopeFitness'] = slopeFitness
+            fitnessVals['slopeFitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
 
     def plot_burst_peak_and_baseline(fitnessVals):
@@ -251,13 +241,11 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
         
     def fit_burst_peak(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         try: 
-            #burstPeakValue Fitness
+            # BurstPeakValue Fitness
             pops = kwargs['pops']
             pops_peaks = pops['burts_peak_targets']
-            print(kwargs)
             maxFitness = kwargs['maxFitness']
             burstPeakValues = net_activity_metrics['burstPeakValues']
-            #popFitnessBurstPeak = [None for i in pops.items()]
             assert len(burstPeakValues) > 0, 'Error: burstPeakValues has no elements. BurstVal_fitness set to maxFitness.'
             popFitnessBurstPeak = [
                 min(np.exp(abs(pops_peaks['target'] - value) / pops_peaks['width']), maxFitness)
@@ -272,16 +260,14 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
 
             # Print the average burstPeak and its fitness
             print('Average burstPeak: %.3f, Fitness: %.3f' % (avg_burstPeak, BurstVal_fitness))
-            fitnessVals['burstAmp_Fitness'] = BurstVal_fitness
-            #if plot: plot_burst_peak(fitnessVals)
+            fitnessVals['burstAmp_Fitness'] = {'Value': avg_burstPeak, 'Fit': BurstVal_fitness}
             return fitnessVals
         except Exception as e:
             print(f'Error calculating burst peak fitness.')
             print(f'Error: {e}')
-            #set fitness values to maxFitness
+            # Set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
-            BurstVal_fitness = maxFitness
-            fitnessVals['burstAmp_Fitness'] = BurstVal_fitness
+            fitnessVals['burstAmp_Fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
 
     def fit_IBI(net_activity_metrics, fitnessVals, plot = False, **kwargs):
@@ -300,27 +286,24 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
             ]
             IBI_fitness = np.mean(popFitnessIBI)
 
-            #Calc average IBI
+            # Calculate average IBI
             avg_IBI = np.mean(IBIs)
 
-            #print average IBI and its fitness
+            # Print average IBI and its fitness
             print('Average IBI: %.3f, Fitness: %.3f' % (avg_IBI, IBI_fitness))
-            fitnessVals['IBI_fitness'] = IBI_fitness
-            if plot: plot_burst_freq_and_IBI(fitnessVals)
+            fitnessVals['IBI_fitness'] = {'Value': avg_IBI, 'Fit': IBI_fitness}
             return fitnessVals
         except Exception as e:
             print(f'Error calculating IBI fitness.')
             print(f'Error: {e}')
-            #set fitness values to maxFitness
+            # Set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
-            IBI_fitness = maxFitness
-            fitnessVals['IBI_fitness'] = IBI_fitness
+            fitnessVals['IBI_fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
 
     def fit_baseline(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         try:
             assert net_activity_metrics['baseline'] is not None, 'Error: baseline is None. Baseline could not be calculated.'
-            #assert len(baseline) > 0, 'Error: baseline has no elements. Baseline could not be calculated.'
             pops = kwargs['pops']
             pops_baseline = pops['baseline_targets']
             maxFitness = kwargs['maxFitness']
@@ -333,16 +316,14 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
 
             #print average baseline and its fitness
             print('baseline: %.3f, Fitness: %.3f' % (baseline, baselineFitness)) 
-            fitnessVals['baselineFitness'] = baselineFitness
-            if plot: plot_burst_peak_and_baseline(fitnessVals)
+            fitnessVals['baseline_fitness'] = {'Value': baseline, 'Fit': baselineFitness}
             return fitnessVals
         except Exception as e:
             print(f'Error calculating baseline fitness.')
             print(f'Error: {e}')
             #set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
-            baselineFitness = maxFitness
-            fitnessVals['baselineFitness'] = baselineFitness
+            fitnessVals['baseline_fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
 
     def fit_firing_rate(net_activity_metrics, fitnessVals, simData, plot = False, **kwargs):
@@ -362,24 +343,23 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
                 list(simData['popRates'].keys()), 
                 list(simData['popRates'].values()), popFitness)])
             print('  '+popInfo)
-            fitnessVals['rate_fitness'] = rate_fitness
+            fitnessVals['rate_fitness'] = {'Value': np.mean(list(simData['popRates'].values())), 'Fit': rate_fitness}
             return fitnessVals
         except Exception as e:
             print(f'Error calculating firing rate fitness.')
             print(f'Error: {e}')
             #set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
-            rate_fitness = maxFitness
-            fitnessVals['rate_fitness'] = rate_fitness
+            fitnessVals['rate_fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
     
     def fitness_summary_metrics(fitnessVals):
-        #average fitness
-        average_fitness = sum(fitnessVals.values()) / len(fitnessVals)
+        # Extract fitness values
+        fitness_values = {key: fitnessVals[key]['Fit'] for key in fitnessVals if isinstance(fitnessVals[key], dict) and 'Fit' in fitnessVals[key]}
 
-        ##normalized and scaled average fitness - mitigate the effect of outliers
-        # Assuming fitness values are stored in a dictionary
-        fitness_values = list(fitnessVals.values())
+        # Average fitness
+        fitness_values = [value for value in fitness_values.values() if value is not None]
+        average_fitness = sum(fitness_values) / len(fitness_values)
 
         # Calculate min and max values
         min_value = min(fitness_values)
@@ -389,7 +369,7 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
         if max_value > min_value:
             normalized_fitness_values = [(value - min_value) / (max_value - min_value) for value in fitness_values]
             if any(np.isnan(value) for value in normalized_fitness_values):
-                #set all values to 1
+                # Set all values to 1
                 normalized_fitness_values = [1 for _ in fitness_values]
             # Scale the normalized values back to the original range (0-1000)
             scaled_fitness_values = [value * 1000 for value in normalized_fitness_values]
@@ -459,8 +439,8 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
 
         ##save fitness results to file        
         #get folder from simLabel
-        if 'overnight' in data_file_path:
-            print('overnight')
+        # if data_file_path is not None and 'overnight' in data_file_path:
+        #     print('overnight')
         gen_folder = simLabel.split('_cand')[0]
         if fitness_save_path is None and data_file_path is None:
             #typical case, during simulations
@@ -602,9 +582,19 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
                 print(f'Error generating sample trace plot from Data at: {data_file_path}')
                 #sample_trace_path_E = None
                 pass
-        plot_network_activity_fitness(net_activity_metrics)
-        plot_raster()
-        plot_trace_example()
+        
+        try: plot_network_activity_fitness(net_activity_metrics)
+        except: 
+            print(f'Error generating network activity plot from Data at: {data_file_path}')
+            pass
+        try: plot_raster()
+        except: 
+            print(f'Error generating raster plot from Data at: {data_file_path}')
+            pass
+        try: plot_trace_example()
+        except: 
+            print(f'Error generating sample trace plot from Data at: {data_file_path}')
+            pass
     
     '''
     Get Fitness (Main Fitness Function)

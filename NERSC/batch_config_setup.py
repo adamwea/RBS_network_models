@@ -36,7 +36,7 @@ num_nodes = USER_nodes #keep this value at 1 for now
 
 ## Genetic Algorithm Parameters ##
 assert USER_frac_elites, 'USER_frac_elites must be specified in USER_INPUTS.py'
-num_elite_percent = 100*USER_frac_elites # top 10% of the population will be copied to the next generation, this is considered high-medium elitism
+num_elite_percent = USER_frac_elites # top 10% of the population will be copied to the next generation, this is considered high-medium elitism
 num_elites = int(num_elite_percent * pop_size)
 try: assert num_elites > 0, "num_elites rounded to 0. num_elites must be greater than 0. Setting num_elites = 1."
 except: num_elites = 1
