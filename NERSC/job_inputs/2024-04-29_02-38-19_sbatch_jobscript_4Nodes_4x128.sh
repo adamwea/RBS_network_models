@@ -1,13 +1,13 @@
 #!/bin/bash
 #SBATCH --job-name=2Nodes_4x128
 #SBATCH -A m2043
-#SBATCH -t 10:00:00
+#SBATCH -t 00:05:00
 #SBATCH --nodes=2
 #SBATCH --output=NERSC/output/job_outputs/job_output_%j_2Nodes_2x128.txt
 #SBATCH --error=NERSC/output/job_outputs/job_error_%j_2Nodes_2x128.txt
 #SBATCH --mail-user=amwe@ucdavis.edu
 #SBATCH --mail-type=ALL
-#SBATCH -q regular
+#SBATCH -q debug
 #SBATCH -C cpu
 #SBATCH --exclusive
     
@@ -26,5 +26,6 @@ export PATH=$HOME/neuron/bin:$PATH
 # export OMP_PROC_BIND=spread
 # export OMP_PLACES=threads
 cd NERSC
-mpiexec --map-by ppr:128:node -np --display-map 256 nrniv -mpi batchRun.py 2Nodes_4x128 15
+nrniv --version
+#mpiexec --map-by ppr:128:node -np --display-map 256 nrniv -mpi batchRun.py 2Nodes_4x128 10
     

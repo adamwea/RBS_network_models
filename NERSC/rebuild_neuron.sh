@@ -5,6 +5,7 @@ module load openmpi
 module load cmake
 
 # Create a new Conda environment
+conda remove --name neuron_env_1 --all -y
 conda create -n neuron_env_1 python=3.9 -y
 source activate neuron_env_1
 
@@ -16,9 +17,11 @@ cd $HOME
 git clone https://github.com/neuronsimulator/nrn.git
 cd nrn
 
+
 # Create a build directory
 mkdir build
 cd build
+make clean
 
 # Configure NEURON with CMake
 cmake .. -DNRN_ENABLE_INTERVIEWS=OFF -DNRN_ENABLE_MPI=ON -DNRN_ENABLE_PYTHON=ON -DPYTHON_EXECUTABLE=$CONDA_PREFIX/bin/python -DCMAKE_INSTALL_PREFIX=$HOME/neuron
