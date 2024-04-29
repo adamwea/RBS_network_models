@@ -21,9 +21,9 @@ if option == 'mpi_bulletin':
     # hw_threads = '--use-hwthread-cpus'
     # mpiexec_flags = f"{mtl_base_verbose} {report_bindings} {display_map} {display_topo} {display_devel_map}"
     mpiexec_command = [
-        f"mpiexec --map-by ppr:128:node"
+        f"mpiexec --map-by ppr:{Perlmutter_cores_per_node}:node"
         f" -np --display-map {USER_total_cores}"
-        f"nrniv -mpi batchRun.py {USER_JobName} {USER_seconds}"
+        f" nrniv -mpi batchRun.py {USER_JobName} {USER_seconds}"
         ]
     #remove /n from mpiexec_command
     mpiexec_command = ' '.join(mpiexec_command)
