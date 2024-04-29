@@ -57,7 +57,7 @@ USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction 
 # Population sizes where 256/USER_pop_size is an integer and perfect square: 1, 4, 16, 64, 256, 1024, 4096, 16384, 65536
 USER_pop_size = 128 # Population sizes
 USER_max_generations = 150
-USER_max_generations = 3
+USER_max_generations = 3000
 USER_time_sleep = 10 #seconds between checking for completed simulations
 USER_maxiter_wait_minutes = 2*60 #Maximum minutes to wait before starting new Generation
 

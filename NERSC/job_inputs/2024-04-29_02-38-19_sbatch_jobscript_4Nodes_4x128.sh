@@ -1,8 +1,8 @@
 #!/bin/bash
-#SBATCH --job-name=2Nodes_2x128
+#SBATCH --job-name=2Nodes_4x128
 #SBATCH -A m2043
-#SBATCH -t 05:00:00
-#SBATCH --nodes=1
+#SBATCH -t 10:00:00
+#SBATCH --nodes=2
 #SBATCH --output=NERSC/output/job_outputs/job_output_%j_2Nodes_2x128.txt
 #SBATCH --error=NERSC/output/job_outputs/job_error_%j_2Nodes_2x128.txt
 #SBATCH --mail-user=amwe@ucdavis.edu
