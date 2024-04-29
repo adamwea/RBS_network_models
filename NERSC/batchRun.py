@@ -98,6 +98,7 @@ def get_batch_config(batch_config_options = None):
         'method': method,
         'cfgFile': cfgFile,
         'netParamsFile': netParamsFile,
+        'initCfg': initCfg,
         'runCfg': {
             'type': USER_runCfg_type,
             'script': script,
@@ -126,7 +127,7 @@ def get_batch_config(batch_config_options = None):
             'maxiter_wait': maxiter_wait, # max number of times to check if sim is completed (for each generation)
             #effectively 1.5 hours per gen, max
             'defaultFitness': 1000,
-            'initCfg': initCfg,
+            #'initCfg': initCfg,
         }
     }  
     
