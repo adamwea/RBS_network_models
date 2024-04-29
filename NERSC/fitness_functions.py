@@ -509,7 +509,7 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
             #Attempt to generate the raster plot
             assert sim_obj is not None, 'sim_obj must be defined to generate raster plot'
             figname = 'raster_plot.png'
-            #rasterData = sim_obj.analysis.prepareRaster()
+            rasterData = sim_obj.analysis.prepareRaster()
             timeVector = net_activity_metrics['timeVector']
             timeRange = [timeVector[0], timeVector[-1]]
             #raster_plot_path = f'{batch_saveFolder}/{simLabel}_raster_plot.svg'
@@ -554,8 +554,22 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
                 elif os.path.exists(fig_path) is False: pass
                 else: raise ValueError(f'Idk how we got here. Logically.')
 
-                timeVector = net_activity_metrics['timeVector']
-                timeRange = [timeVector[0], timeVector[-1]]
+                timeVector = np.array(net_activity_metrics['timeVector'])
+                # Find the indices of the closest values in timeVector to the desired values
+                start_index = (np.abs(timeVector - (timeVector[int(len(timeVector)/2)] - 500))).argmin()
+                end_index = (np.abs(timeVector - (timeVector[int(len(timeVector)/2)] + 500))).argmin()
+
+                # Ensure start_index and end_index are not the same and start_index comes before end_index
+                if start_index == end_index:
+                    if start_index > 0:
+                        start_index -= 1
+                    elif end_index < len(timeVector) - 1:
+                        end_index += 1
+                elif start_index > end_index:
+                    start_index, end_index = end_index, start_index
+
+                # Use these indices to get the closest values in timeVector
+                timeRange = [timeVector[start_index], timeVector[end_index]]
                 # Prepare the sample trace
                 sample_trace_E = sim_obj.analysis.plotTraces(
                     include=[('E', 0), ('I', 0)],

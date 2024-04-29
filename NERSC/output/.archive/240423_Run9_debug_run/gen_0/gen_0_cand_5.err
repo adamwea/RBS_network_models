@@ -1,7 +1,0 @@
-taskset: failed to set pid 14899's affinity: No such process
-Traceback (most recent call last):
-  File "/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/get_used_cores.py", line 13, in <module>
-    process_name = process_names[processes.index(pid)]
-                   ~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
-IndexError: list index out of range
-/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240423_Run9_debug_run/gen_0/gen_0_cand_5.sbatch: 9: export: ['systemd',: bad variable name

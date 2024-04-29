@@ -36,7 +36,7 @@ params['tau2_inh'] = [5.0, 15.0]
 # params['tau2_inh'] = 9.0
 
 #Stimulation Params
-params['Erhythmic_stimWeight'] = [0, 0.02] 
-params['Irhythmic_stimWeight'] = [0, 0.02] 
-params['rythmic_stiminterval'] = [0, 5000]  # Interval between spikes (ms)
-params['rythmic_stimnoise'] = [0, 0.6]
+# params['Erhythmic_stimWeight'] = [0, 0.02] 
+# params['Irhythmic_stimWeight'] = [0, 0.02] 
+# params['rythmic_stiminterval'] = [0, 5000]  # Interval between spikes (ms)
+# params['rythmic_stimnoise'] = [0, 0.6]

@@ -26,7 +26,7 @@ def blockPrint():
 def enablePrint():
     sys.stdout = sys.__stdout__
 
-def generate_pdf_page(data_file_path, elite_paths_cull):
+def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank):
     import matplotlib.pyplot as plt
 
     def plot_params(cfg_data, params, cgf_file_path):
@@ -88,17 +88,22 @@ def generate_pdf_page(data_file_path, elite_paths_cull):
 
         # plot the cfg_data of interest
         main_cfg_data = cfg_data.copy()
-        main_cfg_path = cgf_file_path.copy()       
+        main_cfg_path = cgf_file_path     
 
         #plot the rest for comparison
         #gen_dir = os.path.dirname(os.path.dirname(cgf_file_path))
         
         #os walk through gen_dir and find all .json files with containing cfg in the name
-        for root, dirs, files in os.walk(elite_paths_cull):
+        #for each fitness_save_path, in elite_paths_cull, plot the cfg_data
+        #for i in range(len(elite_paths_cull)):
+            #for root, dirs, files in os.walk(elite_paths_cull[i][1]['fitness_save_path']):
+        gen_path = os.path.dirname(cgf_file_path)
+        for root, dirs, files in os.walk(gen_path):
             for file in files:
                 if '.json' in file and 'cfg' in file:
                     #create corresponding data file path
                     cfg_file_path = os.path.join(root, file)
+                    #print(cfg_file_path)
                     if cfg_file_path == main_cfg_path: continue
                     #check if data file_path exists
                     if os.path.exists(cfg_file_path): pass
@@ -142,11 +147,15 @@ def generate_pdf_page(data_file_path, elite_paths_cull):
     # Define the width and height for the images
     # Assuming the images have an aspect ratio of 1:1
     
-    try: files = [f for f in os.listdir(cand_plot_path) if simLabel_ in f and f.endswith('.png') and '_params_plot.png' not in f]
+    try: 
+        files = [f for f in os.listdir(cand_plot_path) if simLabel_ in f and f.endswith('.png') and '_params_plot.png' not in f]
+        img_width = page_width/len(files)
+        #quick fix for less than 3 plots
+        if len(files) < 3: img_width = page_width/3
+        img_height = img_width
     except: 
         raise Exception('No .png files found in plots directory')
-    img_width = page_width/len(files)
-    img_height = img_width
+    
 
     # Walk through the plots directory
     j=0
@@ -175,19 +184,38 @@ def generate_pdf_page(data_file_path, elite_paths_cull):
     #add table to pdf. top left corner is 0,0
     # c.drawString(0, 0, 'Fitness Data')
     # c.drawString(0, 0, html_table)
+    # Add each item in the JSON data as a new line    
     # Add each item in the JSON data as a new line
-
+        # Get the page width and height
+    #set font for all prints smaller than default
+    c.setFont("Helvetica", 8)
+    
+    #page_width, page_height = letter
+    y_position = page_height - 15  # Start near the top of the page
+    #split data_file_path at 2DNetworkSimulations
+    data_file_path_print = data_file_path.split('2DNetworkSimulations')[1]
+    data_directory_str = f"Data Directory: {data_file_path_print}"
+    c.drawString(10, y_position, data_directory_str)
+    y_position -= 10  # Move down for the next line
+    generation_str = f"Generation: {os.path.basename(os.path.dirname(data_file_path))}"
+    c.drawString(10, y_position, generation_str)
+    y_position -= 10  # Move down for the next line
+    generation_rank_str = f"Generation Rank: {gen_rank}/{len(elite_paths_cull)}"
+    c.drawString(10, y_position, generation_rank_str)
+    y_position -= 10  # Move down for the next line
+    #y_position -= 15  # Move down for the next line
+    
     #import dictionary pops from fitness_config.py and covert print the same way as fitness_data
     from fitness_config import pops
-    y_position = page_height - 20  # Start near the top of the page
+    y_position = y_position - 15  # Start near the top of the page
     for key, value in pops.items():
         c.drawString(10, y_position, f"{key}: {value}")
-        y_position -= 15  # Move down for the next line
+        y_position -= 10  # Move down for the next line
     
-    y_position = y_position - 20  # Start near the top of the page
+    y_position = y_position - 15  # Start near the top of the page
     for key, value in fitness_data.items():
         c.drawString(10, y_position, f"{key}: {value}")
-        y_position -= 15  # Move down for the next line
+        y_position -= 10  # Move down for the next line
 
     #plot params
     from USER_evol_param_space import params
@@ -203,6 +231,17 @@ def generate_pdf_page(data_file_path, elite_paths_cull):
         img = img.convert('RGB')
     # Save the image to the PDF, adjusting the position for each image
     c.drawInlineImage(img, final_x_pos, img_height, width=img_width, height=img_height)
+
+    #print info in top right corner
+    #print data_file_path
+    #split data_file_path at 2DNetworkSimulations
+    #from reportlab.lib.pagesizes import letter
+    #from reportlab.pdfgen import canvas
+    #from reportlab.lib.units import inch
+
+    # Create a new canvas object with the page size of a letter
+    #c = canvas.Canvas("example.pdf", pagesize=letter)
+
 
     # Save the PDF
     c.save()
@@ -259,10 +298,18 @@ def plot_elites(job_dir):
                                                  'fitness_save_path': fitness_save_path,
                                                  'simData': simData,}
                     except: pass
-        num_elites = int(.10 * len(elite_paths))
+        #elite_rate = 0.10
+        #get path in job_dir ending in _batch.json and load
+        batch_file_path = [f.path for f in os.scandir(job_dir) if f.is_file() and '_batch.json' in f.name][0]
+        batch_data = json.load(open(batch_file_path))
+        num_elites = batch_data['batch']['evolCfg']['num_elites']
+        assert num_elites < len(elite_paths), f"Error: num_elites must be less than the number of elites in the generation."
         elite_paths = sorted(elite_paths.items(), key=lambda x: x[1]['avgScaledFitness'], reverse=False)
         elite_paths_cull = elite_paths[:num_elites]
         for simLabel, data in elite_paths_cull:
+            #rank is the index of the elite in the elite_paths list
+            gen_rank = elite_paths.index((simLabel, data))
+            
             #initialize variables
             data_file_path = data['data_file_path']
             batch_saveFolder = data['batch_saveFolder']
@@ -279,10 +326,11 @@ def plot_elites(job_dir):
             #Network plot, Raster plot, and Trace .pngs should have been generated to plots for each candidate in outputs.
             # Get each PNG, line them up in a row, and save them to a single PDF.
             # os walk through plots folder and generate PDF for each candidate
-            generate_pdf_page(data_file_path, elite_paths_cull)
+            try: generate_pdf_page(data_file_path, elite_paths_cull, gen_rank)
+            except: pass
                     
 if __name__ == '__main__':
-    job_dir = '/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240425_Run4_25AprRunWhileWork_1x128'
+    job_dir = '/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100'
     plot_elites(job_dir)
             
             
