@@ -216,11 +216,7 @@ def init_batch_cfg():
 
     return batch_config
 
-# Main code
-import time
-import datetime
-if __name__ == '__main__':
-    
+def main():
     logging.info(f'Batch run script started')
     logging.info(f'Timer Started: {datetime.datetime.now()}')
 
@@ -231,8 +227,7 @@ if __name__ == '__main__':
     # Run batch
     run_batch = True
     if run_batch:    
-        logging.info(f'Initializing batch config')
-        from batch_config_setup import *
+        logging.info(f'Initializing batch config')        
         batch_config = init_batch_cfg()
 
         logging.info(f'Running batch: {batch_config["batchLabel"]}')
@@ -247,3 +242,10 @@ if __name__ == '__main__':
     logging.info(f'Total CPU Time: {end_time_cpu - start_time_cpu}')
     logging.info(f'Total Time Elapsed: {end_time_wall - start_time_wall}')
     logging.info(f'Estimated Wait Time: {end_time_wall - start_time_wall - datetime.timedelta(seconds=end_time_cpu - start_time_cpu)}')
+
+# Main code
+import time
+import datetime
+from batch_config_setup import *
+if __name__ == '__main__':
+    main()

@@ -13,15 +13,22 @@ if option == 'mpi_bulletin':
     datetime_str = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")    
 
     #prepare mpiexec command
-    mtl_base_verbose = "--mca mtl_base_verbose 100"
-    report_bindings = "--report-bindings"
-    display_map = "--display-map"
-    display_topo = "--display-topo"
-    display_devel_map = "--display-devel-map"
-    hw_threads = '--use-hwthread-cpus'
-    mpiexec_flags = f"{mtl_base_verbose} {report_bindings} {display_map} {display_topo} {display_devel_map}"
-    mpiexec_command = f"mpiexec --use-hwthread-cpus -np {USER_total_cores} -bind-to hwthread nrniv -mpi batchRun.py {USER_JobName} {USER_seconds}"
-    
+    # mtl_base_verbose = "--mca mtl_base_verbose 100"
+    # report_bindings = "--report-bindings"
+    # display_map = "--display-map"
+    # display_topo = "--display-topo"
+    # display_devel_map = "--display-devel-map"
+    # hw_threads = '--use-hwthread-cpus'
+    # mpiexec_flags = f"{mtl_base_verbose} {report_bindings} {display_map} {display_topo} {display_devel_map}"
+    mpiexec_command = [
+        f"mpiexec --map-by ppr:128:node"
+        f" -np --display-map {USER_total_cores}"
+        f"nrniv -mpi batchRun.py {USER_JobName} {USER_seconds}"
+        ]
+    #remove /n from mpiexec_command
+    mpiexec_command = ' '.join(mpiexec_command)
+    # mpiexec --map-by ppr:128:node --display-map -np 256 nrniv -mpi batchRun.py interactive_debug 5
+
     # Define the sbatch options using the variables from user_inputs.py
     sbatch_options = f"""#!/bin/bash
 #SBATCH --job-name={USER_JobName}
@@ -44,9 +51,16 @@ if option == 'mpi_bulletin':
     # export FI_LOG_LEVEL=debug
     shell_script = f"""{sbatch_options}
 module load conda
-conda activate 2DSims
+conda activate neuron_env
 module load openmpi
 mkdir -p NERSC/output/job_outputs
+
+# Set the library path for NEURON and Python libraries
+export LD_LIBRARY_PATH=/usr/lib64:$LD_LIBRARY_PATH
+export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
+
+# Set the path to include the NEURON binaries
+export PATH=$HOME/neuron/bin:$PATH
 
 export OMP_PROC_BIND=spread
 export OMP_PLACES=threads
@@ -62,7 +76,7 @@ cd NERSC
         f.write(shell_script)
 
     # Submit the shell script using sbatch
-    subprocess.Popen(["sbatch", f'NERSC/job_inputs/{datetime_str}_sbatch_jobscript_{USER_JobName}.sh'])
+    #subprocess.Popen(["sbatch", f'NERSC/job_inputs/{datetime_str}_sbatch_jobscript_{USER_JobName}.sh'])
 elif option == 'mpidirect':
     datetime_str = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
     # Define the sbatch options using the variables from user_inputs.py

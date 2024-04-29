@@ -1,0 +1,17 @@
+{
+    "run_path": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run2_interactive_debug",
+    "batchLabel": "240429_Run2_interactive_debug",
+    "method": "evol",
+    "cores_per_node": 128,
+    "nodes": 1,
+    "script": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py",
+    "pop_size": 8,
+    "max_generations": 3,
+    "time_sleep": 10,
+    "maxiter_wait": 720.0,
+    "skip": false,
+    "num_elites": 1,
+    "cfgFile": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/cfg.py",
+    "netParamsFile": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/netParams.py",
+    "initCfg": null
+}

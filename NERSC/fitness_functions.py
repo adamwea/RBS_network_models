@@ -180,6 +180,7 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
             maxFitness = kwargs['maxFitness']
             fitnessVals['thresh'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
+    
     def fit_rate_slope(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         try:
             # Firing rate fitness
