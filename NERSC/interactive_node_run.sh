@@ -15,8 +15,8 @@ export PATH=$HOME/neuron/bin:$PATH
 
 # Execute the application and capture all output
 # mpiexec_command = f"mpiexec {mpiexec_flags} --use-hwthread-cpus -np {USER_total_cores} nrniv -mpi NERSC/batchRun.py {USER_JobName} {USER_seconds}"
-export OMP_PROC_BIND=spread
-export OMP_PLACES=threads
+# export OMP_PROC_BIND=spread
+# export OMP_PLACES=threads
 cd NERSC
 #mpiexec --use-hwthread-cpus -np 128 nrniv -mpi -bind-to hwthread batchRun.py interactive_debug 5
 #mpiexec --display-map -np 128 nrniv -mpi batchRun.py interactive_debug 5

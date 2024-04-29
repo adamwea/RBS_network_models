@@ -1,13 +1,13 @@
 #!/bin/bash
-#SBATCH --job-name=4Nodes_4x128
+#SBATCH --job-name=2Nodes_2x128
 #SBATCH -A m2043
-#SBATCH -t 00:30:00
-#SBATCH --nodes=4
-#SBATCH --output=NERSC/output/job_outputs/job_output_%j_4Nodes_4x128.txt
-#SBATCH --error=NERSC/output/job_outputs/job_error_%j_4Nodes_4x128.txt
+#SBATCH -t 05:00:00
+#SBATCH --nodes=1
+#SBATCH --output=NERSC/output/job_outputs/job_output_%j_2Nodes_2x128.txt
+#SBATCH --error=NERSC/output/job_outputs/job_error_%j_2Nodes_2x128.txt
 #SBATCH --mail-user=amwe@ucdavis.edu
 #SBATCH --mail-type=ALL
-#SBATCH -q debug
+#SBATCH -q regular
 #SBATCH -C cpu
 #SBATCH --exclusive
     
@@ -23,8 +23,8 @@ export LD_LIBRARY_PATH=$CONDA_PREFIX/lib:$LD_LIBRARY_PATH
 # Set the path to include the NEURON binaries
 export PATH=$HOME/neuron/bin:$PATH
 
-export OMP_PROC_BIND=spread
-export OMP_PLACES=threads
+# export OMP_PROC_BIND=spread
+# export OMP_PLACES=threads
 cd NERSC
-mpiexec --map-by ppr:128:node -np --display-map 512 nrniv -mpi batchRun.py 4Nodes_4x128 5
+mpiexec --map-by ppr:128:node -np --display-map 256 nrniv -mpi batchRun.py 2Nodes_4x128 15
     
