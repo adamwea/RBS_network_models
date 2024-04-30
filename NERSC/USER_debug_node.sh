@@ -2,7 +2,7 @@
 #SBATCH --job-name=debug_node_run
 #SBATCH -A m2043
 #SBATCH -t 09:00:00
-#SBATCH --nodes=1
+#SBATCH --nodes=2
 #SBATCH --ntasks-per-node=128
 #SBATCH --output=NERSC/output/job_outputs/job_%j_output_debug_node_run.txt
 #SBATCH --error=NERSC/output/job_outputs/job_%j_error_debug_node_run.txt
