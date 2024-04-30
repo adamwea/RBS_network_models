@@ -67,7 +67,7 @@ options = ['mpi_bulletin_Laptop',
            'mpi_bulletin_NERSC', 
            'mpi_direct', 
            'hpc_slurm']
-option = options[0]
+option = options[2]
 if option == 'mpi_bulletin_Laptop':
     USER_pop_size = 4
     USER_runCfg_type = 'mpi_bulletin'    
@@ -103,7 +103,7 @@ elif option == 'mpi_bulletin_NERSC':
     USER_allocation = 'm2043' #project ID
     USER_walltime = "00:30:00"    
     USER_email = "amwe@ucdavis.edu"
-    USER_nodes = 4 #This should be set to the number of nodes available
+    USER_nodes = 1 #This should be set to the number of nodes available
     #Perlmutter_cores_per_node = 256 #128 physical cores, 256 hyperthreads
     Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
     USER_cores_per_node = Perlmutter_cores_per_node

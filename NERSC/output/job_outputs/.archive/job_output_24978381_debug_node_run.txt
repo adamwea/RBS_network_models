@@ -1,0 +1,508 @@
+NEURON -- VERSION 9.0a-231-g8b35309de master (8b35309de) 2024-04-25
+mpiexec (Open MPI) 5.0.0
+
+Report bugs to https://www.open-mpi.org/community/help/
+gcc-12 (SUSE Linux) 12.3.0
+Copyright (C) 2022 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Running the simulation
+
+========================   JOB MAP   ========================
+Data for JOB prterun-nid004822-2181085@1 offset 0 Total slots allocated 512
+    Mapping policy: BYCORE:NOOVERSUBSCRIBE  Ranking policy: SLOT Binding policy: CORE:IF-SUPPORTED
+    Cpu set: N/A  PPR: 1:core  Cpus-per-rank: N/A  Cpu Type: CORE
+
+
+Data for node: nid004822	Num slots: 256	Max slots: 0	Num procs: 128
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 0 Bound: package[0][core:0]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 1 Bound: package[0][core:1]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 2 Bound: package[0][core:2]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 3 Bound: package[0][core:3]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 4 Bound: package[0][core:4]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 5 Bound: package[0][core:5]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 6 Bound: package[0][core:6]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 7 Bound: package[0][core:7]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 8 Bound: package[0][core:8]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 9 Bound: package[0][core:9]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 10 Bound: package[0][core:10]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 11 Bound: package[0][core:11]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 12 Bound: package[0][core:12]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 13 Bound: package[0][core:13]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 14 Bound: package[0][core:14]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 15 Bound: package[0][core:15]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 16 Bound: package[0][core:16]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 17 Bound: package[0][core:17]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 18 Bound: package[0][core:18]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 19 Bound: package[0][core:19]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 20 Bound: package[0][core:20]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 21 Bound: package[0][core:21]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 22 Bound: package[0][core:22]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 23 Bound: package[0][core:23]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 24 Bound: package[0][core:24]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 25 Bound: package[0][core:25]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 26 Bound: package[0][core:26]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 27 Bound: package[0][core:27]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 28 Bound: package[0][core:28]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 29 Bound: package[0][core:29]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 30 Bound: package[0][core:30]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 31 Bound: package[0][core:31]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 32 Bound: package[0][core:32]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 33 Bound: package[0][core:33]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 34 Bound: package[0][core:34]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 35 Bound: package[0][core:35]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 36 Bound: package[0][core:36]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 37 Bound: package[0][core:37]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 38 Bound: package[0][core:38]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 39 Bound: package[0][core:39]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 40 Bound: package[0][core:40]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 41 Bound: package[0][core:41]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 42 Bound: package[0][core:42]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 43 Bound: package[0][core:43]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 44 Bound: package[0][core:44]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 45 Bound: package[0][core:45]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 46 Bound: package[0][core:46]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 47 Bound: package[0][core:47]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 48 Bound: package[0][core:48]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 49 Bound: package[0][core:49]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 50 Bound: package[0][core:50]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 51 Bound: package[0][core:51]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 52 Bound: package[0][core:52]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 53 Bound: package[0][core:53]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 54 Bound: package[0][core:54]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 55 Bound: package[0][core:55]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 56 Bound: package[0][core:56]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 57 Bound: package[0][core:57]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 58 Bound: package[0][core:58]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 59 Bound: package[0][core:59]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 60 Bound: package[0][core:60]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 61 Bound: package[0][core:61]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 62 Bound: package[0][core:62]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 63 Bound: package[0][core:63]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 64 Bound: package[1][core:64]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 65 Bound: package[1][core:65]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 66 Bound: package[1][core:66]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 67 Bound: package[1][core:67]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 68 Bound: package[1][core:68]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 69 Bound: package[1][core:69]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 70 Bound: package[1][core:70]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 71 Bound: package[1][core:71]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 72 Bound: package[1][core:72]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 73 Bound: package[1][core:73]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 74 Bound: package[1][core:74]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 75 Bound: package[1][core:75]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 76 Bound: package[1][core:76]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 77 Bound: package[1][core:77]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 78 Bound: package[1][core:78]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 79 Bound: package[1][core:79]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 80 Bound: package[1][core:80]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 81 Bound: package[1][core:81]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 82 Bound: package[1][core:82]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 83 Bound: package[1][core:83]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 84 Bound: package[1][core:84]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 85 Bound: package[1][core:85]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 86 Bound: package[1][core:86]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 87 Bound: package[1][core:87]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 88 Bound: package[1][core:88]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 89 Bound: package[1][core:89]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 90 Bound: package[1][core:90]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 91 Bound: package[1][core:91]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 92 Bound: package[1][core:92]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 93 Bound: package[1][core:93]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 94 Bound: package[1][core:94]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 95 Bound: package[1][core:95]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 96 Bound: package[1][core:96]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 97 Bound: package[1][core:97]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 98 Bound: package[1][core:98]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 99 Bound: package[1][core:99]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 100 Bound: package[1][core:100]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 101 Bound: package[1][core:101]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 102 Bound: package[1][core:102]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 103 Bound: package[1][core:103]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 104 Bound: package[1][core:104]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 105 Bound: package[1][core:105]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 106 Bound: package[1][core:106]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 107 Bound: package[1][core:107]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 108 Bound: package[1][core:108]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 109 Bound: package[1][core:109]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 110 Bound: package[1][core:110]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 111 Bound: package[1][core:111]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 112 Bound: package[1][core:112]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 113 Bound: package[1][core:113]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 114 Bound: package[1][core:114]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 115 Bound: package[1][core:115]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 116 Bound: package[1][core:116]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 117 Bound: package[1][core:117]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 118 Bound: package[1][core:118]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 119 Bound: package[1][core:119]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 120 Bound: package[1][core:120]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 121 Bound: package[1][core:121]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 122 Bound: package[1][core:122]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 123 Bound: package[1][core:123]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 124 Bound: package[1][core:124]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 125 Bound: package[1][core:125]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 126 Bound: package[1][core:126]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 127 Bound: package[1][core:127]
+
+Data for node: nid004823	Num slots: 256	Max slots: 0	Num procs: 128
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 128 Bound: package[0][core:0]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 129 Bound: package[0][core:1]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 130 Bound: package[0][core:2]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 131 Bound: package[0][core:3]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 132 Bound: package[0][core:4]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 133 Bound: package[0][core:5]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 134 Bound: package[0][core:6]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 135 Bound: package[0][core:7]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 136 Bound: package[0][core:8]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 137 Bound: package[0][core:9]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 138 Bound: package[0][core:10]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 139 Bound: package[0][core:11]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 140 Bound: package[0][core:12]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 141 Bound: package[0][core:13]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 142 Bound: package[0][core:14]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 143 Bound: package[0][core:15]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 144 Bound: package[0][core:16]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 145 Bound: package[0][core:17]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 146 Bound: package[0][core:18]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 147 Bound: package[0][core:19]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 148 Bound: package[0][core:20]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 149 Bound: package[0][core:21]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 150 Bound: package[0][core:22]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 151 Bound: package[0][core:23]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 152 Bound: package[0][core:24]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 153 Bound: package[0][core:25]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 154 Bound: package[0][core:26]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 155 Bound: package[0][core:27]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 156 Bound: package[0][core:28]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 157 Bound: package[0][core:29]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 158 Bound: package[0][core:30]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 159 Bound: package[0][core:31]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 160 Bound: package[0][core:32]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 161 Bound: package[0][core:33]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 162 Bound: package[0][core:34]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 163 Bound: package[0][core:35]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 164 Bound: package[0][core:36]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 165 Bound: package[0][core:37]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 166 Bound: package[0][core:38]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 167 Bound: package[0][core:39]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 168 Bound: package[0][core:40]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 169 Bound: package[0][core:41]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 170 Bound: package[0][core:42]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 171 Bound: package[0][core:43]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 172 Bound: package[0][core:44]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 173 Bound: package[0][core:45]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 174 Bound: package[0][core:46]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 175 Bound: package[0][core:47]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 176 Bound: package[0][core:48]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 177 Bound: package[0][core:49]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 178 Bound: package[0][core:50]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 179 Bound: package[0][core:51]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 180 Bound: package[0][core:52]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 181 Bound: package[0][core:53]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 182 Bound: package[0][core:54]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 183 Bound: package[0][core:55]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 184 Bound: package[0][core:56]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 185 Bound: package[0][core:57]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 186 Bound: package[0][core:58]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 187 Bound: package[0][core:59]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 188 Bound: package[0][core:60]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 189 Bound: package[0][core:61]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 190 Bound: package[0][core:62]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 191 Bound: package[0][core:63]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 192 Bound: package[1][core:64]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 193 Bound: package[1][core:65]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 194 Bound: package[1][core:66]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 195 Bound: package[1][core:67]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 196 Bound: package[1][core:68]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 197 Bound: package[1][core:69]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 198 Bound: package[1][core:70]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 199 Bound: package[1][core:71]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 200 Bound: package[1][core:72]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 201 Bound: package[1][core:73]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 202 Bound: package[1][core:74]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 203 Bound: package[1][core:75]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 204 Bound: package[1][core:76]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 205 Bound: package[1][core:77]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 206 Bound: package[1][core:78]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 207 Bound: package[1][core:79]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 208 Bound: package[1][core:80]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 209 Bound: package[1][core:81]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 210 Bound: package[1][core:82]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 211 Bound: package[1][core:83]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 212 Bound: package[1][core:84]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 213 Bound: package[1][core:85]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 214 Bound: package[1][core:86]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 215 Bound: package[1][core:87]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 216 Bound: package[1][core:88]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 217 Bound: package[1][core:89]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 218 Bound: package[1][core:90]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 219 Bound: package[1][core:91]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 220 Bound: package[1][core:92]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 221 Bound: package[1][core:93]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 222 Bound: package[1][core:94]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 223 Bound: package[1][core:95]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 224 Bound: package[1][core:96]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 225 Bound: package[1][core:97]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 226 Bound: package[1][core:98]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 227 Bound: package[1][core:99]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 228 Bound: package[1][core:100]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 229 Bound: package[1][core:101]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 230 Bound: package[1][core:102]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 231 Bound: package[1][core:103]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 232 Bound: package[1][core:104]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 233 Bound: package[1][core:105]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 234 Bound: package[1][core:106]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 235 Bound: package[1][core:107]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 236 Bound: package[1][core:108]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 237 Bound: package[1][core:109]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 238 Bound: package[1][core:110]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 239 Bound: package[1][core:111]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 240 Bound: package[1][core:112]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 241 Bound: package[1][core:113]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 242 Bound: package[1][core:114]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 243 Bound: package[1][core:115]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 244 Bound: package[1][core:116]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 245 Bound: package[1][core:117]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 246 Bound: package[1][core:118]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 247 Bound: package[1][core:119]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 248 Bound: package[1][core:120]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 249 Bound: package[1][core:121]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 250 Bound: package[1][core:122]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 251 Bound: package[1][core:123]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 252 Bound: package[1][core:124]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 253 Bound: package[1][core:125]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 254 Bound: package[1][core:126]
+        Process jobid: prterun-nid004822-2181085@1 App: 0 Process rank: 255 Bound: package[1][core:127]
+
+=============================================================
+numprocs=256
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Output path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+Saving batch to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_batch.json ... 
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'duration_seconds'] [660.2353267868729, 1.0, 0.09447932813395088, 0.330936172584822, 0.3232481466852558, 0.19256599811004937, 0.02355926510138633, 0.034125161303778906, 0.03293725679284686, 0.0018140531088963964, 4.625365213097369, 1.0226307326042552, 2.275364069339782, 1.5259247223119436, 2.742766813164915, 3.707423758968246, 0.7091804655258608, 10.187619633975016, 10.0]
+set probLengthConst=660.2353267868729
+set propVelocity=1.0
+set probIE=0.09447932813395088
+set probEE=0.330936172584822
+set probII=0.3232481466852558
+set probEI=0.19256599811004937
+set weightEI=0.02355926510138633
+set weightIE=0.034125161303778906
+set weightEE=0.03293725679284686
+set weightII=0.0018140531088963964
+set gnabar_E=4.625365213097369
+set gkbar_E=1.0226307326042552
+set gnabar_I=2.275364069339782
+set gkbar_I=1.5259247223119436
+set tau1_exc=2.742766813164915
+set tau2_exc=3.707423758968246
+set tau1_inh=0.7091804655258608
+set tau2_inh=10.187619633975016
+set duration_seconds=10.0
+Saving simConfig to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/gen_0/gen_0_cand_0_cfg.json ... 
+
+Job in rank id:  0.0
+nrniv /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/gen_0/gen_0_cand_0_cfg.json netParams=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_netParams.py
+--------------------------------------------------------------------------------
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'duration_seconds'] [552.2073123141056, 1.0, 0.25795477965380775, 0.6238744927929674, 0.2785592902096383, 0.2550688217176089, 0.0006719212726320035, 0.01784160795777432, 0.009697812509875137, 0.06082097440474952, 2.1164233481606214, 0.34274896765305063, 2.77008609260007, 3.3067773993814247, 2.711239191719061, 9.314925578534078, 0.24850842597085648, 12.518721521705476, 10.0]
+set probLengthConst=552.2073123141056
+set propVelocity=1.0
+set probIE=0.25795477965380775
+set probEE=0.6238744927929674
+set probII=0.2785592902096383
+set probEI=0.2550688217176089
+set weightEI=0.0006719212726320035
+set weightIE=0.01784160795777432
+set weightEE=0.009697812509875137
+set weightII=0.06082097440474952
+set gnabar_E=2.1164233481606214
+set gkbar_E=0.34274896765305063
+set gnabar_I=2.77008609260007
+set gkbar_I=3.3067773993814247
+set tau1_exc=2.711239191719061
+set tau2_exc=9.314925578534078
+set tau1_inh=0.24850842597085648
+set tau2_inh=12.518721521705476
+set duration_seconds=10.0
+Saving simConfig to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/gen_0/gen_0_cand_1_cfg.json ... 
+--------------------------------------------------------------------------------
+
+Job in rank id:  0.0
+nrniv /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/gen_0/gen_0_cand_1_cfg.json netParams=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_netParams.py
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'duration_seconds'] [1340.1371417622229, 1.0, 0.8752193015152467, 0.10372072608538008, 0.3067959458767382, 0.4700897124059914, 0.08943444674981404, 0.06636704912286048, 0.0005329445952953039, 0.0071862638831240895, 3.9898679523404965, 1.9368442530673817, 0.3815655681033091, 1.9708668381360996, 5.376435434185533, 8.154993529612355, 0.8308246634218269, 12.175401942609582, 10.0]
+set probLengthConst=1340.1371417622229
+set propVelocity=1.0
+set probIE=0.8752193015152467
+set probEE=0.10372072608538008
+set probII=0.3067959458767382
+set probEI=0.4700897124059914
+set weightEI=0.08943444674981404
+set weightIE=0.06636704912286048
+set weightEE=0.0005329445952953039
+set weightII=0.0071862638831240895
+set gnabar_E=3.9898679523404965
+set gkbar_E=1.9368442530673817
+set gnabar_I=0.3815655681033091
+set gkbar_I=1.9708668381360996
+set tau1_exc=5.376435434185533
+set tau2_exc=8.154993529612355
+set tau1_inh=0.8308246634218269
+set tau2_inh=12.175401942609582
+set duration_seconds=10.0
+Saving simConfig to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/gen_0/gen_0_cand_2_cfg.json ... 
+--------------------------------------------------------------------------------
+
+Job in rank id:  0.0
+nrniv /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/gen_0/gen_0_cand_2_cfg.json netParams=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_netParams.py
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'duration_seconds'] [491.44901143340746, 1.0, 0.20732182472582328, 0.48498437747662393, 0.32081599185020193, 0.8823230697682577, 0.08493706424474755, 0.08086932675252767, 0.03159062698927756, 0.013650139667643302, 4.57492916588134, 0.21875067063819853, 1.0575967768706112, 4.8786955046729945, 0.5756524529624268, 8.26196162258139, 0.6535922948052741, 11.206317223315548, 10.0]
+set probLengthConst=491.44901143340746
+set propVelocity=1.0
+set probIE=0.20732182472582328
+set probEE=0.48498437747662393
+set probII=0.32081599185020193
+set probEI=0.8823230697682577
+set weightEI=0.08493706424474755
+set weightIE=0.08086932675252767
+set weightEE=0.03159062698927756
+set weightII=0.013650139667643302
+set gnabar_E=4.57492916588134
+set gkbar_E=0.21875067063819853
+set gnabar_I=1.0575967768706112
+set gkbar_I=4.8786955046729945
+set tau1_exc=0.5756524529624268
+set tau2_exc=8.26196162258139
+set tau1_inh=0.6535922948052741
+set tau2_inh=11.206317223315548
+set duration_seconds=10.0
+Saving simConfig to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/gen_0/gen_0_cand_3_cfg.json ... 
+--------------------------------------------------------------------------------
+
+Job in rank id:  0.0
+nrniv /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/gen_0/gen_0_cand_3_cfg.json netParams=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_netParams.py
+['probLengthConst', 'propVelocity', 'probIE', 'probEE', 'probII', 'probEI', 'weightEI', 'weightIE', 'weightEE', 'weightII', 'gnabar_E', 'gkbar_E', 'gnabar_I', 'gkbar_I', 'tau1_exc', 'tau2_exc', 'tau1_inh', 'tau2_inh', 'duration_seconds'] [1788.8520052364458, 1.0, 0.18831652140080724, 0.7528226283175747, 0.18024733091782874, 0.0933234108144475, 0.025309066868125663, 0.03193408040693028, 0.07840600047341459, 0.037893795745509544, 1.7790182930806515, 1.7442216956045955, 2.5024059705843267, 4.283362901644114, 0.8996173582422717, 2.9412427659656046, 0.33946778814661954, 7.363640212026401, 10.0]
+set probLengthConst=1788.8520052364458
+set propVelocity=1.0
+set probIE=0.18831652140080724
+set probEE=0.7528226283175747
+set probII=0.18024733091782874
+set probEI=0.0933234108144475
+set weightEI=0.025309066868125663
+set weightIE=0.03193408040693028
+set weightEE=0.07840600047341459
+set weightII=0.037893795745509544
+set gnabar_E=1.7790182930806515
+set gkbar_E=1.7442216956045955
+set gnabar_I=2.5024059705843267
+set gkbar_I=4.283362901644114
+set tau1_exc=0.8996173582422717
+set tau2_exc=2.9412427659656046
+set tau1_inh=0.33946778814661954
+set tau2_inh=7.363640212026401
+set duration_seconds=10.0
+Saving simConfig to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/gen_0/gen_0_cand_4_cfg.json ... 
+--------------------------------------------------------------------------------
+
+Job in rank id:  0.0
+nrniv /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/gen_0/gen_0_cand_4_cfg.json netParams=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run26_debug_node_run/240429_Run26_debug_node_run_netParams.py

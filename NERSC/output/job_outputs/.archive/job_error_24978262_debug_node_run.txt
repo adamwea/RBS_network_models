@@ -1,0 +1,32 @@
+[nid006343:974700] *** Process received signal ***
+[nid006343:974700] Signal: Segmentation fault (11)
+[nid006343:974700] Signal code: Address not mapped (1)
+[nid006343:974700] Failing at address: 0x50
+[nid006343:974700] [ 0] /lib64/libpthread.so.0(+0x16910)[0x7f25da0e9910]
+[nid006343:974700] [ 1] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_mtl_ofi_progress_no_inline+0x273)[0x7f25dca61633]
+[nid006343:974700] [ 2] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libopen-pal.so.80(opal_progress+0x33)[0x7f25d96d81e3]
+[nid006343:974700] [ 3] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(+0x6ff7c)[0x7f25dc8edf7c]
+[nid006343:974700] [ 4] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_nextcid+0x31)[0x7f25dc8f1b11]
+[nid006343:974700] [ 5] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_dup_with_info+0xbd)[0x7f25dc8ebd4d]
+[nid006343:974700] [ 6] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(PMPI_Comm_dup+0x96)[0x7f25dc931486]
+[nid006343:974700] [ 7] /global/homes/a/adammwea/neuron/lib/libnrniv.so(nrnmpi_init+0x118)[0x7f25dd834278]
+[nid006343:974700] [ 8] nrniv[0x4007bc]
+[nid006343:974700] [ 9] /lib64/libc.so.6(__libc_start_main+0xef)[0x7f25d9bc524d]
+[nid006343:974700] [10] nrniv[0x40081a]
+[nid006343:974700] *** End of error message ***
+[nid006344:1357016] *** Process received signal ***
+[nid006344:1357016] Signal: Segmentation fault (11)
+[nid006344:1357016] Signal code: Address not mapped (1)
+[nid006344:1357016] Failing at address: 0x50
+[nid006344:1357016] [ 0] /lib64/libpthread.so.0(+0x16910)[0x7f545c0e9910]
+[nid006344:1357016] [ 1] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_mtl_ofi_progress_no_inline+0x273)[0x7f545ea61633]
+[nid006344:1357016] [ 2] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libopen-pal.so.80(opal_progress+0x33)[0x7f545b6d81e3]
+[nid006344:1357016] [ 3] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(+0x6ff7c)[0x7f545e8edf7c]
+[nid006344:1357016] [ 4] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_nextcid+0x31)[0x7f545e8f1b11]
+[nid006344:1357016] [ 5] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_dup_with_info+0xbd)[0x7f545e8ebd4d]
+[nid006344:1357016] [ 6] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(PMPI_Comm_dup+0x96)[0x7f545e931486]
+[nid006344:1357016] [ 7] /global/homes/a/adammwea/neuron/lib/libnrniv.so(nrnmpi_init+0x118)[0x7f545f75e278]
+[nid006344:1357016] [ 8] nrniv[0x4007bc]
+[nid006344:1357016] [ 9] /lib64/libc.so.6(__libc_start_main+0xef)[0x7f545bbc524d]
+[nid006344:1357016] [10] nrniv[0x40081a]
+[nid006344:1357016] *** End of error message ***

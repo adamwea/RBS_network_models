@@ -21,7 +21,7 @@ cd NERSC
 #mpiexec --use-hwthread-cpus -np 128 nrniv -mpi -bind-to hwthread batchRun.py interactive_debug 5
 #mpiexec --display-map -np 128 nrniv -mpi batchRun.py interactive_debug 5
 # cores_per_node = 128
-mpiexec --map-by ppr:128:node --display-map -np 256 nrniv -mpi batchRun.py interactive_debug 5
+mpiexec --map-by ppr:128:node --display-map -np 128 nrniv -mpi batchRun.py interactive_debug 5
 #mpiexec --display-map -np 256 nrniv -mpi batchRun.py interactive_debug 5
 #mpiexec --report-bindings -np 64 nrniv -mpi batchRun.py interactive_debug 5
 #mpiexec --use-hwthread-cpus --display-map -mca mpi_abort_print_stack 1 -np 256 nrniv -mpi -bind-to hwthread debug.py interactive_debug 5

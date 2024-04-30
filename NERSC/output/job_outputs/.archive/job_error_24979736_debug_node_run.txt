@@ -1,0 +1,85 @@
+/var/spool/slurmd/job24979736/slurm_script: line 64: cd: nrn: No such file or directory
+mkdir: cannot create directory ‘build’: File exists
+make: *** No rule to make target 'clean'.  Stop.
+CMake Error: The source directory "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC" does not appear to contain CMakeLists.txt.
+Specify --help for usage, or press the help button on the CMake GUI.
+make: the '-j' option requires a positive integer argument
+Usage: make [options] [target] ...
+Options:
+  -b, -m                      Ignored for compatibility.
+  -B, --always-make           Unconditionally make all targets.
+  -C DIRECTORY, --directory=DIRECTORY
+                              Change to DIRECTORY before doing anything.
+  -d                          Print lots of debugging information.
+  --debug[=FLAGS]             Print various types of debugging information.
+  -e, --environment-overrides
+                              Environment variables override makefiles.
+  --eval=STRING               Evaluate STRING as a makefile statement.
+  -f FILE, --file=FILE, --makefile=FILE
+                              Read FILE as a makefile.
+  -h, --help                  Print this message and exit.
+  -i, --ignore-errors         Ignore errors from recipes.
+  -I DIRECTORY, --include-dir=DIRECTORY
+                              Search DIRECTORY for included makefiles.
+  -j [N], --jobs[=N]          Allow N jobs at once; infinite jobs with no arg.
+  -k, --keep-going            Keep going when some targets can't be made.
+  -l [N], --load-average[=N], --max-load[=N]
+                              Don't start multiple jobs unless load is below N.
+  -L, --check-symlink-times   Use the latest mtime between symlinks and target.
+  -n, --just-print, --dry-run, --recon
+                              Don't actually run any recipe; just print them.
+  -o FILE, --old-file=FILE, --assume-old=FILE
+                              Consider FILE to be very old and don't remake it.
+  -O[TYPE], --output-sync[=TYPE]
+                              Synchronize output of parallel jobs by TYPE.
+  -p, --print-data-base       Print make's internal database.
+  -q, --question              Run no recipe; exit status says if up to date.
+  -r, --no-builtin-rules      Disable the built-in implicit rules.
+  -R, --no-builtin-variables  Disable the built-in variable settings.
+  -s, --silent, --quiet       Don't echo recipes.
+  -S, --no-keep-going, --stop
+                              Turns off -k.
+  -t, --touch                 Touch targets instead of remaking them.
+  --trace                     Print tracing information.
+  -v, --version               Print the version number of make and exit.
+  -w, --print-directory       Print the current directory.
+  --no-print-directory        Turn off -w, even if it was turned on implicitly.
+  -W FILE, --what-if=FILE, --new-file=FILE, --assume-new=FILE
+                              Consider FILE to be infinitely new.
+  --warn-undefined-variables  Warn when an undefined variable is referenced.
+
+This program built for x86_64-suse-linux-gnu
+Report bugs to <bug-make@gnu.org>
+make: *** No rule to make target 'install'.  Stop.
+[nid004540:639115] *** Process received signal ***
+[nid004540:639115] Signal: Segmentation fault (11)
+[nid004540:639115] Signal code: Address not mapped (1)
+[nid004540:639115] Failing at address: 0x50
+[nid004540:639115] [ 0] /lib64/libpthread.so.0(+0x16910)[0x7f5ddace9910]
+[nid004540:639115] [ 1] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_mtl_ofi_progress_no_inline+0x273)[0x7f5ddd661633]
+[nid004540:639115] [ 2] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libopen-pal.so.80(opal_progress+0x33)[0x7f5dda2d81e3]
+[nid004540:639115] [ 3] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(+0x6ff7c)[0x7f5ddd4edf7c]
+[nid004540:639115] [ 4] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_nextcid+0x31)[0x7f5ddd4f1b11]
+[nid004540:639115] [ 5] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_dup_with_info+0xbd)[0x7f5ddd4ebd4d]
+[nid004540:639115] [ 6] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(PMPI_Comm_dup+0x96)[0x7f5ddd531486]
+[nid004540:639115] [ 7] /global/homes/a/adammwea/neuron/lib/libnrniv.so(nrnmpi_init+0x118)[0x7f5dde40b278]
+[nid004540:639115] [ 8] nrniv[0x4007bc]
+[nid004540:639115] [ 9] /lib64/libc.so.6(__libc_start_main+0xef)[0x7f5dda7c524d]
+[nid004540:639115] [10] nrniv[0x40081a]
+[nid004540:639115] *** End of error message ***
+[nid004541:925872] *** Process received signal ***
+[nid004541:925872] Signal: Segmentation fault (11)
+[nid004541:925872] Signal code: Address not mapped (1)
+[nid004541:925872] Failing at address: 0x50
+[nid004541:925872] [ 0] /lib64/libpthread.so.0(+0x16910)[0x7fbf51ae9910]
+[nid004541:925872] [ 1] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_mtl_ofi_progress_no_inline+0x273)[0x7fbf54461633]
+[nid004541:925872] [ 2] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libopen-pal.so.80(opal_progress+0x33)[0x7fbf510d81e3]
+[nid004541:925872] [ 3] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(+0x6ff7c)[0x7fbf542edf7c]
+[nid004541:925872] [ 4] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_nextcid+0x31)[0x7fbf542f1b11]
+[nid004541:925872] [ 5] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_dup_with_info+0xbd)[0x7fbf542ebd4d]
+[nid004541:925872] [ 6] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(PMPI_Comm_dup+0x96)[0x7fbf54331486]
+[nid004541:925872] [ 7] /global/homes/a/adammwea/neuron/lib/libnrniv.so(nrnmpi_init+0x118)[0x7fbf55176278]
+[nid004541:925872] [ 8] nrniv[0x4007bc]
+[nid004541:925872] [ 9] /lib64/libc.so.6(__libc_start_main+0xef)[0x7fbf515c524d]
+[nid004541:925872] [10] nrniv[0x40081a]
+[nid004541:925872] *** End of error message ***

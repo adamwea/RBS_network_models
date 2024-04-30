@@ -129,7 +129,7 @@ Generate Config
 '''
 ## If a candidate configuration is selected, load it
 # example: selected_cand_cfg = 'batch_run_files/evol_params/evol_params_2021-07-07_16-00-00.json'
-selected_cand_cfg = 'NERSC/output/240426_Run12_26AprSAFE_1x100/gen_13/gen_13_cand_10_cfg.json'
+selected_cand_cfg = 'output/240426_Run12_26AprSAFE_1x100/gen_13/gen_13_cand_10_cfg.json'
 if selected_cand_cfg is not None:    
     with open(selected_cand_cfg, 'r') as f:
         initCfg = json.load(f)

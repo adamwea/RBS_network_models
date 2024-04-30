@@ -1,0 +1,1543 @@
+NEURON -- VERSION 9.0a-231-g8b35309de master (8b35309de) 2024-04-25
+mpiexec (Open MPI) 5.0.0
+
+Report bugs to https://www.open-mpi.org/community/help/
+gcc-12 (SUSE Linux) 12.3.0
+Copyright (C) 2022 Free Software Foundation, Inc.
+This is free software; see the source for copying conditions.  There is NO
+warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.
+
+Running the simulation
+-- Cray system detected...setting CRAYPE_LINK_TYPE=dynamic
+-- Cray Programming Environment 2.7.30 C
+-- NOTE: LOADEDMODULES changed since initial config!
+-- NOTE: this may cause unexpected build errors.
+-- Cray Programming Environment 2.7.30 CXX
+-- 3rd party project: using Random123 from "external/Random123"
+-- 3rd party project: using eigen from "external/eigen"
+-- Checking if /global/homes/a/adammwea/.conda/envs/neuron_env/bin/python is a working python
+-- 3rd party project: using CLI11 from "external/CLI11"
+-- 
+-- Configured NEURON 9.0.0
+-- 
+-- You can now build NEURON using:
+--   cmake --build . --parallel 8 [--target TARGET]
+-- You might want to adjust the number of parallel build jobs for your system.
+-- Some non-default targets you might want to build:
+-- --------------+--------------------------------------------------------------
+--  Target       |   Description
+-- --------------+--------------------------------------------------------------
+-- install       | Will install NEURON to: /global/homes/a/adammwea/neuron
+--               | Change the install location of NEURON using:
+--               |   cmake <src_path> -DCMAKE_INSTALL_PREFIX=<install_path>
+-- docs          | Build full docs. Calls targets: doxygen, notebooks, sphinx, notebooks-clean
+-- uninstall     | Removes files installed by make install (todo)
+-- --------------+--------------------------------------------------------------
+--  Build option | Status
+-- --------------+--------------------------------------------------------------
+-- C COMPILER    | /opt/cray/pe/craype/2.7.30/bin/cc
+-- CXX COMPILER  | /opt/cray/pe/craype/2.7.30/bin/CC
+-- BUILD_TYPE    | RelWithDebInfo (allowed: Custom;Debug;Release;RelWithDebInfo;Fast;FastDebug)
+-- COMPILE FLAGS | -g  -O2    -fopenmp-simd
+-- Shared        | ON
+-- MPI           | ON
+--   DYNAMIC     | OFF
+--   INC         | /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/include
+--   LIB         | /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so
+-- Python        | ON
+--   DYNAMIC     | OFF
+--   MODULE      | ON
+--  python3.9 (default)
+--   EXE         | /global/homes/a/adammwea/.conda/envs/neuron_env/bin/python
+--   INC         | /global/homes/a/adammwea/.conda/envs/neuron_env/include/python3.9
+--   LIB         | /global/homes/a/adammwea/.conda/envs/neuron_env/lib/libpython3.9.so
+-- Readline      | /usr/lib64/libreadline.so
+-- Curses        | /usr/lib64/libncurses.so;/usr/lib64/libform.so
+-- RX3D          | ON
+--   OptLevel    | 0
+-- Interviews    | OFF
+-- CoreNEURON    | OFF
+-- Tests         | OFF
+-- --------------+--------------------------------------------------------------
+--  See documentation : https://www.neuron.yale.edu/neuron/
+-- --------------+--------------------------------------------------------------
+-- 
+-- Configuring done
+-- Generating done
+-- Build files have been written to: /pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/build
+[  0%] [FLEX][modlunitlexer] Building scanner with flex 2.6.4
+[  0%] [BISON][modlunitparser] Building parser with bison 3.0.4
+[  0%] [BISON][nocmodlparser] Building parser with bison 3.0.4
+[  1%] [BISON][nocmodlparser] Building parser with bison 3.0.4
+[  1%] [FLEX][nocmodllexer] Building scanner with flex 2.6.4
+[  1%] Building CXX object src/sparse13/CMakeFiles/sparse13.dir/spalloc.cpp.o
+[  1%] Built target CLI11
+[  1%] Building CXX object src/sparse13/CMakeFiles/sparse13.dir/spbuild.cpp.o
+[  1%] Building CXX object src/sparse13/CMakeFiles/sparse13.dir/spfactor.cpp.o
+[  1%] Building CXX object src/sparse13/CMakeFiles/sparse13.dir/spsolve.cpp.o
+[  1%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/Rand.cpp.o
+[  1%] Building CXX object src/sparse13/CMakeFiles/sparse13.dir/spoutput.cpp.o
+[  2%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/Normal.cpp.o
+[  2%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/MCellRan4RNG.cpp.o
+[  2%] Building CXX object src/sparse13/CMakeFiles/sparse13.dir/sputils.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/HypGeom.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/Binomial.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/Erlang.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/ACG.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/isaac64.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/MLCG.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/Poisson.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/Geom.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/Random.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/NegExp.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/RndInt.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/DiscUnif.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/Weibull.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/nrnisaac.cpp.o
+[  3%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/RNG.cpp.o
+[  4%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/Uniform.cpp.o
+[  4%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/nrnran123.cpp.o
+[  4%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/Isaac64RNG.cpp.o
+[  4%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/LogNorm.cpp.o
+[  4%] Building CXX object src/gnu/CMakeFiles/nrngnu.dir/mcran4.cpp.o
+[  4%] Generating ../../include/nrnconf.h
+[  4%] Generating ../../include/nrnmpiuse.h
+[  4%] Generating ../../include/nrnmpiuse.h
+[  4%] Update hh.mod for CoreNEURON compatibility
+[  4%] Generating ../../include/nrncvode/nrnneosm.h
+[  4%] Generating ../../include/nrncvode/nrnneosm.h
+[  5%] Generating help_data.dat
+[  5%] Generating share/nrn/demo/testca.hoc
+[  5%] Building CXX object src/nrnpython/CMakeFiles/rxdmath.dir/rxdmath.cpp.o
+[  5%] Generating share/nrn/demo/hh.hoc
+[  5%] Generating share/nrn/demo/demo.hoc
+[  5%] Generating share/nrn/demo/release.ses
+[  5%] Generating share/nrn/demo/release/nacaex.mod
+[  5%] Generating ../../include/nrnconf.h
+[  5%] Generating ../../share/nrn/nrnmain.cpp
+[  6%] Generating share/nrn/demo/singhh.hoc
+[  6%] Generating share/nrn/demo/sync/cell.hoc
+[  6%] Generating share/nrn/demo/sync/spkplot.hoc
+[  6%] Generating share/nrn/demo/sync/demosync.hoc
+[  6%] Generating share/nrn/demo/release.hoc
+[  7%] Generating share/nrn/demo/release/camchan.mod
+[  8%] Generating share/nrn/demo/nomodel.hoc
+[  8%] Generating share/nrn/demo/pyramid.nrn
+[  9%] Generating share/nrn/demo/dend3/control.hoc
+[  9%] Generating share/nrn/lib/hoc/celbild/celmemb.hoc
+[  9%] Generating share/nrn/demo/release/nachan.mod
+[  9%] Generating share/nrn/demo/release/invlfire.mod
+[  9%] Generating share/nrn/lib/helpdict
+[  9%] Generating share/nrn/demo/demo.ses
+[  9%] Generating share/nrn/demo/sync/init.hoc
+[  9%] Generating share/nrn/lib/hoc/mview/mviewxml.hoc
+[  9%] Generating share/nrn/demo/singhhchan.hoc
+[  9%] Generating share/nrn/demo/dynclamp.ses
+[  9%] Generating share/nrn/demo/reconst.hoc
+[  9%] Generating share/nrn/demo/release/capump.mod
+[  9%] Generating share/nrn/demo/dynchan.ses
+[  9%] Generating share/nrn/demo/dend3.ses
+[  9%] Generating share/nrn/lib/hoc/import3d/read_nlcda3.hoc
+[  9%] Generating share/nrn/demo/dend3/dend3.nrn
+[  9%] Generating share/nrn/lib/hoc/netbild/artcel.hoc
+[  9%] Generating share/nrn/lib/hoc/binfo.hoc
+[  9%] Generating share/nrn/lib/hoc/nrngui1.hoc
+[ 10%] Generating share/nrn/demo/sync/synchronize.hoc
+[ 10%] Generating share/nrn/demo/release/cabpump.mod
+[ 10%] Generating share/nrn/demo/cycle.hoc
+[ 10%] Generating share/nrn/demo/hh.ses
+[ 10%] Generating share/nrn/demo/d3init.hoc
+[ 10%] Generating share/nrn/lib/python/neuron/neuroml/metadata.py
+[ 11%] Generating share/nrn/lib/python/neuron/neuroml/biophysics.py
+[ 11%] Generating share/nrn/demo/dynclamp.hoc
+[ 11%] Generating share/nrn/lib/auditscripts/notes
+[ 12%] Generating share/nrn/lib/hoc/mulfit/e_y.hoc
+[ 12%] Generating share/nrn/demo/sync/start.ses
+[ 12%] Generating share/nrn/lib/hoc/netbild.hoc
+[ 12%] Generating share/nrn/lib/hoc/celbild.hoc
+[ 12%] Generating share/nrn/demo/pyramid.ses
+[ 12%] Generating share/nrn/lib/hoc/mulfit/clampfit.hoc
+[ 12%] Generating share/nrn/lib/hoc/mulfit/eoneprim.hoc
+[ 12%] Generating share/nrn/lib/python/neuron/gui2/rangevar.py
+[ 12%] Generating share/nrn/demo/singhh.ses
+[ 12%] Generating share/nrn/lib/hoc/celbild/celbild1.hoc
+[ 12%] Generating share/nrn/lib/hoc/mview/rcclasses.hoc
+[ 12%] Generating share/nrn/lib/hoc/impedanc.hoc
+[ 12%] Generating share/nrn/lib/hoc/import3d.hoc
+[ 13%] Generating share/nrn/lib/hoc/mview/realcell.hoc
+[ 14%] Generating share/nrn/lib/hoc/showmech.hoc
+[ 14%] Generating share/nrn/lib/hoc/attshape.hoc
+[ 14%] Generating share/nrn/lib/hoc/celbild/psubset.hoc
+[ 14%] Generating share/nrn/lib/python/neuron/neuroml/xml2nrn.py
+[ 14%] Generating share/nrn/lib/auditscripts/saveaudit
+[ 14%] Generating share/nrn/lib/hoc/celbild/celset.hoc
+[ 14%] Generating share/nrn/lib/hoc/mulfit.hoc
+[ 14%] Generating share/nrn/demo/dend3/syn3.hoc
+[ 14%] Generating ../../share/nrn/nrnmain.cpp
+[ 14%] Generating share/nrn/lib/hoc/mview/treeview.hoc
+[ 14%] Generating share/nrn/lib/hoc/mulfit/eparmlst.hoc
+[ 15%] Generating share/nrn/lib/cleanup
+[ 15%] Generating share/nrn/lib/hoc/mview/ppanal.hoc
+[ 15%] Generating share/nrn/lib/hoc/lincir/lincir1.hoc
+[ 15%] Generating share/nrn/lib/hoc/mulfit/mulfit1.hoc
+[ 15%] Generating share/nrn/lib/hoc/netbild/spkplot.hoc
+[ 15%] Generating share/nrn/lib/hoc/mkcurve.hoc
+[ 15%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/FullJoinMorph.py
+[ 15%] Generating share/nrn/lib/hoc/gatherv.hoc
+[ 15%] Generating share/nrn/lib/hoc/celbild/inhomofn.hoc
+[ 15%] Generating share/nrn/lib/python/neuron/crxd/__init__.py
+[ 15%] Generating share/nrn/lib/auditscripts/gettarname
+[ 15%] Generating share/nrn/lib/hoc/wingroup.hoc
+[ 16%] Generating share/nrn/lib/hoc/netbild/netgui.hoc
+[ 16%] Generating share/nrn/lib/hoc/thresh.hoc
+[ 16%] Generating share/nrn/lib/python/neuron/config.py
+[ 16%] Generating share/nrn/lib/hoc/atoltool.hoc
+[ 16%] Generating share/nrn/lib/auditscripts/hocaudit.sh
+[ 16%] Generating share/nrn/lib/hoc/import3d/import3d_gui.hoc
+[ 16%] Generating share/nrn/lib/hoc/impratio.hoc
+[ 16%] Generating share/nrn/lib/hoc/subiter.hoc
+[ 16%] Generating share/nrn/lib/python/neuron/rxd/export.py
+[ 16%] Generating share/nrn/lib/hoc/mview/parmvals.hoc
+[ 16%] Generating share/nrn/lib/hoc/chanbild/properties.hoc
+[ 17%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/__init__.py
+[ 17%] Generating share/nrn/lib/python/neuron/neuroml/__init__.py
+[ 17%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/graphicsPrimitives.cpp
+[ 17%] Generating share/nrn/lib/hoc/mulfit/e_norm.hoc
+[ 17%] Generating share/nrn/lib/hoc/netbild/edgegui.hoc
+[ 17%] Generating share/nrn/lib/hoc/import3d/read_nts.hoc
+[ 17%] Generating share/nrn/lib/hoc/vplay.hoc
+[ 17%] Generating share/nrn/lib/hoc/chanbild/sigmoid.hoc
+[ 17%] Generating share/nrn/lib/python/neuron/gui2/utilities.py
+[ 17%] Generating share/nrn/lib/hoc/mview/allpp.hoc
+[ 17%] Generating share/nrn/lib/hoc/netbild/netdata.hoc
+[ 17%] Generating share/nrn/lib/hoc/mulfit/optwrap.hoc
+[ 17%] Generating share/nrn/lib/hoc/celbild/celtopol.hoc
+[ 17%] Generating share/nrn/lib/hoc/corenrn.hoc
+[ 17%] Generating share/nrn/lib/hoc/movierun.hoc
+[ 17%] Generating share/nrn/lib/hoc/import3d/read_swc.hoc
+[ 17%] Generating share/nrn/lib/hoc/netparmpi.hoc
+[ 17%] Generating share/nrn/lib/hoc/import3d/read_nlcda.hoc
+[ 17%] Generating share/nrn/lib/python/neuron/rxd/generalizedReaction.py
+[ 17%] Generating share/nrn/lib/hoc/nrngui.hoc
+[ 17%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/ctng.cpp
+[ 17%] Generating share/nrn/lib/python/neuron/neuroml/rdxml.py
+[ 17%] Generating share/nrn/lib/hoc/mulfit/eonefunc.hoc
+[ 17%] Generating share/nrn/lib/shape.cm2
+[ 17%] Generating share/nrn/lib/auditscripts/retrieve.sh
+[ 17%] Generating share/nrn/lib/hoc/mulfit/fitparm.hoc
+[ 17%] Generating share/nrn/demo/release/cachan1.mod
+[ 17%] Generating share/nrn/lib/hoc/modlunit.hoc
+[ 17%] Generating share/nrn/lib/python/neuron/hclass3.py
+[ 17%] Generating share/nrn/lib/python/neuron/gui.py
+[ 17%] Generating share/nrn/lib/hoc/logax.hoc
+[ 17%] Generating share/nrn/lib/hoc/chanbild/chanbild1.hoc
+[ 17%] Generating share/nrn/lib/hoc/shapebox.hoc
+[ 17%] Generating share/nrn/lib/python/neuron/doc.py
+[ 17%] Generating share/nrn/lib/hoc/vecwrap.hoc
+[ 17%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/triangularMesh.py
+[ 17%] Generating share/nrn/lib/hoc/chanbild/table.hoc
+[ 17%] Generating share/nrn/lib/hoc/mview/mviewgui.hoc
+[ 17%] Generating share/nrn/lib/hoc/noload.hoc
+[ 17%] Generating share/nrn/lib/hoc/mview/distinctparm.hoc
+[ 18%] Generating share/nrn/lib/hoc/lincir/elmbase.hoc
+[ 18%] Generating share/nrn/lib/hoc/netbild/netready.hoc
+[ 18%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/graphicsPrimitives.pyx
+[ 18%] Generating share/nrn/lib/python/neuron/gui2/config.py
+[ 19%] Generating share/nrn/lib/hoc/varmeth1.hoc
+[ 19%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/scalarField.py
+[ 20%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/surface_a.py
+[ 20%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/surface.py
+[ 20%] Generating share/nrn/lib/hoc/chanbild/kstrans.hoc
+[ 20%] Generating share/nrn/lib/hoc/family.hoc
+[ 20%] Generating share/nrn/lib/python/neuron/nonvint_block_supervisor.py
+[ 20%] Generating share/nrn/lib/hoc/pointbsr.hoc
+[ 20%] Generating share/nrn/lib/hoc/chanbild/exp.hoc
+[ 20%] Generating share/nrn/lib/hoc/runfit.hoc
+[ 21%] Generating share/nrn/lib/hoc/mview/mview1.hoc
+[ 22%] Generating share/nrn/lib/hoc/chanbild/ksgate.hoc
+[ 22%] Generating share/nrn/lib/python/neuron/gui2/__init__.py
+[ 22%] Generating share/nrn/lib/hoc/mulfit/e_xy.hoc
+[ 22%] Generating share/nrn/lib/hoc/macload.hoc
+[ 22%] Generating share/nrn/lib/hocload.sh
+[ 22%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/surfaces.pyx
+[ 22%] Generating share/nrn/lib/hoc/import3d/import3d_sec.hoc
+[ 22%] Generating share/nrn/lib/python/neuron/neuroml/neuroml.py
+[ 22%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/surfaces.cpp
+[ 22%] Generating share/nrn/lib/hoc/mview/allcell.hoc
+[ 22%] Generating share/nrn/lib/python/neuron/gui2/setup_threejs.py
+[ 22%] Generating share/nrn/lib/python/neuron/gui2/plotshape.py
+[ 22%] Generating share/nrn/lib/python/neuron/expect_hocerr.py
+[ 22%] Generating share/nrn/lib/python/neuron/psection.py
+[ 22%] Generating share/nrn/lib/hoc/mview/ncview.hoc
+[ 22%] Generating share/nrn/lib/hoc/chanbild/gategui.hoc
+[ 22%] Generating share/nrn/lib/hoc/impedanx.hoc
+[ 22%] Generating share/nrn/demo/release/release.mod
+[ 23%] Generating share/nrn/lib/hoc/funfit.hoc
+[ 23%] Generating share/nrn/lib/hoc/stdlib.hoc
+[ 24%] Generating share/nrn/lib/python/neuron/__init__.py
+[ 24%] Generating share/nrn/lib/hoc/mulfit/eonerun.hoc
+[ 24%] Generating share/nrn/lib/hoc/lincir.hoc
+[ 24%] Generating share/nrn/lib/hoc/mulfit/e_actpot.hoc
+[ 24%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/ctng.pyx
+[ 24%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/GeneralizedVoxelization.py
+[ 24%] Generating share/nrn/lib/python/neuron/rxd/dimension3.py
+[ 24%] Generating share/nrn/lib/hoc/netbild/syntypes.hoc
+[ 24%] Generating share/nrn/lib/hoc/grapher.hoc
+[ 24%] Generating share/nrn/lib/hoc/inserter.hoc
+[ 24%] Generating share/nrn/lib/hoc/netbild/grstrlst.hoc
+[ 24%] Generating share/nrn/lib/python/neuron/neuroml/morphml.py
+[ 24%] Generating share/nrn/lib/hoc/electrod.hoc
+[ 24%] Generating share/nrn/lib/hoc/prcellstate.hoc
+[ 24%] Generating share/nrn/lib/hoc/chanbild/ksstate.hoc
+[ 24%] Generating share/nrn/lib/hoc/mview/parmsets.hoc
+[ 24%] Generating share/nrn/lib/python/neuron/coreneuron.py
+[ 26%] Generating share/nrn/lib/hoc/mknrndll.hoc
+[ 26%] Generating share/nrn/lib/hoc/chanbild/const.hoc
+[ 26%] Generating share/nrn/lib/hoc/mview/secanal.hoc
+[ 27%] Generating share/nrn/lib/hoc/chanbild/linoid.hoc
+[ 27%] Generating include/neuron/model_data_fwd.hpp
+[ 27%] Generating share/nrn/lib/hoc/pcchdir.hoc
+[ 27%] Generating share/nrn/lib/hoc/chanbild/kstgui.hoc
+[ 27%] Generating share/nrn/lib/hoc/celbild/celgeom.hoc
+[ 27%] Generating share/nrn/lib/hoc/single1.hoc
+[ 27%] Generating share/nrn/lib/python/neuron/rxd/constants.py
+[ 28%] Generating share/nrn/lib/hoc/import3d/read_morphml.hoc
+[ 28%] Generating share/nrn/lib/prologue.id
+[ 29%] Generating share/nrn/lib/hoc/celbild/celmang.hoc
+[ 29%] Generating share/nrn/lib/hoc/pointman.hoc
+[ 29%] Generating share/nrn/lib/hoc/lincir/linmech.hoc
+[ 29%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/simplevolume_helper.py
+[ 29%] Generating share/nrn/lib/hoc/stdrun.hoc
+[ 29%] Generating share/nrn/lib/hoc/chanbild.hoc
+[ 30%] Generating share/nrn/lib/hoc/parcom.hoc
+[ 30%] Generating share/nrn/demo/release/khhchan.mod
+[ 31%] Generating share/nrn/lib/hoc/mulfit/protorun.hoc
+[ 31%] Generating share/nrn/lib/python/neuron/rxd/geometry.py
+[ 31%] Generating share/nrn/lib/hoc/loadbal.hoc
+[ 31%] Generating share/nrn/lib/hoc/lincir/lingraph.hoc
+[ 32%] Generating share/nrn/lib/python/neuron/rxd/__init__.py
+[ 32%] Generating share/nrn/lib/hoc/mview.hoc
+[ 32%] Generating share/nrn/lib/nrn.defaults.in
+[ 32%] Generating share/nrn/lib/hoc/mview/distinct.hoc
+[ 32%] Generating share/nrn/lib/hoc/mview/artview.hoc
+[ 32%] Generating share/nrn/lib/hoc/pointgrp.hoc
+[ 32%] Generating share/nrn/lib/hoc/single.hoc
+[ 32%] Generating share/nrn/lib/hoc/stdgui.hoc
+[ 32%] Generating share/nrn/lib/hoc/chanbild/kschanbg.hoc
+[ 33%] Generating share/nrn/lib/python/neuron/rxd/multiCompartmentReaction.py
+[ 33%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/voxelize.py
+[ 33%] Generating share/nrn/lib/python/neuron/rxd/options.py
+[ 33%] Generating share/nrn/lib/python/neuron/rxd/geometry3d/voxelize2.py
+[ 33%] Generating share/nrn/lib/python/neuron/rxd/initializer.py
+[ 33%] Generating share/nrn/lib/python/neuron/rxd/gui.py
+[ 33%] Generating share/nrn/lib/python/neuron/rxd/nodelist.py
+[ 33%] Generating share/nrn/lib/python/neuron/rxd/node.py
+[ 33%] Generating share/nrn/lib/python/neuron/rxd/plugins.py
+[ 34%] Linking CXX shared library ../../lib/librxdmath.so
+[ 34%] Generating include/mcran4.h
+[ 34%] Generating share/nrn/lib/python/neuron/rxd/rate.py
+[ 35%] Generating share/nrn/lib/python/neuron/rxd/reaction.py
+[ 35%] Generating share/nrn/lib/python/neuron/rxd/region.py
+[ 35%] Generating share/nrn/lib/python/neuron/rxd/rangevar.py
+[ 35%] Generating share/nrn/lib/python/neuron/rxd/rxd.py
+[ 35%] Generating include/backtrace_utils.h
+[ 35%] Generating share/nrn/lib/python/neuron/rxd/rxdException.py
+[ 35%] Generating include/bbsavestate.h
+[ 35%] Generating include/nrnran123.h
+[ 35%] Generating include/nrnisaac.h
+[ 35%] Generating share/nrn/lib/python/neuron/rxd/rxdmath.py
+[ 36%] Generating include/cabvars.h
+[ 36%] Generating include/nrnmpidec.h
+[ 36%] Generating share/nrn/lib/python/neuron/rxd/rxdsection.py
+[ 36%] Generating share/nrn/lib/python/neuron/rxd/species.py
+[ 36%] Generating share/nrn/lib/python/neuron/rxd/section1d.py
+[ 37%] Generating share/nrn/lib/python/neuron/rxdtests/do_test.py
+[ 38%] Linking CXX static library ../../lib/libsparse13.a
+[ 38%] Generating share/nrn/lib/python/neuron/rxdtests/readme.txt
+[ 38%] Built target help_data_dat
+[ 38%] Generating share/nrn/lib/python/neuron/rxdtests/run_all.py
+[ 38%] Linking CXX static library ../../lib/libnrngnu.a
+[ 38%] Generating share/nrn/lib/python/neuron/rxdtests/tests/3d/circadian_rhythm.py
+[ 38%] Generating share/nrn/lib/python/neuron/rxdtests/tests/3d/include_flux3d.py
+[ 38%] Generating share/nrn/lib/python/neuron/rxdtests/tests/3d/include_flux3d_cvode.py
+[ 39%] Generating include/md1redef.h
+[ 39%] Generating share/nrn/lib/python/neuron/rxdtests/tests/3d/multicompartment_reactions.py
+[ 39%] Generating share/nrn/lib/python/neuron/rxdtests/tests/3d/pure_diffusion_3d.py
+[ 40%] Built target build-time-copy-191bb5cf41eed086031f4e710800ab513383a4551b4eb610fc9782b5db6455c8
+[ 40%] Generating share/nrn/lib/python/neuron/rxdtests/tests/3d/pure_diffusion_3d_cvode.py
+[ 40%] Built target build-time-copy-14284b98f579b03fbf8747045e8ce7cde7add3a3604fb43df5878c15cb37282d
+[ 40%] Generating include/md2redef.h
+[ 40%] Generating share/nrn/lib/python/neuron/rxdtests/tests/3d/torun.txt
+[ 40%] Generating share/nrn/lib/python/neuron/rxdtests/tests/IraHH.py
+[ 40%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/consist.cpp.o
+[ 40%] Generating share/nrn/lib/python/neuron/rxdtests/tests/c91662.swc
+[ 40%] Generating include/membdef.h
+[ 40%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/declare.cpp.o
+[ 40%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/init.cpp.o
+[ 41%] Generating include/neuron.h
+[ 41%] Generating include/membfunc.h
+[ 41%] Generating include/nrn_ansi.h
+[ 41%] Generating share/nrn/lib/python/neuron/rxdtests/tests/ca_pump.py
+[ 41%] Built target build-time-copy-792f8720f80a0cd56a907b9283e6bceb86fdb6076476a9277aac8b31524e91e2
+[ 41%] Generating include/multisplit.h
+[ 41%] Generating include/nrncvode.h
+[ 41%] Generating include/nmodlmutex.h
+[ 41%] Generating include/multicore.h
+[ 41%] Generating share/nrn/lib/python/neuron/rxdtests/tests/cabuf.py
+[ 41%] Generating include/nrniv_mf.h
+[ 42%] Generating share/nrn/lib/python/neuron/rxdtests/tests/cabuf_fixed_step.py
+[ 42%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/io.cpp.o
+[ 42%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/kinunit.cpp.o
+[ 42%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/list.cpp.o
+[ 42%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/model.cpp.o
+[ 42%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/nrnunit.cpp.o
+[ 42%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/passn.cpp.o
+[ 42%] Generating include/nrnoc_ml.h
+[ 42%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/symbol.cpp.o
+[ 42%] Generating share/nrn/lib/python/neuron/rxdtests/tests/ecs/ecs_before_sections.py
+[ 43%] Generating share/nrn/lib/python/neuron/rxdtests/tests/ecs/ecs_example.py
+[ 43%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/units.cpp.o
+[ 43%] Generating include/nrnredef.h
+[ 43%] Generating include/nrnversionmacros.h
+[ 43%] Generating include/options.h
+[ 44%] Generating include/hoc.h
+[ 45%] Generating include/treeset.h
+[ 46%] Generating include/section_fwd.hpp
+[ 46%] Generating share/nrn/lib/python/neuron/rxdtests/tests/ecs/ecs_example_cvode.py
+[ 46%] Generating include/hoc_membf.h
+[ 47%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/units1.cpp.o
+[ 47%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/consist.cpp.o
+[ 47%] Generating share/nrn/lib/python/neuron/rxdtests/tests/ecs/ecs_include_flux.py
+[ 47%] Built target nrnivmodl_dependency
+[ 47%] Generating share/nrn/lib/python/neuron/rxdtests/tests/ecs/ecs_include_flux_cvode.py
+[ 47%] Generating share/nrn/lib/python/neuron/rxdtests/tests/ecs/ecs_multi_example.py
+[ 47%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/__/modlunit/version.cpp.o
+[ 47%] Generating share/nrn/lib/python/neuron/rxdtests/tests/ecs/ecs_multi_example_cvode.py
+[ 47%] Generating share/nrn/lib/python/neuron/rxdtests/tests/ecs/pump.mod
+[ 47%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/modlunit_generated/lex.cpp.o
+[ 47%] Building CXX object src/nrniv/CMakeFiles/modlunit.dir/modlunit_generated/parse1.cpp.o
+[ 47%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/deriv.cpp.o
+[ 47%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/discrete.cpp.o
+[ 47%] Generating include/hocassrt.h
+[ 47%] Generating share/nrn/lib/python/neuron/rxdtests/tests/ecs/torun.txt
+[ 48%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hh.py
+[ 48%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hh_cvode.py
+[ 48%] Generating include/hocdec.h
+[ 48%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/init.cpp.o
+[ 48%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/io.cpp.o
+[ 48%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hh_morph.py
+[ 48%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hh_param.py
+[ 48%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/kinetic.cpp.o
+[ 48%] Built target build-time-copy-cd32a6be367195fc054b46c7a7a0fa5b3d107e2c18cf0cfc124082f94ee2b79c
+[ 48%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hh_param_cvode.py
+[ 48%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hybrid/bistable_hybrid.py
+[ 49%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/list.cpp.o
+[ 49%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/nocpout.cpp.o
+[ 49%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/modl.cpp.o
+[ 49%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/noccout.cpp.o
+[ 49%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/parsact.cpp.o
+[ 49%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hybrid/bistable_hybrid_change_nthread.py
+[ 49%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hybrid/bistable_hybrid_cvode.py
+[ 49%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/netrec_discon.cpp.o
+[ 49%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/simultan.cpp.o
+[ 49%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/solve.cpp.o
+[ 50%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/symbol.cpp.o
+[ 50%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/units.cpp.o
+[ 50%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/__/nmodl/version.cpp.o
+[ 50%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/nocmodl_generated/lex.cpp.o
+[ 50%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/nocmodl_generated/parse1.cpp.o
+[ 50%] Building CXX object src/nrniv/CMakeFiles/nocmodl.dir/nocmodl_generated/diffeq.cpp.o
+[ 51%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hybrid/bistable_hybrid_cvode_change_nthread.py
+[ 51%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hybrid/pure_diffusion_hybrid.py
+[ 51%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hybrid/pure_diffusion_hybrid_cvode.py
+[ 51%] Generating share/nrn/lib/python/neuron/rxdtests/tests/hybrid/torun.txt
+[ 51%] Generating share/nrn/lib/python/neuron/rxdtests/tests/include_flux.py
+[ 51%] Generating share/nrn/lib/python/neuron/rxdtests/tests/include_flux_cvode.py
+[ 51%] Generating share/nrn/lib/python/neuron/rxdtests/tests/multicompartment_mebrane_mismatch.py
+[ 52%] Generating share/nrn/lib/python/neuron/rxdtests/tests/multicompartment_reactions.py
+[ 52%] Generating share/nrn/lib/python/neuron/rxdtests/tests/multicompartment_reactions_with_v.py
+[ 52%] Generating share/nrn/lib/python/neuron/rxdtests/tests/multicompartment_reactions_del.py
+[ 52%] Generating share/nrn/lib/python/neuron/rxdtests/tests/nodes_update.py
+[ 52%] Generating include/hocgetsym.h
+[ 52%] Generating share/nrn/lib/python/neuron/rxdtests/tests/pure_diffusion_cvode.py
+[ 52%] Generating share/nrn/lib/python/neuron/rxdtests/tests/pure_diffusion.py
+[ 52%] Generating share/nrn/lib/python/neuron/rxdtests/tests/react_region_specified.py
+[ 52%] Generating share/nrn/lib/python/neuron/rxdtests/tests/reaction_null_dest.py
+[ 52%] Generating share/nrn/lib/python/neuron/rxdtests/tests/reaction_test.py
+[ 52%] Generating share/nrn/lib/python/neuron/rxdtests/tests/torun.txt
+[ 53%] Generating share/nrn/lib/python/neuron/rxdtests/tests/reaction_param_test.py
+[ 53%] Generating share/nrn/lib/python/neuron/rxdtests/tests/verify_no_initialization_order_issue.py
+[ 53%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/cal2.mod
+[ 53%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/caleak.mod
+[ 53%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/readme.txt
+[ 53%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/torun.txt
+[ 53%] Generating include/hoclist.h
+[ 53%] Generating include/hocparse.h
+[ 53%] Generating include/mech_api.h
+[ 54%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/wave1d_125_1.py
+[ 54%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/wave1d_25_5.py
+[ 54%] Generating include/memory.hpp
+[ 54%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/wave1d_taper_125_1.py
+[ 54%] Generating include/nrnapi.h
+[ 54%] Generating include/nrnrandom.h
+[ 54%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/wave1d_taper_25_5.py
+[ 55%] Generating include/nrnassrt.h
+[ 55%] Generating include/nrnmpi.h
+[ 55%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/wave1d_tree2_125_1.py
+[ 56%] Generating include/oc_ansi.h
+[ 56%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/wave1d_tree2_25_5.py
+[ 56%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/wave1d_tree_125_1.py
+[ 56%] Generating share/nrn/lib/python/neuron/rxdtests/tests/wave1d/wave1d_tree_25_5.py
+[ 57%] Generating share/nrn/lib/python/neuron/tests/__init__.py
+[ 57%] Generating share/nrn/lib/python/neuron/sections.py
+[ 57%] Generating share/nrn/lib/python/neuron/tests/_subclass.py
+[ 57%] Generating share/nrn/lib/python/neuron/tests/test_neuron.py
+[ 57%] Generating share/nrn/lib/python/neuron/tests/test_all.py
+[ 57%] Generating share/nrn/lib/python/neuron/tests/test_rxd.py
+[ 57%] Generating share/nrn/lib/python/neuron/tests/test_vector.py
+[ 57%] Generating share/nrn/lib/python/neuron/tests/utils/coreneuron_available.py
+[ 57%] Generating share/nrn/lib/python/neuron/tests/utils/__init__.py
+[ 57%] Generating include/ocfunc.h
+[ 57%] Generating share/nrn/lib/python/neuron/tests/utils/strtobool.py
+[ 57%] Generating share/nrn/lib/python/neuron/tests/utils/checkresult.py
+[ 57%] Generating include/ocmisc.h
+[ 58%] Generating share/nrn/lib/python/neuron/tests/utils/capture_stdout.py
+[ 58%] Generating include/parse_with_deps.hpp
+[ 58%] Generating include/dimplic.hpp
+[ 58%] Generating share/nrn/lib/python/scripts/_binwrapper.py
+[ 58%] Generating include/deflate.hpp
+[ 58%] Generating include/crout_thread.hpp
+[ 59%] Generating include/euler.hpp
+[ 59%] Generating share/nrn/lib/python/scripts/mkthreadsafe
+[ 59%] Generating include/crout.hpp
+[ 59%] Generating include/euler_thread.hpp
+[ 59%] Generating share/nrn/lib/python/neuron/units.py
+[ 59%] Generating share/nrn/lib/python/scripts/modlunit
+[ 59%] Generating include/wrap_sprintf.h
+[ 59%] Generating include/errcodes.hpp
+[ 59%] Generating share/nrn/lib/python/scripts/_README.txt
+[ 59%] Generating share/nrn/lib/python/scripts/idraw
+[ 59%] Generating share/nrn/lib/python/scripts/nrniv
+[ 59%] Generating share/nrn/lib/python/scripts/nmodl
+[ 59%] Generating include/newton_struct.h
+[ 60%] Generating include/newton_thread.hpp
+[ 60%] Generating include/scoplib.h
+[ 60%] Generating share/nrn/lib/python/scripts/neurondemo
+[ 60%] Generating include/sparse.hpp
+[ 60%] Generating include/row_view.hpp
+[ 60%] Generating include/runge.hpp
+[ 60%] Generating share/nrn/lib/python/scripts/nrngui
+[ 60%] Generating share/nrn/lib/python/scripts/nrniv-core
+[ 60%] Generating include/simeq.hpp
+[ 61%] Generating share/nrn/lib/python/scripts/nrnivmodl
+[ 61%] Generating include/sparse_thread.hpp
+[ 61%] Generating include/newton.hpp
+[ 61%] Generating include/ssimplic.hpp
+[ 61%] Generating share/nrn/lib/python/scripts/nrnivmodl-core
+[ 61%] Generating include/ssimplic_thread.hpp
+[ 61%] Generating include/spconfig.h
+[ 61%] Generating include/spmatrix.h
+[ 61%] Generating share/nrn/lib/python/scripts/nrnpyenv.sh
+[ 61%] Generating include/neuron/container/non_owning_soa_identifier.hpp
+[ 61%] Generating include/neuron/container/generic_data_handle.hpp
+[ 61%] Generating share/nrn/lib/shape.cm1
+[ 61%] Generating include/neuron/container/data_handle.hpp
+[ 61%] Generating share/nrn/lib/python/scripts/sortspike
+[ 61%] Generating include/neuron/cache/mechanism_range.hpp
+[ 61%] Copying /pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/share/demo to /pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/build/share/nrn/demo
+[ 61%] Built target hh_update
+[ 61%] Linking CXX executable ../../bin/modlunit
+[ 61%] Built target rxdmath
+[ 61%] Built target nrnversion_h
+[ 61%] Built target copy_share_demo_to_build
+[ 61%] Built target sparse13
+[ 61%] Built target nrngnu
+[ 61%] Copying /pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/share/lib to /pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/build/share/nrn/lib
+[ 61%] Copying headers to build directory
+[ 61%] Built target modlunit
+[ 61%] Built target copy_headers_to_build
+[ 61%] Built target copy_share_lib_to_build
+[ 61%] Linking CXX executable ../../bin/nocmodl
+[ 61%] Built target nocmodl
+[ 62%] Generating ../oc/hocusr.h
+[ 62%] Generating ../nrnoc/exp2syn.cpp
+[ 62%] Generating ../nrnoc/oclmp.cpp
+[ 63%] Generating ../nrnoc/stim.cpp
+[ 63%] Generating ../nrnoc/apcount.cpp
+[ 64%] Generating ../nrnoc/svclmp.cpp
+[ 64%] Generating ../nrnoc/intfire2.cpp
+[ 64%] Generating ../nrnoc/ppmark.cpp
+[ 64%] Generating ../nrnoc/feature.cpp
+[ 64%] Generating ../nrnoc/passive.cpp
+[ 64%] Generating ../nrnoc/pattern.cpp
+[ 64%] Generating ../nrnoc/syn.cpp
+[ 64%] [BISON][ocparser] Building parser with bison 3.0.4
+[ 64%] Generating ../nrnoc/vclmp.cpp
+[ 64%] Generating ../nrnoc/hh.cpp
+[ 64%] Generating ../nrnoc/intfire4.cpp
+[ 64%] Generating ../nrnoc/expsyn.cpp
+[ 64%] Generating ../nrnoc/intfire1.cpp
+[ 64%] Generating ../nrnoc/netstim.cpp
+    Notice: ARTIFICIAL_CELL is a synonym for POINT_PROCESS which hints that it
+only affects and is affected by discrete events. As such it is not
+located in a section and is not associated with an integrator
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/ldifus.cpp.o
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/version.cpp.o
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/grglyph.cpp.o
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/cxprop.cpp.o
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/ftime.cpp.o
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nrnmenu.cpp.o
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/revsigmo.cpp.o
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/objcmd.cpp.o
+[ 64%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/shared/nvector_parallel.c.o
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/exp2syn.cpp.o
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/hoc_oop.cpp.o
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ivocrand.cpp.o
+[ 64%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/init.cpp.o
+[ 65%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/xyview.cpp.o
+[ 65%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/hoc_init.cpp.o
+[ 65%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/nonlin.cpp.o
+[ 65%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/bbsavestate.cpp.o
+[ 65%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/ocjump.cpp.o
+[ 65%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/cvodes/cvodes.c.o
+[ 65%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/vclmp.cpp.o
+[ 65%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrncvode/occvode.cpp.o
+[ 65%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/membfunc.cpp.o
+[ 65%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nrncore_write/utils/nrncore_utils.cpp.o
+[ 66%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/poisrand.cpp.o
+[ 66%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/plt.cpp.o
+[ 66%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/pysecname2sec.cpp.o
+[ 66%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/perpulse.cpp.o
+[ 67%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nrnste.cpp.o
+[ 67%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ocmatrix.cpp.o
+[ 67%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/shared/smalldense.c.o
+[ 68%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnmpi/nrnmpi.cpp.o
+[ 68%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/list.cpp.o
+[ 69%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/glinerec.cpp.o
+[ 69%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/exprand.cpp.o
+[ 69%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/bbslsrv2.cpp.o
+[ 69%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nonlinz.cpp.o
+[ 69%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/vrecord.cpp.o
+[ 69%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/axis.cpp.o
+[ 69%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/fourier.cpp.o
+[ 70%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nmodlrandom.cpp.o
+[ 70%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ochelp.cpp.o
+[ 70%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/fileio.cpp.o
+[ 70%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/symdir.cpp.o
+[ 70%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/plot.cpp.o
+[ 70%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/impedanc.cpp.o
+[ 70%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/savstate.cpp.o
+[ 70%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/hh.cpp.o
+[ 70%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nrncore_write/data/datum_indices.cpp.o
+[ 71%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrncvode/nrndaspk.cpp.o
+[ 71%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/idraw.cpp.o
+[ 71%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/lag.cpp.o
+[ 71%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/invert.cpp.o
+[ 72%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/mlinedit.cpp.o
+[ 72%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/kschan.cpp.o
+[ 72%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/graph.cpp.o
+[ 72%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ocfile.cpp.o
+[ 72%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/secref.cpp.o
+[ 72%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/graphvec.cpp.o
+[ 72%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ocbox.cpp.o
+[ 73%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/memory_usage.cpp.o
+[ 73%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/cvodes/cvdiag.c.o
+[ 73%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/rotate3d.cpp.o
+[ 73%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/abort.cpp.o
+[ 73%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/strfun.cpp.o
+[ 73%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/synapse.cpp.o
+[ 74%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/romberg.cpp.o
+[ 74%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/cvodes/cvbbdpre.c.o
+[ 74%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/oc_mcran4.cpp.o
+[ 74%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/gifimage.cpp.o
+[ 74%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/apcount.cpp.o
+[ 74%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/bbssrv.cpp.o
+[ 75%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/extcelln.cpp.o
+[ 75%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/normrand.cpp.o
+[ 75%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nvector_nrnparallel_ld.cpp.o
+[ 75%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nvector_nrnserial_ld.cpp.o
+[ 75%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/stim.cpp.o
+[ 75%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ivocmain.cpp.o
+[ 76%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/ndatclas.cpp.o
+[ 76%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/shared/iterative.c.o
+[ 76%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/hocusr.cpp.o
+[ 77%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/cvodes/cvband.c.o
+[ 77%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/xred.cpp.o
+[ 77%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sparse/prmat.cpp.o
+[ 77%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nrndae.cpp.o
+[ 78%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/intfire2.cpp.o
+[ 78%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/boundary.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/hocmark.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrncvode/cvodeobj.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/cabcode.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nvector_nrnthread.cpp.o
+[ 79%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/ida/idaio.c.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/sigmoid.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/apwindow.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/xmenu.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/hocprax.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/threshol.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/rect.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/clamp.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/datapath.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/revhyper.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/advance.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/oclist.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/coreneuron/permute/cellorder2.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/ramp.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/kssingle.cpp.o
+[ 79%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/xdep.cpp.o
+[ 80%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/cvodes/cvdense.c.o
+[ 80%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/epsprint.cpp.o
+[ 80%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/coreneuron/permute/node_permute.cpp.o
+[ 80%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/shapeplt.cpp.o
+[ 81%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/symchoos.cpp.o
+[ 81%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ocbrowsr.cpp.o
+[ 81%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/audit.cpp.o
+[ 82%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/coreneuron/permute/cellorder1.cpp.o
+[ 82%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/coreneuron/utils/lpt.cpp.o
+[ 83%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/svclmp.cpp.o
+[ 83%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/linmod1.cpp.o
+[ 83%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrncvode/netcvode.cpp.o
+[ 83%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrncvode/cvtrset.cpp.o
+[ 83%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/partrans.cpp.o
+[ 84%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/octimer.cpp.o
+[ 84%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/shape.cpp.o
+[ 84%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ocnoiv1.cpp.o
+[ 84%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ivoc.cpp.o
+[ 84%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/ida/idadense.c.o
+[ 84%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/ida/idaic.c.o
+[ 85%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nrncore_write/callbacks/nrncore_callbacks.cpp.o
+[ 85%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/memblist.cpp.o
+[ 87%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/splitcell.cpp.o
+[ 87%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/nrnnemo.cpp.o
+[ 87%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/ppmark.cpp.o
+[ 88%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/harmonic.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sparse/bksub.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/rubband.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ocdeck.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/bndedval.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/praxis.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/mymath.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/cbwidget.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/linmod.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/multicore.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/intfire1.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/seclist.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/classreg.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/functabl.cpp.o
+[ 89%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/bbsrcli.cpp.o
+[ 90%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/passive.cpp.o
+[ 90%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/ida/idabbdpre.c.o
+[ 90%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/psection.cpp.o
+[ 90%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/cvodes/cvodea.c.o
+[ 90%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/shared/band.c.o
+[ 90%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nrncore_write.cpp.o
+[ 90%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/code.cpp.o
+[ 90%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/f2cmisc.cpp.o
+[ 91%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/checkpnt.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/code2.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/hoc.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/x.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/grmanip.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/eion.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/getsym.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/nrnversion.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/gauss.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/memory.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/axis.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/factoria.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/scoprand.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/spline.cpp.o
+[ 92%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/cvodes/cvspgmr.c.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/fadvance.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/scenepic.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/getmem.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrncvode/tqueue.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/expfit.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ivocvect.cpp.o
+[ 92%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/shared/sundialsmath.c.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/legendre.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/passive0.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/expsyn.cpp.o
+[ 92%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/cvodes/cvbandpre.c.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/sawtooth.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/secbrows.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/symbol.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/ppshape.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/hyperbol.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/oclmp.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/backtrace_utils.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/coreneuron/permute/cellorder.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/force.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nvector_nrnthread_ld.cpp.o
+[ 92%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/ida/idaband.c.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/pwman.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nrnpy.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/pulse.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/bbs.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/capac.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sparse/getelm.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/matrixmap.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/finithnd.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/spaceplt.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/nrntimeout.cpp.o
+[ 92%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/syn.cpp.o
+[ 93%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ocobserv.cpp.o
+[ 93%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/mswinprt.cpp.o
+[ 93%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/ocerf.cpp.o
+[ 93%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/debug.cpp.o
+[ 93%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nrncore_write/io/nrncore_io.cpp.o
+[ 93%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/oc2iv.cpp.o
+[ 93%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/treeset.cpp.o
+[ 93%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/shared/spgmr.c.o
+[ 93%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/pattern.cpp.o
+[ 93%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/oc_generated/parse.cpp.o
+[ 93%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/math.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/prcellstate.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/container.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/bbslocal.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sparse/lineq.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/netpar.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ocptrvector.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/nrncore_write/data/cell_group.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/crank.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ocpointer.cpp.o
+[ 94%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/ida/idaspgmr.c.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/utility.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrncvode/cvodestb.cpp.o
+[ 94%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/shared/nvector.c.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/oc/settext.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/revsawto.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/coreneuron/permute/balance.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/scene.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/tridiag.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/squarewa.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/ocbbs.cpp.o
+[ 94%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/cvodes/cvodesio.c.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/hocmech.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/multisplit.cpp.o
+[ 94%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/shared/dense.c.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/matrix.cpp.o
+[ 94%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/shared/nvector_serial.c.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/netstim.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/ocpicker.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sparse/subrows.cpp.o
+[ 94%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/feature.cpp.o
+[ 95%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/solve.cpp.o
+[ 95%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/field.cpp.o
+[ 95%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/intfire4.cpp.o
+[ 95%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/fstim.cpp.o
+[ 95%] Building C object src/nrniv/CMakeFiles/nrniv_lib.dir/__/sundials/ida/ida.c.o
+[ 95%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/poisson.cpp.o
+[ 95%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnoc/point.cpp.o
+[ 95%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/step.cpp.o
+[ 95%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/perstep.cpp.o
+[ 96%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/bbslsrv.cpp.o
+[ 96%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/bbsdirect.cpp.o
+[ 96%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivoc/htlist.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/scopmath/scoperf.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnmpi/bbsmpipack.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnpython/nrnpy_nrn.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnpython/nrnpython.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnmpi/mpispike.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnmpi/memory_usage.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnpython/rxd.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnpython/nrnpy_hoc.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnpython/rxd_vol.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnpython/rxd_marching_cubes.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnpython/nrnpy_p2h.cpp.o
+[ 97%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnpython/rxd_extracellular.cpp.o
+[ 98%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivos/resource.cpp.o
+[100%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnpython/grids.cpp.o
+[100%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnpython/rxd_intracellular.cpp.o
+[100%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/nrnpython/rxd_llgramarea.cpp.o
+[100%] Building CXX object src/nrniv/CMakeFiles/nrniv_lib.dir/__/ivos/observe.cpp.o
+[100%] Linking CXX shared library ../../lib/libnrniv.so
+[100%] Built target nrniv_lib
+[100%] Building CXX object src/nrniv/CMakeFiles/nrniv.dir/__/ivoc/nrnmain.cpp.o
+[100%] Building CXX object src/nrniv/CMakeFiles/nrniv.dir/__/oc/modlreg.cpp.o
+[100%] Generating inithoc.cpp
+[100%] Building CXX object src/nrniv/CMakeFiles/nrniv.dir/__/oc/ockludge.cpp.o
+Building python module with: /global/homes/a/adammwea/.conda/envs/neuron_env/bin/python setup.py build
+      --cmake-build-dir;/pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/build;--rx3d-opt-level;0;--without-nrnpython;--build-lib=/pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/build/lib/python build_ext;--define=USE_PYTHON,NRN_ENABLE_THREADS,CORENRN_BUILD=0
+[100%] Linking CXX executable ../../bin/nrniv
+[100%] Built target nrniv
+[100%] Built target hoc_module
+[  0%] Built target CLI11
+Consolidate compiler generated dependencies of target sparse13
+[  1%] Built target sparse13
+Consolidate compiler generated dependencies of target nrngnu
+[  4%] Built target nrngnu
+Consolidate compiler generated dependencies of target modlunit
+[  6%] Built target modlunit
+Consolidate compiler generated dependencies of target nocmodl
+[  9%] Built target nocmodl
+[  9%] Built target nrnversion_h
+[  9%] Update hh.mod for CoreNEURON compatibility
+[  9%] Built target hh_update
+[ 10%] Generating help_data.dat
+[ 10%] Built target help_data_dat
+[ 10%] Copying headers to build directory
+[ 19%] Built target copy_headers_to_build
+Consolidate compiler generated dependencies of target nrniv_lib
+[ 57%] Built target nrniv_lib
+Consolidate compiler generated dependencies of target nrniv
+[ 57%] Built target nrniv
+[ 57%] Built target build-time-copy-cd32a6be367195fc054b46c7a7a0fa5b3d107e2c18cf0cfc124082f94ee2b79c
+[ 57%] Built target build-time-copy-191bb5cf41eed086031f4e710800ab513383a4551b4eb610fc9782b5db6455c8
+[ 57%] Built target build-time-copy-14284b98f579b03fbf8747045e8ce7cde7add3a3604fb43df5878c15cb37282d
+[ 57%] Built target build-time-copy-792f8720f80a0cd56a907b9283e6bceb86fdb6076476a9277aac8b31524e91e2
+[ 57%] Built target nrnivmodl_dependency
+Consolidate compiler generated dependencies of target rxdmath
+[ 58%] Built target rxdmath
+[ 58%] Copying /pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/share/demo to /pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/build/share/nrn/demo
+[ 63%] Built target copy_share_demo_to_build
+[ 63%] Copying /pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/share/lib to /pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/build/share/nrn/lib
+[100%] Built target copy_share_lib_to_build
+Building python module with: /global/homes/a/adammwea/.conda/envs/neuron_env/bin/python setup.py build
+      --cmake-build-dir;/pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/build;--rx3d-opt-level;0;--without-nrnpython;--build-lib=/pscratch/sd/a/adammwea/2DNetworkSimulations/nrn/build/lib/python build_ext;--define=USE_PYTHON,NRN_ENABLE_THREADS,CORENRN_BUILD=0
+[100%] Built target hoc_module
+Install the project...
+-- Install configuration: "RelWithDebInfo"
+-- Installing: /global/homes/a/adammwea/neuron/bin/nrniv
+-- Set runtime path of "/global/homes/a/adammwea/neuron/bin/nrniv" to "/global/homes/a/adammwea/neuron/lib:/global/homes/a/adammwea/.conda/envs/neuron_env/lib:/global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib"
+-- Installing: /global/homes/a/adammwea/neuron/bin/nocmodl
+-- Set runtime path of "/global/homes/a/adammwea/neuron/bin/nocmodl" to "/global/homes/a/adammwea/neuron/lib"
+-- Installing: /global/homes/a/adammwea/neuron/bin/modlunit
+-- Set runtime path of "/global/homes/a/adammwea/neuron/bin/modlunit" to "/global/homes/a/adammwea/neuron/lib"
+-- Installing: /global/homes/a/adammwea/neuron/lib/libnrniv.so
+-- Set runtime path of "/global/homes/a/adammwea/neuron/lib/libnrniv.so" to "/global/homes/a/adammwea/neuron/lib:/global/homes/a/adammwea/.conda/envs/neuron_env/lib:/global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib"
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/nrnmain.cpp
+-- Up-to-date: /global/homes/a/adammwea/neuron/bin/nrngui
+-- Up-to-date: /global/homes/a/adammwea/neuron/bin/neurondemo
+-- Up-to-date: /global/homes/a/adammwea/neuron/bin/nrnivmodl
+-- Installing: /global/homes/a/adammwea/neuron/bin/nrnmech_makefile
+-- Up-to-date: /global/homes/a/adammwea/neuron/bin/sortspike
+-- Up-to-date: /global/homes/a/adammwea/neuron/bin/mkthreadsafe
+-- Up-to-date: /global/homes/a/adammwea/neuron/bin/nrnpyenv.sh
+-- Up-to-date: /global/homes/a/adammwea/neuron/bin/set_nrnpyenv.sh
+-- Installing: /global/homes/a/adammwea/neuron/lib/librxdmath.so
+-- Set runtime path of "/global/homes/a/adammwea/neuron/lib/librxdmath.so" to "/global/homes/a/adammwea/neuron/lib"
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/psection.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/doc.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/constants.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/generalizedReaction.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/species.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/rxdmath.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/options.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/reaction.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/nodelist.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/node.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/multiCompartmentReaction.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/dimension3.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/rangevar.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/rxdsection.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/plugins.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/export.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/region.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/rate.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/section1d.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/initializer.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/rxdException.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/__init__.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/scalarField.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/surface.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/GeneralizedVoxelization.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/FullJoinMorph.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/simplevolume_helper.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/ctng.cpython-39-x86_64-linux-gnu.so
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/graphicsPrimitives.cpython-39-x86_64-linux-gnu.so
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/voxelize.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/voxelize2.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/surface_a.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/triangularMesh.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/__init__.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/geometry3d/surfaces.cpython-39-x86_64-linux-gnu.so
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/rxd.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/rxd/gui.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/nonvint_block_supervisor.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/gui2
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/gui2/utilities.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/gui2/plotshape.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/gui2/config.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/gui2/rangevar.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/gui2/setup_threejs.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/gui2/__init__.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/hoc.cpython-39-x86_64-linux-gnu.so
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/config.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/neuroml
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/neuroml/metadata.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/neuroml/biophysics.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/neuroml/xml2nrn.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/neuroml/rdxml.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/neuroml/neuroml.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/neuroml/morphml.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/neuroml/__init__.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/expect_hocerr.py
+-- Installing: /global/homes/a/adammwea/neuron/lib/python/neuron/help_data.dat
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/crxd
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/crxd/__init__.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/units.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/hclass3.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/_subclass.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/utils
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/utils/strtobool.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/utils/capture_stdout.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/utils/__init__.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/utils/coreneuron_available.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/utils/checkresult.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/test_vector.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/test_rxd.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/test_neuron.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/__init__.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/tests/test_all.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/sections.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/_config_params.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/__init__.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/coreneuron.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/gui.py
+-- Up-to-date: /global/homes/a/adammwea/neuron/lib/python/neuron/help_data.dat
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hocload.sh
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/nrn.defaults.in
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/cleanup
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/prologue.id
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/nrnunits.lib
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/shape.cm1
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/helpdict
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/auditscripts
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/auditscripts/retrieve.sh
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/auditscripts/saveaudit
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/auditscripts/notes
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/auditscripts/gettarname
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/auditscripts/hocaudit.sh
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/vplay.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/family.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/pointman.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/impedanc.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/showmech.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/atoltool.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/gatherv.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/stdrun.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/inserter.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/funfit.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/pcchdir.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/netbild
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/netbild/netdata.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/netbild/spkplot.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/netbild/netgui.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/netbild/artcel.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/netbild/syntypes.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/netbild/netready.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/netbild/grstrlst.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/netbild/edgegui.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/single.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/shapebox.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/lincir.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/runfit.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/wingroup.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/nrngui.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/noload.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/e_xy.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/fitparm.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/eonerun.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/protorun.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/clampfit.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/e_y.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/e_actpot.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/e_norm.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/eoneprim.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/eparmlst.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/eonefunc.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/optwrap.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit/mulfit1.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mkcurve.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mulfit.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/attshape.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/corenrn.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/single1.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/movierun.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/grapher.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/nrngui1.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/pointgrp.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/impedanx.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/import3d.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/netbild.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/stdgui.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/secanal.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/mviewgui.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/allcell.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/parmsets.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/allpp.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/distinctparm.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/artview.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/rcclasses.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/treeview.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/mviewxml.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/realcell.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/ncview.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/parmvals.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/ppanal.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/mview1.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mview/distinct.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/pointbsr.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/impratio.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/electrod.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/netparmpi.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/subiter.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/varmeth1.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/lincir
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/lincir/lincir1.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/lincir/elmbase.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/lincir/linmech.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/lincir/lingraph.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/celbild.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/mknrndll.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/logax.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/stdlib.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/celbild
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/celbild/celmang.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/celbild/celtopol.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/celbild/inhomofn.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/celbild/celbild1.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/celbild/psubset.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/celbild/celmemb.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/celbild/celset.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/celbild/celgeom.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/modlunit.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/thresh.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/loadbal.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/vecwrap.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/macload.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/binfo.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/import3d
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/import3d/read_nlcda3.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/import3d/read_morphml.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/import3d/import3d_sec.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/import3d/import3d_gui.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/import3d/read_nlcda.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/import3d/read_swc.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/import3d/read_nts.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/parcom.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/properties.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/kschanbg.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/linoid.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/ksgate.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/kstrans.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/ksstate.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/const.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/table.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/exp.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/kstgui.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/gategui.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/sigmoid.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/chanbild/chanbild1.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/hoc/prcellstate.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/shape.cm2
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/singhh.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/dend3
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/dend3/syn3.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/dend3/dend3.nrn
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/dend3/control.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/testca.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/sync
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/sync/spkplot.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/sync/synchronize.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/sync/init.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/sync/cell.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/sync/demosync.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/sync/start.ses
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/dynchan.ses
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/pyramid.ses
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release/capump.mod
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release/invlfire.mod
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release/cachan1.mod
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release/nacaex.mod
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release/cabpump.mod
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release/nachan.mod
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release/camchan.mod
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release/khhchan.mod
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release/release.mod
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/demo.ses
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/demo.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/singhhchan.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/cycle.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/dend3.ses
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/pyramid.nrn
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/dynclamp.ses
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/reconst.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/nomodel.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/hh.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/d3init.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/dynclamp.hoc
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/hh.ses
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/release.ses
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/demo/singhh.ses
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/nrnunits.lib
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/nrn.defaults
+-- Up-to-date: /global/homes/a/adammwea/neuron/share/nrn/lib/cleanup
+-- Up-to-date: /global/homes/a/adammwea/neuron/include
+-- Installing: /global/homes/a/adammwea/neuron/include/ocmisc.h
+-- Installing: /global/homes/a/adammwea/neuron/include/hocassrt.h
+-- Installing: /global/homes/a/adammwea/neuron/include/hoclist.h
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnmpidec.h
+-- Installing: /global/homes/a/adammwea/neuron/include/scoplib.h
+-- Up-to-date: /global/homes/a/adammwea/neuron/include/nrncvode
+-- Installing: /global/homes/a/adammwea/neuron/include/nrncvode/nrnneosm.h
+-- Installing: /global/homes/a/adammwea/neuron/include/dimplic.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/simeq.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/multicore.h
+-- Installing: /global/homes/a/adammwea/neuron/include/mcran4.h
+-- Installing: /global/homes/a/adammwea/neuron/include/euler.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnredef.h
+-- Installing: /global/homes/a/adammwea/neuron/include/backtrace_utils.h
+-- Installing: /global/homes/a/adammwea/neuron/include/crout.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnapi.h
+-- Installing: /global/homes/a/adammwea/neuron/include/cabvars.h
+-- Installing: /global/homes/a/adammwea/neuron/include/bbsavestate.h
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnassrt.h
+-- Installing: /global/homes/a/adammwea/neuron/include/multisplit.h
+-- Installing: /global/homes/a/adammwea/neuron/include/sparse.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnmpi.h
+-- Installing: /global/homes/a/adammwea/neuron/include/hocgetsym.h
+-- Installing: /global/homes/a/adammwea/neuron/include/newton_struct.h
+-- Installing: /global/homes/a/adammwea/neuron/include/md1redef.h
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnisaac.h
+-- Installing: /global/homes/a/adammwea/neuron/include/nmodlmutex.h
+-- Installing: /global/homes/a/adammwea/neuron/include/oc_ansi.h
+-- Installing: /global/homes/a/adammwea/neuron/include/nrn_ansi.h
+-- Installing: /global/homes/a/adammwea/neuron/include/mech_api.h
+-- Installing: /global/homes/a/adammwea/neuron/include/parse_with_deps.hpp
+-- Up-to-date: /global/homes/a/adammwea/neuron/include/nrnsemanticversion.h
+-- Installing: /global/homes/a/adammwea/neuron/include/md2redef.h
+-- Installing: /global/homes/a/adammwea/neuron/include/sparse_thread.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/nrncvode.h
+-- Installing: /global/homes/a/adammwea/neuron/include/euler_thread.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/membfunc.h
+-- Installing: /global/homes/a/adammwea/neuron/include/newton_thread.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnrandom.h
+-- Installing: /global/homes/a/adammwea/neuron/include/hoc.h
+-- Installing: /global/homes/a/adammwea/neuron/include/ssimplic_thread.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnmpiuse.h
+-- Installing: /global/homes/a/adammwea/neuron/include/section_fwd.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/hocdec.h
+-- Installing: /global/homes/a/adammwea/neuron/include/deflate.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/ssimplic.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnversionmacros.h
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnoc_ml.h
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnconf.h
+-- Installing: /global/homes/a/adammwea/neuron/include/hoc_membf.h
+-- Installing: /global/homes/a/adammwea/neuron/include/row_view.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/memory.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/treeset.h
+-- Installing: /global/homes/a/adammwea/neuron/include/neuron.h
+-- Installing: /global/homes/a/adammwea/neuron/include/newton.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/spconfig.h
+-- Installing: /global/homes/a/adammwea/neuron/include/hocparse.h
+-- Installing: /global/homes/a/adammwea/neuron/include/ocfunc.h
+-- Installing: /global/homes/a/adammwea/neuron/include/options.h
+-- Installing: /global/homes/a/adammwea/neuron/include/runge.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/wrap_sprintf.h
+-- Installing: /global/homes/a/adammwea/neuron/include/nrnran123.h
+-- Up-to-date: /global/homes/a/adammwea/neuron/include/neuron
+-- Up-to-date: /global/homes/a/adammwea/neuron/include/neuron/cache
+-- Installing: /global/homes/a/adammwea/neuron/include/neuron/cache/mechanism_range.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/neuron/model_data_fwd.hpp
+-- Up-to-date: /global/homes/a/adammwea/neuron/include/neuron/container
+-- Installing: /global/homes/a/adammwea/neuron/include/neuron/container/generic_data_handle.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/neuron/container/non_owning_soa_identifier.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/neuron/container/data_handle.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/spmatrix.h
+-- Installing: /global/homes/a/adammwea/neuron/include/membdef.h
+-- Installing: /global/homes/a/adammwea/neuron/include/crout_thread.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/errcodes.hpp
+-- Installing: /global/homes/a/adammwea/neuron/include/nrniv_mf.h
+
+========================   JOB MAP   ========================
+Data for JOB prterun-nid004858-98685@1 offset 0 Total slots allocated 256
+    Mapping policy: BYCORE:NOOVERSUBSCRIBE  Ranking policy: SLOT Binding policy: CORE:IF-SUPPORTED
+    Cpu set: N/A  PPR: 1:core  Cpus-per-rank: N/A  Cpu Type: CORE
+
+
+Data for node: nid004858	Num slots: 128	Max slots: 0	Num procs: 128
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 0 Bound: package[0][core:0]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 1 Bound: package[0][core:1]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 2 Bound: package[0][core:2]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 3 Bound: package[0][core:3]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 4 Bound: package[0][core:4]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 5 Bound: package[0][core:5]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 6 Bound: package[0][core:6]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 7 Bound: package[0][core:7]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 8 Bound: package[0][core:8]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 9 Bound: package[0][core:9]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 10 Bound: package[0][core:10]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 11 Bound: package[0][core:11]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 12 Bound: package[0][core:12]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 13 Bound: package[0][core:13]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 14 Bound: package[0][core:14]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 15 Bound: package[0][core:15]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 16 Bound: package[0][core:16]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 17 Bound: package[0][core:17]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 18 Bound: package[0][core:18]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 19 Bound: package[0][core:19]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 20 Bound: package[0][core:20]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 21 Bound: package[0][core:21]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 22 Bound: package[0][core:22]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 23 Bound: package[0][core:23]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 24 Bound: package[0][core:24]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 25 Bound: package[0][core:25]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 26 Bound: package[0][core:26]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 27 Bound: package[0][core:27]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 28 Bound: package[0][core:28]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 29 Bound: package[0][core:29]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 30 Bound: package[0][core:30]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 31 Bound: package[0][core:31]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 32 Bound: package[0][core:32]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 33 Bound: package[0][core:33]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 34 Bound: package[0][core:34]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 35 Bound: package[0][core:35]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 36 Bound: package[0][core:36]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 37 Bound: package[0][core:37]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 38 Bound: package[0][core:38]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 39 Bound: package[0][core:39]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 40 Bound: package[0][core:40]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 41 Bound: package[0][core:41]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 42 Bound: package[0][core:42]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 43 Bound: package[0][core:43]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 44 Bound: package[0][core:44]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 45 Bound: package[0][core:45]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 46 Bound: package[0][core:46]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 47 Bound: package[0][core:47]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 48 Bound: package[0][core:48]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 49 Bound: package[0][core:49]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 50 Bound: package[0][core:50]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 51 Bound: package[0][core:51]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 52 Bound: package[0][core:52]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 53 Bound: package[0][core:53]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 54 Bound: package[0][core:54]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 55 Bound: package[0][core:55]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 56 Bound: package[0][core:56]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 57 Bound: package[0][core:57]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 58 Bound: package[0][core:58]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 59 Bound: package[0][core:59]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 60 Bound: package[0][core:60]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 61 Bound: package[0][core:61]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 62 Bound: package[0][core:62]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 63 Bound: package[0][core:63]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 64 Bound: package[1][core:64]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 65 Bound: package[1][core:65]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 66 Bound: package[1][core:66]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 67 Bound: package[1][core:67]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 68 Bound: package[1][core:68]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 69 Bound: package[1][core:69]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 70 Bound: package[1][core:70]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 71 Bound: package[1][core:71]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 72 Bound: package[1][core:72]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 73 Bound: package[1][core:73]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 74 Bound: package[1][core:74]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 75 Bound: package[1][core:75]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 76 Bound: package[1][core:76]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 77 Bound: package[1][core:77]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 78 Bound: package[1][core:78]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 79 Bound: package[1][core:79]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 80 Bound: package[1][core:80]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 81 Bound: package[1][core:81]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 82 Bound: package[1][core:82]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 83 Bound: package[1][core:83]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 84 Bound: package[1][core:84]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 85 Bound: package[1][core:85]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 86 Bound: package[1][core:86]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 87 Bound: package[1][core:87]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 88 Bound: package[1][core:88]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 89 Bound: package[1][core:89]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 90 Bound: package[1][core:90]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 91 Bound: package[1][core:91]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 92 Bound: package[1][core:92]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 93 Bound: package[1][core:93]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 94 Bound: package[1][core:94]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 95 Bound: package[1][core:95]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 96 Bound: package[1][core:96]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 97 Bound: package[1][core:97]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 98 Bound: package[1][core:98]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 99 Bound: package[1][core:99]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 100 Bound: package[1][core:100]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 101 Bound: package[1][core:101]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 102 Bound: package[1][core:102]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 103 Bound: package[1][core:103]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 104 Bound: package[1][core:104]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 105 Bound: package[1][core:105]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 106 Bound: package[1][core:106]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 107 Bound: package[1][core:107]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 108 Bound: package[1][core:108]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 109 Bound: package[1][core:109]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 110 Bound: package[1][core:110]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 111 Bound: package[1][core:111]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 112 Bound: package[1][core:112]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 113 Bound: package[1][core:113]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 114 Bound: package[1][core:114]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 115 Bound: package[1][core:115]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 116 Bound: package[1][core:116]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 117 Bound: package[1][core:117]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 118 Bound: package[1][core:118]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 119 Bound: package[1][core:119]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 120 Bound: package[1][core:120]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 121 Bound: package[1][core:121]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 122 Bound: package[1][core:122]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 123 Bound: package[1][core:123]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 124 Bound: package[1][core:124]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 125 Bound: package[1][core:125]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 126 Bound: package[1][core:126]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 127 Bound: package[1][core:127]
+
+Data for node: nid004917	Num slots: 128	Max slots: 0	Num procs: 128
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 128 Bound: package[0][core:0]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 129 Bound: package[0][core:1]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 130 Bound: package[0][core:2]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 131 Bound: package[0][core:3]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 132 Bound: package[0][core:4]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 133 Bound: package[0][core:5]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 134 Bound: package[0][core:6]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 135 Bound: package[0][core:7]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 136 Bound: package[0][core:8]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 137 Bound: package[0][core:9]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 138 Bound: package[0][core:10]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 139 Bound: package[0][core:11]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 140 Bound: package[0][core:12]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 141 Bound: package[0][core:13]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 142 Bound: package[0][core:14]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 143 Bound: package[0][core:15]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 144 Bound: package[0][core:16]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 145 Bound: package[0][core:17]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 146 Bound: package[0][core:18]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 147 Bound: package[0][core:19]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 148 Bound: package[0][core:20]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 149 Bound: package[0][core:21]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 150 Bound: package[0][core:22]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 151 Bound: package[0][core:23]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 152 Bound: package[0][core:24]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 153 Bound: package[0][core:25]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 154 Bound: package[0][core:26]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 155 Bound: package[0][core:27]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 156 Bound: package[0][core:28]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 157 Bound: package[0][core:29]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 158 Bound: package[0][core:30]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 159 Bound: package[0][core:31]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 160 Bound: package[0][core:32]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 161 Bound: package[0][core:33]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 162 Bound: package[0][core:34]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 163 Bound: package[0][core:35]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 164 Bound: package[0][core:36]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 165 Bound: package[0][core:37]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 166 Bound: package[0][core:38]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 167 Bound: package[0][core:39]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 168 Bound: package[0][core:40]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 169 Bound: package[0][core:41]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 170 Bound: package[0][core:42]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 171 Bound: package[0][core:43]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 172 Bound: package[0][core:44]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 173 Bound: package[0][core:45]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 174 Bound: package[0][core:46]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 175 Bound: package[0][core:47]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 176 Bound: package[0][core:48]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 177 Bound: package[0][core:49]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 178 Bound: package[0][core:50]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 179 Bound: package[0][core:51]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 180 Bound: package[0][core:52]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 181 Bound: package[0][core:53]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 182 Bound: package[0][core:54]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 183 Bound: package[0][core:55]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 184 Bound: package[0][core:56]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 185 Bound: package[0][core:57]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 186 Bound: package[0][core:58]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 187 Bound: package[0][core:59]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 188 Bound: package[0][core:60]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 189 Bound: package[0][core:61]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 190 Bound: package[0][core:62]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 191 Bound: package[0][core:63]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 192 Bound: package[1][core:64]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 193 Bound: package[1][core:65]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 194 Bound: package[1][core:66]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 195 Bound: package[1][core:67]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 196 Bound: package[1][core:68]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 197 Bound: package[1][core:69]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 198 Bound: package[1][core:70]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 199 Bound: package[1][core:71]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 200 Bound: package[1][core:72]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 201 Bound: package[1][core:73]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 202 Bound: package[1][core:74]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 203 Bound: package[1][core:75]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 204 Bound: package[1][core:76]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 205 Bound: package[1][core:77]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 206 Bound: package[1][core:78]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 207 Bound: package[1][core:79]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 208 Bound: package[1][core:80]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 209 Bound: package[1][core:81]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 210 Bound: package[1][core:82]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 211 Bound: package[1][core:83]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 212 Bound: package[1][core:84]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 213 Bound: package[1][core:85]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 214 Bound: package[1][core:86]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 215 Bound: package[1][core:87]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 216 Bound: package[1][core:88]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 217 Bound: package[1][core:89]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 218 Bound: package[1][core:90]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 219 Bound: package[1][core:91]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 220 Bound: package[1][core:92]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 221 Bound: package[1][core:93]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 222 Bound: package[1][core:94]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 223 Bound: package[1][core:95]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 224 Bound: package[1][core:96]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 225 Bound: package[1][core:97]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 226 Bound: package[1][core:98]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 227 Bound: package[1][core:99]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 228 Bound: package[1][core:100]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 229 Bound: package[1][core:101]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 230 Bound: package[1][core:102]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 231 Bound: package[1][core:103]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 232 Bound: package[1][core:104]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 233 Bound: package[1][core:105]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 234 Bound: package[1][core:106]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 235 Bound: package[1][core:107]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 236 Bound: package[1][core:108]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 237 Bound: package[1][core:109]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 238 Bound: package[1][core:110]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 239 Bound: package[1][core:111]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 240 Bound: package[1][core:112]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 241 Bound: package[1][core:113]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 242 Bound: package[1][core:114]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 243 Bound: package[1][core:115]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 244 Bound: package[1][core:116]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 245 Bound: package[1][core:117]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 246 Bound: package[1][core:118]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 247 Bound: package[1][core:119]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 248 Bound: package[1][core:120]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 249 Bound: package[1][core:121]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 250 Bound: package[1][core:122]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 251 Bound: package[1][core:123]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 252 Bound: package[1][core:124]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 253 Bound: package[1][core:125]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 254 Bound: package[1][core:126]
+        Process jobid: prterun-nid004858-98685@1 App: 0 Process rank: 255 Bound: package[1][core:127]
+
+=============================================================
+numprocs=256
