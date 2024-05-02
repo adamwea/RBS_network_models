@@ -1,5 +1,5 @@
 import sys
-from batch_helper_functions import get_walltime_per_sim
+#from batch_helper_functions import get_walltime_per_sim
 
 ## Run Name
 i = 0
@@ -46,8 +46,10 @@ USER_plotting_params = {
 ## Fitness Params
 #Set paramaeters for convolving raster data into network activity plot
 USER_raster_convolve_params = {
-    'binSize': .03*1000, 
-    'gaussianSigma': .12*1000, 
+    #'binSize': .03*1000,
+    'binSize': .03*250,
+    #'gaussianSigma': .12*1000, 
+    'gaussianSigma': .12*250,
     'thresholdBurst': 1.0
     }
 USER_raster_crop = None
@@ -210,7 +212,7 @@ elif option == 'hpc_slurm':
     #assert USER_cores_per_node_per_sim <= (Perlmutter_cores_per_node*USER_nodes)/USER_pop_size, 'USER_cores_per_node_per_sim must be less than or equal to Perlmutter_cores_per_node'    
     USER_cores_per_node = USER_cores_per_node_per_sim
     USER_walltime_per_gen = '01:30:00' # set this value to the maxiumum walltime allowed to charge
-    USER_walltime_per_sim = get_walltime_per_sim(USER_walltime_per_gen, USER_pop_size, USER_nodes)
+    #USER_walltime_per_sim = get_walltime_per_sim(USER_walltime_per_gen, USER_pop_size, USER_nodes)
     USER_walltime_per_sim = '00:06:00'
     #print(f'USER_walltime_per_sim: {USER_walltime_per_sim}')
     USER_walltime = USER_walltime_per_sim    

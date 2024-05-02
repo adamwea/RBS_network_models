@@ -9,13 +9,29 @@ from scipy.stats import linregress
 import os
 import glob
 import json
+import netpyne
 
 # Import USER_INPUTS
 from USER_INPUTS import *
 
-def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_file_path = None, batch_saveFolder = None, fitness_save_path = None, **kwargs):   
+def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, batch_saveFolder = None, fitness_save_path = None, **kwargs):   
     maxFitness = kwargs['maxFitness']
     ''' subfuncs '''
+    def set_all_fitness_to_max():
+        fitnessVals = {}
+        maxFitness = kwargs['maxFitness']
+        fitnessVals['burstAmp_Fitness'] = {'Value': None, 'Fit': maxFitness}
+        fitnessVals['IBI_fitness'] = {'Value': None, 'Fit': maxFitness}
+        fitnessVals['baselineFitness'] = {'Value': None, 'Fit': maxFitness}
+        fitnessVals['slopeFitness'] = {'Value': None, 'Fit': maxFitness}
+        #fitnessVals['baseline_diff_fitness'] = {'Value': None, 'Fit': maxFitness}
+        fitnessVals['burst_peak_frequency_fitness'] = {'Value': None, 'Fit': maxFitness}
+        #fitnessVals['rate_fitness'] = {'Value': None, 'Fit': maxFitness}
+        fitnessVals['E_rate_fitness'] = {'Value': None, 'Fit': maxFitness}
+        fitnessVals['I_rate_fitness'] = {'Value': None, 'Fit': maxFitness}
+        fitnessVals['sustain_oscillation_fitness'] = {'Value': None, 'Fit': maxFitness}
+        return fitnessVals
+    
     def get_network_activity_metrics(fitnessVals, plot = False):
         net_activity_metrics = {}
         #prepare raster data
@@ -50,16 +66,7 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
             print(f'Error calculating network activity metrics.')
             print(f'Error: {e}')
             #set fitness values to maxFitness
-            maxFitness = kwargs['maxFitness']
-            fitnessVals['burstAmp_Fitness'] = {'Value': None, 'Fit': maxFitness}
-            fitnessVals['IBI_fitness'] = {'Value': None, 'Fit': maxFitness}
-            fitnessVals['baselineFitness'] = {'Value': None, 'Fit': maxFitness}
-            fitnessVals['slopeFitness'] = {'Value': None, 'Fit': maxFitness}
-            #fitnessVals['baseline_diff_fitness'] = {'Value': None, 'Fit': maxFitness}
-            fitnessVals['burst_peak_frequency_fitness'] = {'Value': None, 'Fit': maxFitness}
-            fitnessVals['rate_fitness'] = {'Value': None, 'Fit': maxFitness}
-            fitnessVals['sustain_oscillation_fitness'] = {'Value': None, 'Fit': maxFitness}
-            
+            fitnessVals = set_all_fitness_to_max()            
             return fitnessVals, net_activity_metrics            
         
         #net_activity_metrics = {}
@@ -339,19 +346,28 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
                 if simData["popRates"][k] > v['min'] else maxFitness
                 for k, v in pops_rate.items()
             ]
-            rate_fitness = np.mean(popFitness)
-            popInfo = '; '.join(['%s rate=%.1f fit=%1.f'%(p,r,f) for p,r,f in zip(
+            E_rate_fitness = popFitness[0]
+            popInfo_E = '; '.join(['%s rate=%.1f fit=%1.f'%(p,r,f) for p,r,f in zip(
                 list(simData['popRates'].keys()), 
-                list(simData['popRates'].values()), popFitness)])
-            print('  '+popInfo)
-            fitnessVals['rate_fitness'] = {'Value': np.mean(list(simData['popRates'].values())), 'Fit': rate_fitness}
+                list(simData['popRates'].values()), popFitness) if 'E' in p])
+            print('  Excitatory: '+popInfo_E)
+
+            I_rate_fitness = popFitness[1]
+            popInfo_I = '; '.join(['%s rate=%.1f fit=%1.f'%(p,r,f) for p,r,f in zip(
+                list(simData['popRates'].keys()), 
+                list(simData['popRates'].values()), popFitness) if 'I' in p])
+            print('  Inhibitory: '+popInfo_I)
+            fitnessVals['E_rate_fitness'] = {'Value': simData['popRates']['E'], 'Fit': E_rate_fitness}
+            fitnessVals['I_rate_fitness'] = {'Value': simData['popRates']['I'], 'Fit': I_rate_fitness}
             return fitnessVals
         except Exception as e:
             print(f'Error calculating firing rate fitness.')
             print(f'Error: {e}')
             #set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
-            fitnessVals['rate_fitness'] = {'Value': None, 'Fit': maxFitness}
+            #fitnessVals['rate_fitness'] = {'Value': None, 'Fit': maxFitness}
+            fitnessVals['E_rate_fitness'] = {'Value': None, 'Fit': maxFitness}
+            fitnessVals['I_rate_fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
     
     def fitness_summary_metrics(fitnessVals):
@@ -379,11 +395,52 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
 
         # Calculate the average of the scaled fitness values
         avg_scaled_fitness = sum(scaled_fitness_values) / len(scaled_fitness_values)
+        print(f'Average Fitness: {average_fitness}')
+        print(f'Average Scaled Fitness: {avg_scaled_fitness}')
 
         return average_fitness, avg_scaled_fitness
-    
+
     def get_fitness(simData, plot = False, **kwargs):
         '''init'''
+        def save_fitness_results():
+            ##save fitness values
+            maxFitness = kwargs['maxFitness']
+            fitnessResults = {}
+            for key, value in fitnessVals.items():
+                fitnessResults[f'{key}'] = value
+            fitnessResults['maxFitness'] = maxFitness
+            fitnessResults['average_fitness'] = average_fitness
+            fitnessResults['average_scaled_fitness'] = avg_scaled_fitness
+
+            ##print fitness results on multiple lines
+            # for key, value in fitnessResults.items():
+            #     print(f'{key}: {value}')
+
+            ##save fitness results to file        
+            #get folder from simLabel
+            # if data_file_path is not None and 'overnight' in data_file_path:
+            #     print('overnight')
+            gen_folder = simLabel.split('_cand')[0]
+            if fitness_save_path is None and data_file_path is None:
+                #typical case, during simulations
+                with open(f'{output_path}/{gen_folder}/{simLabel}_Fitness.json', 'w') as f:
+                    json.dump(fitnessResults, f, indent=4)
+                print(f'Fitness results saved to {output_path}/{simLabel}_Fitness.json')
+            elif fitness_save_path is None and data_file_path is not None:
+                #during re-eval of fitness without plotting
+                with open(data_file_path.replace('_data', '_Fitness'), 'w') as f:
+                    json.dump(fitnessResults, f, indent=4)
+                print(f'Fitness results saved to {data_file_path.replace("_data", "_Fitness")}')
+            else:
+                assert data_file_path is not None, 'data_file_path must be specified to save fitness results'
+                #while plotting
+                with open(data_file_path.replace('_data', '_Fitness'), 'w') as f:
+                    json.dump(fitnessResults, f, indent=4)
+                print(f'Fitness results saved to {data_file_path.replace("_data", "_Fitness")}')
+                # with open(f'{fitness_save_path}/{simLabel}_Fitness.json', 'w') as f:
+                #     json.dump(fitnessResults, f, indent=4)
+
+        
         maxFitness = kwargs['maxFitness']
         fitnessVals = {}
         ## Get the fitness function arguments
@@ -392,6 +449,10 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
         assert USER_plot_fitness_bool is not None, 'USER_plot_fitness_bool must be set in USER_INPUTS.py'
         fitnessVals, net_activity_metrics = get_network_activity_metrics(fitnessVals, plot = USER_plot_NetworkActivity)
         if net_activity_metrics == {}:
+            # Get the fitness summary metrics        
+            average_fitness, avg_scaled_fitness = fitness_summary_metrics(fitnessVals)
+            # Save the fitness results
+            save_fitness_results()
             return maxFitness
 
         ## Get the fitness values
@@ -422,51 +483,16 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
 
         # Get the fitness summary metrics        
         average_fitness, avg_scaled_fitness = fitness_summary_metrics(fitnessVals)
-        print(f'Average Fitness: {average_fitness}')
-        print(f'Average Scaled Fitness: {avg_scaled_fitness}')
-
-        ##save fitness values
-        maxFitness = kwargs['maxFitness']
-        fitnessResults = {}
-        for key, value in fitnessVals.items():
-            fitnessResults[f'{key}'] = value
-        fitnessResults['maxFitness'] = maxFitness
-        fitnessResults['average_fitness'] = average_fitness
-        fitnessResults['average_scaled_fitness'] = avg_scaled_fitness
-
-        ##print fitness results on multiple lines
-        # for key, value in fitnessResults.items():
-        #     print(f'{key}: {value}')
-
-        ##save fitness results to file        
-        #get folder from simLabel
-        # if data_file_path is not None and 'overnight' in data_file_path:
-        #     print('overnight')
-        gen_folder = simLabel.split('_cand')[0]
-        if fitness_save_path is None and data_file_path is None:
-            #typical case, during simulations
-            with open(f'{output_path}/{gen_folder}/{simLabel}_Fitness.json', 'w') as f:
-                json.dump(fitnessResults, f, indent=4)
-            print(f'Fitness results saved to {output_path}/{simLabel}_Fitness.json')
-        elif fitness_save_path is None and data_file_path is not None:
-            #during re-eval of fitness without plotting
-            with open(data_file_path.replace('_data', '_Fitness'), 'w') as f:
-                json.dump(fitnessResults, f, indent=4)
-            print(f'Fitness results saved to {data_file_path.replace("_data", "_Fitness")}')
-        else:
-            assert data_file_path is not None, 'data_file_path must be specified to save fitness results'
-            #while plotting
-            with open(data_file_path.replace('_data', '_Fitness'), 'w') as f:
-                json.dump(fitnessResults, f, indent=4)
-            print(f'Fitness results saved to {data_file_path.replace("_data", "_Fitness")}')
-            # with open(f'{fitness_save_path}/{simLabel}_Fitness.json', 'w') as f:
-            #     json.dump(fitnessResults, f, indent=4)
-
+        # Save the fitness results
+        save_fitness_results()
+        
         #print(f'Fitness results saved to {output_path}/{gen_folder}/{simLabel}_Fitness.json')
         if plot: plot_fitness(fitnessVals, simData, net_activity_metrics, **kwargs)
         return avg_scaled_fitness
     
     def plot_fitness(fitnessVals, simData, net_activity_metrics, **kwargs):
+        print('Plotting fitness...')
+        netpyne.sim.loadAll(data_file_path)
         def plot_network_activity_fitness(net_activity_metrics):
             #net_activity_metrics = net_activity_metrics
             rasterData = simData
@@ -507,9 +533,7 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
             )
         def plot_raster():
             #Attempt to generate the raster plot
-            assert sim_obj is not None, 'sim_obj must be defined to generate raster plot'
             figname = 'raster_plot.png'
-            rasterData = sim_obj.analysis.prepareRaster()
             timeVector = net_activity_metrics['timeVector']
             timeRange = [timeVector[0], timeVector[-1]]
             #raster_plot_path = f'{batch_saveFolder}/{simLabel}_raster_plot.svg'
@@ -526,7 +550,7 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
             else: raise ValueError(f'Idk how we got here. Logically.')
             
             try:
-                sim_obj.analysis.plotRaster(saveFig=fig_path, 
+                netpyne.sim.analysis.plotRaster(saveFig=fig_path, 
                                             #timeRange = raster_activity_timeRange,
                                             timeRange = timeRange,
                                             showFig=False,
@@ -538,10 +562,69 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
                 print(f'Error generating raster plot from Data at: {data_file_path}')
                 # raster_plot_path = None
                 pass
+        
+        def most_active_time_range(timeVector, sim_obj):
+                
+                # Get the time range of the most active part of the simulation for each neuron
+                # Get the voltage trace for a specific cell
+                # Get the keys (GIDs) of the neurons
+                neuron_gids = list(sim_obj.allSimData['soma_voltage'].keys())
+                # Get the voltage trace for the first (excitatory) neuron
+                # Get the voltage trace for the first (excitatory) neuron
+                excite_voltage_trace = sim_obj.allSimData['soma_voltage'][neuron_gids[1]]
+                # Get the voltage trace for the second (inhibitory) neuron
+                inhib_voltage_trace = sim_obj.allSimData['soma_voltage'][neuron_gids[0]]                
+                # Get the time points
+                time_points = sim_obj.allSimData['t']
+                #remove time_points above and below timeVector max and min values respectively
+                time_points = [t for t in time_points if t >= timeVector[0] and t <= timeVector[-1]]
+                #remove corresponding voltage values
+                excite_voltage_trace = [v for t, v in zip(time_points, excite_voltage_trace) if t >= timeVector[0] and t <= timeVector[-1]]
+                inhib_voltage_trace = [v for t, v in zip(time_points, inhib_voltage_trace) if t >= timeVector[0] and t <= timeVector[-1]]
+
+                #get location of max amp for each neuron and corresponding time points
+                # max_amp_excite = np.max(excite_voltage_trace)
+                # max_amp_inhib = np.max(inhib_voltage_trace)
+                max_amp_excite_time = time_points[np.argmax(excite_voltage_trace)]
+                max_amp_inhib_time = time_points[np.argmax(inhib_voltage_trace)]
+                #prepare excite and inhib time ranges
+                #center on max amp, 500 ms before and after
+                excite_timeRange = [max_amp_excite_time - 500, max_amp_excite_time + 500]                
+                inhib_timeRange = [max_amp_inhib_time - 500, max_amp_inhib_time + 500]
+                #if any values are < 0, make them 0
+                excite_timeRange = [0 if t < 0 else t for t in excite_timeRange]
+                inhib_timeRange = [0 if t < 0 else t for t in inhib_timeRange]
+                #if either left value is zero, make right value 1000
+                if excite_timeRange[0] == 0: excite_timeRange[1] = 1000
+                if inhib_timeRange[0] == 0: inhib_timeRange[1] = 1000
+                #get closest values in timeVector
+                excite_timeRange_indices = [np.abs(timeVector - t).argmin() for t in excite_timeRange]
+                inhib_timeRange_indices = [np.abs(timeVector - t).argmin() for t in inhib_timeRange]
+                # # Now you can use these indices to get the corresponding times from timeVector
+                # excite_timeRange_closest = [timeVector[i] for i in excite_timeRange_indices]
+                # inhib_timeRange_closest = [timeVector[i] for i in inhib_timeRange_indices]
+
+                #get timeVector values for each time range
+                excite_timeVector = [timeVector[i] for i in range(excite_timeRange_indices[0], excite_timeRange_indices[1])]
+                inhib_timeVector = [timeVector[i] for i in range(inhib_timeRange_indices[0], inhib_timeRange_indices[1])]
+
+                # # Ensure start_index and end_index are not the same and start_index comes before end_index
+                # if start_index == end_index:
+                #     if start_index > 0:
+                #         start_index -= 1
+                #     elif end_index < len(timeVector) - 1:
+                #         end_index += 1
+                # elif start_index > end_index:
+                #     start_index, end_index = end_index, start_index
+
+                # Use these indices to get the closest values in timeVector
+                #timeRanges = [excite_timeVector, inhib_timeVector]
+                return excite_timeRange, inhib_timeRange
+        
         def plot_trace_example():
             # Attempt to generate sample trace for an excitatory example neuron
             try:
-                figname = 'sample_trace.png'
+                figname = 'sample_trace'
                 job_name = os.path.basename(os.path.dirname(batch_saveFolder))
                 gen_folder = simLabel.split('_cand')[0]
                 saveFig = USER_plotting_params['saveFig']
@@ -554,40 +637,50 @@ def fitnessFunc(simData, sim_obj = None, plot = False, simLabel = None, data_fil
                 elif os.path.exists(fig_path) is False: pass
                 else: raise ValueError(f'Idk how we got here. Logically.')
 
+                sim_obj = netpyne.sim
                 timeVector = np.array(net_activity_metrics['timeVector'])
-                # Find the indices of the closest values in timeVector to the desired values
-                start_index = (np.abs(timeVector - (timeVector[int(len(timeVector)/2)] - 500))).argmin()
-                end_index = (np.abs(timeVector - (timeVector[int(len(timeVector)/2)] + 500))).argmin()
+                excite_timeVector, inhib_timeVector = most_active_time_range(timeVector, sim_obj)
+                timeRanges = [excite_timeVector, inhib_timeVector]
+                titles = ['E0_highestAmp', 'I0_highestAmp']
+                import matplotlib.pyplot as plt
+                import matplotlib.image as mpimg
+                # Create individual plots and save as PNG
+                for i, timeRange in enumerate(timeRanges):
+                    title = titles[i]
+                    # Prepare the sample trace
+                    sample_trace = sim_obj.analysis.plotTraces(
+                        include=[('E', 0), ('I', 0)],
+                        overlay=True,
+                        oneFigPer='trace',
+                        title=title,
+                        timeRange=timeRange,
+                        showFig=False,
+                        figSize=(USER_plotting_params['figsize'][0], USER_plotting_params['figsize'][1]/2)
+                    )
+                    # Get the figure
+                    fig = sample_trace[0]['_trace_soma_voltage']
+                    # Add title to the figure
+                    fig.suptitle(title)
+                    # Move title all the way to the left
+                    fig.tight_layout(rect=[0, 0.03, 1, 1])
+                    # Save the figure with the title
+                    fig_path_path = f'{fig_path}_{title}.png'
+                    fig.savefig(fig_path_path)
 
-                # Ensure start_index and end_index are not the same and start_index comes before end_index
-                if start_index == end_index:
-                    if start_index > 0:
-                        start_index -= 1
-                    elif end_index < len(timeVector) - 1:
-                        end_index += 1
-                elif start_index > end_index:
-                    start_index, end_index = end_index, start_index
+                # Create a composite figure
+                fig, axs = plt.subplots(2, 1, figsize=USER_plotting_params['figsize'])
+                for i, title in enumerate(titles):
+                    # Load the image
+                    img = mpimg.imread(f'{fig_path}_{title}.png')
+                    # Add the image to the subplot
+                    axs[i].imshow(img)
+                    axs[i].axis('off')
 
-                # Use these indices to get the closest values in timeVector
-                timeRange = [timeVector[start_index], timeVector[end_index]]
-                # Prepare the sample trace
-                sample_trace_E = sim_obj.analysis.plotTraces(
-                    include=[('E', 0), ('I', 0)],
-                    overlay=True,
-                    oneFigPer='trace',
-                    title='Middlemost 1 second of simulation',
-                    timeRange=timeRange,
-                    #saveFig=sample_trace_path_E,
-                    showFig=False,
-                    figSize=USER_plotting_params['figsize']
-                )
-                # Add title to the figure
-                fig = sample_trace_E[0]['_trace_soma_voltage']
-                fig.suptitle('Middlemost 1 second of simulation')
-                #move title all the way to the left
+                # Adjust the layout
                 fig.tight_layout(rect=[0, 0.03, 1, 1])
-                # Save the figure with the title
-                fig.savefig(fig_path)
+
+                # Save the composite figure
+                fig.savefig(f'{fig_path}_combined.png')
                 #fig.suptitle('Middlemost 1 second of simulation')
                 # Save the figure with the title
                 #fig.savefig(sample_trace_path_E)

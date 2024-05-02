@@ -1,0 +1,53 @@
+{
+    "net": {
+        "params": {
+            "_labelid": 0,
+            "cellParams": {},
+            "cellsVisualizationSpacingMultiplier": [
+                1,
+                1,
+                1
+            ],
+            "connParams": {},
+            "correctBorder": false,
+            "defaultDelay": 1,
+            "defaultThreshold": 10,
+            "defaultWeight": 1,
+            "defineCellShapes": false,
+            "mapping": {},
+            "popParams": {
+                "I": {
+                    "cellType": "I",
+                    "numCells": 1,
+                    "xRange": [
+                        100,
+                        3900
+                    ],
+                    "yRange": [
+                        100,
+                        1900
+                    ]
+                }
+            },
+            "popTagsCopiedToCells": [
+                "cellModel",
+                "cellType"
+            ],
+            "propVelocity": 500.0,
+            "rotateCellsRandomly": false,
+            "rxdParams": {},
+            "scale": 1,
+            "scaleConnWeight": 1,
+            "scaleConnWeightModels": false,
+            "scaleConnWeightNetStims": 1,
+            "shape": "cuboid",
+            "sizeX": 4000,
+            "sizeY": 2000,
+            "sizeZ": 0,
+            "stimSourceParams": {},
+            "stimTargetParams": {},
+            "subConnParams": {},
+            "synMechParams": {}
+        }
+    }
+}

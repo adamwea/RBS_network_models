@@ -1,0 +1,19 @@
+/home/adamm/miniconda3/envs/2DSims/bin/nrniv:10: DeprecationWarning: pkg_resources is deprecated as an API. See https://setuptools.pypa.io/en/latest/pkg_resources.html
+  from pkg_resources import working_set
+NEURON -- VERSION 8.2.4 HEAD (1d87d5d39) 2024-02-09
+Duke, Yale, and the BlueBrain Project -- Copyright 1984-2022
+See http://neuron.yale.edu/neuron/credits
+
+Traceback (most recent call last):
+  File "/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/InhibNeuronDebug/init.py", line 5, in <module>
+    simConfig, netParams = sim.readCmdLineArgs(simConfigDefault='simConfig.py', netParamsDefault='netParams.py')
+  File "/home/adamm/miniconda3/envs/2DSims/lib/python3.9/site-packages/netpyne/sim/setup.py", line 293, in readCmdLineArgs
+    netParamsModule = sim.loadPythonModule(netParamsPath)
+  File "/home/adamm/miniconda3/envs/2DSims/lib/python3.9/site-packages/netpyne/sim/utils.py", line 42, in loadPythonModule
+    loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 846, in exec_module
+  File "<frozen importlib._bootstrap_external>", line 982, in get_code
+  File "<frozen importlib._bootstrap_external>", line 1039, in get_data
+OSError: [Errno 5] Input/output error: '/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/InhibNeuronDebug/output/240430_Run5_debug_run/240430_Run5_debug_run_netParams.py'
+0 /home/adamm/miniconda3/envs/2DSims/bin/nrniv: can't open simConfig=/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/InhibNeuronDebug/output/240430_Run5_debug_run/gen_19/gen_19_cand_0_cfg.json
+Could not open netParams=/mnt/c/Users/adamm/Documents/GithubRepositories/2DNetworkSimulations/InhibNeuronDebug/output/240430_Run5_debug_run/240430_Run5_debug_run_netParams.py
