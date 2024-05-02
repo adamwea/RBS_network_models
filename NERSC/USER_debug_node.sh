@@ -1,7 +1,10 @@
+#to run the script
+#sbatch NERSC/USER_debug_node.sh
+
 #!/bin/bash
 #SBATCH --job-name=debug_node_run
 #SBATCH -A m2043
-#SBATCH -t 09:00:00
+#SBATCH -t 10:00:00
 #SBATCH --nodes=2
 #SBATCH --ntasks-per-node=128
 #SBATCH --output=NERSC/output/job_outputs/job_%j_output_debug_node_run.txt
@@ -11,6 +14,9 @@
 #SBATCH -q regular
 #SBATCH -C cpu
 #SBATCH --exclusive
+
+#start timer to see how long the job takes
+start=`date +%s`
 
 module load conda
 conda activate neuron_env
@@ -42,4 +48,9 @@ mpiexec --version
 mpicc --version
 echo "Running the simulation"
 # Run the MPI command
-mpiexec --display-map --map-by ppr:1:core -np ${NP} nrniv -mpi batchRun.py debug_node_run 10
+#mpiexec --display-map --map-by ppr:1:core -np ${NP} nrniv -mpi batchRun.py debug_node_run 10
+mpiexec --display-map --map-by ppr:${PPN}:node -np ${NP} nrniv -mpi batchRun.py debug_node_run 10
+
+#end timer to see how long the job takes
+end=`date +%s`
+runtime=$((end-start))
