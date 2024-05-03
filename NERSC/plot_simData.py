@@ -1,44 +1,21 @@
+'''imports'''
 import os
 import netpyne
 import subprocess
 from fitness_functions import fitnessFunc
 from fitness_config import *
-kwargs = fitnessFuncArgs
-#from USER_INPUTS import *
 import pandas as pd
 import json
-
-# Initialize an empty DataFrame
-df = pd.DataFrame()
-
 import os
 from reportlab.pdfgen import canvas
-from reportlab.lib.pagesizes import letter
 from PIL import Image
-from json2table import convert
-
-# surpress all print statements
 import sys, os
-import copy
 
+'''functions'''
 def blockPrint():
     sys.stdout = open(os.devnull, 'w')
-
-# enable all print statements
 def enablePrint():
     sys.stdout = sys.__stdout__
-
-class SimCopy:
-    def __init__(self, sim):
-        for attr in dir(sim):
-            try:
-                if not attr.startswith('__'):  # Exclude built-in attributes
-                    value = getattr(sim, attr)
-                    #if isinstance(value, dict):
-                    setattr(self, attr, copy.deepcopy(value))
-            except Exception:
-                pass
-
 def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank):
     import matplotlib.pyplot as plt
 
@@ -259,20 +236,132 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank):
 
     # Close the PDF
     c.save()
+def recalc_fitness(data_file_path):
+    #assert that data_file_path exists, if it doesnt, probably wokring with locally instead of on NERSC
+    assert os.path.exists(data_file_path), f"Error: {data_file_path} does not exist."
+    
+    #load the data file using netpyne loadall
+    netpyne.sim.loadAll(data_file_path)
+    simData = netpyne.sim.allSimData
+    batch_saveFolder = netpyne.sim.cfg.saveFolder
+    simLabel = netpyne.sim.cfg.simLabel
 
-#surpress all print statements
-blockPrint()
+    #pathing
+    NERSC_path = os.path.dirname(os.path.realpath(__file__))
+    repo_path = os.path.dirname(NERSC_path)
+    cwd = repo_path
+    cwd_basename = os.path.basename(cwd)
+    batch_saveFolder = f'{cwd}{batch_saveFolder.split(cwd_basename)[1]}'                        
+    fitness_save_path = os.path.dirname(data_file_path)
 
+    #measure fitness
+    avgScaledFitness = fitnessFunc(
+        simData, plot = False, simLabel = simLabel, 
+        data_file_path = data_file_path, batch_saveFolder = batch_saveFolder, 
+        fitness_save_path = fitness_save_path, **kwargs)
+    
+    return avgScaledFitness, simData, batch_saveFolder, fitness_save_path, simLabel
+def plot_elite_paths(elite_paths):
+    #elite_rate = 0.10
+    #get path in job_dir ending in _batch.json and load
+    batch_file_path = [f.path for f in os.scandir(job_dir) if f.is_file() and '_batch.json' in f.name][0]
+    batch_data = json.load(open(batch_file_path))
+    num_elites = batch_data['batch']['evolCfg']['num_elites']
+    # try: assert num_elites < len(elite_paths), f"Error: num_elites must be less than the number of elites in the generation."
+    # except: 
+    #     if cand is not None: pass
+    #     else: raise Exception(f"Error: num_elites must be less than the number of elites in the generation.")
+
+    elite_paths = sorted(elite_paths.items(), key=lambda x: x[1]['avgScaledFitness'], reverse=False)
+    elite_paths_cull = elite_paths[:num_elites]
+    for simLabel, data in elite_paths_cull:
+        
+        #print simLabel bold and yellow
+        enablePrint()
+        print(f"\033[1;33m{simLabel}\033[0m, {data['avgScaledFitness']}")
+
+        #skip if already plotted
+        if new_plots == False:
+            assert 'archive' not in data_file_path, 'Error: Cannot plot from archive.'
+            expected_plot_path = os.path.join(data['fitness_save_path'], simLabel + '.pdf').replace('output', 'plots')              
+            if os.path.exists(expected_plot_path): 
+                print('Already plotted. Skipping...')
+                continue                
+        blockPrint()
+        if verbose == True: enablePrint()
+        
+        #rank is the index of the elite in the elite_paths list
+        gen_rank = elite_paths.index((simLabel, data))
+        
+        #initialize variables
+        data_file_path = data['data_file_path']
+        batch_saveFolder = data['batch_saveFolder']
+        fitness_save_path = data['fitness_save_path']
+        simData = data['simData']
+    
+        #plot
+        avgScaledFitness = fitnessFunc(
+            simData, plot = True, simLabel = simLabel, 
+            data_file_path = data_file_path, batch_saveFolder = batch_saveFolder, 
+            fitness_save_path = fitness_save_path, **kwargs)
+        print('Plots saved to: ...')
+
+        #Network plot, Raster plot, and Trace .pngs should have been generated to plots for each candidate in outputs.
+        # Get each PNG, line them up in a row, and save them to a single PDF.
+        # os walk through plots folder and generate PDF for each candidate
+        try: generate_pdf_page(data_file_path, elite_paths_cull, gen_rank)
+        except: pass   
+def get_elite_paths(gen_dir):       
+    elite_paths = {}        
+    if verbose == True: enablePrint()
+    for root, dirs, files in os.walk(gen_dir):
+        for file in files:
+            #if '.json' in file and 'Fitness' in file:
+            if '.json' in file and '_data' in file:
+
+                #create corresponding data file path
+                fit_file_path = os.path.join(root, file.replace('_data', '_Fitness'))
+                data_file_path = os.path.join(root, file)
+                
+                #skip if gen_dir is less than start_gen
+                if cand is not None:
+                    if int(data_file_path.split('_')[-2]) != cand: 
+                        enablePrint()
+                        print(f"Skipping {os.path.basename(data_file_path)}")
+                        blockPrint()
+                        continue
+
+                # enablePrint()    
+                # print(data_file_path)
+                # blockPrint()
+                # if verbose == True: enablePrint()
+
+                #temp
+                if '.archive' in data_file_path: continue
+                
+                #check if data file_path exists
+                if os.path.exists(data_file_path): pass
+                else: continue
+
+                try: 
+                    avgScaledFitness, simData, batch_saveFolder, fitness_save_path, simLabel = recalc_fitness(data_file_path)
+                    elite_paths[simLabel] = {'avgScaledFitness': avgScaledFitness, 
+                                                'data_file_path': data_file_path,
+                                                'batch_saveFolder': batch_saveFolder,
+                                                'fitness_save_path': fitness_save_path,
+                                                'simData': simData,
+                                                }
+                except: pass
+    return elite_paths
 def plot_elites(job_dir):
+
     #job_dir = os.path.abspath(job_dir)
     gen_dirs = [f.path for f in os.scandir(job_dir) if f.is_dir() and 'gen' in f.name]
 
     #sort gendirs numerically such that, gen_9 comes before gen_10
-    gen_dirs = sorted(gen_dirs, key=lambda x: int(x.split('_')[-1]))
+    gen_dirs = sorted(gen_dirs, key=lambda x: int(x.split('_')[-1])) 
     
-
     for gen_dir in gen_dirs:
-        
         #skip if gen_dir is less than start_gen
         if start_gen is not None:
             if int(gen_dir.split('_')[-1]) < start_gen: 
@@ -286,130 +375,44 @@ def plot_elites(job_dir):
         print(f"\033[1;32m{gen_dir}\033[0m")
         blockPrint()
         if verbose == True: enablePrint()
-            
-        
-        elite_paths = {}
+
         enablePrint()    
         print(f"Collecting Elites...")
         blockPrint()
-        if verbose == True: enablePrint()
-        for root, dirs, files in os.walk(gen_dir):
-            for file in files:
-                #if '.json' in file and 'Fitness' in file:
-                if '.json' in file and '_data' in file:
+        elite_paths = get_elite_paths(gen_dir)
 
-                    #create corresponding data file path
-                    fit_file_path = os.path.join(root, file.replace('_data', '_Fitness'))
-                    data_file_path = os.path.join(root, file)
-                    
-                    #skip if gen_dir is less than start_gen
-                    if cand is not None:
-                        if int(data_file_path.split('_')[-2]) != cand: 
-                            enablePrint()
-                            print(f"Skipping {os.path.basename(data_file_path)}")
-                            blockPrint()
-                            continue
-
-                    # enablePrint()    
-                    # print(data_file_path)
-                    # blockPrint()
-                    # if verbose == True: enablePrint()
-
-                    #temp
-                    if '.archive' in data_file_path: continue
-                    
-                    #check if data file_path exists
-                    if os.path.exists(data_file_path): pass
-                    else: continue
-
-                    try:
-                        #load the data file using netpyne loadall
-                        netpyne.sim.loadAll(data_file_path)
-                        simData = netpyne.sim.allSimData
-                        batch_saveFolder = netpyne.sim.cfg.saveFolder
-                        simLabel = netpyne.sim.cfg.simLabel
-
-                        #pathing
-                        NERSC_path = os.path.dirname(os.path.realpath(__file__))
-                        repo_path = os.path.dirname(NERSC_path)
-                        cwd = repo_path
-                        cwd_basename = os.path.basename(cwd)
-                        batch_saveFolder = f'{cwd}{batch_saveFolder.split(cwd_basename)[1]}'                        
-                        fitness_save_path = os.path.dirname(data_file_path)
-
-                        #measure fitness
-                        avgScaledFitness = fitnessFunc(
-                            simData, plot = False, simLabel = simLabel, 
-                            data_file_path = data_file_path, batch_saveFolder = batch_saveFolder, 
-                            fitness_save_path = fitness_save_path, **kwargs)
-                        elite_paths[simLabel] = {'avgScaledFitness': avgScaledFitness, 
-                                                 'data_file_path': data_file_path,
-                                                 'batch_saveFolder': batch_saveFolder,
-                                                 'fitness_save_path': fitness_save_path,
-                                                 'simData': simData,
-                                                 }
-                    except: pass
-
-        #elite_rate = 0.10
-        #get path in job_dir ending in _batch.json and load
-        batch_file_path = [f.path for f in os.scandir(job_dir) if f.is_file() and '_batch.json' in f.name][0]
-        batch_data = json.load(open(batch_file_path))
-        num_elites = batch_data['batch']['evolCfg']['num_elites']
-        # try: assert num_elites < len(elite_paths), f"Error: num_elites must be less than the number of elites in the generation."
-        # except: 
-        #     if cand is not None: pass
-        #     else: raise Exception(f"Error: num_elites must be less than the number of elites in the generation.")
-
-        elite_paths = sorted(elite_paths.items(), key=lambda x: x[1]['avgScaledFitness'], reverse=False)
-        elite_paths_cull = elite_paths[:num_elites]
-        for simLabel, data in elite_paths_cull:
-            
-            #print simLabel bold and yellow
-            enablePrint()
-            print(f"\033[1;33m{simLabel}\033[0m, {data['avgScaledFitness']}")
-
-            #skip if already plotted
-            if new_plots == False:
-                assert 'archive' not in data_file_path, 'Error: Cannot plot from archive.'
-                expected_plot_path = os.path.join(data['fitness_save_path'], simLabel + '.pdf').replace('output', 'plots')              
-                if os.path.exists(expected_plot_path): 
-                    print('Already plotted. Skipping...')
-                    continue                
-            blockPrint()
-            if verbose == True: enablePrint()
-            
-            #rank is the index of the elite in the elite_paths list
-            gen_rank = elite_paths.index((simLabel, data))
-            
-            #initialize variables
-            data_file_path = data['data_file_path']
-            batch_saveFolder = data['batch_saveFolder']
-            fitness_save_path = data['fitness_save_path']
-            simData = data['simData']
-        
-            #plot
-            avgScaledFitness = fitnessFunc(
-                simData, plot = True, simLabel = simLabel, 
-                data_file_path = data_file_path, batch_saveFolder = batch_saveFolder, 
-                fitness_save_path = fitness_save_path, **kwargs)
-            print('Plots saved to: ...')
-
-            #Network plot, Raster plot, and Trace .pngs should have been generated to plots for each candidate in outputs.
-            # Get each PNG, line them up in a row, and save them to a single PDF.
-            # os walk through plots folder and generate PDF for each candidate
-            try: generate_pdf_page(data_file_path, elite_paths_cull, gen_rank)
-            except: pass
-                   
-import signal
-
-# Function to handle the timeout
-def handler(signum, frame):
-    raise Exception("Program took too long to finish")
-
-# Set the signal handler
-signal.signal(signal.SIGALRM, handler)
+        plot_elite_paths(elite_paths)                                
+def plot_HOFs(HOF_dirs):
+    elite_paths = {}
+    for HOF_dir in HOF_dirs:
+        enablePrint()
+        print(f"\033[1;32m{HOF_dir}\033[0m")
+        blockPrint()
+        data_file_path = HOF_dir
+        avgScaledFitness, simData, batch_saveFolder, fitness_save_path, simLabel = recalc_fitness(data_file_path)
+        elite_paths[simLabel] = {
+            'avgScaledFitness': avgScaledFitness,
+            'data_file_path': data_file_path,
+            'batch_saveFolder': batch_saveFolder,
+            'fitness_save_path': fitness_save_path,
+            'simData': simData,
+            }
+    plot_elite_paths(elite_paths)
+def HOF_get_dirs():
+    #get HOF dirs
+    HOF_dir = 'NERSC/HOF/hof.csv'
+    #load HOF csv
+    HOF = pd.read_csv(HOF_dir)
+    HOF_dirs = HOF.values.tolist()
+    HOF_dirs = [f[0] for f in HOF_dirs]
+    return HOF_dirs
 
 if __name__ == '__main__':
+    kwargs = fitnessFuncArgs
+    
+    #surpress all print statements
+    blockPrint()
+    
     #set to some value to skip gens less than start_gen
     start_gen = 10
     #start_gen = None
@@ -424,24 +427,33 @@ if __name__ == '__main__':
 
     #HOF Mode
     HOF_mode = True
-
-    job_dirs = [
-        #'/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100',
-        #'/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',        
-        #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100',
-        #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run1_debug_node_run',
-        #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',
-        #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run1_interactive_node_run',
-        '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run2_debug_node_run',
-    ]
-
-    
-    for job_dir in job_dirs:
-        try: plot_elites(job_dir)
+    if HOF_mode:
+        HOF_dirs = HOF_get_dirs()
+        try: plot_HOFs(HOF_dirs)
         except Exception as e: 
             enablePrint()
-            print(f'An error occurred while plotting {os.path.basename(job_dir)}')
-            print(f"Error: {e}")
+            print(f'An error occurred while plotting HOFs')
+            print(f"{e}")
             blockPrint()
+
+    else:
+        job_dirs = [
+            #'/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100',
+            #'/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',        
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run1_debug_node_run',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run1_interactive_node_run',
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run2_debug_node_run',
+            ]
+        
+        #run plot_elites    
+        for job_dir in job_dirs:
+            try: plot_elites(job_dir)
+            except Exception as e: 
+                enablePrint()
+                print(f'An error occurred while plotting {os.path.basename(job_dir)}')
+                print(f"Error: {e}")
+                blockPrint()
             
             
