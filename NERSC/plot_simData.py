@@ -269,6 +269,7 @@ def plot_elites(job_dir):
 
     #sort gendirs numerically such that, gen_9 comes before gen_10
     gen_dirs = sorted(gen_dirs, key=lambda x: int(x.split('_')[-1]))
+    
 
     for gen_dir in gen_dirs:
         
@@ -354,10 +355,10 @@ def plot_elites(job_dir):
         batch_file_path = [f.path for f in os.scandir(job_dir) if f.is_file() and '_batch.json' in f.name][0]
         batch_data = json.load(open(batch_file_path))
         num_elites = batch_data['batch']['evolCfg']['num_elites']
-        try: assert num_elites < len(elite_paths), f"Error: num_elites must be less than the number of elites in the generation."
-        except: 
-            if cand is not None: pass
-            else: raise Exception(f"Error: num_elites must be less than the number of elites in the generation.")
+        # try: assert num_elites < len(elite_paths), f"Error: num_elites must be less than the number of elites in the generation."
+        # except: 
+        #     if cand is not None: pass
+        #     else: raise Exception(f"Error: num_elites must be less than the number of elites in the generation.")
 
         elite_paths = sorted(elite_paths.items(), key=lambda x: x[1]['avgScaledFitness'], reverse=False)
         elite_paths_cull = elite_paths[:num_elites]
@@ -410,7 +411,7 @@ signal.signal(signal.SIGALRM, handler)
 
 if __name__ == '__main__':
     #set to some value to skip gens less than start_gen
-    start_gen = 2
+    start_gen = 10
     #start_gen = None
     cand = 70
     cand = None
@@ -421,30 +422,26 @@ if __name__ == '__main__':
     #set to True to print verbose output
     verbose = False
 
+    #HOF Mode
+    HOF_mode = True
+
     job_dirs = [
         #'/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100',
-        '/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run'
+        #'/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',        
+        #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100',
+        #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run1_debug_node_run',
+        #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',
+        #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run1_interactive_node_run',
+        '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run2_debug_node_run',
     ]
 
     
     for job_dir in job_dirs:
-        enablePrint()
-        print(f"Job: {os.path.basename(job_dir)}")
-        blockPrint()
-        attempt_num = 1
-        while True:
-            try:
-                # Set a timeout of 30 minutes
-                enablePrint()
-                print(f"Plotting Attempt: {attempt_num}")
-                attempt_num += 1
-                blockPrint()
-                signal.alarm(30 * 60 * 2)
-                plot_elites(job_dir)
-                # Cancel the timeout if the function finishes in time
-                signal.alarm(0)
-                break  # If the function finishes successfully, break the loop
-            except Exception as e:
-                print(f"Timeout or error occurred: {e}. Retrying...")
+        try: plot_elites(job_dir)
+        except Exception as e: 
+            enablePrint()
+            print(f'An error occurred while plotting {os.path.basename(job_dir)}')
+            print(f"Error: {e}")
+            blockPrint()
             
             
