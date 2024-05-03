@@ -260,7 +260,8 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
     c.save()
 def recalc_fitness(data_file_path):
     #assert that data_file_path exists, if it doesnt, probably wokring with locally instead of on NERSC
-    assert os.path.exists(data_file_path), f"Error: {data_file_path} does not exist."
+    try: assert os.path.exists(data_file_path), f"Error: {data_file_path} does not exist."
+    except: return None, None, None, None, None
     
     print(f"Recalculating Fitness for {os.path.basename(data_file_path)}")
     #load the data file using netpyne loadall
@@ -435,6 +436,7 @@ def plot_HOFs(HOF_dirs):
         if not os.path.exists(data_file_path): data_file_path = f".{HOF_dir}"
         #recalc fitness
         avgScaledFitness, simData, batch_saveFolder, fitness_save_path, simLabel = recalc_fitness(data_file_path)
+        if avgScaledFitness is None: continue
         #add to elite_paths
         elite_paths[simLabel] = {
             'avgScaledFitness': avgScaledFitness,

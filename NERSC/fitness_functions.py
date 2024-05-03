@@ -557,7 +557,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 # raster_plot_path = None
                 pass
         def most_active_time_range(timeVector, sim_obj):
-                
+                '''subfunc'''
                 def electric_slide(time_points, voltage_trace):
                     #spike threshold, anything above zero is a spike
                     spike_threshold = 0
@@ -573,13 +573,13 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                     max_spike_count = 0
                     max_spike_start_time = None
 
-
                     # Slide the window over the voltage trace
                     for start_time in np.arange(time_points[0], time_points[-1] - window_size + step_size, step_size):
                         # Get the end time of the current window
                         end_time = start_time + window_size
 
                         # Get the voltage trace for the current window
+                        voltage_trace = np.array(voltage_trace)
                         window_voltage_trace = voltage_trace[(time_points >= start_time) & (time_points < end_time)]
 
                         # print(f'test')
@@ -594,65 +594,36 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                         if spike_count > max_spike_count:
                             max_spike_count = spike_count
                             max_spike_start_time = start_time
-
                     
+                    #if no spikes are found, return full time range
+                    if max_spike_start_time is None:
+                        return [0, time_points[-1]]                    
                     # The time range with the most spiking activity is from max_spike_start_time to max_spike_start_time + window_size
                     timeRange = [max_spike_start_time, max_spike_start_time + window_size]
                     #if any values are < 0, make them 0
-
                     return timeRange
-                
+                '''main'''
                 # Get the time range of the most active part of the simulation for each neuron
                 # Get the voltage trace for a specific cell
                 # Get the keys (GIDs) of the neurons
                 neuron_gids = list(sim_obj.allSimData['soma_voltage'].keys())
                 # Get the voltage trace for the first (excitatory) neuron
                 # Get the voltage trace for the first (excitatory) neuron
-                excite_voltage_trace = sim_obj.allSimData['soma_voltage'][neuron_gids[1]]
+                excite_voltage_trace = sim_obj.allSimData['soma_voltage'][neuron_gids[0]]
                 # Get the voltage trace for the second (inhibitory) neuron
-                inhib_voltage_trace = sim_obj.allSimData['soma_voltage'][neuron_gids[0]]                
+                inhib_voltage_trace = sim_obj.allSimData['soma_voltage'][neuron_gids[1]]                
                 # Get the time points
                 time_points = sim_obj.allSimData['t']
-                #remove time_points above and below timeVector max and min values respectively
-                time_points = [t for t in time_points if t >= timeVector[0] and t <= timeVector[-1]]
-                #remove corresponding voltage values
-                excite_voltage_trace = [v for t, v in zip(time_points, excite_voltage_trace) if t >= timeVector[0] and t <= timeVector[-1]]
-                inhib_voltage_trace = [v for t, v in zip(time_points, inhib_voltage_trace) if t >= timeVector[0] and t <= timeVector[-1]]
-                
-                print(f'test')                
+                # Create a zip object from time_points and voltage traces
+                excite_pairs = zip(time_points, excite_voltage_trace)
+                inhib_pairs = zip(time_points, inhib_voltage_trace)
+                # Filter voltage traces based on filtered time_points
+                excite_voltage_trace = [v for t, v in excite_pairs if t >= timeVector[0] and t <= timeVector[-1]]
+                inhib_voltage_trace = [v for t, v in inhib_pairs if t >= timeVector[0] and t <= timeVector[-1]]
+                time_points = [t for t in time_points if t >= timeVector[0] and t <= timeVector[-1]]                
+                #print(f'test')                
                 excite_timeRange = electric_slide(time_points, excite_voltage_trace)
                 inhib_timeRange = electric_slide(time_points, inhib_voltage_trace)
-                print(f'excite_timeRange: {excite_timeRange}')
-                print(f'inhib_timeRange: {inhib_timeRange}')
- 
-
-                excite_timeRange = [0 if t < 0 else t for t in excite_timeRange]
-                inhib_timeRange = [0 if t < 0 else t for t in inhib_timeRange]
-                #if either left value is zero, make right value 1000
-                if excite_timeRange[0] == 0: excite_timeRange[1] = 1000
-                if inhib_timeRange[0] == 0: inhib_timeRange[1] = 1000
-                #get closest values in timeVector
-                excite_timeRange_indices = [np.abs(timeVector - t).argmin() for t in excite_timeRange]
-                inhib_timeRange_indices = [np.abs(timeVector - t).argmin() for t in inhib_timeRange]
-                # # Now you can use these indices to get the corresponding times from timeVector
-                # excite_timeRange_closest = [timeVector[i] for i in excite_timeRange_indices]
-                # inhib_timeRange_closest = [timeVector[i] for i in inhib_timeRange_indices]
-
-                #get timeVector values for each time range
-                excite_timeVector = [timeVector[i] for i in range(excite_timeRange_indices[0], excite_timeRange_indices[1])]
-                inhib_timeVector = [timeVector[i] for i in range(inhib_timeRange_indices[0], inhib_timeRange_indices[1])]
-
-                # # Ensure start_index and end_index are not the same and start_index comes before end_index
-                # if start_index == end_index:
-                #     if start_index > 0:
-                #         start_index -= 1
-                #     elif end_index < len(timeVector) - 1:
-                #         end_index += 1
-                # elif start_index > end_index:
-                #     start_index, end_index = end_index, start_index
-
-                # Use these indices to get the closest values in timeVector
-                #timeRanges = [excite_timeVector, inhib_timeVector]
                 return excite_timeRange, inhib_timeRange
         def plot_trace_example():
             # Attempt to generate sample trace for an excitatory example neuron
@@ -688,7 +659,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                         overlay=True,
                         oneFigPer='trace',
                         title=title,
-                        timeRange=timeRange,
+                       # timeRange=timeRange,
                         showFig=False,
                         figSize=(USER_plotting_params['figsize'][0], USER_plotting_params['figsize'][1]/2)
                     )
