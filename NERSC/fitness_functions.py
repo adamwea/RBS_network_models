@@ -659,7 +659,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                         overlay=True,
                         oneFigPer='trace',
                         title=title,
-                       # timeRange=timeRange,
+                        timeRange=timeRange,
                         showFig=False,
                         figSize=(USER_plotting_params['figsize'][0], USER_plotting_params['figsize'][1]/2)
                     )
