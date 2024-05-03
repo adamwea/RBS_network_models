@@ -10,13 +10,16 @@ import os
 from reportlab.pdfgen import canvas
 from PIL import Image
 import sys, os
+import datetime
+from USER_INPUTS import *
+from reportlab.lib.pagesizes import letter
 
 '''functions'''
 def blockPrint():
     sys.stdout = open(os.devnull, 'w')
 def enablePrint():
     sys.stdout = sys.__stdout__
-def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank):
+def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = None):
     import matplotlib.pyplot as plt
 
     def plot_params(cfg_data, params, cgf_file_path):
@@ -87,24 +90,28 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank):
         #for each fitness_save_path, in elite_paths_cull, plot the cfg_data
         #for i in range(len(elite_paths_cull)):
             #for root, dirs, files in os.walk(elite_paths_cull[i][1]['fitness_save_path']):
-        gen_path = os.path.dirname(cgf_file_path)
+        #gen_path = os.path.dirname(cgf_file_path)
         elite_cfg_paths = [f[1]['data_file_path'].replace('_data', '_cfg') for f in elite_paths_cull]
-        for root, dirs, files in os.walk(gen_path):
-            for file in files:
-                if '.json' in file and 'cfg' in file:
-                    #create corresponding data file path
-                    cfg_file_path = os.path.join(root, file)
-                    if cfg_file_path not in elite_cfg_paths: continue
-                    #print(cfg_file_path)
-                    if cfg_file_path == main_cfg_path: continue
-                    #check if data file_path exists
-                    if os.path.exists(cfg_file_path): pass
-                    else: continue
-                    #load the data file using netpyne loadall
-                    cfg_data = json.load(open(cfg_file_path))
-                    cfg_data = cfg_data['simConfig']
-                    # plot the cfg_data of interest
-                    plot_each_cfg(cfg_data, color = 'k', markersize = 8, markerfacecolor = 'none')
+        # for root, dirs, files in os.walk(gen_path):
+        #     for file in files:
+        for file in elite_cfg_paths:
+            if '.json' in file and 'cfg' in file:
+                #create corresponding data file path
+                #file = os.path.basename(file)
+                #cfg_file_path = os.path.join(root, file)
+                cfg_file_path = file
+                #print(cfg_file_path)
+                #if cfg_file_path not in elite_cfg_paths: continue
+                #print(cfg_file_path)
+                if cfg_file_path == main_cfg_path: continue
+                #check if data file_path exists
+                if os.path.exists(cfg_file_path): pass
+                else: continue
+                #load the data file using netpyne loadall
+                cfg_data = json.load(open(cfg_file_path))
+                cfg_data = cfg_data['simConfig']
+                # plot the cfg_data of interest
+                plot_each_cfg(cfg_data, color = 'k', markersize = 8, markerfacecolor = 'none')
 
         #plot main cfg_data last, so it is on top
         plot_each_cfg(main_cfg_data, color = 'r', markersize = 10, markerfacecolor = 'red')        
@@ -120,7 +127,13 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank):
        
     if '.archive' in data_file_path:
         cand_plot_path = data_file_path.replace('/output/.archive/', '/plots/')
+        cand_plot_path = os.path.dirname(cand_plot_path)    
+    elif HOF_mode and HOF_path is not None:
+        HOF_dt_folder = HOF_path.split('/plots/')[1]
+        cand_plot_path = data_file_path.replace('/output/', f'/plots/{HOF_dt_folder}/')
         cand_plot_path = os.path.dirname(cand_plot_path)
+        # print(cand_plot_path)
+        # sys.exit()
     else:
         cand_plot_path = data_file_path.replace('/output/', '/plots/')
         cand_plot_path = os.path.dirname(cand_plot_path)
@@ -131,7 +144,10 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank):
     from reportlab.lib.pagesizes import landscape, letter
 
     # Create a new PDF with landscape orientation
+    print(os.path.join(cand_plot_path, f"{simLabel}.pdf"))
+    #sys.exit()
     c = canvas.Canvas(os.path.join(cand_plot_path, f"{simLabel}.pdf"), pagesize=landscape(letter))
+    #c.save()
 
     # Get the page width and height
     page_width, page_height = landscape(letter)
@@ -199,11 +215,15 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank):
     fitness_data = json.load(open(fitness_path))
     c.setFont("Helvetica", 8)
     
+
     ## Generation-Simualtion info
     #page_width, page_height = letter
     y_position = page_height - 15  # Start near the top of the page
     #split data_file_path at 2DNetworkSimulations
     data_file_path_print = data_file_path.split('2DNetworkSimulations')[1]
+    print(data_file_path_print)
+    # print(f"check")
+    # sys.exit()
     data_directory_str = f"Data Directory: {data_file_path_print}"
     c.drawString(10, y_position, data_directory_str)
     y_position -= 10  # Move down for the next line
@@ -214,6 +234,7 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank):
     c.drawString(10, y_position, generation_rank_str)
     y_position -= 10  # Move down for the next line
     
+
     ## Fitness Data
     #import dictionary pops from fitness_config.py and covert print the same way as fitness_data
     from fitness_config import pops
@@ -235,11 +256,13 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank):
         y_position -= 10  # Move down for the next line
 
     # Close the PDF
+
     c.save()
 def recalc_fitness(data_file_path):
     #assert that data_file_path exists, if it doesnt, probably wokring with locally instead of on NERSC
     assert os.path.exists(data_file_path), f"Error: {data_file_path} does not exist."
     
+    print(f"Recalculating Fitness for {os.path.basename(data_file_path)}")
     #load the data file using netpyne loadall
     netpyne.sim.loadAll(data_file_path)
     simData = netpyne.sim.allSimData
@@ -261,9 +284,11 @@ def recalc_fitness(data_file_path):
         fitness_save_path = fitness_save_path, **kwargs)
     
     return avgScaledFitness, simData, batch_saveFolder, fitness_save_path, simLabel
-def plot_elite_paths(elite_paths):
+def plot_elite_paths(elite_paths, HOF_path = None):
     #elite_rate = 0.10
     #get path in job_dir ending in _batch.json and load
+    job_dir = os.path.dirname(os.path.dirname(list(elite_paths.values())[0]['data_file_path']))
+    print(f"Job Directory: {job_dir}")
     batch_file_path = [f.path for f in os.scandir(job_dir) if f.is_file() and '_batch.json' in f.name][0]
     batch_data = json.load(open(batch_file_path))
     num_elites = batch_data['batch']['evolCfg']['num_elites']
@@ -273,7 +298,8 @@ def plot_elite_paths(elite_paths):
     #     else: raise Exception(f"Error: num_elites must be less than the number of elites in the generation.")
 
     elite_paths = sorted(elite_paths.items(), key=lambda x: x[1]['avgScaledFitness'], reverse=False)
-    elite_paths_cull = elite_paths[:num_elites]
+    if not HOF_mode: elite_paths_cull = elite_paths[:num_elites]
+    else: elite_paths_cull = elite_paths
     for simLabel, data in elite_paths_cull:
         
         #print simLabel bold and yellow
@@ -281,6 +307,7 @@ def plot_elite_paths(elite_paths):
         print(f"\033[1;33m{simLabel}\033[0m, {data['avgScaledFitness']}")
 
         #skip if already plotted
+        data_file_path = data['data_file_path']
         if new_plots == False:
             assert 'archive' not in data_file_path, 'Error: Cannot plot from archive.'
             expected_plot_path = os.path.join(data['fitness_save_path'], simLabel + '.pdf').replace('output', 'plots')              
@@ -300,17 +327,31 @@ def plot_elite_paths(elite_paths):
         simData = data['simData']
     
         #plot
+        if HOF_mode:
+            #get date string YYMMDD            
+            date_str = datetime.datetime.now().strftime("%y%m%d")
+            #prep HOF_plot_dir
+            HOF_plot_dir = f'{date_str}_HOF'
+            saveFig = USER_plotting_params['saveFig']
+            saveFig = os.path.join(saveFig, HOF_plot_dir)
+            #batch_saveFolder = batch_saveFolder.replace('/output/', f'/plots/{HOF_plot_dir}/')
+            HOF_path = saveFig
+            print(saveFig)
+            #print(HOF_path)
+        #sys.exit()
         avgScaledFitness = fitnessFunc(
             simData, plot = True, simLabel = simLabel, 
             data_file_path = data_file_path, batch_saveFolder = batch_saveFolder, 
-            fitness_save_path = fitness_save_path, **kwargs)
+            fitness_save_path = fitness_save_path, plot_save_path = saveFig, **kwargs)
         print('Plots saved to: ...')
+        
 
         #Network plot, Raster plot, and Trace .pngs should have been generated to plots for each candidate in outputs.
         # Get each PNG, line them up in a row, and save them to a single PDF.
         # os walk through plots folder and generate PDF for each candidate
-        try: generate_pdf_page(data_file_path, elite_paths_cull, gen_rank)
-        except: pass   
+        try: generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = saveFig)
+        except: pass
+        #sys.exit()   
 def get_elite_paths(gen_dir):       
     elite_paths = {}        
     if verbose == True: enablePrint()
@@ -388,15 +429,20 @@ def plot_HOFs(HOF_dirs):
         enablePrint()
         print(f"\033[1;32m{HOF_dir}\033[0m")
         blockPrint()
+        if verbose == True: enablePrint()
         data_file_path = HOF_dir
+        #make sure HOF_dir is functional relative path
+        if not os.path.exists(data_file_path): data_file_path = f".{HOF_dir}"
+        #recalc fitness
         avgScaledFitness, simData, batch_saveFolder, fitness_save_path, simLabel = recalc_fitness(data_file_path)
+        #add to elite_paths
         elite_paths[simLabel] = {
             'avgScaledFitness': avgScaledFitness,
             'data_file_path': data_file_path,
             'batch_saveFolder': batch_saveFolder,
             'fitness_save_path': fitness_save_path,
             'simData': simData,
-            }
+            }    
     plot_elite_paths(elite_paths)
 def HOF_get_dirs():
     #get HOF dirs
@@ -415,7 +461,7 @@ if __name__ == '__main__':
     
     #set to some value to skip gens less than start_gen
     start_gen = 10
-    #start_gen = None
+    start_gen = None
     cand = 70
     cand = None
 
@@ -428,7 +474,12 @@ if __name__ == '__main__':
     #HOF Mode
     HOF_mode = True
     if HOF_mode:
+        new_plots = True
         HOF_dirs = HOF_get_dirs()
+        #these should be relative paths, get full paths
+        HOF_dirs = [f'.{f}' for f in HOF_dirs]
+        HOF_dirs = [os.path.abspath(f) for f in HOF_dirs]
+        print(HOF_dirs)
         try: plot_HOFs(HOF_dirs)
         except Exception as e: 
             enablePrint()

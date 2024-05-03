@@ -15,6 +15,7 @@ nrniv --version
 echo "Plotting..."
 
 python3 NERSC/plot_simData.py
+#python3 NERSC/generate_pdf_report.py
 
 
 

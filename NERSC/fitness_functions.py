@@ -14,8 +14,8 @@ import netpyne
 # Import USER_INPUTS
 from USER_INPUTS import *
 
-def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, batch_saveFolder = None, fitness_save_path = None, **kwargs):   
-    maxFitness = kwargs['maxFitness']
+def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, batch_saveFolder = None, fitness_save_path = None, plot_save_path = None, **kwargs):   
+
     ''' subfuncs '''
     def set_all_fitness_to_max():
         fitnessVals = {}
@@ -31,7 +31,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
         fitnessVals['I_rate_fitness'] = {'Value': None, 'Fit': maxFitness}
         fitnessVals['sustain_oscillation_fitness'] = {'Value': None, 'Fit': maxFitness}
         return fitnessVals
-    
     def get_network_activity_metrics(fitnessVals, plot = False):
         net_activity_metrics = {}
         #prepare raster data
@@ -83,7 +82,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
         net_activity_metrics['sustained_oscillation'] = net_metrics['sustain']
 
         return fitnessVals, net_activity_metrics
-
     def plot_burst_freq_and_IBI(fitnessVals):
         rasterData = simData
         assert USER_raster_convolve_params, 'USER_raster_convolve_params needs to be specified in USER_INPUTS.py'
@@ -112,8 +110,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             plot=plot,
             plotting_params = plotting_params,
             crop = USER_raster_crop,
-        )
-        
+        )  
     def fit_burst_freq(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         
         ##
@@ -137,8 +134,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             # Set fitness values to maxFitness
             maxFitness = kwargs['maxFitness']
             fitnessVals['burst_peak_frequency_fitness'] = {'Value': None, 'Fit': maxFitness}
-            return fitnessVals
-        
+            return fitnessVals  
     def fit_sustain(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         try:
             # Sustain Fitness
@@ -163,7 +159,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             maxFitness = kwargs['maxFitness']
             fitnessVals['sustain_oscillation_fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
-        
     def fit_thresh(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         try:
             pops = kwargs['pops']
@@ -187,7 +182,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             maxFitness = kwargs['maxFitness']
             fitnessVals['thresh'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
-    
     def fit_rate_slope(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         try:
             # Firing rate fitness
@@ -216,7 +210,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             maxFitness = kwargs['maxFitness']
             fitnessVals['slopeFitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
-
     def plot_burst_peak_and_baseline(fitnessVals):
         rasterData = simData
         assert USER_raster_convolve_params, 'USER_raster_convolve_params needs to be specified in USER_INPUTS.py'
@@ -245,8 +238,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             plot=plot,
             plotting_params = plotting_params,
             crop = USER_raster_crop,
-        )
-        
+        )  
     def fit_burst_peak(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         try: 
             # BurstPeakValue Fitness
@@ -277,7 +269,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             maxFitness = kwargs['maxFitness']
             fitnessVals['burstAmp_Fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
-
     def fit_IBI(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         try:
             assert len(net_activity_metrics['burstPeakTimes']) > 0, 'Error: burstPeakTimes has less than 1 element. IBI could be calculated.'
@@ -308,7 +299,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             maxFitness = kwargs['maxFitness']
             fitnessVals['IBI_fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
-
     def fit_baseline(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         try:
             assert net_activity_metrics['baseline'] is not None, 'Error: baseline is None. Baseline could not be calculated.'
@@ -333,7 +323,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             maxFitness = kwargs['maxFitness']
             fitnessVals['baseline_fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
-
     def fit_firing_rate(net_activity_metrics, fitnessVals, simData, plot = False, **kwargs):
         try:
             pops = kwargs['pops']
@@ -369,7 +358,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             fitnessVals['E_rate_fitness'] = {'Value': None, 'Fit': maxFitness}
             fitnessVals['I_rate_fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
-    
     def fitness_summary_metrics(fitnessVals):
         # Extract fitness values
         fitness_values = {key: fitnessVals[key]['Fit'] for key in fitnessVals if isinstance(fitnessVals[key], dict) and 'Fit' in fitnessVals[key]}
@@ -399,7 +387,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
         print(f'Average Scaled Fitness: {avg_scaled_fitness}')
 
         return average_fitness, avg_scaled_fitness
-
     def get_fitness(simData, plot = False, **kwargs):
         '''init'''
         def save_fitness_results():
@@ -489,10 +476,11 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
         #print(f'Fitness results saved to {output_path}/{gen_folder}/{simLabel}_Fitness.json')
         if plot: plot_fitness(fitnessVals, simData, net_activity_metrics, **kwargs)
         return avg_scaled_fitness
-    
     def plot_fitness(fitnessVals, simData, net_activity_metrics, **kwargs):
         print('Plotting fitness...')
         netpyne.sim.loadAll(data_file_path)
+        
+        '''plotting functions'''
         def plot_network_activity_fitness(net_activity_metrics):
             #net_activity_metrics = net_activity_metrics
             rasterData = simData
@@ -509,6 +497,8 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 plotting_params = USER_plotting_params['NetworkActivity']
                 plotting_params['simLabel'] = simLabel
                 plotting_params['batch_saveFolder'] = batch_saveFolder
+                print('plotting_params:', plotting_params)
+                #sys.exit()
                 #prep to plot fitplot
                 below_baseline_target = kwargs['pops']['baseline_targets']['target'] * 0.95
                 above_amplitude_target = kwargs['pops']['burts_peak_targets']['target']
@@ -522,6 +512,8 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 plotting_params['fitplot'] = True
                 plotting_params['net_activity_metrics'] = net_activity_metrics
                 plotting_params['fresh_plots'] = USER_plotting_params['fresh_plots']
+                #if plot_save_path defined, replace saveFig with plot_save_path
+                if plot_save_path is not None: plotting_params['saveFig'] = plot_save_path
             net_metrics = measure_network_activity(
                 rasterData, 
                 binSize=binSize, 
@@ -540,6 +532,8 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             job_name = os.path.basename(os.path.dirname(batch_saveFolder))
             gen_folder = simLabel.split('_cand')[0]
             saveFig = USER_plotting_params['saveFig']
+            #if plot_save_path defined, replace saveFig with plot_save_path
+            if plot_save_path is not None: saveFig = plot_save_path
             fig_path = os.path.join(saveFig, f'{job_name}/{gen_folder}/{simLabel}_{figname}')
             USER_fresh_plots = USER_plotting_params['fresh_plots']
             if os.path.exists(fig_path) and USER_fresh_plots: pass
@@ -562,7 +556,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 print(f'Error generating raster plot from Data at: {data_file_path}')
                 # raster_plot_path = None
                 pass
-        
         def most_active_time_range(timeVector, sim_obj):
                 
                 # Get the time range of the most active part of the simulation for each neuron
@@ -620,7 +613,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 # Use these indices to get the closest values in timeVector
                 #timeRanges = [excite_timeVector, inhib_timeVector]
                 return excite_timeRange, inhib_timeRange
-        
         def plot_trace_example():
             # Attempt to generate sample trace for an excitatory example neuron
             try:
@@ -628,6 +620,8 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 job_name = os.path.basename(os.path.dirname(batch_saveFolder))
                 gen_folder = simLabel.split('_cand')[0]
                 saveFig = USER_plotting_params['saveFig']
+                #if plot_save_path defined, replace saveFig with plot_save_path
+                if plot_save_path is not None: saveFig = plot_save_path
                 fig_path = os.path.join(saveFig, f'{job_name}/{gen_folder}/{simLabel}_{figname}')
                 USER_fresh_plots = USER_plotting_params['fresh_plots']
                 if os.path.exists(fig_path) and USER_fresh_plots: pass
@@ -691,6 +685,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 #sample_trace_path_E = None
                 pass
         
+        '''plotting'''
         try: plot_network_activity_fitness(net_activity_metrics)
         except: 
             print(f'Error generating network activity plot from Data at: {data_file_path}')
