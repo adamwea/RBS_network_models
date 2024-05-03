@@ -558,6 +558,50 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 pass
         def most_active_time_range(timeVector, sim_obj):
                 
+                def electric_slide(time_points, voltage_trace):
+                    #spike threshold, anything above zero is a spike
+                    spike_threshold = 0
+                    
+                    # Define the window size and step size in milliseconds
+                    window_size = 1000  # 1 second
+                    step_size = 1  # 1 millisecond
+
+                    # Convert the time points to an array for easier indexing
+                    time_points = np.array(time_points)
+
+                    # Initialize the maximum spike count and the start time of the window with the maximum spike count
+                    max_spike_count = 0
+                    max_spike_start_time = None
+
+
+                    # Slide the window over the voltage trace
+                    for start_time in np.arange(time_points[0], time_points[-1] - window_size + step_size, step_size):
+                        # Get the end time of the current window
+                        end_time = start_time + window_size
+
+                        # Get the voltage trace for the current window
+                        window_voltage_trace = voltage_trace[(time_points >= start_time) & (time_points < end_time)]
+
+                        # print(f'test')
+                        # sys.exit()
+                        # Detect zero-crossings: points where the signal changes from positive to negative
+                        zero_crossings = np.where(np.diff(np.sign(window_voltage_trace)) < spike_threshold)[0]
+
+                        # Count the number of zero-crossings, which corresponds to the number of spikes
+                        spike_count = len(zero_crossings)
+
+                        # If the current window has more spikes than the previous maximum, update the maximum
+                        if spike_count > max_spike_count:
+                            max_spike_count = spike_count
+                            max_spike_start_time = start_time
+
+                    
+                    # The time range with the most spiking activity is from max_spike_start_time to max_spike_start_time + window_size
+                    timeRange = [max_spike_start_time, max_spike_start_time + window_size]
+                    #if any values are < 0, make them 0
+
+                    return timeRange
+                
                 # Get the time range of the most active part of the simulation for each neuron
                 # Get the voltage trace for a specific cell
                 # Get the keys (GIDs) of the neurons
@@ -574,17 +618,14 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 #remove corresponding voltage values
                 excite_voltage_trace = [v for t, v in zip(time_points, excite_voltage_trace) if t >= timeVector[0] and t <= timeVector[-1]]
                 inhib_voltage_trace = [v for t, v in zip(time_points, inhib_voltage_trace) if t >= timeVector[0] and t <= timeVector[-1]]
+                
+                print(f'test')                
+                excite_timeRange = electric_slide(time_points, excite_voltage_trace)
+                inhib_timeRange = electric_slide(time_points, inhib_voltage_trace)
+                print(f'excite_timeRange: {excite_timeRange}')
+                print(f'inhib_timeRange: {inhib_timeRange}')
+ 
 
-                #get location of max amp for each neuron and corresponding time points
-                # max_amp_excite = np.max(excite_voltage_trace)
-                # max_amp_inhib = np.max(inhib_voltage_trace)
-                max_amp_excite_time = time_points[np.argmax(excite_voltage_trace)]
-                max_amp_inhib_time = time_points[np.argmax(inhib_voltage_trace)]
-                #prepare excite and inhib time ranges
-                #center on max amp, 500 ms before and after
-                excite_timeRange = [max_amp_excite_time - 500, max_amp_excite_time + 500]                
-                inhib_timeRange = [max_amp_inhib_time - 500, max_amp_inhib_time + 500]
-                #if any values are < 0, make them 0
                 excite_timeRange = [0 if t < 0 else t for t in excite_timeRange]
                 inhib_timeRange = [0 if t < 0 else t for t in inhib_timeRange]
                 #if either left value is zero, make right value 1000
