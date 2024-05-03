@@ -471,7 +471,7 @@ if __name__ == '__main__':
     new_plots = False
 
     #set to True to print verbose output
-    verbose = True
+    verbose = False
 
     #HOF Mode
     HOF_mode = True
