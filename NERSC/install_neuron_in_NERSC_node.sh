@@ -4,19 +4,20 @@
 #set -e
 
 # Load necessary modules. Ensure these modules are available on all node types.
+# note, module commands wont work on local node (server or laptop, but this bash script sill works.)
 module load conda
 conda activate neuron_env
 module load openmpi
 module load cmake
 
 # Activate the existing Conda environment
-#conda activate neuron_env
+conda activate neuron_env
 
 # Install necessary Python packages
 conda install -c conda-forge numpy cython matplotlib -y
 
 # Navigate to the home directory and clone/update NEURON repository
-cd $HOME
+#cd $HOME
 if [ -d "nrn" ]; then
     echo "Updating existing NEURON repository..."
     cd nrn
