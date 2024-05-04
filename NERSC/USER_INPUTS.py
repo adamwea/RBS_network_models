@@ -1,26 +1,53 @@
 import sys
-#from batch_helper_functions import get_walltime_per_sim
+import os
 
-## Run Name
+'''Batch Inputs'''
 i = 0
-#while 'batchRun.py' not in sys.argv[i]: i += 1
 try: USER_run_label = sys.argv[-2] ### Change this to a unique name for the batch run
 except: USER_run_label = 'debug_run' ### Change this to a unique name for the batch run
 
+'''SBATCH Inputs'''
+USER_email = 'amwe@ucdavis.edu'
+USER_JobName = USER_run_label
+
+'''Simulation Inputs'''
+script_path = os.path.dirname(os.path.realpath(__file__))
 ##Simulation Duration
 try: USER_seconds = int(sys.argv[-1]) ### Change this to the number of seconds for the simulation
 except: USER_seconds = 5
-#USER_seconds = 30
+## Simulation method
+USER_method = 'evol' #'evol', 'grid', 'asd'
+USER_init_script = f'{script_path}/init.py'
+USER_cfgFile = f'{script_path}/cfg.py'
+## Network Params
+USER_netParamsFile = f'{script_path}/netParams.py'
+assert os.path.exists(USER_init_script), f'initFile does not exist: {USER_init_script}'
+assert os.path.exists(USER_cfgFile), f'cfgFile does not exist: {USER_cfgFile}'
+assert os.path.exists(USER_netParamsFile), f'netParamsFile does not exist: {USER_netParamsFile}'
 
-## Available Methods
-USER_method = 'evol'
-#USER_method = 'grid'
+'''Overwrite Inputs'''
+USER_skip = False #Skip running the simulation if data already exist
+USER_overwrite = False #Overwrite existing batch_run with same name
+USER_continue = False #Continue from last completed simulation
+if USER_continue: USER_skip = True #continue doesnt really work with out skip
 
+'''Evol Params'''
+USER_pop_size = 10
+USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
+USER_max_generations = 3000
+USER_time_sleep = 10 #seconds between checking for completed simulations
+maxiter_wait_minutes = 2*60 #Maximum minutes to wait before starting new Generation
+USER_maxiter_wait = maxiter_wait_minutes*60/USER_time_sleep
+USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 else 1
+USER_mutation_rate = 0.7
+USER_crossover = 0.5
+
+
+'''Plotting Inputs'''
 ##Plotting Params
 USER_plot_fitness_bool = True
 USER_plot_NetworkActivity = False
 USER_plotting_path = 'NERSC/plots/'
-#USER_plotting_path = lse
 #USER_ploting_path = None #prevent plotting even if USER_plot_fitness_bool = True
 USER_figsize = (10, 10)
 # Network Activity Plotting Params
@@ -30,10 +57,8 @@ USER_plotting_params = {
     'figsize': USER_figsize,
     'NetworkActivity': {
         'figsize': USER_figsize,
-        #'ylim': [1, 5.25], # Set y-axis limits to min and max of firingRate
         #limits (will override modifiers)
-        #'ylim': None,
-        'ylim': [0, 20], # Set y-axis limits to min and max of firingRate
+        'ylim': None,
         'xlim': None,
         #range mods
         'yhigh100': 1.05, #high modifier limit for y axis
@@ -43,6 +68,7 @@ USER_plotting_params = {
         }
     }
 
+'''Fitness Inputs'''
 ## Fitness Params
 #Set paramaeters for convolving raster data into network activity plot
 USER_raster_convolve_params = {
@@ -54,23 +80,27 @@ USER_raster_convolve_params = {
     }
 USER_raster_crop = None
 
-## Evol Params
-USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
-# Population sizes where 256/USER_pop_size is an integer and perfect square: 1, 4, 16, 64, 256, 1024, 4096, 16384, 65536
-USER_pop_size = 128 # Population sizes
-USER_max_generations = 150
-USER_max_generations = 3000
-USER_time_sleep = 10 #seconds between checking for completed simulations
-USER_maxiter_wait_minutes = 2*60 #Maximum minutes to wait before starting new Generation
-
-## Parallelization
+''' Parallelization Inputs'''
 options = ['mpi_bulletin_Laptop', 
            'mpi_bulletin_Server', 
            'mpi_bulletin_NERSC', 
            'mpi_direct', 
            'hpc_slurm']
-option = options[2]
-if option == 'mpi_bulletin_Laptop':
+option = options[0]
+if option == 'benshalom-labserver':
+    USER_runCfg_type = 'mpi_bulletin'    
+    USER_nodes = 1 #1 server = 1 node
+    Server_cores_per_node = 10 #I think there are like 48 cores available, but they are shared with other users
+    USER_cores_per_node = Server_cores_per_node
+    USER_total_cores = Server_cores_per_node*USER_nodes
+    #USER_JobName = f'mpiexec_test_{USER_nodes}x{USER_cores_per_node}'
+    #USER_MPI_run_keep = True
+    #USER_walltime = None
+    #USER_email = None
+    #USER_custom_slurm = None
+    #USER_allocation = None
+    #USER_mpiCommand = None
+elif option == 'mpi_bulletin_Laptop':
     USER_pop_size = 4
     USER_runCfg_type = 'mpi_bulletin'    
     USER_nodes = 1 #This should be set to the number of nodes available

@@ -95,55 +95,55 @@ if cfg.networkType == 'pre13Apr24': #Network used for grant proposal in 01Apr24
 	# 	'noise': cfg.rythmic_stimnoise  # Noise percentage (0 for no noise)
 	# }
 
-	# Connect the rhythmic stimulation source to the 'E' population
-	netParams.stimTargetParams['rhythmic->E'] = {
-		'source': 'rhythmic', 
-		'conds': {'cellType': ['E']}, 
-		'weight': cfg.Erhythmic_stimWeight, 
-		'sec': 'soma', 
-		'delay': 'max(1, normal(5,2))', 
-		'synMech': 'exc'
-	}
+	# # Connect the rhythmic stimulation source to the 'E' population
+	# netParams.stimTargetParams['rhythmic->E'] = {
+	# 	'source': 'rhythmic', 
+	# 	'conds': {'cellType': ['E']}, 
+	# 	'weight': cfg.Erhythmic_stimWeight, 
+	# 	'sec': 'soma', 
+	# 	'delay': 'max(1, normal(5,2))', 
+	# 	'synMech': 'exc'
+	# }
 
-	# Connect the rhythmic stimulation source to the 'I' population
-	netParams.stimTargetParams['rhythmic->I'] = {
-		'source': 'rhythmic', 
-		'conds': {'cellType': ['I']}, 
-		'weight': cfg.Irhythmic_stimWeight, 
-		'sec': 'soma', 
-		'delay': 'max(1, normal(5,2))', 
-		'synMech': 'exc'
-	}
+	# # Connect the rhythmic stimulation source to the 'I' population
+	# netParams.stimTargetParams['rhythmic->I'] = {
+	# 	'source': 'rhythmic', 
+	# 	'conds': {'cellType': ['I']}, 
+	# 	'weight': cfg.Irhythmic_stimWeight, 
+	# 	'sec': 'soma', 
+	# 	'delay': 'max(1, normal(5,2))', 
+	# 	'synMech': 'exc'
+	# }
 
-	# ## Cell connectivity rules
-	netParams.connParams['E->I'] = {
-	  'preConds': {'cellType': 'E'}, 'postConds': {'pop': 'I'},  #  E -> all (100-2000 um)
-	  'probability': str(cfg.probEI)+'*exp(-dist_3D/probLengthConst)',  # adjust mu and sigma as needed
-	  'weight': str(cfg.weightEI)+'*post_ynorm',         # synaptic weight
-	  'delay': 'dist_3D/propVelocity',      # transmission delay (ms)	
-	  'synMech': 'exc'}                     # synaptic mechanism
+	# # ## Cell connectivity rules
+	# netParams.connParams['E->I'] = {
+	#   'preConds': {'cellType': 'E'}, 'postConds': {'pop': 'I'},  #  E -> all (100-2000 um)
+	#   'probability': str(cfg.probEI)+'*exp(-dist_3D/probLengthConst)',  # adjust mu and sigma as needed
+	#   'weight': str(cfg.weightEI)+'*post_ynorm',         # synaptic weight
+	#   'delay': 'dist_3D/propVelocity',      # transmission delay (ms)	
+	#   'synMech': 'exc'}                     # synaptic mechanism
 
-	netParams.connParams['I->E'] = {
-	  'preConds': {'cellType': 'I'}, 'postConds': {'pop': 'E'},       #  I -> E
-	  'probability': str(cfg.probIE)+'*exp(-dist_3D/probLengthConst)',   # probability of connection
-	  'weight': str(cfg.weightIE)+'*post_ynorm',                                       # synaptic weight
-	  'delay': 'dist_3D/propVelocity',                      # transmission delay (ms)
-	  'synMech': 'inh'}                                     # synaptic mechanism	
+	# netParams.connParams['I->E'] = {
+	#   'preConds': {'cellType': 'I'}, 'postConds': {'pop': 'E'},       #  I -> E
+	#   'probability': str(cfg.probIE)+'*exp(-dist_3D/probLengthConst)',   # probability of connection
+	#   'weight': str(cfg.weightIE)+'*post_ynorm',                                       # synaptic weight
+	#   'delay': 'dist_3D/propVelocity',                      # transmission delay (ms)
+	#   'synMech': 'inh'}                                     # synaptic mechanism	
 
-	## E -> E recurrent connectivity
-	netParams.connParams['E->E'] = {
-		'preConds': {'pop': 'E'}, 'postConds': {'pop': 'E'},
-		'probability': str(cfg.probEE)+'*exp(-dist_3D/probLengthConst)',  # adjust mu and sigma as needed
-		'weight': str(cfg.weightEE)+'*post_ynorm',  
-		'delay': 'dist_3D/propVelocity', 
-		'synMech': 'exc'
-	}
+	# ## E -> E recurrent connectivity
+	# netParams.connParams['E->E'] = {
+	# 	'preConds': {'pop': 'E'}, 'postConds': {'pop': 'E'},
+	# 	'probability': str(cfg.probEE)+'*exp(-dist_3D/probLengthConst)',  # adjust mu and sigma as needed
+	# 	'weight': str(cfg.weightEE)+'*post_ynorm',  
+	# 	'delay': 'dist_3D/propVelocity', 
+	# 	'synMech': 'exc'
+	# }
 
-	## I -> I recurrent connectivity
-	netParams.connParams['I->I'] = {
-		'preConds': {'pop': 'I'}, 'postConds': {'pop': 'I'},
-		'probability': str(cfg.probII)+'*exp(-dist_3D/probLengthConst)',  # adjust as needed
-		'weight':  str(cfg.weightII)+'*post_ynorm',   
-		'delay': 'dist_3D/propVelocity', 
-		'synMech': 'inh'
-    }
+	# ## I -> I recurrent connectivity
+	# netParams.connParams['I->I'] = {
+	# 	'preConds': {'pop': 'I'}, 'postConds': {'pop': 'I'},
+	# 	'probability': str(cfg.probII)+'*exp(-dist_3D/probLengthConst)',  # adjust as needed
+	# 	'weight':  str(cfg.weightII)+'*post_ynorm',   
+	# 	'delay': 'dist_3D/propVelocity', 
+	# 	'synMech': 'inh'
+    # }
