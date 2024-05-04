@@ -647,7 +647,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 timeVector = np.array(net_activity_metrics['timeVector'])
                 excite_timeVector, inhib_timeVector = most_active_time_range(timeVector, sim_obj)
                 timeRanges = [excite_timeVector, inhib_timeVector]
-                titles = ['E0_highestAmp', 'I0_highestAmp']
+                titles = ['E0_highFR', 'I0_highFR']
                 import matplotlib.pyplot as plt
                 import matplotlib.image as mpimg
                 # Create individual plots and save as PNG
