@@ -1,12 +1,17 @@
 from netpyne import specs
+from USER_INPUTS import USER_seconds
 
 ## Evol Params
-#ProbLengthConst
 params = specs.ODict()
-params['probLengthConst'] = [50, 2000] # length constant for conn probability (um)    
 
+#Duration
+#TODO - move these to const net params eventually
+params['duration_seconds'] = USER_seconds # Duration of the simulation, in ms
 #Propagation velocity
 params['propVelocity'] = 1 #, propVelocity/100, propVelocity/10, propVelocity*10, propVelocity*100]
+
+#ProbLengthConst
+params['probLengthConst'] = [50, 2000] # length constant for conn probability (um)    
 
 #Cell Params
 params['probIE'] = [0, 1] # min: 0.2, max: 0.6

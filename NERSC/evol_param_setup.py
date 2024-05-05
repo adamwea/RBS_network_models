@@ -10,10 +10,10 @@ Define the parameter space for the evolutionary search
 ## Add USER_Inputs
 from USER_INPUTS import *
 from USER_evol_param_space import params
-assert USER_seconds, 'USER_seconds must be specified in USER_INPUTS.py'
-seconds = USER_seconds
+#assert USER_seconds, 'USER_seconds must be specified in USER_INPUTS.py'
+#seconds = USER_seconds
 #print(f"Duration: {seconds} seconds")
-params['duration_seconds'] = seconds
+#params['duration_seconds'] = seconds
 
 # Prepare params for evol batching.
 # If any param is a single value, convert to list with that value twice

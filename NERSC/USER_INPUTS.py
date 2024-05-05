@@ -14,7 +14,7 @@ USER_JobName = USER_run_label
 script_path = os.path.dirname(os.path.realpath(__file__))
 ##Simulation Duration
 try: USER_seconds = int(sys.argv[-1]) ### Change this to the number of seconds for the simulation
-except: USER_seconds = 5
+except: USER_seconds = 10
 ## Simulation method
 USER_method = 'evol' #'evol', 'grid', 'asd'
 USER_init_script = f'{script_path}/init.py'
@@ -32,6 +32,9 @@ USER_continue = False #Continue from last completed simulation
 if USER_continue: USER_skip = True #continue doesnt really work with out skip
 
 '''Evol Params'''
+script_path = os.path.dirname(os.path.realpath(__file__))
+USER_HOF = f'{script_path}/HOF/hof.csv' #seed gen 0 with solutions in HOF.csv
+USER_HOF = os.path.abspath(USER_HOF)
 USER_pop_size = 10
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
 USER_max_generations = 3000
@@ -42,10 +45,9 @@ USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 
 USER_mutation_rate = 0.7
 USER_crossover = 0.5
 
-
 '''Plotting Inputs'''
 ##Plotting Params
-USER_plot_fitness_bool = True
+USER_plot_fitness_bool = False
 USER_plot_NetworkActivity = False
 USER_plotting_path = 'NERSC/plots/'
 #USER_ploting_path = None #prevent plotting even if USER_plot_fitness_bool = True
@@ -81,25 +83,30 @@ USER_raster_convolve_params = {
 USER_raster_crop = None
 
 ''' Parallelization Inputs'''
-options = ['mpi_bulletin_Laptop', 
+options = ['benshalom-labserver',
+           'mpi_bulletin_Laptop', 
            'mpi_bulletin_Server', 
            'mpi_bulletin_NERSC', 
            'mpi_direct', 
            'hpc_slurm']
 option = options[0]
 if option == 'benshalom-labserver':
-    USER_runCfg_type = 'mpi_bulletin'    
+    USER_runCfg_type = 'mpi_bulletin'
+    USER_mpiCommand = None    
     USER_nodes = 1 #1 server = 1 node
     Server_cores_per_node = 10 #I think there are like 48 cores available, but they are shared with other users
     USER_cores_per_node = Server_cores_per_node
     USER_total_cores = Server_cores_per_node*USER_nodes
+    USER_allocation = None
+    USER_walltime = None
+    USER_custom_slurm = None
     #USER_JobName = f'mpiexec_test_{USER_nodes}x{USER_cores_per_node}'
     #USER_MPI_run_keep = True
-    #USER_walltime = None
+
     #USER_email = None
-    #USER_custom_slurm = None
-    #USER_allocation = None
-    #USER_mpiCommand = None
+
+    
+    
 elif option == 'mpi_bulletin_Laptop':
     USER_pop_size = 4
     USER_runCfg_type = 'mpi_bulletin'    
