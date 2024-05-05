@@ -84,12 +84,14 @@ USER_raster_crop = None
 
 ''' Parallelization Inputs'''
 options = ['benshalom-labserver',
+           'nersc-mpidirect',
+           
            'mpi_bulletin_Laptop', 
            'mpi_bulletin_Server', 
            'mpi_bulletin_NERSC', 
            'mpi_direct', 
            'hpc_slurm']
-option = options[0]
+option = options[1]
 if option == 'benshalom-labserver':
     USER_runCfg_type = 'mpi_bulletin'
     USER_mpiCommand = None    
@@ -100,11 +102,22 @@ if option == 'benshalom-labserver':
     USER_allocation = None
     USER_walltime = None
     USER_custom_slurm = None
-    #USER_JobName = f'mpiexec_test_{USER_nodes}x{USER_cores_per_node}'
+elif option == 'nersc-mpidirect':
+    USER_runCfg_type = 'mpi_direct'
+    USER_mpiCommand = 'mpirun' 
+    #USER_pop_size = 128 # Population sizes
+    USER_queue = 'debug' #Options: debug, regular, premium  
+    USER_allocation = 'm2043' #project ID
+    USER_walltime = "00:30:00"    
+    USER_email = "amwe@ucdavis.edu"
+    USER_nodes = 1
+    Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
+    USER_cores_per_node = Perlmutter_cores_per_node
+    #USER_cpus_per_task = 2
+    USER_total_cores = Perlmutter_cores_per_node*USER_nodes
+    USER_JobName = f'test_nersc-mpidirect'
     #USER_MPI_run_keep = True
-
-    #USER_email = None
-
+    USER_custom_slurm = 'export OMP_NUM_THREADS=1'
     
     
 elif option == 'mpi_bulletin_Laptop':

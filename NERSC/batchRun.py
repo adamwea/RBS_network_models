@@ -61,7 +61,11 @@ def get_HOF_seeds():
     seeded_HOF_cands = [cfg.replace('_data', '_cfg') for cfg in seeded_HOF_cands]
     seeded_HOF_cands = [os.path.abspath(f'./{cfg}') for cfg in seeded_HOF_cands]
     #compensate for running in NERSC dir...this is bad code...fix later
-    seeded_HOF_cands = [cfg.replace('NERSC/NERSC', 'NERSC') for cfg in seeded_HOF_cands if 'NERSC/NERSC' in cfg]
+    #seeded_HOF_cands = [cfg.replace('NERSC/NERSC', 'NERSC') for cfg in seeded_HOF_cands if 'NERSC/NERSC' in cfg]
+    for cfg in seeded_HOF_cands:
+        if 'NERSC/NERSC' in cfg: 
+            seeded_HOF_cands[seeded_HOF_cands.index(cfg)] = cfg.replace('NERSC/NERSC', 'NERSC')
+        else: continue
 
     #print(f'Loaded {len(seeded_HOF_cands)} Hall of Fame candidates')
 
