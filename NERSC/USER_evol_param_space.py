@@ -25,8 +25,14 @@ params['weightEE'] = [0, 0.1] # min: 0.001, max: 0.01
 params['weightII'] = [0, 0.1]
 
 params['gnabar_E'] = [0, 5] 
+
+#gkbar_E - potassium conductance
 #params['gkbar_E'] = [0, 0.5]
-params['gkbar_E'] = [0, 2]
+#params['gkbar_E'] = [0, 2]
+#06may24 - good solutions are heavily trending toward zero. reducing range to 25% of previous range
+params['gkbar_E'] = [0, 0.25]
+
+
 #params['gnabar_I'] = [0, 1.5]
 params['gnabar_I'] = [0, 3] 
 #params['gkbar_I'] = [0.005, 2]

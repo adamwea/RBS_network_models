@@ -132,7 +132,9 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
         HOF_dt_folder = HOF_path.split('/plots/')[1]
         cand_plot_path = data_file_path.replace('/output/', f'/plots/{HOF_dt_folder}/')
         cand_plot_path = os.path.dirname(cand_plot_path)
-        # print(cand_plot_path)
+        enablePrint()
+        print(cand_plot_path)
+        blockPrint()
         # sys.exit()
     else:
         cand_plot_path = data_file_path.replace('/output/', '/plots/')
@@ -156,6 +158,9 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
     # Assuming the images have an aspect ratio of 1:1
     
     try: 
+        enablePrint()
+        print(cand_plot_path)
+        blockPrint()
         files = [f for f in os.listdir(cand_plot_path) 
                  if simLabel_ in f and f.endswith('.png') 
                  and '_params_plot.png' not in f
@@ -336,7 +341,10 @@ def plot_elite_paths(elite_paths, HOF_path = None):
             #prep HOF_plot_dir
             HOF_plot_dir = f'{date_str}_HOF'            
             HOF_path = os.path.join(saveFig, HOF_plot_dir)
+            enablePrint()
+            saveFig = HOF_path
             print(HOF_path)
+            blockPrint()
             #print(HOF_path)
         #sys.exit()
         avgScaledFitness = fitnessFunc(
@@ -350,7 +358,11 @@ def plot_elite_paths(elite_paths, HOF_path = None):
         # Get each PNG, line them up in a row, and save them to a single PDF.
         # os walk through plots folder and generate PDF for each candidate
         try: generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = HOF_path)
-        except: pass
+        except Exception as e:
+            enablePrint()
+            print(f'Error: {e}')
+            blockPrint()           
+            pass
         #sys.exit()   
 def get_elite_paths(gen_dir):       
     elite_paths = {}        
@@ -470,10 +482,10 @@ if __name__ == '__main__':
     new_plots = False
 
     #set to True to print verbose output
-    verbose = True
+    verbose = False
 
     #HOF Mode
-    HOF_mode = False
+    HOF_mode = True
     
     if HOF_mode:
         new_plots = True
@@ -481,7 +493,9 @@ if __name__ == '__main__':
         #these should be relative paths, get full paths
         HOF_dirs = [f'.{f}' for f in HOF_dirs]
         HOF_dirs = [os.path.abspath(f) for f in HOF_dirs]
+        #enablePrint()
         print(HOF_dirs)
+        #blockPrint()
         try: plot_HOFs(HOF_dirs)
         except Exception as e: 
             enablePrint()
@@ -492,17 +506,17 @@ if __name__ == '__main__':
     else:
         job_dirs = [
             #'/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100',
-            '/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',        
+            #'/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',        
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100',
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run1_debug_node_run',
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run1_interactive_node_run',
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run2_debug_node_run',
             
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run16_debug_node_run',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run17_debug_node_run',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run18_debug_node_run',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun',
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run16_debug_node_run',
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run17_debug_node_run',
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run18_debug_node_run',
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun',
             ]
         
         #run plot_elites    
