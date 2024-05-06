@@ -11,6 +11,12 @@ To run use: mpiexec -np [num_cores] nrniv -mpi batchRun.py
 Initialize
 '''
 ##General Imports
+import sys
+
+print(sys.argv[-1])
+print(sys.argv[-2])
+print(sys.argv[-3])
+
 import os
 import shutil
 import json
@@ -23,7 +29,6 @@ import pickle
 import time
 import datetime
 import pandas as pd
-import sys
 
 ## NetPyne Imports
 #sys.path.insert(0, 'netpyne')
@@ -206,6 +211,7 @@ def init_batch_cfg():
 
     ##Create a dictionary with the given variables and their values
     run_path = USER_run_path
+    print('runpath:',run_path)
     batch_config_options = {
         "run_path": run_path,
         'batchLabel': os.path.basename(run_path),

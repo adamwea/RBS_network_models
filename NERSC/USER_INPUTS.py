@@ -1,10 +1,20 @@
 import sys
 import os
+import datetime
 
 '''Batch Inputs'''
 # try: USER_run_label = sys.argv[-2] ### Change this to a unique name for the batch run
 # except: USER_run_label = 'USER_inputs_debug' ### Change this to a unique name for the batch run
-USER_run_path = sys.argv[-2]
+try: 
+    #USER_run_path = sys.argv[-2]
+    USER_run_path = sys.argv[-2]
+except: 
+    from USER_init_new_batch import init_new_batch
+    USER_run_label = 'local_debug'
+    run_path, run_name = init_new_batch(USER_run_label)
+    USER_run_path = run_path
+print(f'USER_run_path: {USER_run_path}')
+#print(f'USER_run_path: {USER_run_path}')
 if os.path.isdir(USER_run_path): assert os.path.exists(USER_run_path), f'USER_run_path does not exist: {USER_run_path}'
 else: USER_run_path = None
 
@@ -15,7 +25,10 @@ USER_email = 'amwe@ucdavis.edu'
 '''Simulation Inputs'''
 script_path = os.path.dirname(os.path.realpath(__file__))
 ##Simulation Duration
-try: USER_seconds = int(sys.argv[-1]) ### Change this to the number of seconds for the simulation
+try: 
+    #USER_seconds = int(sys.argv[-1]) ### Change this to the number of seconds for the simulation
+    USER_seconds = int(sys.argv[-1]) ### Change this to the number of seconds for the simulation
+    print(f'USER_seconds: {USER_seconds}')
 except: USER_seconds = 10
 ## Simulation method
 USER_method = 'evol' #'evol', 'grid', 'asd'
@@ -38,6 +51,7 @@ script_path = os.path.dirname(os.path.realpath(__file__))
 USER_HOF = f'{script_path}/HOF/hof.csv' #seed gen 0 with solutions in HOF.csv
 USER_HOF = os.path.abspath(USER_HOF)
 USER_pop_size = 128
+USER_pop_size = 4
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
 USER_max_generations = 3000
 USER_time_sleep = 10 #seconds between checking for completed simulations

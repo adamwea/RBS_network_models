@@ -8,12 +8,14 @@ import time
 import json
 
 #from USER_INPUTS import USER_run_label
-from USER_INPUTS import USER_overwrite
-from USER_INPUTS import USER_continue
+# from USER_INPUTS import USER_overwrite
+# from USER_INPUTS import USER_continue
+USER_continue = False #Continue the previous run without deleting it
+USER_overwrite = True #Delete the previous run and start a new one
 try: USER_run_label = sys.argv[-1] ### Change this to a unique name for the batch run
 except: USER_run_label = 'USER_int_debug' ### Change this to a unique name for the batch run
 
-def init_new_batch():
+def init_new_batch(USER_run_label):
     '''
     Initialize
     '''
@@ -88,13 +90,11 @@ def init_new_batch():
 
 if __name__ == '__main__':
     #print('Initializing new batch run...')
-    USER_continue = False #Continue the previous run without deleting it
-    USER_overwrite = True #Delete the previous run and start a new one
     assert not (USER_overwrite and USER_continue), 'overwrite_run and continue_run cannot both be True'
     #print(f'USER_run_label: {USER_run_label}')
     #print(f'USER_overwrite: {USER_overwrite}')
     #print(f'USER_continue: {USER_continue}')
-    run_path, run_name = init_new_batch()
+    run_path, run_name = init_new_batch(USER_run_label)
     #print(f'Run Path: {run_path}')
     #print(f'Run Name: {run_name}')
     #save a .json file at run_path with run_name and run_path
