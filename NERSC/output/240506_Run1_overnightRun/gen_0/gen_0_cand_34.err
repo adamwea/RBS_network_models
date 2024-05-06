@@ -6,21 +6,5 @@ NEURON -- VERSION 8.2.4 HEAD (1d87d5d39) 2024-02-09
 Duke, Yale, and the BlueBrain Project -- Copyright 1984-2022
 See http://neuron.yale.edu/neuron/credits
 
-Traceback (most recent call last):
-  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 5, in <module>
-    simConfig, netParams = sim.readCmdLineArgs(simConfigDefault='simConfig.py', netParamsDefault='netParams.py')
-  File "/global/homes/a/adammwea/.conda/envs/2DSims_nersc/lib/python3.9/site-packages/netpyne/sim/setup.py", line 293, in readCmdLineArgs
-    netParamsModule = sim.loadPythonModule(netParamsPath)
-  File "/global/homes/a/adammwea/.conda/envs/2DSims_nersc/lib/python3.9/site-packages/netpyne/sim/utils.py", line 42, in loadPythonModule
-    loader.exec_module(module)
-  File "<frozen importlib._bootstrap_external>", line 850, in exec_module
-  File "<frozen importlib._bootstrap>", line 228, in _call_with_frames_removed
-  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun/240506_Run1_overnightRun_netParams.py", line 25, in <module>
-    from evol_param_setup import define_population_params
-  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/evol_param_setup.py", line 11, in <module>
-    from USER_INPUTS import *
-  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/USER_INPUTS.py", line 8, in <module>
-    assert os.path.exists(USER_run_path), f'USER_run_path does not exist: {USER_run_path}'
-AssertionError: USER_run_path does not exist: simConfig=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun/gen_0/gen_0_cand_34_cfg.json
 0 /global/homes/a/adammwea/.conda/envs/2DSims_nersc/bin/nrniv: can't open simConfig=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun/gen_0/gen_0_cand_34_cfg.json
 Could not open netParams=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun/240506_Run1_overnightRun_netParams.py

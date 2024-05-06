@@ -4,3 +4,41 @@ Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/outp
 Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun/gen_0/gen_0_cand_7_cfg.json ... 
 Loading simConfig...
 Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun/240506_Run1_overnightRun_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun/netParams_popParams.json ... 
+ADLFKJAS;DLFKJ
+
+Start time:  2024-05-06 01:58:58.537355
+
+Creating network of 2 cell populations on 1 hosts...
+  Number of cells on node 0: 400 
+  Done; cell creation time = 2.27 s.
+Making connections...
+  Number of connections on node 0: 11678 
+  Done; cell connection time = 139.64 s.
+  Number of stims on node 0: 0 
+  Done; cell stims creation time = 0.00 s.
+Recording 2 traces of 1 types on node 0
+
+Running simulation using NEURON for 12000.0 ms...
+  Done; run time = 9054.98 s; real-time ratio: 0.00.
+
+Gathering data...
+  Done; gather time = 14.55 s.
+
+Analyzing...
+  Cells: 400
+  Connections: 11678 (29.20 per cell)
+  Spikes: 0 (0.00 Hz)
+  Simulated time: 12.0 s; 1 workers
+  Run time: 9054.98 s
+   E : 0.000 Hz
+   I : 0.000 Hz
+Saving output as /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun/gen_0/gen_0_cand_7_data.json ... 
+Finished saving!
+  Done; saving time = 31.50 s.
+  Done; plotting time = 0.00 s
+
+Total time = 9243.05 s
+first instance of v_init
+first instance of tstop
