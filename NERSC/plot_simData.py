@@ -328,16 +328,15 @@ def plot_elite_paths(elite_paths, HOF_path = None):
         simData = data['simData']
     
         #plot
+        HOF_path = None
+        saveFig = USER_plotting_params['saveFig']
         if HOF_mode:
             #get date string YYMMDD            
             date_str = datetime.datetime.now().strftime("%y%m%d")
             #prep HOF_plot_dir
-            HOF_plot_dir = f'{date_str}_HOF'
-            saveFig = USER_plotting_params['saveFig']
-            saveFig = os.path.join(saveFig, HOF_plot_dir)
-            #batch_saveFolder = batch_saveFolder.replace('/output/', f'/plots/{HOF_plot_dir}/')
-            HOF_path = saveFig
-            print(saveFig)
+            HOF_plot_dir = f'{date_str}_HOF'            
+            HOF_path = os.path.join(saveFig, HOF_plot_dir)
+            print(HOF_path)
             #print(HOF_path)
         #sys.exit()
         avgScaledFitness = fitnessFunc(
@@ -350,7 +349,7 @@ def plot_elite_paths(elite_paths, HOF_path = None):
         #Network plot, Raster plot, and Trace .pngs should have been generated to plots for each candidate in outputs.
         # Get each PNG, line them up in a row, and save them to a single PDF.
         # os walk through plots folder and generate PDF for each candidate
-        try: generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = saveFig)
+        try: generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = HOF_path)
         except: pass
         #sys.exit()   
 def get_elite_paths(gen_dir):       
@@ -471,7 +470,7 @@ if __name__ == '__main__':
     new_plots = False
 
     #set to True to print verbose output
-    verbose = False
+    verbose = True
 
     #HOF Mode
     HOF_mode = False
@@ -493,16 +492,17 @@ if __name__ == '__main__':
     else:
         job_dirs = [
             #'/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100',
-            #'/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',        
+            '/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',        
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100',
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run1_debug_node_run',
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run2_debug_node_run',
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run1_interactive_node_run',
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run2_debug_node_run',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run16_debug_node_run',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run17_debug_node_run',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run18_debug_node_run',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun',
+            
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run16_debug_node_run',
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run17_debug_node_run',
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run18_debug_node_run',
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun',
             ]
         
         #run plot_elites    
