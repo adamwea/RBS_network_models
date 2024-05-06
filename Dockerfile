@@ -46,6 +46,25 @@ RUN /sbin/ldconfig
 
 #
 RUN /opt/miniconda3/bin/conda install pip -y
+
+#nrn dependencies
+RUN /opt/miniconda3/bin/pip install wheel
+RUN /opt/miniconda3/bin/pip install setuptools
+RUN /opt/miniconda3/bin/pip install setuptools_scm
+RUN /opt/miniconda3/bin/pip install scikit-build
+RUN /opt/miniconda3/bin/pip install matplotlib
+# bokeh 3 seems to break docs notebooks
+RUN /opt/miniconda3/bin/pip install 'bokeh<3'
+RUN /opt/miniconda3/bin/pip install ipython
+RUN /opt/miniconda3/bin/pip install 'cython<3'
+RUN /opt/miniconda3/bin/pip install packaging
+# potential bug from 8.2.0 due to parallelism?
+RUN /opt/miniconda3/bin/pip install 'pytest<=8.1.1' 
+RUN /opt/miniconda3/bin/pip install pytest-cov
+RUN /opt/miniconda3/bin/pip install mpi4py
+RUN /opt/miniconda3/bin/pip install numpy
+RUN /opt/miniconda3/bin/pip install find_libpython
+
 RUN /opt/miniconda3/bin/pip install neuron
 RUN /opt/miniconda3/bin/pip install netpyne
 RUN /opt/miniconda3/bin/pip install inspyred
