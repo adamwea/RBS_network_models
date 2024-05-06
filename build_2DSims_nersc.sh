@@ -1,5 +1,6 @@
 #for persistent environment, run source build_2DSims_nersc.sh
 module load python
+module load conda
 conda env remove -n 2DSims_nersc #delete 2DSims_nersc environment if it exists
 #conda create --name 2DSims_nersc --clone nersc-mpi4py
 conda create -n 2DSims_nersc python=3.9

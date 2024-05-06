@@ -2,13 +2,15 @@ import sys
 import os
 
 '''Batch Inputs'''
-i = 0
-try: USER_run_label = sys.argv[-2] ### Change this to a unique name for the batch run
-except: USER_run_label = 'debug_run' ### Change this to a unique name for the batch run
+# try: USER_run_label = sys.argv[-2] ### Change this to a unique name for the batch run
+# except: USER_run_label = 'USER_inputs_debug' ### Change this to a unique name for the batch run
+USER_run_path = sys.argv[-2]
+if os.path.isdir(USER_run_path): assert os.path.exists(USER_run_path), f'USER_run_path does not exist: {USER_run_path}'
+else: USER_run_path = None
 
 '''SBATCH Inputs'''
 USER_email = 'amwe@ucdavis.edu'
-USER_JobName = USER_run_label
+#USER_JobName = USER_run_label
 
 '''Simulation Inputs'''
 script_path = os.path.dirname(os.path.realpath(__file__))
@@ -29,17 +31,17 @@ assert os.path.exists(USER_netParamsFile), f'netParamsFile does not exist: {USER
 USER_skip = False #Skip running the simulation if data already exist
 USER_overwrite = False #Overwrite existing batch_run with same name
 USER_continue = False #Continue from last completed simulation
-if USER_continue: USER_skip = True #continue doesnt really work with out skip
+if USER_continue: USER_skip = True #continue will re-run existing simulations if skip is False
 
 '''Evol Params'''
 script_path = os.path.dirname(os.path.realpath(__file__))
 USER_HOF = f'{script_path}/HOF/hof.csv' #seed gen 0 with solutions in HOF.csv
 USER_HOF = os.path.abspath(USER_HOF)
-USER_pop_size = 10
+USER_pop_size = 128
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
 USER_max_generations = 3000
 USER_time_sleep = 10 #seconds between checking for completed simulations
-maxiter_wait_minutes = 2*60 #Maximum minutes to wait before starting new Generation
+maxiter_wait_minutes = 4*60 #Maximum minutes to wait before starting new Generation
 USER_maxiter_wait = maxiter_wait_minutes*60/USER_time_sleep
 USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 else 1
 USER_mutation_rate = 0.7
@@ -91,12 +93,14 @@ options = ['benshalom-labserver',
            'mpi_bulletin_NERSC', 
            'mpi_direct', 
            'hpc_slurm']
-option = options[1]
+option = options[0]
 if option == 'benshalom-labserver':
     USER_runCfg_type = 'mpi_bulletin'
-    USER_mpiCommand = None    
-    USER_nodes = 1 #1 server = 1 node
+    USER_mpiCommand = 'mpirun' 
+    #USER_mpiCommand = None    
+    USER_nodes = 2 #1 server = 1 node
     Server_cores_per_node = 10 #I think there are like 48 cores available, but they are shared with other users
+    Server_cores_per_node = 100
     USER_cores_per_node = Server_cores_per_node
     USER_total_cores = Server_cores_per_node*USER_nodes
     USER_allocation = None
@@ -111,7 +115,7 @@ elif option == 'nersc-mpidirect':
     USER_walltime = "00:30:00"    
     USER_email = "amwe@ucdavis.edu"
     USER_nodes = 1
-    Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
+    Perlmutter_cores_per_node = 1 #128 physical cores, 256 hyperthreads
     USER_cores_per_node = Perlmutter_cores_per_node
     #USER_cpus_per_task = 2
     USER_total_cores = Perlmutter_cores_per_node*USER_nodes
@@ -157,7 +161,7 @@ elif option == 'mpi_bulletin_NERSC':
     USER_email = "amwe@ucdavis.edu"
     USER_nodes = 1 #This should be set to the number of nodes available
     #Perlmutter_cores_per_node = 256 #128 physical cores, 256 hyperthreads
-    Perlmutter_cores_per_node = 128 #128 physical cores, 256 hyperthreads
+    Perlmutter_cores_per_node = 1 #128 physical cores, 256 hyperthreads
     USER_cores_per_node = Perlmutter_cores_per_node
     #USER_cpus_per_task = 2
     USER_total_cores = Perlmutter_cores_per_node*USER_nodes

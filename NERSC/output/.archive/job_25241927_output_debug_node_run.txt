@@ -1,0 +1,25 @@
+Collecting mpi4py
+  Downloading mpi4py-3.1.6.tar.gz (2.4 MB)
+     ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.4/2.4 MB 35.3 MB/s eta 0:00:00
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: mpi4py
+  Building wheel for mpi4py (pyproject.toml): started
+  Building wheel for mpi4py (pyproject.toml): still running...
+  Building wheel for mpi4py (pyproject.toml): finished with status 'done'
+  Created wheel for mpi4py: filename=mpi4py-3.1.6-cp39-cp39-linux_x86_64.whl size=634644 sha256=be9e76fb7d3af19ac565d87c7266b56110f19687ab0e26aec5e71d512aac2c0c
+  Stored in directory: /tmp/pip-ephem-wheel-cache-t7wgs0zu/wheels/da/d8/f2/f91d6a59208dfe65710309277b4451b3aa203be4922fc92147
+Successfully built mpi4py
+Installing collected packages: mpi4py
+  Attempting uninstall: mpi4py
+    Found existing installation: mpi4py 3.1.6
+    Uninstalling mpi4py-3.1.6:
+      Successfully uninstalled mpi4py-3.1.6
+Successfully installed mpi4py-3.1.6
+Run path: /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run20_debug_debug
+Running the simulation
+mpiexec --display-map --map-by ppr::node -np  nrniv -mpi batchRun.py /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run20_debug_debug 10
