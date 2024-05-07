@@ -13,9 +13,9 @@ Initialize
 ##General Imports
 import sys
 
-print(sys.argv[-1])
-print(sys.argv[-2])
-print(sys.argv[-3])
+# print(sys.argv[-1])
+# print(sys.argv[-2])
+# print(sys.argv[-3])
 
 import os
 import shutil
@@ -48,6 +48,9 @@ log_file = f'{script_dir}/batchRun.log'
 logging.basicConfig(filename=log_file, level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 # Define a logger
 logger = logging.getLogger(__name__)
+rank = os.environ.get('OMPI_COMM_WORLD_RANK')
+#print(f'rank: {rank}')
+#sys.exit()
 
 '''functions'''
 ## Function to serialize the batch_config dictionary
@@ -59,6 +62,7 @@ class batchcfgEncoder(json.JSONEncoder):
 def get_HOF_seeds():
     #seeded_HOF_cands = ['.'+'/NERSC/output/240430_Run2_debug_node_run/gen_5/gen_5_cand_39_cfg.json']
     #import list of paths from .csv USER_HOF
+    print(f'Loading Hall of Fame from {USER_HOF}')
     assert os.path.exists(USER_HOF), f'USER_HOF file not found: {USER_HOF}'
     #print(f'Loading Hall of Fame from {USER_HOF}')
 
@@ -107,9 +111,12 @@ def get_HOF_seeds():
 def get_batch_config(batch_config_options = None):
     
     USER_seed_evol = True
-    if USER_seed_evol == True:
-        HOF_seeds = get_HOF_seeds()
-        #load HOF of previous runs
+    if rank == 0:
+        print(f'rank zero getting seeds')
+        if USER_seed_evol == True:
+            HOF_seeds = get_HOF_seeds()
+            #load HOF of previous runs
+        else: HOF_seeds = {}
     else: HOF_seeds = {}
     
     # Extract the parameters
@@ -259,10 +266,13 @@ def main():
     # Run batch
     run_batch = True
     if run_batch:    
+        print('Initializing batch config')
         logging.info(f'Initializing batch config')        
         batch_config = init_batch_cfg()
+        print(f'Running batch: {batch_config["batchLabel"]}')
         logging.info(f'Running batch: {batch_config["batchLabel"]}')
         batchRun(batch_config = batch_config)
+        print(f'Batch run completed')
         logging.info(f'Batch run completed')
 
     # End timers

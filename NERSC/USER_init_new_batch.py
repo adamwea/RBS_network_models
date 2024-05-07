@@ -32,12 +32,15 @@ def init_new_batch(USER_run_label):
         #print("OMPI_COMM_WORLD_RANK is not set")
         #logger.info("OMPI_COMM_WORLD_RANK is not set")
         rank = 0
+    
+    #print('adfasdf')
 
     # Get current date in YYMMDD format
     current_date = datetime.datetime.now().strftime('%y%m%d')
     # Prepare Batch_Run_Folder and Initial Files
     script_path = os.path.dirname(os.path.realpath(__file__))
     output_path = script_path+'/output'
+    #print(f'Output Path: {output_path}')
 
     # Get list of existing runs for the day
     try: existing_runs = [run for run in os.listdir(output_path) if run.startswith(current_date)]
@@ -86,7 +89,7 @@ def init_new_batch(USER_run_label):
             while not os.path.exists(run_path):
                 time.sleep(1)
     #sys.exit()
-    return run_path, run_name
+    return run_path, run_name, USER_run_label
 
 if __name__ == '__main__':
     #print('Initializing new batch run...')
@@ -94,7 +97,7 @@ if __name__ == '__main__':
     #print(f'USER_run_label: {USER_run_label}')
     #print(f'USER_overwrite: {USER_overwrite}')
     #print(f'USER_continue: {USER_continue}')
-    run_path, run_name = init_new_batch(USER_run_label)
+    run_path, run_name, USER_run_label = init_new_batch(USER_run_label)
     #print(f'Run Path: {run_path}')
     #print(f'Run Name: {run_name}')
     #save a .json file at run_path with run_name and run_path
