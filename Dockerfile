@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM ubuntu:22.04
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -13,24 +13,42 @@ RUN \
 
 WORKDIR /opt
 
+# Install Python 3.9
+# Update and install Python 3.9 and other essential packages
+ARG python_version=3.9
+# Install necessary tools and libraries
+RUN apt-get update && \
+    apt-get install -y software-properties-common && \
+    add-apt-repository ppa:deadsnakes/ppa && \
+    apt-get update && \
+    apt-get install -y build-essential gfortran wget libtool libx11-dev python$python_version python$python_version-distutils
+# Set Python 3.9 as the default python3
+RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python$python_version 1 && \
+    update-alternatives --set python3 /usr/bin/python$python_version
 
-ARG mpich=3.3
+# Check python version
+RUN python3 --version
+
+#ARG mpich=3.3
+ARG mpich=4.1.2
 ARG mpich_prefix=mpich-$mpich
 
 RUN \
     wget https://www.mpich.org/static/downloads/$mpich/$mpich_prefix.tar.gz && \
     tar xvzf $mpich_prefix.tar.gz                                           && \
     cd $mpich_prefix                                                        && \
-    #./configure                                                             && \
-    ./configure FFLAGS=-fallow-argument-mismatch FCFLAGS=-fallow-argument-mismatch && \
-    make -j 4                                                               && \
+    ./configure                                                             && \
+    #./configure FFLAGS=-fallow-argument-mismatch FCFLAGS=-fallow-argument-mismatch && \
+    make -j 6                                                               && \
     make install                                                            && \
     make clean                                                              && \
     cd ..                                                                   && \
     rm -rf $mpich_prefix
 
 # Install NEURON dependencies
-RUN apt-get install -y bison cmake flex git \
+RUN apt-get update && \
+    apt-get clean && \
+    apt-get install -y --fix-missing bison cmake flex git \
     libncurses-dev libopenmpi-dev libx11-dev \
     libxcomposite-dev openmpi-bin python3-dev \
     libreadline-dev
@@ -41,7 +59,7 @@ RUN /sbin/ldconfig
 
 # We need conda here since pip numpy is built with open blas. We want mkl.
 # Install miniconda
-ENV installer=Miniconda3-py38_4.9.2-Linux-x86_64.sh
+ENV installer=Miniconda3-py39_4.9.2-Linux-x86_64.sh
 RUN wget https://repo.anaconda.com/miniconda/$installer && \
     /bin/bash $installer -b -p /opt/miniconda3          && \
     rm -rf $installer
@@ -69,8 +87,8 @@ RUN /opt/miniconda3/bin/pip install packaging
 # potential bug from 8.2.0 due to parallelism?
 RUN /opt/miniconda3/bin/pip install 'pytest<=8.1.1' 
 RUN /opt/miniconda3/bin/pip install pytest-cov
-RUN /opt/miniconda3/bin/pip install mpi4py
-RUN /opt/miniconda3/bin/pip install numpy
+# RUN /opt/miniconda3/bin/pip install mpi4py
+# RUN /opt/miniconda3/bin/pip install numpy
 RUN /opt/miniconda3/bin/pip install find_libpython
 
 # # Clone the NEURON repository
