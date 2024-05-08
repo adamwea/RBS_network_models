@@ -15,7 +15,7 @@ USER_overwrite = True #Delete the previous run and start a new one
 try: USER_run_label = sys.argv[-1] ### Change this to a unique name for the batch run
 except: USER_run_label = 'USER_int_debug' ### Change this to a unique name for the batch run
 
-def init_new_batch(USER_run_label):
+def init_new_batch(USER_run_label, run_path_only = False):
     '''
     Initialize
     '''
@@ -68,7 +68,7 @@ def init_new_batch(USER_run_label):
         if prev_run_name in existing_runs:
             assert not (USER_overwrite and USER_continue), 'overwrite_run and continue_run cannot both be True'
             if USER_overwrite and os.path.exists(prev_run_path):
-                shutil.rmtree(prev_run_path)
+                if rank == 0 and not run_path_only: shutil.rmtree(prev_run_path)
                 run_path = prev_run_path   
                 #logger.info(f'Overwriting existing batch_run: {os.path.basename(run_path)}')
                 #print(f'Overwriting existing batch_run: {os.path.basename(run_path)}')
