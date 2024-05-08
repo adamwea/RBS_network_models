@@ -1,6 +1,8 @@
-#output*/
-#plots*/
-#.archive*/
+__pycache__*/
+output*/
+plots*/
+.archive*/
+.archived*/
 #reports*/
 btr files*/
 *.btr
@@ -8,3 +10,8 @@ btr files*/
 Miniconda3-latest-Linux-x86_64.sh
 *.pid
 *_data.json
+**/output/
+**/plots/
+**/*.btr
+**/*.log
+**/*_data.json
