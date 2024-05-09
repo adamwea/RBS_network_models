@@ -1,188 +1,75 @@
-FROM python:3.8
+# Use a base image
+FROM ubuntu:latest
 
 ENV DEBIAN_FRONTEND noninteractive
 
+# Install essential packages
+RUN apt-get -y update && apt-get install -y autoconf automake gcc g++ make gfortran wget curl
+
+# Set environment variables
+ENV MPICH_VERSION=3.4 \
+    PATH=/usr/bin:/usr/local/bin:/bin:/app \
+    DEBIAN_FRONTEND=noninteractive \
+    TZ=America/Los_Angeles
+
+# Install MPICH
+RUN cd /usr/local/src/ && \
+    wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz && \
+    tar xf mpich-${MPICH_VERSION}.tar.gz && \
+    rm mpich-${MPICH_VERSION}.tar.gz && \
+    cd mpich-${MPICH_VERSION} && \
+    ./configure --with-device=ch4:ofi --enable-fortran=no --enable-static=no && \
+    make -j 4 && make install && \
+    cd /usr/local/src && \
+    rm -rf mpich-${MPICH_VERSION}
+
+# Update OS and install packages
 RUN apt-get update && \
-    apt-get install -y --no-install-recommends \
-        build-essential \
-        gfortran \
-        wget \
-        libtool \
-        libx11-dev \
-        bison \
-        cmake \
-        flex \
-        git \
-        libncurses-dev \
-        libopenmpi-dev \
-        libx11-dev \
-        libxcomposite-dev \
-        openmpi-bin \
-        libreadline-dev \
-        fontconfig \
-        libdbus-1-dev \
-        libdbus-glib-1-dev \
-        dbus \
-        #gobject-introspection \
-        # meson \
-        # ninja-build \
-        libgirepository1.0-dev \
-        python3-gi && \
-    apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    apt-get install --yes build-essential gfortran python3-dev python3-pip wget && \
+    apt-get clean all
 
-# RUN wget http://ftp.gnome.org/pub/GNOME/sources/gobject-introspection/1.70/gobject-introspection-1.70.0.tar.xz && \
-#     tar -xf gobject-introspection-1.70.0.tar.xz && \
-#     cd gobject-introspection-1.70.0 && \
-#     meson setup _build && \
-#     ninja -C _build && \
-#     ninja -C _build install
+# Set up for NEURON
+RUN apt-get install -y locales autoconf automake gcc g++ make vim ssh git emacs aptitude build-essential xterm iputils-ping net-tools screen graphviz && \
+    apt-get clean all
 
-RUN apt-get update
+# Install tzdata
+RUN apt-get install -y tzdata
+
+# More libs for NEURON
+RUN apt-get install -y libgraphviz-dev pkg-config expat zlib1g-dev libncurses5-dev libncursesw5-dev python3-tk && \
+    apt-get clean all
+
+# Install user management tools
+RUN apt-get update && apt-get install -y
+
+# Install Miniconda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /miniconda && \
+    rm Miniconda3-latest-Linux-x86_64.sh
 
 WORKDIR /opt
 
-# Install Python packages using pip
-RUN pip install --no-cache-dir \
-    anyio \
-    argon2-cffi \
-    argon2-cffi-bindings \
-    arrow \
-    asttokens \
-    attrs \
-    backcall \
-    beautifulsoup4 \
-    bleach \
-    bluepyopt \
-    bokeh \
-    cffi \
-    comm \
-    contextlib2 \
-    contourpy \
-    cycler
+# Set path to conda
+ENV PATH /miniconda/bin:$PATH
 
-RUN pip install --no-cache-dir \    
-    dbus-python \
-    deap \
-    debugpy \
-    decorator \
-    defusedxml \
-    distro \
-    efel \
-    entrypoints \
-    executing \
-    fastjsonschema \
-    fonttools \
-    fqdn \
-    future \
-    h5py \
-    idna \
-    igor \
-    ipykernel \
-    ipyparallel \
-    ipython \
-    ipython-genutils \
-    ipywidgets \
-    isoduration \
-    jedi \
-    Jinja2 \
-    jsonpointer \
-    jsonschema \
-    jupyter \
-    jupyter-console \
-    jupyter-events \
-    jupyter_client \
-    jupyter_core \
-    jupyter_server \
-    jupyter_server_terminals \
-    jupyterlab-pygments \
-    jupyterlab-widgets \
-    kiwisolver \
-    LFPykit \
-    MarkupSafe \
-    matplotlib \
-    matplotlib-inline \
-    matplotlib-scalebar \
-    MEAutility \
-    mistune
+# Create a Conda environment
+RUN conda create -n myenv python=3.8
 
-RUN pip install --no-cache-dir \
-    mpi4py \
-    nbclassic \
-    nbclient \
-    nbconvert \
-    nbformat \
-    nest-asyncio \
-    netpyne \
-    NEURON \
-    notebook \
-    notebook_shim \
-    numpy \
-    packaging \
-    pandas \
-    pandocfilters \
-    parso \
-    Pebble \
-    pexpect \
-    pickleshare \
-    Pillow \
-    platformdirs \
-    prometheus-client \
-    prompt-toolkit \
-    psutil \
-    ptyprocess \
-    pure-eval \
-    pycparser \
-    Pygments \
-    PyGObject \
-    pyparsing \
-    pyrsistent \
-    python-dateutil \
-    python-json-logger \
-    pytz \
-    PyYAML \
-    pyzmq \
-    qtconsole \
-    QtPy \
-    rfc3339-validator \
-    rfc3986-validator \
-    ruamel.yaml \
-    ruamel.yaml.clib \
-    schema \
-    scipy \
-    Send2Trash \
-    six \
-    sniffio \
-    soupsieve \
-    ssh-import-id \
-    stack-data \
-    terminado \
-    tinycss2 \
-    tornado \
-    tqdm \
-    traitlets \
-    tzdata \
-    uri-template \
-    wcwidth \
-    webcolors \
-    webencodings \
-    websocket-client \
-    widgetsnbextension \
-    xyzservices \
-    inspyred
+# Activate the Conda environment
+RUN echo "source activate myenv" > ~/.bashrc
+ENV PATH /miniconda/envs/myenv/bin:$PATH
 
-RUN pip install --no-cache-dir \
-    evol \
-    grid \
-    PyPDF2 \
-    reportlab \
-    utils
+# Install essential Python libraries
+RUN /miniconda/envs/myenv/bin/pip install numpy matplotlib h5py ruamel.yaml jupyter jupyter_server scipy six bluepyopt neuron netpyne Igor
 
-# Set necessary environment variables
-ENV LD_LIBRARY_PATH=/opt/miniconda3/lib:$LD_LIBRARY_PATH
+# Upgrade Pillow
+RUN /miniconda/envs/myenv/bin/pip install --upgrade Pillow
 
-# Set necessary environment variables
-ENV LD_LIBRARY_PATH=/opt/miniconda3/lib:$LD_LIBRARY_PATH
+# Install additional Python packages
+RUN /miniconda/envs/myenv/bin/pip install bokeh contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado
+
+# Install mpi4py
+RUN /miniconda/envs/myenv/bin/python -m pip install mpi4py
 
 # Prepare a writable directory for Fontconfig cache
 RUN mkdir /opt/fontconfig && \
@@ -191,21 +78,21 @@ RUN mkdir /opt/fontconfig && \
 # Set environment variable for Fontconfig to use the new cache directory
 ENV FONTCONFIG_PATH=/opt/fontconfig
 
-WORKDIR /app
-
 # Create a non-root user
-RUN useradd -m myuser -d /opt/myuser
+#RUN useradd -m myuser -d /opt/myuser
 
 # Set HOME environment variable
-ENV HOME=/opt/myuser
+#ENV HOME=/opt/myuser
 
-# Make the home directory writable
-RUN chmod a+w /opt/myuser
-RUN chmod -R o+w /opt/myuser \
+WORKDIR /app
+
+# # Make the home directory writable
+# RUN chmod a+w /opt/myuser
+RUN chmod -R o+w /opt \
     && fc-cache --really-force --verbose
 
-# Switch to the non-root user
-USER myuser
+# # Switch to the non-root user
+# USER myuser
 
-# Set the default command to run when the container starts
-CMD ["python"]
+# Set default command
+CMD ["bash"]

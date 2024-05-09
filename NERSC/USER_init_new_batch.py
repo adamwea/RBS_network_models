@@ -19,21 +19,13 @@ def init_new_batch(USER_run_label, run_path_only = False):
     '''
     Initialize
     '''
-    # Get the rank of the current process
-    rank = os.environ.get('OMPI_COMM_WORLD_RANK')
-    if rank is None: rank = os.environ.get('OMPI_COMM_WORLD_LOCAL_RANK')
-    if rank is None: rank = os.environ.get('OMPI_COMM_WORLD_NODE_RANK')
-    # Check if the environment variable is set
-    if rank is not None:
-        rank = int(rank)  # Convert the rank to an integer
-        # logger.info(f"I am process: {rank}")
-        #print(f"I am process: {rank}")
-    else:
-        #print("OMPI_COMM_WORLD_RANK is not set")
-        #logger.info("OMPI_COMM_WORLD_RANK is not set")
-        rank = 0
-    
-    #print('adfasdf')
+    from mpi4py import MPI
+    mpi_rank = MPI.COMM_WORLD.Get_rank()
+    mpi_size = MPI.COMM_WORLD.Get_size()
+    rank = mpi_rank
+    #rank = os.environ.get('OMPI_COMM_WORLD_RANK')
+    if not rank: rank = 0
+    rank = int(rank)
 
     # Get current date in YYMMDD format
     current_date = datetime.datetime.now().strftime('%y%m%d')
@@ -92,6 +84,8 @@ def init_new_batch(USER_run_label, run_path_only = False):
     return run_path, run_name, USER_run_label
 
 if __name__ == '__main__':
+
+    
     #print('Initializing new batch run...')
     assert not (USER_overwrite and USER_continue), 'overwrite_run and continue_run cannot both be True'
     #print(f'USER_run_label: {USER_run_label}')

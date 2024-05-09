@@ -4,7 +4,11 @@ import datetime
 from USER_init_new_batch import init_new_batch
 from USER_init_new_batch import init_new_batch
 import re
-rank = os.environ.get('OMPI_COMM_WORLD_RANK')
+from mpi4py import MPI
+mpi_rank = MPI.COMM_WORLD.Get_rank()
+mpi_size = MPI.COMM_WORLD.Get_size()
+rank = mpi_rank
+#rank = os.environ.get('OMPI_COMM_WORLD_RANK')
 if not rank: rank = 0
 rank = int(rank)
 

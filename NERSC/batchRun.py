@@ -286,7 +286,12 @@ def main():
 '''Main code'''
 if __name__ == '__main__':
     #make batchRun.py rank aware
-    rank = os.environ.get('OMPI_COMM_WORLD_RANK')
+    from mpi4py import MPI
+    mpi_rank = MPI.COMM_WORLD.Get_rank()
+    mpi_size = MPI.COMM_WORLD.Get_size()
+    rank = mpi_rank
+    print(rank)
+    #rank = os.environ.get('OMPI_COMM_WORLD_RANK')
     if rank is None: rank = 0
     else: rank = int(rank)   
 
