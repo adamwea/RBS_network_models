@@ -13,7 +13,8 @@ np=$((nodes*cores_per_node)) # 128 physical cores on the laptop
 
 ### Uncomment for testing MPI
 # Start the Docker container and get its ID
-shifter mpiexec -np ${np} python3 testmpi.py #test mpi
+#shifter mpiexec -np ${np} python3 testmpi.py #test mpi
+srun -n 4 -c 4 shifter --image=adammwea/netpyneshifter:1.0 python3 testmpi.py
 
 # # Run commands inside the Docker container
 # echo "Starting the Docker container"
