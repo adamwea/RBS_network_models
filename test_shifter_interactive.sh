@@ -1,5 +1,5 @@
 #To run this, run these lines:
-#salloc --nodes=1 -C cpu -q interactive -t 04:00:00 --exclusive --image=adammwea/netpyneshifter:v2
+#salloc --nodes=1 -C cpu -q interactive -t 00:30:00 --exclusive --image=adammwea/netpyneshifter:v3
 #salloc --nodes=1 -C cpu -q interactive -t 04:00:00 --exclusive --image=kpkaur28/neuron:v3
 #bash test_shifter_interactive.sh
 #SBATCH 
