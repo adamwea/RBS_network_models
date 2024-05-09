@@ -1,6 +1,5 @@
 # Use a base image
 FROM ubuntu:latest
-WORKDIR /opt
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -8,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -y update && apt-get install -y autoconf automake gcc g++ make gfortran wget curl
 
 # Set environment variables
-ENV MPICH_VERSION=4.2.1 \
+ENV MPICH_VERSION=3.4 \
     PATH=/usr/bin:/usr/local/bin:/bin:/app \
     DEBIAN_FRONTEND=noninteractive \
     TZ=America/Los_Angeles
@@ -20,7 +19,7 @@ RUN cd /usr/local/src/ && \
     rm mpich-${MPICH_VERSION}.tar.gz && \
     cd mpich-${MPICH_VERSION} && \
     ./configure --with-device=ch4:ofi --enable-fortran=no --enable-static=no && \
-    make -j 6 && make install && \
+    make -j 4 && make install && \
     cd /usr/local/src && \
     rm -rf mpich-${MPICH_VERSION}
 
@@ -43,32 +42,58 @@ RUN apt-get install -y libgraphviz-dev pkg-config expat zlib1g-dev libncurses5-d
 # Install user management tools
 RUN apt-get update && apt-get install -y
 
-# Install Miniconda
-RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
-    bash Miniconda3-latest-Linux-x86_64.sh -b -p /miniconda && \
-    rm Miniconda3-latest-Linux-x86_64.sh
+# # Install Miniconda
+# RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+#     bash Miniconda3-latest-Linux-x86_64.sh -b -p /miniconda && \
+#     rm Miniconda3-latest-Linux-x86_64.sh
 
-# Set path to conda
-ENV PATH /miniconda/bin:$PATH
+# WORKDIR /opt
 
-# Create a Conda environment
-RUN conda create -n myenv python=3.8
+# # Set path to conda
+# ENV PATH /miniconda/bin:$PATH
 
-# Activate the Conda environment
-RUN echo "source activate myenv" > ~/.bashrc
-ENV PATH /miniconda/envs/myenv/bin:$PATH
+# # Create a Conda environment
+# RUN conda create -n myenv python=3.8
+
+# # Activate the Conda environment
+# RUN echo "source activate myenv" > ~/.bashrc
+# ENV PATH /miniconda/envs/myenv/bin:$PATH
+
+# # Install essential Python libraries
+# RUN /miniconda/envs/myenv/bin/pip install numpy matplotlib h5py ruamel.yaml jupyter jupyter_server scipy six bluepyopt neuron netpyne Igor
+
+# # Upgrade Pillow
+# RUN /miniconda/envs/myenv/bin/pip install --upgrade Pillow
+
+# # Install additional Python packages
+# RUN /miniconda/envs/myenv/bin/pip install bokeh contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado
+
+# # Install mpi4py
+# RUN /miniconda/envs/myenv/bin/python -m pip install mpi4py
+
+# # Prepare a writable directory for Fontconfig cache
+# RUN mkdir /opt/fontconfig && \
+#     chmod 777 /opt/fontconfig
+
+# # Set environment variable for Fontconfig to use the new cache directory
+# ENV FONTCONFIG_PATH=/opt/fontconfig
+
+# Install Python and pip
+RUN apt-get update && \
+    apt-get install -y python3.8 python3-pip && \
+    rm -rf /var/lib/apt/lists/*
 
 # Install essential Python libraries
-RUN /miniconda/envs/myenv/bin/pip install numpy matplotlib h5py ruamel.yaml jupyter jupyter_server scipy six bluepyopt neuron netpyne Igor
+RUN pip3 install numpy matplotlib h5py ruamel.yaml jupyter jupyter_server scipy six bluepyopt neuron netpyne Igor
 
 # Upgrade Pillow
-RUN /miniconda/envs/myenv/bin/pip install --upgrade Pillow
+RUN pip3 install --upgrade Pillow
 
 # Install additional Python packages
-RUN /miniconda/envs/myenv/bin/pip install bokeh contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado
+RUN pip3 install bokeh contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado
 
 # Install mpi4py
-RUN /miniconda/envs/myenv/bin/python -m pip install mpi4py
+RUN python3 -m pip install mpi4py
 
 # Prepare a writable directory for Fontconfig cache
 RUN mkdir /opt/fontconfig && \
@@ -83,7 +108,7 @@ ENV FONTCONFIG_PATH=/opt/fontconfig
 # Set HOME environment variable
 #ENV HOME=/opt/myuser
 
-#WORKDIR /app
+WORKDIR /app
 
 # # Make the home directory writable
 # RUN chmod a+w /opt/myuser
