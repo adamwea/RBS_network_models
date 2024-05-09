@@ -171,6 +171,13 @@ RUN pip install --no-cache-dir \
     xyzservices \
     inspyred
 
+RUN pip install --no-cache-dir \
+    evol \
+    grid \
+    PyPDF2 \
+    reportlab \
+    utils
+
 # Set necessary environment variables
 ENV LD_LIBRARY_PATH=/opt/miniconda3/lib:$LD_LIBRARY_PATH
 
