@@ -1,12 +1,7 @@
-#specify the duration of the simulation and the label of the batch run
+### parameters
 Duration_Seconds=1
 Batch_Run_Label=test_docker
-
-### Init
-# run_path=$(python3 NERSC/USER_init_new_batch.py ${Batch_Run_Label}) # Initialize the batch file and store the return value in run_path
-# echo "Run path: ${run_path}"
-# full_path=$(realpath $0)
-# cp ${full_path} ${run_path}/test_docker_laptop.sh #save copy of this batch_script in the run_path
+np=8 # 8 physical cores on the laptop
 
 ### Uncomment for testing MPI
 # Start the Docker container and get its ID
@@ -21,11 +16,12 @@ container_run_path=$(docker exec $container_id bash -c "python3 NERSC/USER_init_
 echo "Container path: ${container_run_path}"
 full_sh_path_container=$(docker exec $container_id bash -c "realpath $0")
 echo "Batch script path in container: ${full_sh_path_container}"
-docker exec $container_id bash -c "cp ${full_sh_path_container} ${container_run_path}/test_docker_laptop.sh" #save copy of this batch_script in the run_path
+script_name=$(basename $0) #get the name of this batch script file
+docker exec $container_id bash -c "cp ${full_sh_path_container} ${container_run_path}/${script_name}" #save copy of this batch_script in the run_path
 echo "Running batch script inside the Docker container..."
 docker exec $container_id bash -c "\
     cd NERSC &&\
-    mpiexec -np 8\
+    mpiexec -np ${np}\
     nrniv -mpi batchRun.py -rp ${container_run_path} -d ${Duration_Seconds}\
     > ${container_run_path}/mpi_output.txt 2> ${container_run_path}/mpi_error.txt"
 echo "Batch script finished running inside the Docker container"
