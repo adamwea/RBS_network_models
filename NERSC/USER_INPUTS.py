@@ -1,22 +1,25 @@
 import sys
 import os
 import datetime
+from USER_init_new_batch import init_new_batch
+from USER_init_new_batch import init_new_batch
+import re
+rank = os.environ.get('OMPI_COMM_WORLD_RANK')
+if not rank: rank = 0
+rank = int(rank)
 
 '''Batch Inputs'''
 # try: USER_run_label = sys.argv[-2] ### Change this to a unique name for the batch run
 # except: USER_run_label = 'USER_inputs_debug' ### Change this to a unique name for the batch run
-try: 
-    #USER_run_path = sys.argv[-2]
-    USER_run_path = sys.argv[-2]
-except: 
-    from USER_init_new_batch import init_new_batch
-    USER_run_label = 'local_debug'
-    run_path, run_name = init_new_batch(USER_run_label)
-    USER_run_path = run_path
-print(f'USER_run_path: {USER_run_path}')
-#print(f'USER_run_path: {USER_run_path}')
-if os.path.isdir(USER_run_path): assert os.path.exists(USER_run_path), f'USER_run_path does not exist: {USER_run_path}'
-else: USER_run_path = None
+if '-rp' in sys.argv:
+    #print('Found -rp flag')
+    index = sys.argv.index('-rp')
+    USER_run_path = sys.argv[index + 1]
+try: assert os.path.exists(USER_run_path), f'USER_run_path does not exist: {USER_run_path}'
+except: USER_run_path = None
+if rank == 0: 
+    print(f'USER_run_path: {USER_run_path}')
+    print(f'USER_run_path will be automatically generated in batchRun.py.')
 
 '''SBATCH Inputs'''
 USER_email = 'amwe@ucdavis.edu'
@@ -26,10 +29,30 @@ USER_email = 'amwe@ucdavis.edu'
 script_path = os.path.dirname(os.path.realpath(__file__))
 ##Simulation Duration
 try: 
-    #USER_seconds = int(sys.argv[-1]) ### Change this to the number of seconds for the simulation
-    USER_seconds = int(sys.argv[-1]) ### Change this to the number of seconds for the simulation
-    print(f'USER_seconds: {USER_seconds}')
-except: USER_seconds = 10
+    # Check if the flag -d is present
+    #if __name__ == "__main__":
+    if "-d" in sys.argv:
+        # Find the index of the flag -d
+        index = sys.argv.index("-d")        
+        # Check if there is an integer value after the flag -d
+        if index + 1 < len(sys.argv):
+            try:
+                # Get the integer value after the flag -d
+                USER_seconds = int(sys.argv[index + 1])
+                #print(f'USER_seconds: {USER_seconds}')
+            except ValueError:
+                print("Invalid value after -d flag. Please provide an integer value.")
+                raise Exception
+        else:
+            print("No value provided after -d flag.")
+            raise Exception
+    else:
+        print("Flag -d not found.")
+        raise Exception
+except: USER_seconds = 1
+if rank == 0: print(f'USER_seconds: {USER_seconds}')
+
+#sys.exit()
 ## Simulation method
 USER_method = 'evol' #'evol', 'grid', 'asd'
 USER_init_script = f'{script_path}/init.py'
@@ -49,6 +72,7 @@ if USER_continue: USER_skip = True #continue will re-run existing simulations if
 '''Evol Params'''
 script_path = os.path.dirname(os.path.realpath(__file__))
 USER_HOF = f'{script_path}/HOF/hof.csv' #seed gen 0 with solutions in HOF.csv
+#print(f'USER_HOF: {USER_HOF}') 
 USER_HOF = os.path.abspath(USER_HOF)
 USER_pop_size = 128
 USER_pop_size = 4

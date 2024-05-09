@@ -13,9 +13,9 @@ Initialize
 ##General Imports
 import sys
 
-print(sys.argv[-1])
-print(sys.argv[-2])
-print(sys.argv[-3])
+# print(sys.argv[-1])
+# print(sys.argv[-2])
+# print(sys.argv[-3])
 
 import os
 import shutil
@@ -48,6 +48,8 @@ log_file = f'{script_dir}/batchRun.log'
 logging.basicConfig(filename=log_file, level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 # Define a logger
 logger = logging.getLogger(__name__)
+#print(f'rank: {rank}')
+#sys.exit()
 
 '''functions'''
 ## Function to serialize the batch_config dictionary
@@ -59,6 +61,7 @@ class batchcfgEncoder(json.JSONEncoder):
 def get_HOF_seeds():
     #seeded_HOF_cands = ['.'+'/NERSC/output/240430_Run2_debug_node_run/gen_5/gen_5_cand_39_cfg.json']
     #import list of paths from .csv USER_HOF
+    print(f'Loading Hall of Fame from {USER_HOF}')
     assert os.path.exists(USER_HOF), f'USER_HOF file not found: {USER_HOF}'
     #print(f'Loading Hall of Fame from {USER_HOF}')
 
@@ -107,9 +110,12 @@ def get_HOF_seeds():
 def get_batch_config(batch_config_options = None):
     
     USER_seed_evol = True
-    if USER_seed_evol == True:
-        HOF_seeds = get_HOF_seeds()
-        #load HOF of previous runs
+    if rank == 0:
+        #print(f'rank zero getting seeds')
+        if USER_seed_evol == True:
+            HOF_seeds = get_HOF_seeds()
+            #load HOF of previous runs
+        else: HOF_seeds = {}
     else: HOF_seeds = {}
     
     # Extract the parameters
@@ -178,8 +184,8 @@ def batchRun(batch_config = None):
 
 	# create Batch object with paramaters to modify, and specifying files to use
     #batch = Batch(initCfg=batch_config['initCfg'], params=params)
-    bool = os.path.exists(batch_config['cfgFile'])
-    bool2 = os.path.exists(batch_config['netParamsFile'])
+    # bool = os.path.exists(batch_config['cfgFile'])
+    # bool2 = os.path.exists(batch_config['netParamsFile'])
     batch = Batch(
         #cfgFile=batch_config['cfgFile'],
         #netParamsFile=batch_config['netParamsFile'],
@@ -208,7 +214,7 @@ def init_batch_cfg():
     '''
     Generate Config
     '''
-
+    
     ##Create a dictionary with the given variables and their values
     run_path = USER_run_path
     print('runpath:',run_path)
@@ -224,7 +230,7 @@ def init_batch_cfg():
 
     ## Output path
     output_path = f'{script_dir}/output/' 
-    print(f'Output path: {output_path}')
+    #print(f'Output path: {output_path}')
     # Check if the output directory exists, if not, create it
     if not os.path.exists(output_path):
         os.makedirs(output_path)
@@ -259,10 +265,13 @@ def main():
     # Run batch
     run_batch = True
     if run_batch:    
+        print('Initializing batch config')
         logging.info(f'Initializing batch config')        
         batch_config = init_batch_cfg()
+        print(f'Running batch: {batch_config["batchLabel"]}')
         logging.info(f'Running batch: {batch_config["batchLabel"]}')
         batchRun(batch_config = batch_config)
+        print(f'Batch run completed')
         logging.info(f'Batch run completed')
 
     # End timers
@@ -276,4 +285,17 @@ def main():
 
 '''Main code'''
 if __name__ == '__main__':
+    #make batchRun.py rank aware
+    rank = os.environ.get('OMPI_COMM_WORLD_RANK')
+    if rank is None: rank = 0
+    else: rank = int(rank)   
+
+    #get USER_run_path and USER_run_label in different cases
+    if USER_run_path is None and rank == 0: run_path_only = False
+    elif USER_run_path is None and rank > 0: run_path_only = True
+    else: assert False, 'How did you get here?'
+    USER_run_label = 'local_debug'
+    run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = run_path_only)
+    USER_run_path = run_path
+
     main()
