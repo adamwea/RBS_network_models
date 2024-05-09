@@ -1,5 +1,6 @@
 # Use a base image
 FROM ubuntu:latest
+WORKDIR /opt
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -7,7 +8,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -y update && apt-get install -y autoconf automake gcc g++ make gfortran wget curl
 
 # Set environment variables
-ENV MPICH_VERSION=3.4 \
+ENV MPICH_VERSION=4.2.1 \
     PATH=/usr/bin:/usr/local/bin:/bin:/app \
     DEBIAN_FRONTEND=noninteractive \
     TZ=America/Los_Angeles
@@ -19,7 +20,7 @@ RUN cd /usr/local/src/ && \
     rm mpich-${MPICH_VERSION}.tar.gz && \
     cd mpich-${MPICH_VERSION} && \
     ./configure --with-device=ch4:ofi --enable-fortran=no --enable-static=no && \
-    make -j 4 && make install && \
+    make -j 6 && make install && \
     cd /usr/local/src && \
     rm -rf mpich-${MPICH_VERSION}
 
@@ -46,8 +47,6 @@ RUN apt-get update && apt-get install -y
 RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
     bash Miniconda3-latest-Linux-x86_64.sh -b -p /miniconda && \
     rm Miniconda3-latest-Linux-x86_64.sh
-
-WORKDIR /opt
 
 # Set path to conda
 ENV PATH /miniconda/bin:$PATH
@@ -84,7 +83,7 @@ ENV FONTCONFIG_PATH=/opt/fontconfig
 # Set HOME environment variable
 #ENV HOME=/opt/myuser
 
-WORKDIR /app
+#WORKDIR /app
 
 # # Make the home directory writable
 # RUN chmod a+w /opt/myuser
