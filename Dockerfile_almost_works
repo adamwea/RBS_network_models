@@ -1,5 +1,5 @@
 # Use a base image
-FROM ubuntu:22.04
+FROM ubuntu:latest
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -7,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -y update && apt-get install -y autoconf automake gcc g++ make gfortran wget curl
 
 # Set environment variables
-ENV MPICH_VERSION=4.1.1 \
+ENV MPICH_VERSION=3.4 \
     PATH=/usr/bin:/usr/local/bin:/bin:/app \
     DEBIAN_FRONTEND=noninteractive \
     TZ=America/Los_Angeles
@@ -66,25 +66,45 @@ RUN apt-get install -y tzdata
 RUN apt-get install -y libgraphviz-dev pkg-config expat zlib1g-dev libncurses5-dev libncursesw5-dev python3-tk && \
     apt-get clean all
 
-# # Install necessary tools including Bison and Flex
-# RUN apt-get update && apt-get install -y \
-#     cmake \
-#     bison \
-#     flex
-
-# Example for OpenMPI with CUDA support
-# RUN apt-get install -y libopenmpi-dev
-# ENV OMPI_MCA_opal_cuda_support=true
-
-# Install user management utilities
-#RUN apt-get update && apt-get install -y passwd
-RUN apt-get install adduser
+# Install necessary tools including Bison and Flex
+RUN apt-get update && apt-get install -y \
+    cmake \
+    bison \
+    flex
 
 # Install user management tools
 RUN apt-get update && apt-get install -y
 
 # Create a virtual environment
 RUN python3.8 -m venv /opt/venv
+
+# # Install Cython using pip
+# # Install a compatible version of Cython
+# RUN /opt/venv/bin/pip install Cython==0.29.24 numpy
+
+# # Clone NEURON source code from the official repository
+# RUN git clone https://github.com/neuronsimulator/nrn.git /opt/nrn && \
+#     mkdir /opt/nrn/build
+
+# # Configure NEURON with Python support
+# RUN cd /opt/nrn/build && \
+#     cmake .. \
+#       -DNRN_ENABLE_PYTHON=ON \
+#       -DPYTHON_EXECUTABLE=/opt/venv/bin/python \
+#       -DNRN_ENABLE_INTERVIEWS=OFF \
+#       -DNRN_ENABLE_MPI=ON \
+#       -DCMAKE_INSTALL_PREFIX=/opt/nrn/install
+
+# # Build and install NEURON
+# RUN cd /opt/nrn/build && \
+#     make && \
+#     make install
+
+# # Add NEURON to the PATH
+# ENV PATH="/opt/nrn/install/bin:${PATH}"
+
+# # Add NEURON to Python path
+# ENV PYTHONPATH="/opt/nrn/install/lib/python:${PYTHONPATH}"
 
 # Install essential Python libraries
 RUN /opt/venv/bin/pip install \
@@ -97,15 +117,13 @@ RUN /opt/venv/bin/pip install \
 RUN /opt/venv/bin/pip install --upgrade Pillow
 
 # Install additional Python packages
-RUN /opt/venv/bin/pip install bokeh contextlib2 \
-    cycler fonttools future jinja2 kiwisolver lfpykit \
-    markupsafe matplotlib-scalebar meautility packaging \
-    pandas pyparsing pytz pyyaml schema tornado inspyred
+RUN /opt/venv/bin/pip install bokeh contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado
 
 # Install mpi4py
 RUN /opt/venv/bin/python -m pip install mpi4py
 
 #Install remaining batchRun.py dependencies
+
 # Prepare a writable directory for Fontconfig cache
 RUN mkdir /opt/fontconfig && \
     chmod 777 /opt/fontconfig
@@ -119,39 +137,21 @@ ENV PATH="/opt/venv/bin:$PATH"
 #add neuron to python path
 ENV PYTHONPATH opt/venv/bin/nrniv:$PYTHONPATH
 
-# Set environment variables for MPICH
-ENV MPIR_CVAR_CH3_NOLOCAL=0
-ENV MPIR_CVAR_CH4_NOLOCAL=0
-#ENV HYDRA_BOOTSTRAP=slurm
+# Create a non-root user
+#RUN useradd -m myuser -d /opt/myuser
 
-#allow write to /opt
+# Set HOME environment variable
+#ENV HOME=/opt/myuser
+
+WORKDIR /app
+
+# # Make the home directory writable
+# RUN chmod a+w /opt/myuser
 RUN chmod -R o+w /opt \
     && fc-cache --really-force --verbose
 
-# #give mpiuser permissions
-# RUN chmod -R o+w /usr \
-#     && fc-cache --really-force --verbose
-
-#add /usr/sbin to path so that adduser is found
-#ENV PATH /usr/sbin:$PATH
-
-# Create a non-root user
-#RUN groupadd -r mpiuser && useradd -r -g mpiuser -m -d /home/mpiuser -s /bin/bash mpiuser
-#RUN adduser --disabled-password --gecos '' --shell /bin/bash mpiuser
-
-# Change to non-root privilege
-# RUN chown -R mpiuser:mpiuser /usr
-# RUN chown -R mpiuser:mpiuser /opt
-#USER mpiuser
-# Set the working directory to the user's home directory
-#RUN chown mpiuser:mpiuser /home/mpiuser
-WORKDIR /app
-# WORKDIR /opt/app
-
+# # Switch to the non-root user
+# USER myuser
 
 # Set default command
-#CMD ["bash"]
-
-#CMD ["mpiexec", "-np", "4", "python3", "testmpi.py"]
-CMD ["mpiexec", "-np", "1", "nrniv", "-mpi", "batchRun.py"]
-#mpiexec -np 1 nrniv -mpi -python batchRun.py
+CMD ["bash"]
