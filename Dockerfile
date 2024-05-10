@@ -53,7 +53,7 @@ RUN python3 -m venv /opt/venv
 
 #--
 # Make sure we use the virtualenv:
-#ENV PATH="/opt/venv/bin:$PATH"
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Install pyenv
 RUN apt-get update && \
