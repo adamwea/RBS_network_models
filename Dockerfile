@@ -78,22 +78,25 @@ RUN apt-get update && apt-get install -y
 # # Set environment variable for Fontconfig to use the new cache directory
 # ENV FONTCONFIG_PATH=/opt/fontconfig
 
-# Install Python and pip
+# Install Python, pip and venv
 RUN apt-get update && \
-    apt-get install -y python3.8 python3-pip && \
+    apt-get install -y python3.8 python3-pip python3-venv && \
     rm -rf /var/lib/apt/lists/*
 
+# Create a virtual environment
+RUN python3 -m venv /opt/venv
+
 # Install essential Python libraries
-RUN pip3 install numpy matplotlib h5py ruamel.yaml jupyter jupyter_server scipy six bluepyopt neuron netpyne Igor
+RUN /opt/venv/bin/pip install numpy matplotlib h5py ruamel.yaml jupyter jupyter_server scipy six bluepyopt neuron netpyne Igor
 
 # Upgrade Pillow
-RUN pip3 install --upgrade Pillow
+RUN /opt/venv/bin/pip install --upgrade Pillow
 
 # Install additional Python packages
-RUN pip3 install bokeh contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado
+RUN /opt/venv/bin/pip install bokeh contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado
 
 # Install mpi4py
-RUN python3 -m pip install mpi4py
+RUN /opt/venv/bin/python -m pip install mpi4py
 
 # Prepare a writable directory for Fontconfig cache
 RUN mkdir /opt/fontconfig && \
@@ -101,6 +104,9 @@ RUN mkdir /opt/fontconfig && \
 
 # Set environment variable for Fontconfig to use the new cache directory
 ENV FONTCONFIG_PATH=/opt/fontconfig
+
+# Activate the virtual environment by default
+ENV PATH="/opt/venv/bin:$PATH"
 
 # Create a non-root user
 #RUN useradd -m myuser -d /opt/myuser
