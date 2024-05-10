@@ -1,6 +1,5 @@
 # Use a base image
 FROM ubuntu:latest
-WORKDIR /opt
 
 ENV DEBIAN_FRONTEND noninteractive
 
@@ -8,7 +7,7 @@ ENV DEBIAN_FRONTEND noninteractive
 RUN apt-get -y update && apt-get install -y autoconf automake gcc g++ make gfortran wget curl
 
 # Set environment variables
-ENV MPICH_VERSION=4.2.1 \
+ENV MPICH_VERSION=3.4 \
     PATH=/usr/bin:/usr/local/bin:/bin:/app \
     DEBIAN_FRONTEND=noninteractive \
     TZ=America/Los_Angeles
@@ -43,61 +42,58 @@ RUN apt-get install -y libgraphviz-dev pkg-config expat zlib1g-dev libncurses5-d
 # Install user management tools
 RUN apt-get update && apt-get install -y
 
-# Install Python, pip and venv
+# # Install Miniconda
+# RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+#     bash Miniconda3-latest-Linux-x86_64.sh -b -p /miniconda && \
+#     rm Miniconda3-latest-Linux-x86_64.sh
+
+# WORKDIR /opt
+
+# # Set path to conda
+# ENV PATH /miniconda/bin:$PATH
+
+# # Create a Conda environment
+# RUN conda create -n myenv python=3.8
+
+# # Activate the Conda environment
+# RUN echo "source activate myenv" > ~/.bashrc
+# ENV PATH /miniconda/envs/myenv/bin:$PATH
+
+# # Install essential Python libraries
+# RUN /miniconda/envs/myenv/bin/pip install numpy matplotlib h5py ruamel.yaml jupyter jupyter_server scipy six bluepyopt neuron netpyne Igor
+
+# # Upgrade Pillow
+# RUN /miniconda/envs/myenv/bin/pip install --upgrade Pillow
+
+# # Install additional Python packages
+# RUN /miniconda/envs/myenv/bin/pip install bokeh contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado
+
+# # Install mpi4py
+# RUN /miniconda/envs/myenv/bin/python -m pip install mpi4py
+
+# # Prepare a writable directory for Fontconfig cache
+# RUN mkdir /opt/fontconfig && \
+#     chmod 777 /opt/fontconfig
+
+# # Set environment variable for Fontconfig to use the new cache directory
+# ENV FONTCONFIG_PATH=/opt/fontconfig
+
+# Install Python and pip
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip python3-venv && \
+    apt-get install -y python3.8 python3-pip && \
     rm -rf /var/lib/apt/lists/*
 
-# Create a virtual environment
-RUN python3 -m venv /opt/venv
-
-#--
-# Make sure we use the virtualenv:
-ENV PATH="/opt/venv/bin:$PATH"
-
-# Install pyenv
-RUN apt-get update && \
-    apt-get install -y git curl && \
-    curl https://pyenv.run | bash
-
-# Install dependencies for Python build
-RUN apt-get update && apt-get install -y \
-    libbz2-dev \
-    libffi-dev \
-    libreadline-dev \
-    libssl-dev \
-    libncurses5-dev \
-    libncursesw5-dev \
-    libsqlite3-dev \
-    tk-dev \
-    libgdbm-dev \
-    libc6-dev \
-    zlib1g-dev
-
-# Set environment variables for pyenv
-ENV PYENV_ROOT="/root/.pyenv"
-ENV PATH="$PYENV_ROOT/bin:$PATH"
-RUN echo 'eval "$(pyenv init --path)"' >> ~/.bashrc
-RUN echo 'eval "$(pyenv init -)"' >> ~/.bashrc
-RUN echo 'eval "$(pyenv virtualenv-init -)"' >> ~/.bashrc
-
-# Install Python 3.8 with pyenv
-RUN pyenv install 3.8.12
-RUN pyenv global 3.8.12
-
-#--
-
 # Install essential Python libraries
-RUN /opt/venv/bin/pip install numpy matplotlib h5py ruamel.yaml jupyter jupyter_server scipy six bluepyopt neuron netpyne Igor
+RUN pip3 install numpy matplotlib h5py ruamel.yaml jupyter jupyter_server scipy six bluepyopt neuron netpyne Igor
 
 # Upgrade Pillow
-RUN /opt/venv/bin/pip install --upgrade Pillow
+RUN pip3 install --upgrade Pillow
 
 # Install additional Python packages
-RUN /opt/venv/bin/pip install bokeh contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado
+RUN pip3 install bokeh contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado
 
 # Install mpi4py
-RUN /opt/venv/bin/python -m pip install mpi4py
+RUN python3 -m pip install mpi4py
 
 # Prepare a writable directory for Fontconfig cache
 RUN mkdir /opt/fontconfig && \
@@ -105,9 +101,6 @@ RUN mkdir /opt/fontconfig && \
 
 # Set environment variable for Fontconfig to use the new cache directory
 ENV FONTCONFIG_PATH=/opt/fontconfig
-
-# Activate the virtual environment by default
-ENV PATH="/opt/venv/bin:$PATH"
 
 # Create a non-root user
 #RUN useradd -m myuser -d /opt/myuser
