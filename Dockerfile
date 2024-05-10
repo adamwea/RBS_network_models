@@ -98,6 +98,8 @@ RUN /opt/venv/bin/pip install bokeh contextlib2 cycler fonttools future jinja2 k
 # Install mpi4py
 RUN /opt/venv/bin/python -m pip install mpi4py
 
+#Install remaining batchRun.py dependencies
+
 # Prepare a writable directory for Fontconfig cache
 RUN mkdir /opt/fontconfig && \
     chmod 777 /opt/fontconfig
