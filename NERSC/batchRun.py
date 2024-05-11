@@ -139,6 +139,7 @@ def get_batch_config(batch_config_options = None):
             'type': USER_runCfg_type,
             'script': USER_init_script,
             'mpiCommand': USER_mpiCommand,
+            'nrnCommand' : USER_nrnCommand,
             'nodes': USER_nodes,
             'coresPerNode': USER_cores_per_node,
             #'allocation': USER_allocation,
@@ -302,7 +303,7 @@ if __name__ == '__main__':
         USER_runCfg_type = 'mpi_direct'
         #USER_mpiCommand = 'mpirun -bootstrap fork' 
         USER_mpiCommand = 'mpiexec -bootstrap fork'
-        #USER_mpiCommand = 'srun'
+        USER_mpiCommand = 'srun'
         #USER_mpiCommand = 'srun -n 128 shifter --image=adammwea/netpyneshifter:v5'   
     else: 
         rank = int(rank)
@@ -311,8 +312,16 @@ if __name__ == '__main__':
         #USER_mpiCommand = 'mpiexec -bootstrap fork'
         #USER_mpiCommand = 'srun'
         #NOTE: This command will run n=USER_pop_size times.
-        
-        USER_mpiCommand = f'srun -n 128 shifter --image=adammwea/netpyneshifter:v5'    
+        #USER_mpiCommand = f'srun -n 128 shifter --image=adammwea/netpyneshifter:v5'
+        USER_pop_size = 16
+        USER_nodes = 4
+        cores_per_perlmutter = 128 #or 256, pending debug
+        USER_cores_per_node = int(cores_per_perlmutter/USER_pop_size) #cores per node per simulation            
+        #assert that USER_cores_per_indv must be an integer and that USER_cores_per_indv * USER_pop_size = 128
+        assert USER_cores_per_node * USER_pop_size == 128, f'USER_cores_per_node * USER_pop_size must equal 128: {USER_cores_per_node * USER_pop_size}'
+        USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5'
+        USER_nrnCommand = f'{USER_shifterCommmand} nrniv'
+        USER_mpiCommand = 'srun'    
 
     #get USER_run_path and USER_run_label in different cases
     if USER_run_path is None and rank == 0: run_path_only = False

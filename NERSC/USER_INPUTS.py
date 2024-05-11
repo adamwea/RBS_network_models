@@ -128,9 +128,10 @@ if option == 'local-mpidirect':
 elif option == 'nersc-mpidirect':
     USER_runCfg_type = 'mpi_bulletin'
     USER_mpiCommand = 'mpirun' 
-    USER_nodes = 4
-    USER_cores_per_indv = 128/USER_pop_size
-    USER_cores_per_node = USER_cores_per_indv
+
+    # USER_nodes = 4
+    # USER_cores_per_indv = 128/USER_pop_size
+
     #User_custom_slurm = 'export HYDRA_BOOTSTRAP=ssh'
 else: 
     print('Invalid Parallelization Option')
