@@ -131,6 +131,7 @@ elif option == 'nersc-mpidirect':
     USER_nodes = 4
     USER_cores_per_indv = 128/USER_pop_size
     USER_cores_per_node = USER_cores_per_indv
+    #User_custom_slurm = 'export HYDRA_BOOTSTRAP=ssh'
 else: 
     print('Invalid Parallelization Option')
     sys.exit()

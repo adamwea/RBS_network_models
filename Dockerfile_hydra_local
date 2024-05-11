@@ -62,43 +62,14 @@ ENV LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}"
 #     rm -rf pmix-${PMIX_VERSION} pmix-${PMIX_VERSION}.tar.gz
 
 RUN apt-get update && apt-get install -y build-essential wget tar libevent-dev hwloc libhwloc-dev pandoc \
-    libfabric-dev libpsm-infinipath1-dev libpsm2-dev librdmacm-dev libibverbs-dev libslurm-dev
-
-# Define the version
-ENV SLURM_VERSION=22.05.8
-
-# Download and install SLURM
-RUN cd /usr/local/src/ && \
-    wget https://download.schedmd.com/slurm/slurm-${SLURM_VERSION}.tar.bz2 && \
-    tar xf slurm-${SLURM_VERSION}.tar.bz2 && \
-    cd slurm-${SLURM_VERSION} && \
-    ./configure --prefix=/usr/local && \
-    make -j$(nproc) && \
-    make install && \
-    cd /usr/local/src && \
-    rm -rf slurm-${SLURM_VERSION} slurm-${SLURM_VERSION}.tar.bz2
-
-RUN find /usr -name pmi.h -print && \
-    find /usr -name libpmi.so -print
-
-ENV PATH=/usr/local/sbin:/usr/local/bin:$PATH
-
-#check pmi version
-#check SLURM version
-RUN slurmd --version
-#RUN cat /usr/include/slurm-wlm/pmi.h | grep PMI_VERSION
-
-
-# RUN ls -l /usr/lib/x86_64-linux-gnu/libpmi.so
-# RUN ls -l /usr/include/slurm/pmi.h
+    libfabric-dev libpsm-infinipath1-dev libpsm2-dev librdmacm-dev libibverbs-dev
     
-# Install MPICH
+# Install MPICH with PMIx support
 RUN cd /usr/local/src/ && \
     wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz && \
     tar xf mpich-${MPICH_VERSION}.tar.gz && \
     cd mpich-${MPICH_VERSION} && \
     ./configure --with-device=ch4:ofi --enable-fortran=no --enable-static=no \
-    #--with-pmi=slurm --with-pm=no &&\
     --with-pm=hydra && \
     #--with-pmi=pmix --with-pmix=/usr/local && \
     make -j6 && \
