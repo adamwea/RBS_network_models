@@ -10,8 +10,8 @@ if not rank: rank = 0
 rank = int(rank)
 
 '''Functions'''
-get_USER_duration(sys.argv):
-    sys = sys.argv
+def get_USER_duration(args = sys.argv):
+    args = args
     # Check if the flag -d is present
     #if __name__ == "__main__":
     if "-d" in sys.argv:
@@ -47,7 +47,6 @@ if rank == 0:
 '''Simulation Inputs'''
 script_path = os.path.dirname(os.path.realpath(__file__))
 try: get_USER_duration()
-
 except: USER_seconds = 1
 if rank == 0: print(f'USER_seconds: {USER_seconds}')
 USER_method = 'evol' #'evol', 'grid', 'asd'
@@ -67,18 +66,18 @@ USER_continue = False #Continue from last completed simulation
 if USER_continue: USER_skip = True #continue will re-run existing simulations if skip is False
 
 '''Evol Params'''
+USER_pop_size = 128
+USER_pop_size = 4
 script_path = os.path.dirname(os.path.realpath(__file__))
 USER_HOF = f'{script_path}/HOF/hof.csv' #seed gen 0 with solutions in HOF.csv
 #print(f'USER_HOF: {USER_HOF}') 
 USER_HOF = os.path.abspath(USER_HOF)
-USER_pop_size = 128
-USER_pop_size = 4
 USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
+USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 else 1
 USER_max_generations = 3000
 USER_time_sleep = 10 #seconds between checking for completed simulations
 maxiter_wait_minutes = 4*60 #Maximum minutes to wait before starting new Generation
 USER_maxiter_wait = maxiter_wait_minutes*60/USER_time_sleep
-USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 else 1
 USER_mutation_rate = 0.7
 USER_crossover = 0.5
 
