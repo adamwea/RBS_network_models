@@ -141,12 +141,12 @@ def get_batch_config(batch_config_options = None):
             'mpiCommand': USER_mpiCommand,
             'nodes': USER_nodes,
             'coresPerNode': USER_cores_per_node,
-            'allocation': USER_allocation,
+            #'allocation': USER_allocation,
             'reservation': None,
             'skip': USER_skip,
-            'email': USER_email,
-            'walltime': USER_walltime,
-            'custom': USER_custom_slurm,
+            #'email': USER_email,
+            #'walltime': USER_walltime,
+            #'custom': USER_custom_slurm,
             #'initCfg': initCfg,
         },
         'evolCfg': {
@@ -300,16 +300,22 @@ if __name__ == '__main__':
         print('hello')
         #USER_runCfg_type = 'mpi_bulletin'
         USER_runCfg_type = 'mpi_direct'
-        USER_mpiCommand = 'mpirun -bootstrap fork' 
+        #USER_mpiCommand = 'mpirun -bootstrap fork' 
+        USER_mpiCommand = 'mpiexec'
     else: 
         rank = int(rank)
         USER_runCfg_type = 'mpi_direct'
-        USER_mpiCommand = 'mpirun -bootstrap fork'    
+        #USER_mpiCommand = 'mpirun -bootstrap fork'
+        USER_mpiCommand = 'mpiexec'    
 
     #get USER_run_path and USER_run_label in different cases
     if USER_run_path is None and rank == 0: run_path_only = False
     elif USER_run_path is None and rank > 0: run_path_only = True
-    else: assert False, 'How did you get here?'
+    elif USER_run_path is not None: run_path_only = True
+    else: 
+        print(USER_run_path)
+        print(rank)
+        assert False, 'How did you get here?'
     USER_run_label = 'local_debug'
     run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = run_path_only)
     USER_run_path = run_path

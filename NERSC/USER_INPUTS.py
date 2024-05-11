@@ -32,6 +32,7 @@ def get_USER_duration(args = sys.argv):
     else:
         print("Flag -d not found.")
         raise Exception
+    return USER_seconds
 
 '''Batch Dir Inputs'''
 if '-rp' in sys.argv:
@@ -46,7 +47,7 @@ if rank == 0:
 
 '''Simulation Inputs'''
 script_path = os.path.dirname(os.path.realpath(__file__))
-try: get_USER_duration()
+try: USER_seconds = get_USER_duration()
 except: USER_seconds = 1
 if rank == 0: print(f'USER_seconds: {USER_seconds}')
 USER_method = 'evol' #'evol', 'grid', 'asd'
@@ -120,13 +121,16 @@ USER_raster_crop = None
 
 ''' Parallelization Inputs'''
 options = ['local-mpidirect', 'nersc-mpidirect',]
-option = options[0]
+option = options[1]
 if option == 'local-mpidirect':
     USER_runCfg_type = 'mpi_bulletin'
     USER_mpiCommand = 'mpirun -bootstrap fork'
 elif option == 'nersc-mpidirect':
     USER_runCfg_type = 'mpi_bulletin'
     USER_mpiCommand = 'mpirun' 
+    USER_nodes = 4
+    USER_cores_per_indv = 128/USER_pop_size
+    USER_cores_per_node = USER_cores_per_indv
 else: 
     print('Invalid Parallelization Option')
     sys.exit()
