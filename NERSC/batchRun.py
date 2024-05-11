@@ -301,12 +301,14 @@ if __name__ == '__main__':
         #USER_runCfg_type = 'mpi_bulletin'
         USER_runCfg_type = 'mpi_direct'
         #USER_mpiCommand = 'mpirun -bootstrap fork' 
-        USER_mpiCommand = 'mpiexec'
+        USER_mpiCommand = 'mpiexec -bootstrap fork'
+        #USER_mpiCommand = 'srun'
     else: 
         rank = int(rank)
         USER_runCfg_type = 'mpi_direct'
         #USER_mpiCommand = 'mpirun -bootstrap fork'
-        USER_mpiCommand = 'mpiexec'    
+        USER_mpiCommand = 'mpiexec -bootstrap fork'
+        #USER_mpiCommand = 'srun'    
 
     #get USER_run_path and USER_run_label in different cases
     if USER_run_path is None and rank == 0: run_path_only = False
