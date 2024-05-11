@@ -12,23 +12,16 @@ ENV MPICH_VERSION=4.1.1 \
     DEBIAN_FRONTEND=noninteractive \
     TZ=America/Los_Angeles
 
-# Install MPICH
-RUN cd /usr/local/src/ && \
-    wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz && \
-    tar xf mpich-${MPICH_VERSION}.tar.gz && \
-    rm mpich-${MPICH_VERSION}.tar.gz && \
-    cd mpich-${MPICH_VERSION} && \
-    ./configure --with-device=ch4:ofi --enable-fortran=no --enable-static=no && \
-    make -j 4 && make install && \
-    cd /usr/local/src && \
-    rm -rf mpich-${MPICH_VERSION}
+# Install dependencies
+RUN apt-get update && \
+    apt-get install -y wget build-essential
 
 # Install build dependencies
 RUN apt-get update && \
     apt-get install -y build-essential libssl-dev zlib1g-dev libbz2-dev \
     libreadline-dev libsqlite3-dev wget curl llvm \
     libncurses5-dev libncursesw5-dev xz-utils tk-dev \
-    libffi-dev liblzma-dev python3-openssl git
+    libffi-dev liblzma-dev python3-openssl git 
 
 # Download and extract Python 3.8 source code
 RUN mkdir ~/python38 && \
@@ -47,6 +40,47 @@ RUN cd ~/python38/Python-3.8.16 && \
 # Install Python
 RUN cd ~/python38/Python-3.8.16 && \
     make install
+
+RUN apt-get update && apt-get install -y build-essential wget tar libevent-dev hwloc libhwloc-dev pandoc libfabric-dev && \
+    rm -rf /var/lib/apt/lists/*
+
+# Define the versions
+#ENV PMIX_VERSION=4.1.0
+ENV MPICH_VERSION=4.1.1
+ENV PATH="/usr/local/bin:${PATH}"
+ENV LD_LIBRARY_PATH="/usr/local/lib:${LD_LIBRARY_PATH}"
+
+# # Install PMIx
+# RUN cd /usr/local/src/ && \
+#     wget https://github.com/openpmix/openpmix/releases/download/v${PMIX_VERSION}/pmix-${PMIX_VERSION}.tar.gz && \
+#     tar xf pmix-${PMIX_VERSION}.tar.gz && \
+#     cd pmix-${PMIX_VERSION} && \
+#     ./configure --prefix=/usr/local && \
+#     make -j$(nproc) && \
+#     make install && \
+#     cd /usr/local/src && \
+#     rm -rf pmix-${PMIX_VERSION} pmix-${PMIX_VERSION}.tar.gz
+
+RUN apt-get update && apt-get install -y build-essential wget tar libevent-dev hwloc libhwloc-dev pandoc \
+    libfabric-dev libpsm-infinipath1-dev libpsm2-dev librdmacm-dev libibverbs-dev
+    
+# Install MPICH with PMIx support
+RUN cd /usr/local/src/ && \
+    wget http://www.mpich.org/static/downloads/${MPICH_VERSION}/mpich-${MPICH_VERSION}.tar.gz && \
+    tar xf mpich-${MPICH_VERSION}.tar.gz && \
+    cd mpich-${MPICH_VERSION} && \
+    ./configure --with-device=ch4:ofi --enable-fortran=no --enable-static=no \
+    --with-pm=hydra && \
+    #--with-pmi=pmix --with-pmix=/usr/local && \
+    make -j6 && \
+    make install && \
+    cd /usr/local/src && \
+    rm -rf mpich-${MPICH_VERSION} mpich-${MPICH_VERSION}.tar.gz
+
+RUN ls -l /usr/local/bin/mpiexec
+RUN mpiexec --version
+# RUN ls -l /usr/local/include/pmi.h
+# RUN ls -l /usr/local/lib/libpmi*
 
 # Update OS and install packages
 RUN apt-get update && \
@@ -78,7 +112,10 @@ RUN apt-get install -y libgraphviz-dev pkg-config expat zlib1g-dev libncurses5-d
 
 # Install user management utilities
 #RUN apt-get update && apt-get install -y passwd
-RUN apt-get install adduser
+#RUN apt-get install adduser
+
+# Install pmi library
+#RUN apt-get install libpmi-dev
 
 # Install user management tools
 RUN apt-get update && apt-get install -y
@@ -120,9 +157,11 @@ ENV PATH="/opt/venv/bin:$PATH"
 ENV PYTHONPATH opt/venv/bin/nrniv:$PYTHONPATH
 
 # Set environment variables for MPICH
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 ENV MPIR_CVAR_CH3_NOLOCAL=0
 ENV MPIR_CVAR_CH4_NOLOCAL=0
-#ENV HYDRA_BOOTSTRAP=slurm
+ENV HYDRA_BOOTSTRAP=slurm
+ENV RDMAV_FORK_SAFE=1
 
 #allow write to /opt
 RUN chmod -R o+w /opt \
@@ -150,8 +189,14 @@ WORKDIR /app
 
 
 # Set default command
-#CMD ["bash"]
+CMD ["bash"]
 
 #CMD ["mpiexec", "-np", "4", "python3", "testmpi.py"]
-CMD ["mpiexec", "-np", "1", "nrniv", "-mpi", "batchRun.py"]
-#mpiexec -np 1 nrniv -mpi -python batchRun.py
+#CMD ["mpiexec", "-np", "1", "nrniv", "-mpi", "batchRun.py"]
+
+#without slurm
+#export RDMAV_FORK_SAFE=1
+#mpiexec -bootstrap fork -np 1 --verbose nrniv -mpi -python batchRun.py
+#mpiexec -bootstrap fork -np 1 python3 testmpi.py
+#with slurm
+#mpiexec -np 1 --verbose nrniv -mpi -python batchRun.py

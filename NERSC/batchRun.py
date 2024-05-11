@@ -39,6 +39,7 @@ from fitness_config import *
 from USER_INPUTS import *
 from evol_param_setup import evol_param_space
 #from batch_config_setup import *
+from USER_init_new_batch import init_new_batch  
 
 ## Logger
 import logging
@@ -83,7 +84,9 @@ def get_HOF_seeds():
     for cfg in seeded_HOF_cands:
         #cfg = os.path.abspath(cfg)
         #print(f'Loading Hall of Fame candidate: {cfg}')
+        print(cfg)
         if not os.path.exists(cfg): cfg = None #check if file exists, else set to None
+        print(cfg)
         #print(f'Loading Hall of Fame candidate: {cfg}')
         #selected_cand_cfg = None        
         if cfg is not None:    
@@ -292,8 +295,16 @@ if __name__ == '__main__':
     rank = mpi_rank
     print(rank)
     #rank = os.environ.get('OMPI_COMM_WORLD_RANK')
-    if rank is None: rank = 0
-    else: rank = int(rank)   
+    if rank is None: 
+        rank = 0
+        print('hello')
+        #USER_runCfg_type = 'mpi_bulletin'
+        USER_runCfg_type = 'mpi_direct'
+        USER_mpiCommand = 'mpirun -bootstrap fork' 
+    else: 
+        rank = int(rank)
+        USER_runCfg_type = 'mpi_direct'
+        USER_mpiCommand = 'mpirun -bootstrap fork'    
 
     #get USER_run_path and USER_run_label in different cases
     if USER_run_path is None and rank == 0: run_path_only = False
