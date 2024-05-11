@@ -68,7 +68,7 @@ if USER_continue: USER_skip = True #continue will re-run existing simulations if
 
 '''Evol Params'''
 USER_pop_size = 128
-USER_pop_size = 4
+USER_pop_size = 15
 script_path = os.path.dirname(os.path.realpath(__file__))
 USER_HOF = f'{script_path}/HOF/hof.csv' #seed gen 0 with solutions in HOF.csv
 #print(f'USER_HOF: {USER_HOF}') 

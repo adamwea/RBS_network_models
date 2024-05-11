@@ -15,6 +15,7 @@ proc_per_task=1
 
 ##modules
 module load mpich/4.1.1
+module load conda
 
 ### Uncomment for testing MPI
 # Start the Docker container and get its ID
@@ -36,12 +37,18 @@ cp ${full_sh_path_container} ${container_run_path}/${script_name} #save copy of 
 echo "Running batch script inside the Docker container..."
 
 # ## Run the batch script inside the Docker container
-#shifter /bin/bash
-#cd NERSC
-#srun 
-srun -n 128 shifter --image=adammwea/netpyneshifter:v5 \
-    nrniv -python -mpi /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run10_local_debug/gen_0/gen_0_cand_9_cfg.json netParams=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run10_local_debug/240511_Run10_local_debug_netParams.py 
-#     nrniv -mpi batchRun.py -rp ${container_run_path} -d ${Duration_Seconds} #\
+#Test one simulation 
+# srun -n 128 shifter --image=adammwea/netpyneshifter:v5 \
+#     nrniv -python -mpi /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py\ 
+#     simConfig=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run10_local_debug/gen_0/gen_0_cand_9_cfg.json\
+#     netParams=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run10_local_debug/240511_Run10_local_debug_netParams.py
+
+#Test Batch
+cd NERSC
+conda activate preshifter
+nrniv -mpi -python batchRun.py -rp ${container_run_path} -d ${Duration_Seconds}
+
+#\
 
 #srun -N ${SLURM_NNODES} shifter --image=adammwea/netpyneshifter:v5 nrniv -mpi -python batchRun.py -rp ${container_run_path} -d ${Duration_Seconds} #\
 #     > ${container_run_path}/mpi_output.txt \
