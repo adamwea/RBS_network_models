@@ -44,7 +44,7 @@ echo "Running a shifter for each simulation..."
 cd NERSC
 conda activate preshifter
 # OpenMP settings:
-export OMP_NUM_THREADS=2
+export OMP_NUM_THREADS=1
 export OMP_PLACES=threads
 export OMP_PROC_BIND=close
 python3 batchRun.py -rp ${container_run_path} -d ${Duration_Seconds} \

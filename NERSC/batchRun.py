@@ -319,14 +319,15 @@ if __name__ == '__main__':
     #assert that USER_cores_per_indv must be an integer and that USER_cores_per_indv * USER_pop_size = 128
     assert USER_process_per_node_per_sim * USER_pop_size == cores_per_perlmutter, f'USER_cores_per_node * USER_pop_size must equal 128: {USER_cores_per_node * USER_pop_size}'
     USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5' 
-    USER_cores_per_process = 1
-    USER_cores_per_job = USER_cores_per_process * USER_process_per_node_per_sim * USER_nodes
-    USER_bindingCommands = f'-c {USER_cores_per_job} --cpu_bind=cores'
+    #USER_cores_per_process = 1
+    #USER_cores_per_job = USER_cores_per_process * USER_process_per_node_per_sim * USER_nodes
+    #USER_bindingCommands = f'-c {USER_cores_per_job}' # --cpu_bind=cores'
     
     #variable passed to batchcfg
     USER_pop_size = USER_pop_size
     USER_nodes = USER_nodes
-    USER_nrnCommand = f'{USER_bindingCommands} {USER_shifterCommmand} nrniv'
+    #USER_nrnCommand = f'{USER_bindingCommands} {USER_shifterCommmand} nrniv'
+    USER_nrnCommand = f'{USER_shifterCommmand} nrniv'
     USER_mpiCommand = 'srun'
     USER_cores_per_node = USER_process_per_node_per_sim   
      
