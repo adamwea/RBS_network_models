@@ -113,13 +113,13 @@ def get_HOF_seeds():
 def get_batch_config(batch_config_options = None):
     
     USER_seed_evol = True
-    if rank == 0:
-        #print(f'rank zero getting seeds')
-        if USER_seed_evol == True:
-            HOF_seeds = get_HOF_seeds()
-            #load HOF of previous runs
-        else: HOF_seeds = {}
+    #if rank == 0:
+    #print(f'rank zero getting seeds')
+    if USER_seed_evol == True:
+        HOF_seeds = get_HOF_seeds()
+        #load HOF of previous runs
     else: HOF_seeds = {}
+    #else: HOF_seeds = {}
     
     # Extract the parameters
     run_path =  batch_config_options['run_path']
@@ -290,49 +290,50 @@ def main():
 '''Main code'''
 if __name__ == '__main__':
     #make batchRun.py rank aware
-    from mpi4py import MPI
-    mpi_rank = MPI.COMM_WORLD.Get_rank()
-    mpi_size = MPI.COMM_WORLD.Get_size()
-    rank = mpi_rank
-    print(rank)
-    #rank = os.environ.get('OMPI_COMM_WORLD_RANK')
-    if rank is None: 
-        rank = 0
-        print('hello')
-        #USER_runCfg_type = 'mpi_bulletin'
-        USER_runCfg_type = 'mpi_direct'
-        #USER_mpiCommand = 'mpirun -bootstrap fork' 
-        USER_mpiCommand = 'mpiexec -bootstrap fork'
-        USER_mpiCommand = 'srun'
-        #USER_mpiCommand = 'srun -n 128 shifter --image=adammwea/netpyneshifter:v5'   
-    else: 
-        rank = int(rank)
-        USER_runCfg_type = 'mpi_direct'
-        #USER_mpiCommand = 'mpirun -bootstrap fork'
-        #USER_mpiCommand = 'mpiexec -bootstrap fork'
-        #USER_mpiCommand = 'srun'
-        #NOTE: This command will run n=USER_pop_size times.
-        #USER_mpiCommand = f'srun -n 128 shifter --image=adammwea/netpyneshifter:v5'
-        USER_pop_size = 16
-        USER_nodes = 4
-        cores_per_perlmutter = 128 #or 256, pending debug
-        USER_cores_per_node = int(cores_per_perlmutter/USER_pop_size) #cores per node per simulation            
-        #assert that USER_cores_per_indv must be an integer and that USER_cores_per_indv * USER_pop_size = 128
-        assert USER_cores_per_node * USER_pop_size == 128, f'USER_cores_per_node * USER_pop_size must equal 128: {USER_cores_per_node * USER_pop_size}'
-        USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5'
-        USER_nrnCommand = f'{USER_shifterCommmand} nrniv'
-        USER_mpiCommand = 'srun'    
-
+    # from mpi4py import MPI
+    # mpi_rank = MPI.COMM_WORLD.Get_rank()
+    # mpi_size = MPI.COMM_WORLD.Get_size()
+    # rank = mpi_rank
+    # print(rank)
+    # #rank = os.environ.get('OMPI_COMM_WORLD_RANK')
+    # if rank is None: 
+    #     rank = 0
+    #     print('hello')
+    #     #USER_runCfg_type = 'mpi_bulletin'
+    #     USER_runCfg_type = 'mpi_direct'
+    #     #USER_mpiCommand = 'mpirun -bootstrap fork' 
+    #     USER_mpiCommand = 'mpiexec -bootstrap fork'
+    #     USER_mpiCommand = 'srun'
+    #     #USER_mpiCommand = 'srun -n 128 shifter --image=adammwea/netpyneshifter:v5'   
+    # else: 
+    USER_runCfg_type = 'mpi_direct'
+    #USER_mpiCommand = 'mpirun -bootstrap fork'
+    #USER_mpiCommand = 'mpiexec -bootstrap fork'
+    #USER_mpiCommand = 'srun'
+    #NOTE: This command will run n=USER_pop_size times.
+    #USER_mpiCommand = f'srun -n 128 shifter --image=adammwea/netpyneshifter:v5'
+    USER_pop_size = 128
+    USER_nodes = 4
+    cores_per_perlmutter = 256 #128 or 256, pending debug
+    USER_cores_per_node = int(cores_per_perlmutter/USER_pop_size) #cores per node per simulation            
+    #assert that USER_cores_per_indv must be an integer and that USER_cores_per_indv * USER_pop_size = 128
+    assert USER_cores_per_node * USER_pop_size == cores_per_perlmutter, f'USER_cores_per_node * USER_pop_size must equal 128: {USER_cores_per_node * USER_pop_size}'
+    USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5'
+    #USER_process_per_node_per_sim = USER_cores_per_node #this is just here for conceptual understanding. 
+    USER_cores_per_process = 1
+    USER_bindingCommands = f'-c {USER_cores_per_process} --cpu_bind=cores '
+    USER_nrnCommand = f'{USER_bindingCommands} {USER_cores_per_process} {USER_shifterCommmand} nrniv'
+    USER_mpiCommand = 'srun'    
+    #srun -n 32 -c 32 --cpu_bind=cores
     #get USER_run_path and USER_run_label in different cases
-    if USER_run_path is None and rank == 0: run_path_only = False
-    elif USER_run_path is None and rank > 0: run_path_only = True
-    elif USER_run_path is not None: run_path_only = True
-    else: 
-        print(USER_run_path)
-        print(rank)
-        assert False, 'How did you get here?'
-    USER_run_label = 'local_debug'
-    run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = run_path_only)
+    # if USER_run_path is None and rank == 0: run_path_only = False
+    # elif USER_run_path is None and rank > 0: run_path_only = True
+    # elif USER_run_path is not None: run_path_only = True
+    # else: 
+    #     print(USER_run_path)
+    #     print(rank)
+    #     assert False, 'How did you get here?'
+    USER_run_label = 'OMPTest'
+    run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = True)
     USER_run_path = run_path
-
     main()

@@ -2,12 +2,12 @@ import sys
 import os
 import datetime
 import re
-from mpi4py import MPI
-mpi_rank = MPI.COMM_WORLD.Get_rank()
-mpi_size = MPI.COMM_WORLD.Get_size()
-rank = mpi_rank
-if not rank: rank = 0
-rank = int(rank)
+#from mpi4py import MPI
+# mpi_rank = MPI.COMM_WORLD.Get_rank()
+# mpi_size = MPI.COMM_WORLD.Get_size()
+# rank = mpi_rank
+# if not rank: rank = 0
+# rank = int(rank)
 
 '''Functions'''
 def get_USER_duration(args = sys.argv):
@@ -41,15 +41,15 @@ if '-rp' in sys.argv:
     USER_run_path = sys.argv[index + 1]
 try: assert os.path.exists(USER_run_path), f'USER_run_path does not exist: {USER_run_path}'
 except: USER_run_path = None
-if rank == 0: 
-    print(f'USER_run_path: {USER_run_path}')
-    print(f'USER_run_path will be automatically generated in batchRun.py.')
+# if rank == 0: 
+#     print(f'USER_run_path: {USER_run_path}')
+#     print(f'USER_run_path will be automatically generated in batchRun.py.')
 
 '''Simulation Inputs'''
 script_path = os.path.dirname(os.path.realpath(__file__))
 try: USER_seconds = get_USER_duration()
 except: USER_seconds = 1
-if rank == 0: print(f'USER_seconds: {USER_seconds}')
+# if rank == 0: print(f'USER_seconds: {USER_seconds}')
 USER_method = 'evol' #'evol', 'grid', 'asd'
 USER_init_script = f'{script_path}/init.py'
 USER_cfgFile = f'{script_path}/cfg.py'
