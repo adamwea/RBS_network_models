@@ -485,7 +485,7 @@ if __name__ == '__main__':
     verbose = False
 
     #HOF Mode
-    HOF_mode = True
+    HOF_mode = False
     
     if HOF_mode:
         new_plots = True
@@ -513,10 +513,14 @@ if __name__ == '__main__':
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run1_interactive_node_run',
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240430_Run2_debug_node_run',
             
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run16_debug_node_run',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run17_debug_node_run',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run18_debug_node_run',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun',
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run16_debug_node_run',
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run17_debug_node_run',
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run18_debug_node_run',
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun',
+
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run13_interactive',
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run14_OMPTest',
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run15_OMPTest2'
             ]
         
         #run plot_elites    

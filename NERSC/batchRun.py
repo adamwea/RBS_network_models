@@ -313,23 +313,24 @@ if __name__ == '__main__':
     #NOTE: This command will run n=USER_pop_size times.
     #USER_mpiCommand = f'srun -n 128 shifter --image=adammwea/netpyneshifter:v5'
     USER_pop_size = 128
-    USER_nodes = 4
-    cores_per_perlmutter = 256 #128 or 256, pending debug
-    USER_process_per_node_per_sim = int(cores_per_perlmutter/USER_pop_size) #cores per node per simulation            
+    USER_nodes = 1
+    cores_per_perlmutter = 128 #128 or 256, pending debug
+    USER_mpis_per_sim = 128 #16 fits nicely into 400 cells and 256 cores
+    #USER_process_per_node_per_sim = int(cores_per_perlmutter/USER_pop_size) #cores per node per simulation            
     #assert that USER_cores_per_indv must be an integer and that USER_cores_per_indv * USER_pop_size = 128
-    assert USER_process_per_node_per_sim * USER_pop_size == cores_per_perlmutter, f'USER_cores_per_node * USER_pop_size must equal 128: {USER_cores_per_node * USER_pop_size}'
+    #assert USER_process_per_node_per_sim * USER_pop_size == cores_per_perlmutter, f'USER_cores_per_node * USER_pop_size must equal 128: {USER_cores_per_node * USER_pop_size}'
     USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5' 
     #USER_cores_per_process = 1
     #USER_cores_per_job = USER_cores_per_process * USER_process_per_node_per_sim * USER_nodes
     #USER_bindingCommands = f'-c {USER_cores_per_job}' # --cpu_bind=cores'
-    
+    assert USER_mpis_per_sim * USER_nodes < 400, 'process per sim should be less than cells per sim'
     #variable passed to batchcfg
     USER_pop_size = USER_pop_size
     USER_nodes = USER_nodes
     #USER_nrnCommand = f'{USER_bindingCommands} {USER_shifterCommmand} nrniv'
-    USER_nrnCommand = f'{USER_shifterCommmand} nrniv'
+    USER_nrnCommand = f'--cpu_bind=cores {USER_shifterCommmand} nrniv'
     USER_mpiCommand = 'srun'
-    USER_cores_per_node = USER_process_per_node_per_sim   
+    USER_cores_per_node = USER_mpis_per_sim   
      
     #srun -n 32 -c 32 --cpu_bind=cores
     #get USER_run_path and USER_run_label in different cases
@@ -340,7 +341,8 @@ if __name__ == '__main__':
     #     print(USER_run_path)
     #     print(rank)
     #     assert False, 'How did you get here?'
-    USER_run_label = 'OMPTest'
+    #USER_run_label = 'process_per_sim_inttest'
+    USER_run_label = sys.argv[-1]
     run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = True)
     USER_run_path = run_path
     main()
