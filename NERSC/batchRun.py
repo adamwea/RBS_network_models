@@ -315,15 +315,21 @@ if __name__ == '__main__':
     USER_pop_size = 128
     USER_nodes = 4
     cores_per_perlmutter = 256 #128 or 256, pending debug
-    USER_cores_per_node = int(cores_per_perlmutter/USER_pop_size) #cores per node per simulation            
+    USER_process_per_node_per_sim = int(cores_per_perlmutter/USER_pop_size) #cores per node per simulation            
     #assert that USER_cores_per_indv must be an integer and that USER_cores_per_indv * USER_pop_size = 128
-    assert USER_cores_per_node * USER_pop_size == cores_per_perlmutter, f'USER_cores_per_node * USER_pop_size must equal 128: {USER_cores_per_node * USER_pop_size}'
-    USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5'
-    #USER_process_per_node_per_sim = USER_cores_per_node #this is just here for conceptual understanding. 
+    assert USER_process_per_node_per_sim * USER_pop_size == cores_per_perlmutter, f'USER_cores_per_node * USER_pop_size must equal 128: {USER_cores_per_node * USER_pop_size}'
+    USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5' 
     USER_cores_per_process = 1
-    USER_bindingCommands = f'-c {USER_cores_per_process} --cpu_bind=cores '
-    USER_nrnCommand = f'{USER_bindingCommands} {USER_cores_per_process} {USER_shifterCommmand} nrniv'
-    USER_mpiCommand = 'srun'    
+    USER_cores_per_job = USER_cores_per_process * USER_process_per_node_per_sim * USER_nodes
+    USER_bindingCommands = f'-c {USER_cores_per_job} --cpu_bind=cores'
+    
+    #variable passed to batchcfg
+    USER_pop_size = USER_pop_size
+    USER_nodes = USER_nodes
+    USER_nrnCommand = f'{USER_bindingCommands} {USER_shifterCommmand} nrniv'
+    USER_mpiCommand = 'srun'
+    USER_cores_per_node = USER_process_per_node_per_sim   
+     
     #srun -n 32 -c 32 --cpu_bind=cores
     #get USER_run_path and USER_run_label in different cases
     # if USER_run_path is None and rank == 0: run_path_only = False
