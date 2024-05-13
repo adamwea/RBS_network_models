@@ -3,3 +3,129 @@ Lmod is automatically replacing "cray-mpich/8.1.28" with "mpich/4.1.1".
 
 Warning: no DISPLAY environment variable.
 --No graphics will be displayed.
+Traceback (most recent call last):
+  File "batchRun.py", line 348, in <module>
+    main()
+  File "batchRun.py", line 277, in main
+    batchRun(batch_config = batch_config)
+  File "batchRun.py", line 216, in batchRun
+    batch.run()
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/batch.py", line 283, in run
+    evolOptim(self, pc)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 211, in evolOptim
+    final_pop = ea.evolve(
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/inspyred/ec/ec.py", line 439, in evolve
+    initial_fit = evaluator(candidates=initial_cs, args=self._kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 209, in func
+    return evaluator(batch, candidates, args, ngen, pc, **kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/utils.py", line 592, in evaluator
+    import psutil
+ModuleNotFoundError: No module named 'psutil'
+Traceback (most recent call last):
+  File "batchRun.py", line 348, in <module>
+    main()
+  File "batchRun.py", line 277, in main
+    batchRun(batch_config = batch_config)
+  File "batchRun.py", line 216, in batchRun
+    batch.run()
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/batch.py", line 283, in run
+    evolOptim(self, pc)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 211, in evolOptim
+    final_pop = ea.evolve(
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/inspyred/ec/ec.py", line 439, in evolve
+    initial_fit = evaluator(candidates=initial_cs, args=self._kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 209, in func
+    return evaluator(batch, candidates, args, ngen, pc, **kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/utils.py", line 592, in evaluator
+    import psutil
+ModuleNotFoundError: No module named 'psutil'
+Traceback (most recent call last):
+  File "batchRun.py", line 348, in <module>
+    main()
+  File "batchRun.py", line 277, in main
+    batchRun(batch_config = batch_config)
+  File "batchRun.py", line 216, in batchRun
+    batch.run()
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/batch.py", line 283, in run
+    evolOptim(self, pc)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 211, in evolOptim
+    final_pop = ea.evolve(
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/inspyred/ec/ec.py", line 439, in evolve
+    initial_fit = evaluator(candidates=initial_cs, args=self._kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 209, in func
+    return evaluator(batch, candidates, args, ngen, pc, **kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/utils.py", line 592, in evaluator
+    import psutil
+ModuleNotFoundError: No module named 'psutil'
+Traceback (most recent call last):
+  File "batchRun.py", line 348, in <module>
+    main()
+  File "batchRun.py", line 277, in main
+    batchRun(batch_config = batch_config)
+  File "batchRun.py", line 216, in batchRun
+    batch.run()
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/batch.py", line 283, in run
+    evolOptim(self, pc)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 211, in evolOptim
+    final_pop = ea.evolve(
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/inspyred/ec/ec.py", line 439, in evolve
+    initial_fit = evaluator(candidates=initial_cs, args=self._kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 209, in func
+    return evaluator(batch, candidates, args, ngen, pc, **kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/utils.py", line 592, in evaluator
+    import psutil
+ModuleNotFoundError: No module named 'psutil'
+Traceback (most recent call last):
+  File "batchRun.py", line 348, in <module>
+    main()
+  File "batchRun.py", line 277, in main
+    batchRun(batch_config = batch_config)
+  File "batchRun.py", line 216, in batchRun
+    batch.run()
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/batch.py", line 283, in run
+    evolOptim(self, pc)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 211, in evolOptim
+    final_pop = ea.evolve(
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/inspyred/ec/ec.py", line 439, in evolve
+    initial_fit = evaluator(candidates=initial_cs, args=self._kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 209, in func
+    return evaluator(batch, candidates, args, ngen, pc, **kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/utils.py", line 592, in evaluator
+    import psutil
+ModuleNotFoundError: No module named 'psutil'
+Traceback (most recent call last):
+  File "batchRun.py", line 348, in <module>
+    main()
+  File "batchRun.py", line 277, in main
+    batchRun(batch_config = batch_config)
+  File "batchRun.py", line 216, in batchRun
+    batch.run()
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/batch.py", line 283, in run
+    evolOptim(self, pc)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 211, in evolOptim
+    final_pop = ea.evolve(
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/inspyred/ec/ec.py", line 439, in evolve
+    initial_fit = evaluator(candidates=initial_cs, args=self._kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 209, in func
+    return evaluator(batch, candidates, args, ngen, pc, **kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/utils.py", line 592, in evaluator
+    import psutil
+ModuleNotFoundError: No module named 'psutil'
+Traceback (most recent call last):
+  File "batchRun.py", line 348, in <module>
+    main()
+  File "batchRun.py", line 277, in main
+    batchRun(batch_config = batch_config)
+  File "batchRun.py", line 216, in batchRun
+    batch.run()
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/batch.py", line 283, in run
+    evolOptim(self, pc)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 211, in evolOptim
+    final_pop = ea.evolve(
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/inspyred/ec/ec.py", line 439, in evolve
+    initial_fit = evaluator(candidates=initial_cs, args=self._kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/evol.py", line 209, in func
+    return evaluator(batch, candidates, args, ngen, pc, **kwargs)
+  File "/global/homes/a/adammwea/.conda/envs/preshifter/lib/python3.8/site-packages/netpyne/batch/utils.py", line 592, in evaluator
+    import psutil
+ModuleNotFoundError: No module named 'psutil'
