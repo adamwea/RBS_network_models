@@ -1,13 +1,5 @@
 import sys
 import os
-import datetime
-import re
-#from mpi4py import MPI
-# mpi_rank = MPI.COMM_WORLD.Get_rank()
-# mpi_size = MPI.COMM_WORLD.Get_size()
-# rank = mpi_rank
-# if not rank: rank = 0
-# rank = int(rank)
 
 '''Functions'''
 def get_USER_duration(args = sys.argv):
@@ -118,24 +110,6 @@ USER_raster_convolve_params = {
     'thresholdBurst': 1.0
     }
 USER_raster_crop = None
-
-''' Parallelization Inputs'''
-options = ['local-mpidirect', 'nersc-mpidirect',]
-option = options[1]
-if option == 'local-mpidirect':
-    USER_runCfg_type = 'mpi_bulletin'
-    USER_mpiCommand = 'mpirun -bootstrap fork'
-elif option == 'nersc-mpidirect':
-    USER_runCfg_type = 'mpi_bulletin'
-    USER_mpiCommand = 'mpirun' 
-
-    # USER_nodes = 4
-    # USER_cores_per_indv = 128/USER_pop_size
-
-    #User_custom_slurm = 'export HYDRA_BOOTSTRAP=ssh'
-else: 
-    print('Invalid Parallelization Option')
-    sys.exit()
 
 ## Overwrite and Continue
 USER_overwrite_run = False

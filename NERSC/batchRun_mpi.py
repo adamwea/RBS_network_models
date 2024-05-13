@@ -12,31 +12,18 @@ Initialize
 '''
 ##General Imports
 import sys
-
-# print(sys.argv[-1])
-# print(sys.argv[-2])
-# print(sys.argv[-3])
-
 import os
-import shutil
 import json
-import pickle
-import glob
 import sys
 import json
 import os
-import pickle
-import time
-import datetime
 import pandas as pd
 
 ## NetPyne Imports
 #sys.path.insert(0, 'netpyne')
-from netpyne import specs
 from netpyne.batch import Batch
 from fitness_functions import *
 from fitness_config import *
-from USER_INPUTS import *
 from evol_param_setup import evol_param_space
 #from batch_config_setup import *
 from USER_init_new_batch import init_new_batch  
@@ -103,6 +90,7 @@ def get_HOF_seeds():
             #make sure all values are floats
             seed = [float(val) for val in seed]
             seeds.append(seed)
+            if len(seeds) >= USER_pop_size: break
         else: continue
         #seed = [] #set to empty dict for compatibility with NetPyNE Batch
         #sys.exit()
@@ -289,32 +277,31 @@ def main():
 
 '''Main code'''
 if __name__ == '__main__':
-    USER_runCfg_type = 'mpi_direct'
+    #allow for running in vscode for debugging
+    run_in_vscode = False
+    
+    '''USER Inputs'''
+    from USER_INPUTS import *
+    #USER_runCfg_type = 'mpi_direct'
+    USER_runCfg_type = 'mpi_bulletin'
     USER_pop_size = 128
+    USER_pop_size = 4 #laptop
     USER_nodes = 1
     cores_per_perlmutter = 128 #128 or 256, pending debug
-    USER_mpis_per_sim = 128 #16 fits nicely into 400 cells and 256 cores
+    USER_mpis_per_batch = 128 #16 fits nicely into 400 cells and 256 cores
+    USER_mpis_per_batch = 8 #laptop
     USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5' 
-    assert USER_mpis_per_sim * USER_nodes < 400, 'process per sim should be less than cells per sim'
-    #variable passed to batchcfg
     USER_pop_size = USER_pop_size
     USER_nodes = USER_nodes
-    #USER_nrnCommand = f'{USER_bindingCommands} {USER_shifterCommmand} nrniv'
-    USER_nrnCommand = f'--cpu_bind=cores {USER_shifterCommmand} nrniv'
+    #USER_nrnCommand = f'--cpu_bind=cores {USER_shifterCommmand} nrniv'
+    USER_nrnCommand = f'nrniv -mpi -python'
     USER_mpiCommand = 'srun'
-    USER_cores_per_node = USER_mpis_per_sim   
-     
-    #srun -n 32 -c 32 --cpu_bind=cores
-    #get USER_run_path and USER_run_label in different cases
-    # if USER_run_path is None and rank == 0: run_path_only = False
-    # elif USER_run_path is None and rank > 0: run_path_only = True
-    # elif USER_run_path is not None: run_path_only = True
-    # else: 
-    #     print(USER_run_path)
-    #     print(rank)
-    #     assert False, 'How did you get here?'
-    #USER_run_label = 'process_per_sim_inttest'
-    USER_run_label = sys.argv[-1]
+    USER_cores_per_node = USER_mpis_per_batch 
+    if run_in_vscode: 
+        USER_pop_size = 4
+        USER_run_label = 'vscode_debug'
+        run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = False)
+    else: USER_run_label = sys.argv[-1]
     run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = True)
     USER_run_path = run_path
     main()

@@ -214,6 +214,7 @@ RUN chmod -R o+w /opt \
 # Set the working directory to the user's home directory
 #RUN chown mpiuser:mpiuser /home/mpiuser
 WORKDIR /app
+RUN chmod 777 /app
 # WORKDIR /opt/app
 
 

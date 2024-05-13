@@ -4,8 +4,8 @@
 #bash test_shifter_interactive.sh
 
 ##modules
-module load mpich/4.1.1
-module load conda
+# module load mpich/4.1.1
+# module load conda
 
 ### Uncomment for testing MPI
 # Start the Docker container and get its ID
@@ -41,27 +41,32 @@ cp ${full_sh_path_container} ${container_run_path}/${script_name} #save copy of 
 echo "Running a shifter for each simulation..."
 
 ##Test Batch Architectures
-cd NERSC
-conda activate preshifter
+
+# conda activate preshifter
 # OpenMP settings:
-export OMP_NUM_THREADS=1
-export OMP_PLACES=threads
-export OMP_PROC_BIND=close
+# export OMP_NUM_THREADS=1
+# export OMP_PLACES=threads
+# export OMP_PROC_BIND=close
 
 ### srun each simulation ###
-python3 batchRun.py -rp ${container_run_path} -d ${Duration_Seconds} # \
+# python3 batchRun.py -rp ${container_run_path} -d ${Duration_Seconds} # \
 # > ${container_run_path}/mpi_output.txt \
 # 2> ${container_run_path}/mpi_error.txt
 
 ### srun the batch script ###
-nodes=$SLURM_NNODES
+# nodes=$SLURM_NNODES
 nodes=1 #laptop
 #cores_per_node=4 # 128 physical cores on perlmutter node
-tasks_per_node=128 #NESRC
+# tasks_per_node=128 #NESRC
 tasks_per_node=8 #laptop
 num_MPI_task=$((nodes*tasks_per_node)) # 128 physical cores on perlmutter node
-srun -n ${num_MPI_task} --cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 \ 
-nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+echo "Nodes: ${nodes}"
+echo "Number of MPI tasks: ${num_MPI_task}"
+mpiexec -bootstrap fork -n ${num_MPI_task} python3 testmpi.py
+mpiexec -bootstrap fork -n 4 valgrind nrniv -mpi test0.hoc
+cd NERSC
+# mpiexec -bootstrap fork -np ${num_MPI_task}\  #shifter --image=adammwea/netpyneshifter:v5 \ 
+# nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
 #\
 # > ${container_run_path}/mpi_output.txt \
 # 2> ${container_run_path}/mpi_error.txt
