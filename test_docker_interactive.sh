@@ -62,14 +62,14 @@ tasks_per_node=4 #laptop
 num_MPI_task=$((nodes*tasks_per_node)) # 128 physical cores on perlmutter node
 echo "Nodes: ${nodes}"
 echo "Number of MPI tasks: ${num_MPI_task}"
-#mpiexec -bootstrap fork -n ${num_MPI_task} python3 testmpi.py
-srun -n ${num_MPI_task} --cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 python3 testmpi.py
-#mpiexec -bootstrap fork -n 4 valgrind nrniv -mpi test0.hoc
-srun -n ${num_MPI_task} --cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 nrniv -mpi test0.hoc
+mpiexec -bootstrap fork -n ${num_MPI_task} python testmpi.py
+#srun -n ${num_MPI_task} --cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 python3 testmpi.py
+mpiexec -bootstrap fork -n 4 nrniv -mpi test0.hoc
+#srun -n ${num_MPI_task} --cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 nrniv -mpi test0.hoc
 cd NERSC
-# mpiexec -bootstrap fork -np ${num_MPI_task}\  #shifter --image=adammwea/netpyneshifter:v5 \ 
-# nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
-srun -n ${num_MPI_task} --cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+mpiexec -np ${num_MPI_task}\  #shifter --image=adammwea/netpyneshifter:v5 \ 
+nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+#srun -n ${num_MPI_task} --cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
 #\
 # > ${container_run_path}/mpi_output.txt \
 # 2> ${container_run_path}/mpi_error.txt
