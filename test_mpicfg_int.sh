@@ -8,11 +8,6 @@ Duration_Seconds=15
 Batch_Run_Label=mpi_batch_test_nersc
 JOB_ID=$SLURM_JOB_ID
 
-
-#num_MPI_task=$((nodes*cores_per_node)) # 128 physical cores on the laptop
-#num_MPI_task=$((cores_per_node)) # 128 physical cores on the laptop
-#proc_per_task=1
-
 container_run_path=$(python3 NERSC/USER_init_new_batch.py ${Batch_Run_Label})
 echo "Container path:" $container_run_path
 full_sh_path=$(realpath $0)
