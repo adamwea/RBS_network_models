@@ -49,12 +49,12 @@ int main(int argc, char *argv[])
   memset(clbuf, 0, sizeof(clbuf));
   memset(hnbuf, 0, sizeof(hnbuf));
   (void)gethostname(hnbuf, sizeof(hnbuf));
-  pragma omp parallel private(thread, coremask, clbuf)
+  #pragma omp parallel private(thread, coremask, clbuf)
   {
     thread = omp_get_thread_num();
     (void)sched_getaffinity(0, sizeof(coremask), &coremask);
     cpuset_to_cstr(&coremask, clbuf);
-    pragma omp barrier
+    #pragma omp barrier
     printf("Hello from rank %d, thread %d, on %s. (core affinity = %s)\n",
             rank, thread, hnbuf, clbuf);
   }

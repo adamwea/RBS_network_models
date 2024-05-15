@@ -5,13 +5,13 @@
 ###options
 USER_pop_size=128
 Duration_Seconds=15
-Batch_Run_Label=mpi_batch_test_nersc
+Batch_Run_Label=more_docker_testing
 nodes=$SLURM_NNODES #hpc
-#nodes=1 #laptop or server
+nodes=1 #laptop or server
 OMP_threads_per_process=1 #recomended 1 cpu per task NERSC, https://docs.nersc.gov/development/languages/python/parallel-python/#numpy-and-nested-threading
 cpus_per_task=$OMP_threads_per_process
 cores_per_node=128 # 128 physical. 256 logical. perlmutter
-#cores_per_node=8 # 8 physical. 16 logical. laptop
+cores_per_node=4 # 8 physical. 16 logical. laptop
 #cores_per_node=48 # 24 physical. 48 logical. server
 total_cores=$((nodes*cores_per_node))
 #hyper_threads=1 #threads per core, max 2
@@ -46,32 +46,39 @@ echo "OMP threads per task: ${OMP_threads_per_process}"
 echo "Running..."
 
 #OpenMP settings:
-export OMP_NUM_THREADS=$OMP_threads_per_process
-export OMP_PLACES=threads
-export OMP_PROC_BIND=close
+# export OMP_NUM_THREADS=$OMP_threads_per_process
+# export OMP_PLACES=threads
+# export OMP_PROC_BIND=close
 #export OMP_PROC_BIND=spread
 
 # #check allocation
+#mpiexec -np ${ntasks} check-hybrid.gnu.pm |sort -k4,6
 # srun --ntasks ${ntasks} \
 #     --cpus-per-task ${cores_per_task} \
 #     --cpu_bind=cores \
 #     check-hybrid.gnu.pm |sort -k4,6
 
 # #Test mpi4py
-# #mpiexec -n ${num_MPI_task} python testmpi.py
+#mpiexec -n ${ntasks} python testmpi.py
 # srun --ntasks ${ntasks} \
 #     --cpus-per-task ${cores_per_task} \
 #     --cpu_bind=cores \
 #     shifter --image=adammwea/netpyneshifter:v6 python testmpi.py
 
+#test mpisync
+# mpicc -o mpitest mpitest.c
+# mpiexec -np 4 ./mpitest
+
 #test NEURON
-#mpiexec -n ${num_MPI_task}  nrniv -mpi test0.hoc
+#mpiexec -n ${ntasks}  nrniv -mpi test0.hoc
+#mpiexec -bootstrap fork -n ${ntasks}  nrniv -mpi test0.hoc
 #srun -n ${num_MPI_task} --cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 nrniv -mpi test0.hoc
 
 #Test batchRun local
 cd NERSC
 # mpiexec -bootstrap fork -np ${num_MPI_task}\
-# nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+mpiexec -bootstrap fork  --verbose -np ${ntasks} nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+#mpiexec --verbose -np ${ntasks} nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
 
 # srun \
 #     --ntasks ${ntasks} \
@@ -81,8 +88,8 @@ cd NERSC
 #     nrniv -mpi -python batchRun_mpi.py \
 #     -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
 
-shifter /bin/bash -c "\
-    mpiexec -n ${total_cores} &&\
-    nrniv -mpi -python batchRun_mpi.py \
-    -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}"
+# shifter /bin/bash -c "\
+#     mpiexec -n ${total_cores} &&\
+#     nrniv -mpi -python batchRun_mpi.py \
+#     -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}"
 

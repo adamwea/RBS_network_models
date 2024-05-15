@@ -128,8 +128,8 @@ def get_batch_config(batch_config_options = None):
             'script': USER_init_script,
             'mpiCommand': USER_mpiCommand,
             'nrnCommand' : USER_nrnCommand,
-            #'nodes': USER_nodes,
-            #'coresPerNode': USER_cores_per_node,
+            'nodes': USER_nodes,
+            'coresPerNode': USER_cores_per_node,
             #'allocation': USER_allocation,
             'reservation': None,
             'skip': USER_skip,
@@ -284,17 +284,18 @@ if __name__ == '__main__':
     from USER_INPUTS import *
     #USER_runCfg_type = 'mpi_direct'
     USER_runCfg_type = 'mpi_bulletin'
-    USER_pop_size = 32
+    USER_pop_size = 4
     #USER_pop_size = 4 #laptop
     USER_nodes = 1
     cores_per_perlmutter = 128 #128 or 256, pending debug
-    USER_mpis_per_batch = 32 #16 fits nicely into 400 cells and 256 cores
+    USER_mpis_per_batch = 4 #16 fits nicely into 400 cells and 256 cores
     #USER_mpis_per_batch = 8 #laptop
     USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5' 
     USER_pop_size = USER_pop_size
     USER_nodes = USER_nodes
     #USER_nrnCommand = f'--cpu_bind=cores {USER_shifterCommmand} nrniv'
-    USER_nrnCommand = f'nrniv -mpi -python'
+    #USER_nrnCommand = f'nrniv -mpi -python'
+    USER_nrnCommand = f'nrniv'
     USER_mpiCommand = 'srun'
     USER_cores_per_node = USER_mpis_per_batch 
     if run_in_vscode: 

@@ -290,7 +290,7 @@ def main():
 '''Main code'''
 if __name__ == '__main__':
     USER_runCfg_type = 'mpi_direct'
-    USER_pop_size = 128
+    USER_pop_size = 4
     USER_nodes = 1
     cores_per_perlmutter = 128 #128 or 256, pending debug
     USER_mpis_per_sim = 128 #16 fits nicely into 400 cells and 256 cores

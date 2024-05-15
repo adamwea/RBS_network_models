@@ -1,5 +1,5 @@
 # Use a base image
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 WORKDIR /opt
 
@@ -11,28 +11,22 @@ ENV TZ=America/Los_Angeles
 RUN apt-get update && apt-get install -y \
     autoconf automake gcc g++ make gfortran wget curl libevent-dev hwloc libhwloc-dev pandoc \
     libfabric-dev libpsm-infinipath1-dev libpsm2-dev librdmacm-dev libibverbs-dev libslurm-dev \
-    build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev \
-    llvm xz-utils tk-dev libffi-dev liblzma-dev git \
+    build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
+    llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev git \
     locales vim ssh emacs aptitude xterm iputils-ping net-tools screen graphviz tzdata \
-    libgraphviz-dev pkg-config expat && \
-    apt-get clean all && rm -rf /var/lib/apt/lists/*
-
-# Neuron Dependencies as a separate step
-RUN apt-get update && apt-get install -y \
-    libx11-dev git bison flex automake libtool libxext-dev \
-    python3-dev xfonts-100dpi cython3 libopenmpi-dev python3-scipy make zlib1g-dev && \
+    libgraphviz-dev pkg-config expat zlib1g-dev libncurses5-dev libncursesw5-dev && \
     apt-get clean all && rm -rf /var/lib/apt/lists/*
 
 # Set environment variables
 ENV PATH="/usr/local/bin:/usr/bin:/bin:/app"
 ENV LD_LIBRARY_PATH="/usr/local/lib"
 
-# Install Python 3.7
-RUN mkdir ~/python37 && \
-    cd ~/python37 && \
-    wget https://www.python.org/ftp/python/3.7.12/Python-3.7.12.tgz && \
-    tar -xf Python-3.7.12.tgz && \
-    cd Python-3.7.12 && \
+# Install Python 3.8
+RUN mkdir ~/python38 && \
+    cd ~/python38 && \
+    wget https://www.python.org/ftp/python/3.8.16/Python-3.8.16.tgz && \
+    tar -xf Python-3.8.16.tgz && \
+    cd Python-3.8.16 && \
     ./configure --enable-optimizations --enable-shared && \
     make -j$(nproc) && \
     make install
@@ -44,6 +38,16 @@ RUN python --version && which python
 
 # Install python3-openssl and python3-tk
 RUN apt-get update && apt-get install -y python3-openssl python3-tk && \
+    apt-get clean all && rm -rf /var/lib/apt/lists/*
+
+# Install all necessary packages in one step
+RUN apt-get update && apt-get install -y \
+    autoconf automake gcc g++ make gfortran wget curl libevent-dev hwloc libhwloc-dev pandoc \
+    libfabric-dev libpsm-infinipath1-dev libpsm2-dev librdmacm-dev libibverbs-dev libslurm-dev \
+    build-essential libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev \
+    llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev libffi-dev liblzma-dev python3-openssl git \
+    locales vim ssh emacs aptitude xterm iputils-ping net-tools screen graphviz tzdata \
+    libgraphviz-dev pkg-config expat zlib1g-dev libncurses5-dev libncursesw5-dev python3-tk && \
     apt-get clean all && rm -rf /var/lib/apt/lists/*
 
 # Install MPICH
@@ -107,54 +111,63 @@ RUN rm test_mpi.c test_mpi
 # Keep the container running
 #RUN sleep infinity
 
-# # Install necessary packages for building NEURON
-# RUN apt-get update && apt-get install -y \
-#     wget curl git \
-#     cmake bison flex \
-#     build-essential \
-#     libncurses-dev \
-#     libreadline-dev \
-#     libx11-dev \
-#     python3-dev python3-pip \
-#     libopenmpi-dev
+# Install necessary packages for building NEURON
+RUN apt-get update && apt-get install -y \
+    wget curl git \
+    cmake bison flex \
+    build-essential \
+    libncurses-dev \
+    libreadline-dev \
+    libx11-dev \
+    python3-dev python3-pip \
+    libopenmpi-dev
 
-# RUN pip install 'cython<3'
+RUN pip install 'cython<3'
 
-# Download and install InterViews
-RUN wget https://neuron.yale.edu/ftp/neuron/versions/v7.7/iv-19.tar.gz && \
-    tar xzf iv-19.tar.gz && \
-    cd iv-19 && \
-    ./configure && \
+# Install C and C++ compilers that support C++17
+RUN apt-get install -y gcc-9 g++-9 && \
+    update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-9 60 --slave /usr/bin/g++ g++ /usr/bin/g++-9
+
+# Clone the NEURON repository
+RUN git clone https://github.com/neuronsimulator/nrn.git /opt/nrn && \
+    cd /opt/nrn && \
+    git checkout tags/8.0.0  # Adjust the tag as per your specific version requirement
+
+# Configure NEURON using CMake
+RUN mkdir /opt/nrn/build && cd /opt/nrn/build && \
+    cmake .. \
+    -DNRN_ENABLE_INTERVIEWS=OFF \
+    -DNRN_ENABLE_PYTHON=ON \
+    -DNRN_ENABLE_CORENEURON=ON \
+    -DPYTHON_EXECUTABLE="/usr/local/bin/python3.8" \
+    -DNRN_ENABLE_MPI=ON \
+    -DCMAKE_INSTALL_PREFIX="/opt/neuron"
+    #-DCMAKE_PREFIX_PATH="/usr/local/ncurses"
+
+# Build and install NEURON
+RUN cd /opt/nrn/build && \
     make -j$(nproc) && \
     make install
 
-# Download and install NEURON
-RUN wget https://neuron.yale.edu/ftp/neuron/versions/v7.7/nrn-7.7.tar.gz && \
-    tar xzf nrn-7.7.tar.gz && \
-    cd nrn-7.7 && \
-    ./configure --with-iv --with-paranrn --with-nrnpython=python3 && \
-    make -j$(nproc) && \
-    make install && \
-    cd src/nrnpython && \
-    python3 setup.py install
-
 # Set environment variables
-ENV PATH="/usr/local/nrn/x86_64/bin:$PATH" \
-    PYTHONPATH="/usr/local/nrn/x86_64/lib/python:$PYTHONPATH"
+ENV PATH="/opt/neuron/bin:$PATH" \
+    PYTHONPATH="/opt/neuron/lib/python:$PYTHONPATH"
+
+#NEURON will try to find MPI library in the standard library paths (e.g. /usr/lib). But on some systems MPI libraries may not be in standard path. 
+ENV LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH
 
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Keep the container running
-#RUN sleep infinity
+RUN sleep infinity
 
 # Install Python packages
 RUN python -m pip install \
     numpy matplotlib h5py ruamel.yaml jupyter jupyter_server scipy six bluepyopt \
     netpyne Pillow 'bokeh<3' contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit \
-    markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado 'inspyred >= 1.0.2' \
-    wheel setuptools setuptools_scm scikit-build ipython packaging 'pytest<=8.1.1' pytest-cov find_libpython \
-    'pyneuroml>=1.1.5' tables
+    markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado inspyred \
+    wheel setuptools setuptools_scm scikit-build ipython packaging 'pytest<=8.1.1' pytest-cov find_libpython
     
 #install mpi4py
 RUN python -m pip install mpi4py
