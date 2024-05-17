@@ -12,9 +12,6 @@ Initialize
 '''
 ##General Imports
 import sys
-import os
-import json
-import sys
 import json
 import os
 import pandas as pd
@@ -303,6 +300,8 @@ if __name__ == '__main__':
         USER_run_label = 'vscode_debug'
         run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = False)
     else: USER_run_label = sys.argv[-1]
+    #name_of_this_script = os.path.basename(__file__)
+    #if sys.argv[-1] == name_of_this_script: USER_run_label = 'default'
     run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = True)
     USER_run_path = run_path
     main()

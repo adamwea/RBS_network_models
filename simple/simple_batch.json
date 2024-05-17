@@ -1,0 +1,76 @@
+{
+    "batch": {
+        "batchLabel": "simple",
+        "cfgFile": "cfg.py",
+        "evolCfg": {
+            "crossover": 0.5,
+            "defaultFitness": 1000,
+            "evolAlgorithm": "custom",
+            "fitnessFunc": "removed",
+            "fitnessFuncArgs": {
+                "maxFitness": 1000,
+                "pops": {
+                    "M": {
+                        "min": 0.2,
+                        "target": 15,
+                        "width": 2
+                    },
+                    "S": {
+                        "min": 2,
+                        "target": 5,
+                        "width": 2
+                    }
+                }
+            },
+            "max_generations": 4,
+            "maximize": false,
+            "maxiter_wait": 40,
+            "mutation_rate": 0.4,
+            "num_elites": 1,
+            "pop_size": 6,
+            "time_sleep": 5
+        },
+        "initCfg": {},
+        "method": "evol",
+        "netParamsFile": "netParams.py",
+        "optimCfg": {
+            "fitnessFunc": "removed"
+        },
+        "params": [
+            {
+                "label": "prob",
+                "values": [
+                    0.01,
+                    0.5
+                ]
+            },
+            {
+                "label": "weight",
+                "values": [
+                    0.001,
+                    0.1
+                ]
+            },
+            {
+                "label": "delay",
+                "values": [
+                    1,
+                    20
+                ]
+            }
+        ],
+        "runCfg": {
+            "allocation": "default",
+            "coresPerNode": 2,
+            "email": "salvadordura@gmail.com",
+            "folder": "/home/salvadord/evol",
+            "mpiCommand": "mpirun",
+            "nodes": 1,
+            "reservation": null,
+            "script": "init.py",
+            "type": "mpi_bulletin"
+        },
+        "saveFolder": "./simple",
+        "seed": null
+    }
+}

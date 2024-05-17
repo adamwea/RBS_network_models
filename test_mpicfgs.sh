@@ -4,7 +4,7 @@
 
 ###options
 USER_pop_size=128
-Duration_Seconds=15
+Duration_Seconds=1
 Batch_Run_Label=more_docker_testing
 nodes=$SLURM_NNODES #hpc
 nodes=1 #laptop or server
@@ -57,8 +57,9 @@ echo "Running..."
 #     --cpu_bind=cores \
 #     check-hybrid.gnu.pm |sort -k4,6
 
-# #Test mpi4py
-#mpiexec -n ${ntasks} python testmpi.py
+# #Test mpi4pynrniv -python -c "import sys; print(sys.executable)"
+#mpiexec -n ${ntasks} python3 testmpi.py
+#mpiexec -bootstrap fork -n ${ntasks} python3 testmpi.py
 # srun --ntasks ${ntasks} \
 #     --cpus-per-task ${cores_per_task} \
 #     --cpu_bind=cores \
@@ -67,6 +68,7 @@ echo "Running..."
 #test mpisync
 #mpicc -o mpitest mpitest.c
 #mpiexec -np 4 ./mpitest
+#mpiexec -bootstrap fork -np 4 ./mpitest
 
 #test NEURON
 #mpiexec --allow-run-as-root -n ${ntasks}  nrniv -mpi test0.hoc
@@ -74,10 +76,26 @@ echo "Running..."
 #srun -n ${num_MPI_task} --cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 nrniv -mpi test0.hoc
 
 #Test batchRun local
+source activate netpyne_env
+export OMP_NUM_THREADS=1
 cd NERSC
 # mpiexec -bootstrap fork -np ${num_MPI_task}\
 #mpiexec -bootstrap fork  --verbose -np ${ntasks} nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
-mpiexec -bootstrap fork --verbose -np ${ntasks} nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+#mpiexec --verbose -np ${ntasks} nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+#delete temp if exists
+rm -rf /app/tmp
+#export TMPDIR=/app/tmp
+export PMIX_MCA_gds=hash
+include "toppar/forcefield.itp"
+include "toppar/PROA.itp"
+include "toppar/LIG.itp"
+include "toppar/SOD.itp"
+include "toppar/CLA.itp"
+include "toppar/TIP3.itp"
+#mpiexec --mca btl self,tcp -verbose -np ${ntasks} -x TMPDIR=$TMPDIR \
+mpiexec --mca btl self,tcp -verbose -np ${ntasks} \
+nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+
 
 # srun \
 #     --ntasks ${ntasks} \
