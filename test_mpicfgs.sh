@@ -86,14 +86,8 @@ cd NERSC
 rm -rf /app/tmp
 #export TMPDIR=/app/tmp
 export PMIX_MCA_gds=hash
-include "toppar/forcefield.itp"
-include "toppar/PROA.itp"
-include "toppar/LIG.itp"
-include "toppar/SOD.itp"
-include "toppar/CLA.itp"
-include "toppar/TIP3.itp"
 #mpiexec --mca btl self,tcp -verbose -np ${ntasks} -x TMPDIR=$TMPDIR \
-mpiexec --mca btl self,tcp -verbose -np ${ntasks} \
+mpiexec --mca btl self,tcp -verbose -np ${ntasks} -x TMPDIR=$TMPDIR \
 nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
 
 
