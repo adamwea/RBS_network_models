@@ -22,7 +22,24 @@ RUN which find
 RUN apt-get update && apt-get install -y \
     libpmi0-dev libpmix-dev  
 
-# #Install pmi packages
+# Update SSL certificates
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    wget \
+    build-essential \
+    libssl-dev \
+    libffi-dev \
+    zlib1g-dev \
+    libbz2-dev \
+    libreadline-dev \
+    libsqlite3-dev \
+    libncurses5-dev \
+    libgdbm-dev \
+    libnss3-dev \
+    liblzma-dev \
+    libdb-dev \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # # Keep the container running
 # RUN sleep infinity
@@ -46,20 +63,23 @@ RUN find /usr -name pmi.h -print && \
 ENV PATH="/usr/local/bin:/usr/bin:/bin:/app:$PATH"
 ENV LD_LIBRARY_PATH="/usr/local/lib:$LD_LIBRARY_PATH"
 
-# Install Python 3.8
-RUN mkdir ~/python38 && \
-    cd ~/python38 && \
-    wget https://www.python.org/ftp/python/3.8.16/Python-3.8.16.tgz && \
-    tar -xf Python-3.8.16.tgz && \
-    cd Python-3.8.16 && \
+# Install Python 3.7
+RUN mkdir ~/python37 && \
+    cd ~/python37 && \
+    wget https://www.python.org/ftp/python/3.7.12/Python-3.7.12.tgz && \
+    tar -xf Python-3.7.12.tgz && \
+    cd Python-3.7.12 && \
     ./configure --enable-optimizations --enable-shared && \
-    make -j$(nproc) && \
+    #make -j$(nproc) && \
+    make -j4 && \
     make install
 
-# Create a symbolic link to the Python 3.8 binary, and check the Python version
+# Create a symbolic link to the Python 3.7 binary, and check the Python version
 RUN ln -s /usr/bin/python3 /usr/bin/python
-RUN ln -sf /usr/local/bin/python3.8 /usr/bin/python
+RUN ln -sf /usr/local/bin/python3.7 /usr/bin/python
 RUN python --version && which python
+
+ENV PYTHONUNBUFFERED=1
 
 # Install python3-openssl and python3-tk
 RUN apt-get update && apt-get install -y python3-openssl python3-tk && \
@@ -89,16 +109,18 @@ RUN \
     cd /tmp/mpich-${MPICH_VERSION} && \
     ./configure --prefix=${PREFIX} \
     #--datarootdir=${PREFIX}/share 
-    --enable-fortran=no --with-device=ch4:ofi &&\
+    --enable-fortran=no \
+    --with-device=ch3:nemesis \
+    #--with-device=ch4:ofi \
     ##--with-pmi=/usr \
     # --with-pmi-include=/usr/include/slurm \
     # --with-pmi-lib=/usr/lib/x86_64-linux-gnu && \
-    ##--with-pmix=/usr && \
+    ##--with-pmix=/usr \
     # --with-pmix-include=/usr/lib/x86_64-linux-gnu/pmix2/include \
     # --with-pmix-lib=/usr/lib/x86_64-linux-gnu/pmix2 \
-    # --with-pm=hydra && \
-    #&&\
-    make -j$(nproc) && \
+    # --with-pm=hydra \
+    # && make -j$(nproc) && \
+    && make -j4 && \
     make install && \
     rm -rf /tmp/mpich-${MPICH_VERSION} /tmp/mpich-${MPICH_VERSION}.tar.gz
 

@@ -52,7 +52,6 @@ echo "Running..."
 #export OMP_PROC_BIND=spread
 
 # #check allocation
-#mpiexec -np ${ntasks} check-hybrid.gnu.pm |sort -k4,6
 # srun --ntasks ${ntasks} \
 #     --cpus-per-task ${cores_per_task} \
 #     --cpu_bind=cores \
@@ -66,19 +65,19 @@ echo "Running..."
 #     shifter --image=adammwea/netpyneshifter:v6 python testmpi.py
 
 #test mpisync
-# mpicc -o mpitest mpitest.c
-# mpiexec -np 4 ./mpitest
+#mpicc -o mpitest mpitest.c
+#mpiexec -np 4 ./mpitest
 
 #test NEURON
+#mpiexec --allow-run-as-root -n ${ntasks}  nrniv -mpi test0.hoc
 #mpiexec -n ${ntasks}  nrniv -mpi test0.hoc
-#mpiexec -bootstrap fork -n ${ntasks}  nrniv -mpi test0.hoc
 #srun -n ${num_MPI_task} --cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 nrniv -mpi test0.hoc
 
 #Test batchRun local
 cd NERSC
 # mpiexec -bootstrap fork -np ${num_MPI_task}\
-mpiexec -bootstrap fork  --verbose -np ${ntasks} nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
-#mpiexec --verbose -np ${ntasks} nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+#mpiexec -bootstrap fork  --verbose -np ${ntasks} nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+mpiexec -bootstrap fork --verbose -np ${ntasks} nrniv -mpi -python batchRun_mpi.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
 
 # srun \
 #     --ntasks ${ntasks} \
