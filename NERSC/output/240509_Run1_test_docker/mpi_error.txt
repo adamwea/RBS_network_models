@@ -1,0 +1,10 @@
+NEURON -- VERSION 8.2.4 HEAD (1d87d5d39) 2024-02-09
+Duke, Yale, and the BlueBrain Project -- Copyright 1984-2022
+See http://neuron.yale.edu/neuron/credits
+
+Traceback (most recent call last):
+  File "batchRun.py", line 296, in <module>
+    else: assert False, 'How did you get here?'
+AssertionError: How did you get here?
+0 /miniconda/envs/myenv/bin/nrniv: can't open -rp
+Abort(-1) on node 0 (rank 0 in comm 0): application called MPI_Abort(MPI_COMM_WORLD, -1) - process 0

@@ -1,0 +1,57 @@
+/app/NERSC/output/240510_Run1_local_debug/gen_0/gen_0_cand_2.sbatch: 2: None: not found
+NEURON -- VERSION 8.2.4 HEAD (1d87d5d39) 2024-02-09
+Duke, Yale, and the BlueBrain Project -- Copyright 1984-2022
+See http://neuron.yale.edu/neuron/credits
+
+Traceback (most recent call last):
+  File "/app/NERSC/init.py", line 5, in <module>
+    simConfig, netParams = sim.readCmdLineArgs(simConfigDefault='simConfig.py', netParamsDefault='netParams.py')
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/setup.py", line 293, in readCmdLineArgs
+    netParamsModule = sim.loadPythonModule(netParamsPath)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/utils.py", line 42, in loadPythonModule
+    loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/app/NERSC/output/240510_Run1_local_debug/240510_Run1_local_debug_netParams.py", line 23, in <module>
+    if 'evol' in batch_method:
+NameError: name 'batch_method' is not defined
+Traceback (most recent call last):
+  File "/app/NERSC/init.py", line 5, in <module>
+    simConfig, netParams = sim.readCmdLineArgs(simConfigDefault='simConfig.py', netParamsDefault='netParams.py')
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/setup.py", line 293, in readCmdLineArgs
+    netParamsModule = sim.loadPythonModule(netParamsPath)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/utils.py", line 42, in loadPythonModule
+    loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/app/NERSC/output/240510_Run1_local_debug/240510_Run1_local_debug_netParams.py", line 23, in <module>
+    if 'evol' in batch_method:
+NameError: name 'batch_method' is not defined
+Traceback (most recent call last):
+  File "/app/NERSC/init.py", line 5, in <module>
+    simConfig, netParams = sim.readCmdLineArgs(simConfigDefault='simConfig.py', netParamsDefault='netParams.py')
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/setup.py", line 293, in readCmdLineArgs
+    netParamsModule = sim.loadPythonModule(netParamsPath)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/utils.py", line 42, in loadPythonModule
+    loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/app/NERSC/output/240510_Run1_local_debug/240510_Run1_local_debug_netParams.py", line 23, in <module>
+    if 'evol' in batch_method:
+NameError: name 'batch_method' is not defined
+Traceback (most recent call last):
+  File "/app/NERSC/init.py", line 5, in <module>
+    simConfig, netParams = sim.readCmdLineArgs(simConfigDefault='simConfig.py', netParamsDefault='netParams.py')
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/setup.py", line 293, in readCmdLineArgs
+    netParamsModule = sim.loadPythonModule(netParamsPath)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/utils.py", line 42, in loadPythonModule
+    loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/app/NERSC/output/240510_Run1_local_debug/240510_Run1_local_debug_netParams.py", line 23, in <module>
+    if 'evol' in batch_method:
+NameError: name 'batch_method' is not defined
+[WARNING] yaksa: 1 leaked handle pool objects
+[WARNING] yaksa: 1 leaked handle pool objects
+[WARNING] yaksa: 1 leaked handle pool objects
+[WARNING] yaksa: 1 leaked handle pool objects
