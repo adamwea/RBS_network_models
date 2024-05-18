@@ -1,0 +1,32 @@
+srun: Job 25523022 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=25523022.51
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+srun: error: nid004734: tasks 1,5,19-21,23,25,31,57-58,62,65,69,75,77-78,81,85,89,91,93,95,102,118: Exited with exit code 1
+srun: Terminating StepId=25523022.51
+slurmstepd: error: *** STEP 25523022.51 ON nid004734 CANCELLED AT 2024-05-12T08:06:58 ***
+srun: error: nid004734: tasks 0,3,9-10,13,16,18,33,35,37-38,41-43,46-47,49,51,56,61,63,71,73,79-80,83-84,87,90,92,98,101,112-114,122-123,127: Terminated
+srun: error: nid004734: tasks 2,4,6-8,11-12,14-15,17,22,24,26-30,32,34,36,39-40,44-45,48,50,52-55,59-60,64,66-68,70,72,74,76,82,86,88,94,96-97,99-100,103-111,115-117,119-121,124-126: Killed
+srun: Force Terminated StepId=25523022.51

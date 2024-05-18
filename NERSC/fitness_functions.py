@@ -696,6 +696,34 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 print(f'Error generating sample trace plot from Data at: {data_file_path}')
                 #sample_trace_path_E = None
                 pass
+        def plot_connections():
+            # Attempt to generate sample trace for an excitatory example neuron
+            try:
+                figname = 'connections'
+                job_name = os.path.basename(os.path.dirname(batch_saveFolder))
+                gen_folder = simLabel.split('_cand')[0]
+                saveFig = USER_plotting_params['saveFig']
+                #if plot_save_path defined, replace saveFig with plot_save_path
+                if plot_save_path is not None: saveFig = plot_save_path
+                fig_path = os.path.join(saveFig, f'{job_name}/{gen_folder}/{simLabel}_{figname}')
+                USER_fresh_plots = USER_plotting_params['fresh_plots']
+                if os.path.exists(fig_path) and USER_fresh_plots: pass
+                elif os.path.exists(fig_path) and not USER_fresh_plots: 
+                    print(f'File {fig_path} already exists and USER_fresh_plots is set to False. Skipping plot.')
+                    return
+                elif os.path.exists(fig_path) is False: pass
+                else: raise ValueError(f'Idk how we got here. Logically.')
+
+                sim_obj = netpyne.sim
+                import matplotlib.pyplot as plt
+                import matplotlib.image as mpimg
+                # Create individual plots and save as PNG
+                sim_obj.analysis.plot2Dnet(saveFig=fig_path, showFig=False, showConns=True, figSize=(USER_plotting_params['figsize'][0], USER_plotting_params['figsize'][1]/2))
+
+            except:
+                print(f'Error generating sample trace plot from Data at: {data_file_path}')
+                #sample_trace_path_E = None
+                pass
         
         '''plotting'''
         try: plot_network_activity_fitness(net_activity_metrics)
@@ -709,6 +737,10 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
         try: plot_trace_example()
         except: 
             print(f'Error generating sample trace plot from Data at: {data_file_path}')
+            pass
+        try: plot_connections()
+        except: 
+            print(f'Error generating connections plot from Data at: {data_file_path}')
             pass
     
     '''

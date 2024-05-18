@@ -1,0 +1,22 @@
+srun: Job 25523050 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 25523050 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 25523050 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=25523050.5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+srun: error: nid006544: tasks 32,34,36-39,44,54,56,58-59,61: Exited with exit code 1
+srun: Terminating StepId=25523050.5
+slurmstepd: error: *** STEP 25523050.5 ON nid006544 CANCELLED AT 2024-05-12T07:02:06 ***
+srun: error: nid006544: tasks 2-3,5-6,8-9,11,15-20,22-31,33,35,41,43,45,47,49-53,55,60,62-66,68-74,77-81,83,85,87,89,91,93,95,99,112-113,115,117,121-123,127: Terminated
+srun: error: nid006544: tasks 0-1,4,7,10,12-14,21,40,42,46,48,57,67,75-76,82,84,86,88,90,92,94,96-98,100-111,114,116,118-120,124-126: Killed
+srun: Force Terminated StepId=25523050.5

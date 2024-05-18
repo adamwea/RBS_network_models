@@ -167,6 +167,7 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
                  and not 'E0' in f
                  and not 'I0' in f
                  and not '_sample_trace.png' in f
+                 and not 'connections' in f
                 ]
         img_width = page_width/len(files)
         #quick fix for less than 3 plots
@@ -185,6 +186,7 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
             if simLabel_ in file and file.endswith('.png') and '_params_plot.png' not in file:                
                 if 'E0' in file or 'I0' in file: continue
                 if '_sample_trace.png' in file: continue
+                if 'connections' in file: continue
                 # Open the image file
                 img = Image.open(os.path.join(root, file))
                 # Convert the image to RGB (required by reportlab)
@@ -193,6 +195,8 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
                 # Save the image to the PDF, adjusting the position for each image
                 c.drawInlineImage(img, j * img_width, 0, width=img_width, height=img_height)
                 #use for plotting params later
+                try: ante_final_x_pos = j-1 * img_width
+                except: pass
                 final_x_pos = j * img_width
                 j += 1
         # # Start a new page after adding all images on the current page
@@ -213,12 +217,28 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
     # Save the image to the PDF, adjusting the position for each image
     c.drawInlineImage(img, final_x_pos, img_height, width=img_width, height=img_height)
 
+    #plot connections
+    from USER_evol_param_space import params
+    cgf_file_path = data_file_path.replace('_data.json', '_cfg.json')
+    cfg_data = json.load(open(cgf_file_path))
+    cfg_data = cfg_data['simConfig']
+    plt = plot_params(cfg_data, params, cgf_file_path)
+    #params_plot_path = os.path.join(cand_plot_path, f'{simLabel}_params_plot.png')
+    conns_plot_path = os.path.join(cand_plot_path, f'{simLabel}_connections.png')
+    plt.savefig(conns_plot_path)
+    img = Image.open(conns_plot_path)
+     # Convert the image to RGB (required by reportlab)
+    if img.mode != 'RGB':
+        img = img.convert('RGB')
+    # Save the image to the PDF, adjusting the position for each image
+    c.drawInlineImage(img, ante_final_x_pos, img_height, width=img_width, height=img_height)
+
     '''
     Prints the JSON data to PDF
     '''
     fitness_path = data_file_path.replace('_data.json', '_Fitness.json')
     fitness_data = json.load(open(fitness_path))
-    c.setFont("Helvetica", 8)
+    c.setFont("Helvetica", 6)
     
 
     ## Generation-Simualtion info
@@ -297,13 +317,15 @@ def plot_elite_paths(elite_paths, HOF_path = None):
     print(f"Job Directory: {job_dir}")
     batch_file_path = [f.path for f in os.scandir(job_dir) if f.is_file() and '_batch.json' in f.name][0]
     batch_data = json.load(open(batch_file_path))
-    num_elites = batch_data['batch']['evolCfg']['num_elites']
+    
     # try: assert num_elites < len(elite_paths), f"Error: num_elites must be less than the number of elites in the generation."
     # except: 
     #     if cand is not None: pass
     #     else: raise Exception(f"Error: num_elites must be less than the number of elites in the generation.")
 
     elite_paths = sorted(elite_paths.items(), key=lambda x: x[1]['avgScaledFitness'], reverse=False)
+    num_elites = batch_data['batch']['evolCfg']['num_elites']
+    num_elites = len(elite_paths)
     if not HOF_mode: elite_paths_cull = elite_paths[:num_elites]
     else: elite_paths_cull = elite_paths
     for simLabel, data in elite_paths_cull:
@@ -479,7 +501,7 @@ if __name__ == '__main__':
     cand = None
 
     #set to True to plot all candidates, regardless of whether they have already been plotted
-    new_plots = False
+    new_plots = True
 
     #set to True to print verbose output
     verbose = False
@@ -518,9 +540,12 @@ if __name__ == '__main__':
             # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240505_Run18_debug_node_run',
             # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240506_Run1_overnightRun',
 
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run13_interactive',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run14_OMPTest',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run15_OMPTest2'
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run13_interactive',
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run14_OMPTest',
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run15_OMPTest2'
+
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240517_Run1_best_case',
+
             ]
         
         #run plot_elites    

@@ -1,0 +1,51 @@
+srun: Job 25523050 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 25523050 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 25523050 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 25523050 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 25523050 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=25523050.77
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+srun: error: nid006544: tasks 1-3,5-6,8,13-15,19,21,23,25,29,33,35,37,39,43,53,72,75,80,82-83,89,94-95,97,104,106,109,113,115,118,121,124-126: Exited with exit code 1
+srun: Terminating StepId=25523050.77
+slurmstepd: error: *** STEP 25523050.77 ON nid006544 CANCELLED AT 2024-05-12T08:41:23 ***
+srun: error: nid006544: tasks 0,9,17-18,26,28,30,41,55,68,79,87,93,101,117,123: Terminated
+srun: error: nid006544: tasks 4,7,10-12,16,20,22,24,27,31-32,34,36,38,40,42,44-52,54,56-67,69-71,73-74,76-78,81,84-86,88,90-92,96,98-100,102-103,105,107-108,110-112,114,116,119-120,122,127: Killed
+srun: Force Terminated StepId=25523050.77
