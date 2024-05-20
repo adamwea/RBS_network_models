@@ -19,3 +19,9 @@ netParams.popParams['I'] = {
     'numCells': int(totalPop*0.30), 
     'yRange': [100,1900], 
     'xRange': [100,3900]}
+
+	# cfg.recordTraces['soma_voltage'] = { "sec": "soma", "loc": 0.5, "var": "v"}
+	# # only record this trace from populations 'M' and 'S'
+	# # record from the first cell in populations 'M' and 'S'
+	# cfg.recordCells = [('E', [0]), ('I', [0])]
+

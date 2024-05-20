@@ -195,7 +195,7 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
                 # Save the image to the PDF, adjusting the position for each image
                 c.drawInlineImage(img, j * img_width, 0, width=img_width, height=img_height)
                 #use for plotting params later
-                try: ante_final_x_pos = j-1 * img_width
+                try: ante_final_x_pos = (j-1) * img_width
                 except: pass
                 final_x_pos = j * img_width
                 j += 1
@@ -219,19 +219,13 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
 
     #plot connections
     from USER_evol_param_space import params
-    cgf_file_path = data_file_path.replace('_data.json', '_cfg.json')
-    cfg_data = json.load(open(cgf_file_path))
-    cfg_data = cfg_data['simConfig']
-    plt = plot_params(cfg_data, params, cgf_file_path)
-    #params_plot_path = os.path.join(cand_plot_path, f'{simLabel}_params_plot.png')
     conns_plot_path = os.path.join(cand_plot_path, f'{simLabel}_connections.png')
-    plt.savefig(conns_plot_path)
     img = Image.open(conns_plot_path)
      # Convert the image to RGB (required by reportlab)
     if img.mode != 'RGB':
         img = img.convert('RGB')
     # Save the image to the PDF, adjusting the position for each image
-    c.drawInlineImage(img, ante_final_x_pos, img_height, width=img_width, height=img_height)
+    c.drawInlineImage(img, ante_final_x_pos, img_height, width=img_width, height=img_height/2)
 
     '''
     Prints the JSON data to PDF
@@ -283,6 +277,8 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
     # Close the PDF
 
     c.save()
+
+    #sys.exit()
 def recalc_fitness(data_file_path):
     #assert that data_file_path exists, if it doesnt, probably wokring with locally instead of on NERSC
     try: assert os.path.exists(data_file_path), f"Error: {data_file_path} does not exist."

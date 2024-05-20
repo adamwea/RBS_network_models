@@ -30,11 +30,19 @@ if cfg.networkType == 'pre13Apr24':
 	cfg.printPopAvgRates = [100, cfg.duration]
 
 	#http://doc.netpyne.org/user_documentation.html#simconfig-recordtraces
-	# record voltage at the center of the 'soma' section
-	cfg.recordTraces['soma_voltage'] = { "sec": "soma", "loc": 0.5, "var": "v"}
-	# only record this trace from populations 'M' and 'S'
-	# record from the first cell in populations 'M' and 'S'
-	cfg.recordCells = [('E', [0]), ('I', [0])]
+	from USER_const_net_params import netParams
+	num_Ecells = netParams.popParams['E']['numCells']
+	num_Icells = netParams.popParams['I']['numCells']
+	import random
+
+	# Choose two random cells from each population
+	E_cells = random.sample(range(num_Ecells), min(2, num_Ecells))
+	I_cells = random.sample(range(num_Icells), min(2, num_Icells))
+
+	cfg.recordCells = [('E', E_cells), ('I', I_cells)]
+	print(cfg.recordCells)
+
+
 	
 	#Investigate Oscillatory behavior
 	# cfg.recordLFP = [[50, 50, 50]]
