@@ -14,6 +14,7 @@ if cfg.networkType == 'pre13Apr24':
 
 	#seconds = cfg.duration_seconds
 	#cfg.duration = seconds*1e3           # Duration of the simulation, in ms
+	print('im here first')
 	cfg.dt = 0.025                # Internal integration timestep to use
 	cfg.verbose = False            # Show detailed messages
 	cfg.recordStep = 0.1             # Step size in ms to save data (eg. V traces, LFP, etc)

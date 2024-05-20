@@ -97,21 +97,15 @@ def get_HOF_seeds():
     return seeds
 def get_batch_config(batch_config_options = None):
     
-    USER_seed_evol = True
-    #if rank == 0:
-    #print(f'rank zero getting seeds')
+    #Apply HOF setting in main
     if USER_seed_evol == True:
-        HOF_seeds = get_HOF_seeds()
         #load HOF of previous runs
-    else: HOF_seeds = {}
-    #else: HOF_seeds = {}
+        HOF_seeds = get_HOF_seeds()        
+    else: HOF_seeds = None
     
     # Extract the parameters
     run_path =  batch_config_options['run_path']
     batch_label = batch_config_options['batchLabel']
-    # if 'initCfg' in batch_config_options:
-    #     initCfg = batch_config_options['initCfg']
-    # else: initCfg = {}
 
     batch_config = {
         'batchLabel': batch_label,
@@ -278,6 +272,7 @@ if __name__ == '__main__':
     run_in_vscode = False
     
     '''USER Inputs'''
+    USER_seed_evol = False
     from USER_INPUTS import *
     #USER_runCfg_type = 'mpi_direct'
     USER_runCfg_type = 'mpi_bulletin'
@@ -296,7 +291,7 @@ if __name__ == '__main__':
     USER_mpiCommand = 'srun'
     USER_cores_per_node = USER_mpis_per_batch 
     if run_in_vscode: 
-        USER_pop_size = 4
+        USER_pop_size = 2
         USER_run_label = 'vscode_debug'
         run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = False)
     else: USER_run_label = sys.argv[-1]

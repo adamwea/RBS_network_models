@@ -1,0 +1,146 @@
+# Use a base image
+#FROM ubuntu:20.04
+FROM phusion/baseimage:focal-1.2.0
+
+WORKDIR /opt
+
+# Set noninteractive installation mode and timezone
+ENV DEBIAN_FRONTEND noninteractive
+ENV TZ=America/Los_Angeles
+
+# Install necessary packages
+RUN apt-get update && \
+    apt-get install -y \
+        locales \
+        wget \
+        gcc \
+        g++ \
+        build-essential \
+        libncurses-dev \
+        python3 \
+        python3-pip \
+        libpython3-dev \
+        openmpi-bin \
+        openmpi-common \
+        libopenmpi-dev \
+        git \
+        cmake \
+        bison \
+        libreadline-dev \
+        flex && \
+    localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
+    pip3 install --upgrade pip && \
+    pip3 install cython
+
+RUN apt-get update && apt-get install -y \
+    ssh \
+    build-essential \
+    gfortran \
+    libblas-dev liblapack-dev \
+    libfabric-dev \
+    infiniband-diags libibverbs-dev librdmacm-dev \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+#    && pip install -r requirements.txt \
+
+# Install Slurm and additional packages
+RUN apt-get update && \
+    apt-get install -y \
+        #slurm-wlm \
+        libpmi0 \
+        libpmix-dev \
+        libpmix2 \
+        libopenmpi-dev \
+        libopenmpi3
+
+RUN apt-get install -y libx11-dev libxcomposite-dev
+
+#Set MpiDefault to pmix
+#RUN echo "MpiDefault=pmix" >> /etc/slurm/slurm.conf
+
+# # Clone the NEURON repository
+# RUN git clone https://github.com/neuronsimulator/nrn.git /opt/nrn && \
+#     cd /opt/nrn && \
+#     git checkout tags/8.2.4  # Adjust the tag as per your specific version requirement
+
+# # Configure NEURON using CMake
+# RUN mkdir /opt/nrn/build && cd /opt/nrn/build && \
+#     cmake .. \
+#     -DNRN_ENABLE_INTERVIEWS=OFF \
+#     -DNRN_ENABLE_PYTHON=ON \
+#     -DNRN_ENABLE_CORENEURON=ON \
+#     -DPYTHON_EXECUTABLE="/usr/bin/python3" \
+#     -DNRN_ENABLE_MPI=ON \
+#     -DCMAKE_INSTALL_PREFIX="/opt/neuron"
+#     #-DCMAKE_PREFIX_PATH="/usr/local/ncurses"
+
+# Install Miniconda
+RUN wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh && \
+    bash Miniconda3-latest-Linux-x86_64.sh -b -p /opt/miniconda && \
+    rm Miniconda3-latest-Linux-x86_64.sh
+
+# Set path to conda
+ENV PATH /opt/miniconda/bin:$PATH
+
+# Create a Python 3.9 environment
+RUN conda create -n netpyne_env python=3.8
+
+#create a user
+RUN useradd -m mpiuser
+RUN /sbin/ldconfig
+USER mpiuser
+ENV PATH=$PATH:/home/mpiuser/.local/bin
+
+# Activate the environment
+SHELL ["conda", "run", "-n", "netpyne_env", "/bin/bash", "-c"]
+RUN source activate netpyne_env
+
+#RUN python3 -m pip install numpy
+# RUN cd /opt/nrn \
+#     && python3 setup.py install
+
+RUN python3 -m pip install numpy
+RUN python3 -m pip show numpy | grep Location
+
+RUN python3 -m pip install neuron
+RUN python3 -m pip show neuron | grep Location
+RUN python3 -m pip install \
+    numpy matplotlib h5py ruamel.yaml jupyter jupyter_server scipy six bluepyopt \
+    netpyne Pillow 'bokeh<3' contextlib2 cycler fonttools future jinja2 kiwisolver lfpykit \
+    markupsafe matplotlib-scalebar meautility packaging pandas pyparsing pytz pyyaml schema tornado inspyred \
+    wheel setuptools setuptools_scm scikit-build ipython packaging 'pytest<=8.1.1' pytest-cov find_libpython
+    
+#install mpi4py
+
+RUN python3 -m pip install mpi4py
+
+WORKDIR /app
+
+ENV LANG en_US.utf8
+# ENV PATH=/usr/bin:$PATH
+# ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu/openmpi/lib
+# ENV OPAL_PREFIX=/usr/lib/x86_64-linux-gnu/openmpi/include/openmpi/opal
+
+# ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/mpi/lib
+# ENV OPAL_PREFIX=/opt/hpcx/ompi
+#ENV PATH $PATH:/opt/nrn/x86_64/bin
+
+#RUN cat /etc/slurm/slurm.conf
+# Set environment variables for Open MPI
+#ENV OMPI_MCA_orte_rsh_agent=ssh
+#ENV OMPI_MCA_plm_rsh_agent=ssh
+#ENV OMPI_MCA_orte_base_help_aggregate=0
+
+#start environment
+#RUN /bin/bash -c ["source", "activate", "netpyne_env"]
+
+#RUN source activate netpyne_env
+
+# Set default command
+CMD ["bash"]
+# Set default command
+# Create the script and make it executable
+# RUN echo -e '#!/bin/bash\nsource /opt/miniconda/bin/activate netpyne_env\nexec /bin/bash' > /usr/local/bin/entrypoint.sh && \
+#     chmod +x /usr/local/bin/entrypoint.sh
+
+# # Set the script as the default command
+# CMD ["/usr/local/bin/entrypoint.sh"]
