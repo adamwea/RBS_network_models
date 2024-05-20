@@ -89,6 +89,55 @@ RUN /etc/init.d/munge start && \
     /etc/init.d/slurmd start
 #     tail -f /dev/null
 
+# Install UCX dependencies
+RUN apt-get update && \
+    apt-get install -y \
+        binutils-dev \
+        libnuma-dev \
+        wget && \
+        apt-get clean && rm -rf /var/lib/apt/lists/*
+
+# Set environment variables for PMIx
+ENV PATH="/usr/local/pmix/bin:$PATH"
+ENV LD_LIBRARY_PATH="/usr/local/pmix/lib:$LD_LIBRARY_PATH"
+ENV PKG_CONFIG_PATH="/usr/local/pmix/lib/pkgconfig:$PKG_CONFIG_PATH"
+
+# Download, build, and install UCX
+RUN wget https://github.com/openucx/ucx/releases/download/v1.12.1/ucx-1.12.1.tar.gz && \
+    tar -xzf ucx-1.12.1.tar.gz && \
+    cd ucx-1.12.1 && \
+    ./configure --prefix=/usr/local/ucx && \
+    make -j4 && \
+    make install && \
+    cd .. && \
+    rm -rf ucx-1.12.1 ucx-1.12.1.tar.gz
+
+# Set environment variables for UCX
+ENV PATH="/usr/local/ucx/bin:$PATH"
+ENV LD_LIBRARY_PATH="/usr/local/ucx/lib:$LD_LIBRARY_PATH"
+ENV PKG_CONFIG_PATH="/usr/local/ucx/lib/pkgconfig:$PKG_CONFIG_PATH"
+
+#confirm ucx version is 1.12.1
+#RUN ucx_info -v
+
+#make docker build hang for debug purposes
+#RUN tail -f /dev/null
+
+# Clone, build, and install OpenSHMEM with UCX support
+RUN git clone https://github.com/openshmem-org/osss-ucx.git /tmp/osss-ucx && \
+    cd /tmp/osss-ucx && \
+    ./autogen.sh && \
+    ./configure --prefix=/usr/local/openshmem-ucx \
+                --with-ucx=/usr/local/ucx \
+                --enable-option-checking && \
+    make -j4 && \
+    make install && \
+    rm -rf /tmp/osss-ucx
+
+# Set the necessary environment variables
+ENV PATH="/usr/local/openshmem-ucx/bin:$PATH"
+ENV LD_LIBRARY_PATH="/usr/local/openshmem-ucx/lib:$LD_LIBRARY_PATH"
+ENV C_INCLUDE_PATH="/usr/local/openshmem-ucx/include:$C_INCLUDE_PATH"
 
 # Clone, build, and install Open MPI
 RUN git clone https://github.com/open-mpi/ompi.git /tmp/ompi && \
@@ -99,6 +148,8 @@ RUN git clone https://github.com/open-mpi/ompi.git /tmp/ompi && \
                 --with-pmix=/usr/local/pmix \
                 --with-prrte=/usr/local/prrte \
                 --with-slurm \
+                #--with-ucx=/usr/local/ucx \
+                #--with-shmem=/usr/local/openshmem-ucx \
                 #--with-pmi \
                 &&\
     #make -j$(nproc) && \
@@ -203,7 +254,7 @@ WORKDIR /app
 ENV LANG en_US.utf8
 
 # Add the path to shmem.h to C_INCLUDE_PATH
-ENV C_INCLUDE_PATH="/usr/include/hwloc:$C_INCLUDE_PATH"
+#ENV C_INCLUDE_PATH="/usr/include/hwloc:$C_INCLUDE_PATH"
 
 # ENV PATH=/usr/bin:$PATH
 # ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/x86_64-linux-gnu:/usr/lib/x86_64-linux-gnu/openmpi/lib
