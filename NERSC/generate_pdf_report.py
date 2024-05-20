@@ -1,6 +1,7 @@
 import os
 import PyPDF2
 HOF = True
+HOF = False
 
 plots_dir = '/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations/NERSC/plots'
 #check if exists
@@ -10,7 +11,8 @@ if not os.path.exists(plots_dir): raise FileNotFoundError
 
 if HOF:
     #plots_dir = '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/plots/240503_HOF'
-    plots_dir = '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/plots/240506_HOF'
+    #plots_dir = '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/plots/240506_HOF'
+    plots_dir = '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/plots/240517_Run1_best_case'
     pdf_writer = PyPDF2.PdfWriter()
 
 #job_dir = os.path.abspath(job_dir)
