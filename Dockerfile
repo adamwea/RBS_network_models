@@ -45,7 +45,8 @@ RUN git clone https://github.com/openpmix/openpmix.git /tmp/openpmix && \
     git submodule update --init --recursive && \
     ./autogen.pl && \
     ./configure --prefix=/usr/local/pmix && \
-    make -j$(nproc) && \
+    #make -j$(nproc) && \
+    make -j4 && \
     make install && \
     rm -rf /tmp/openpmix
 
@@ -55,7 +56,8 @@ RUN git clone https://github.com/openpmix/prrte.git /tmp/prrte && \
     git submodule update --init --recursive && \
     ./autogen.pl && \
     ./configure --prefix=/usr/local/prrte --with-pmix=/usr/local/pmix && \
-    make -j$(nproc) && \
+    #make -j$(nproc) && \
+    make -j4 && \
     make install && \
     rm -rf /tmp/prrte
 
@@ -99,7 +101,8 @@ RUN git clone https://github.com/open-mpi/ompi.git /tmp/ompi && \
                 --with-slurm \
                 #--with-pmi \
                 &&\
-    make -j$(nproc) && \
+    #make -j$(nproc) && \
+    make -j4 && \
     make install && \
     rm -rf /tmp/ompi
 
