@@ -279,10 +279,10 @@ if __name__ == '__main__':
     
     '''USER Inputs'''
     from USER_INPUTS import *
-    USER_max_generations=1
+    USER_max_generations=3000
     USER_runCfg_type = 'mpi_direct'
     #USER_runCfg_type = 'mpi_bulletin'
-    USER_pop_size = 15
+    USER_pop_size = 45
     #USER_pop_size = 4 #laptop
     USER_nodes = 1
     cores_per_perlmutter = 128 #128 or 256, pending debug
