@@ -14,7 +14,7 @@ import netpyne
 # Import USER_INPUTS
 from USER_INPUTS import *
 
-def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, batch_saveFolder = None, fitness_save_path = None, plot_save_path = None, **kwargs):   
+def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, batch_saveFolder = None, fitness_save_path = None, plot_save_path = None, exp_mode = False, **kwargs):   
 
     ''' subfuncs '''
     def set_all_fitness_to_max():
@@ -43,6 +43,10 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             binSize = net_activity_params['binSize']
             gaussianSigma = net_activity_params['gaussianSigma']
             thresholdBurst = net_activity_params['thresholdBurst']
+            #experimental data fitting mode
+            if exp_mode: 
+                rasterData = {}
+                rasterData['spkt'] = simData
             assert len(rasterData['spkt']) > 0, 'Error: rasterData has no elements. burstPeak, baseline, slopeFitness, and IBI fitness set to 1000.'                       
             # Generate the network activity plot with a size of (10, 5)
             plotting_params = None

@@ -3,7 +3,7 @@
 # Test case: Use oshrun to launch a trivial MPI program (hello_shmem) that does no OpenSHMEM communication.
 
 # Compile hello_shmem.c
-mpicc -o hello_oshmem hello_oshmem_c.c
+mpicc hello_oshmem_c.c -o hello_oshmem -L/opt/openmpi/lib -loshmem
 
 # Path to the compiled MPI program
 MPI_PROGRAM="./hello_oshmem"

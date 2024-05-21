@@ -540,9 +540,13 @@ if __name__ == '__main__':
             # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run14_OMPTest',
             # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run15_OMPTest2'
 
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240517_Run1_best_case',
+            './NERSC/output/240517_Run1_best_case',
 
             ]
+        
+        for job_dir in job_dirs: job_dir = os.path.abspath(job_dir)
+            
+            #
         
         #run plot_elites    
         for job_dir in job_dirs:

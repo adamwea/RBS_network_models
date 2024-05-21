@@ -1,0 +1,32 @@
+NEURON -- VERSION 8.2.4 HEAD (1d87d5d39) 2024-02-09
+Duke, Yale, and the BlueBrain Project -- Copyright 1984-2022
+See http://neuron.yale.edu/neuron/credits
+
+--------------------------------------------------------------------------
+It looks like MPI_INIT failed for some reason; your parallel process is
+likely to abort.  There are many reasons that a parallel process can
+fail during MPI_INIT; some of which are due to configuration or environment
+problems.  This failure appears to be an internal failure; here's some
+additional information (which may only be relevant to an Open MPI
+developer):
+
+  PML add procs failed
+  --> Returned "Not found" (-13) instead of "Success" (0)
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+It looks like MPI_INIT failed for some reason; your parallel process is
+likely to abort.  There are many reasons that a parallel process can
+fail during MPI_INIT; some of which are due to configuration or environment
+problems.  This failure appears to be an internal failure; here's some
+additional information (which may only be relevant to an Open MPI
+developer):
+
+  ompi_mpi_init: ompi_mpi_instance_init failed
+  --> Returned "Not found" (-13) instead of "Success" (0)
+--------------------------------------------------------------------------
+[6ebe98b748b3:00000] *** An error occurred in MPI_Init_thread
+[6ebe98b748b3:00000] *** reported by process [3986358273,1]
+[6ebe98b748b3:00000] *** on a NULL communicator
+[6ebe98b748b3:00000] *** Unknown error
+[6ebe98b748b3:00000] *** MPI_ERRORS_ARE_FATAL (processes in this communicator will now abort,
+[6ebe98b748b3:00000] ***    and MPI will try to terminate your MPI job as well)
