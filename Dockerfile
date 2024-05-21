@@ -7,7 +7,7 @@ WORKDIR /opt
 ENV DEBIAN_FRONTEND noninteractive
 ENV TZ=America/Los_Angeles
 
-# Install necessary packages including UCX
+# Install other necessary packages
 RUN apt-get update && \
     apt-get install -y \
         locales \
@@ -19,22 +19,29 @@ RUN apt-get update && \
         python3 \
         python3-pip \
         libpython3-dev \
-        openmpi-bin \
-        openmpi-common \
-        libopenmpi-dev \
         git \
         cmake \
         bison \
         libreadline-dev \
         flex \
-        libucx-dev \
-        libucx0 \
-        libfabric-dev \
-        infiniband-diags libibverbs-dev librdmacm-dev \
         libx11-dev libxcomposite-dev && \
     localedef -i en_US -c -f UTF-8 -A /usr/share/locale/locale.alias en_US.UTF-8 && \
     pip3 install --upgrade pip && \
     pip3 install cython
+
+# Install OpenMPI and related packages
+RUN apt-get update && \
+    apt-get install -y \
+        openmpi-bin \
+        openmpi-common \
+        libopenmpi-dev \
+        libucx-dev \
+        libucx0 \
+        libfabric-dev \
+        hwloc \
+        infiniband-diags libibverbs-dev librdmacm-dev && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 # Build Open MPI 5.x with OpenSHMEM and UCX support
 RUN mkdir -p /opt/src && cd /opt/src && \
@@ -57,6 +64,20 @@ ENV PKG_CONFIG_PATH="/opt/openmpi/lib/pkgconfig:$PKG_CONFIG_PATH"
 # Ensure Open MPI libraries are always linked
 ENV LDFLAGS="-L/opt/openmpi/lib -loshmem"
 ENV CPPFLAGS="-I/opt/openmpi/include"
+
+# RUN hwloc-info --version
+# RUN dpkg -l | grep libevent
+# RUN prte_info
+# RUN pmix_info
+# RUN lstopo --version
+
+# RUN ompi_info | grep pmix
+# RUN ompi_info | grep hwloc
+# RUN ompi_info | grep libevent
+# RUN ompi_info | grep prrte
+
+# # Pause the build process
+# RUN sleep 3600  # Pause for 1 hour
 
 #Allow OpenMPI to fork processes
 ENV RDMAV_FORK_SAFE=1

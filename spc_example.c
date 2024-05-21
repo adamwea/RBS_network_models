@@ -74,6 +74,15 @@ int main(int argc, char **argv)
     /* Determine the MPI_T pvar indices for the OMPI_BYTES_SENT/RECEIVED_USER SPCs */
     index = -1;
     MPI_T_pvar_get_num(&num);
+
+    for (i = 0; i < num; i++) {
+        name_len = desc_len = 256;
+        rc = PMPI_T_pvar_get_info(i, name, &name_len, &verbosity, &var_class, &datatype, &enumtype,
+                                description, &desc_len, &bind, &readonly, &continuous, &atomic);
+        if (MPI_SUCCESS != rc)
+            continue;
+        printf("PVar %d: %s\n", i, name);
+    }
     for (i = 0; i < num; i++) {
         name_len = desc_len = 256;
         rc = PMPI_T_pvar_get_info(i, name, &name_len, &verbosity, &var_class, &datatype, &enumtype,
