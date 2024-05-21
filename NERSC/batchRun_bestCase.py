@@ -283,6 +283,8 @@ if __name__ == '__main__':
     USER_runCfg_type = 'mpi_direct'
     #USER_runCfg_type = 'mpi_bulletin'
     USER_pop_size = 45
+    USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
+    USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 else 1
     #USER_pop_size = 4 #laptop
     USER_nodes = 1
     cores_per_perlmutter = 128 #128 or 256, pending debug
