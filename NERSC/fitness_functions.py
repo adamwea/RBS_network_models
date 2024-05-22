@@ -694,24 +694,24 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 # Get the voltage trace for a specific cell
                 # Get the keys (GIDs) of the neurons
                 neuron_gids = list(sim_obj.allSimData['soma_voltage'].keys())
-                # Get the voltage trace for the first (excitatory) neuron
-                # Get the voltage trace for the first (excitatory) neuron
-                excite_voltage_trace = sim_obj.allSimData['soma_voltage'][neuron_gids[0]]
-                # Get the voltage trace for the second (inhibitory) neuron
-                inhib_voltage_trace = sim_obj.allSimData['soma_voltage'][neuron_gids[1]]                
-                # Get the time points
                 time_points = sim_obj.allSimData['t']
-                # Create a zip object from time_points and voltage traces
-                excite_pairs = zip(time_points, excite_voltage_trace)
-                inhib_pairs = zip(time_points, inhib_voltage_trace)
-                # Filter voltage traces based on filtered time_points
-                excite_voltage_trace = [v for t, v in excite_pairs if t >= timeVector[0] and t <= timeVector[-1]]
-                inhib_voltage_trace = [v for t, v in inhib_pairs if t >= timeVector[0] and t <= timeVector[-1]]
-                time_points = [t for t in time_points if t >= timeVector[0] and t <= timeVector[-1]]                
-                #print(f'test')                
-                excite_timeRange = electric_slide(time_points, excite_voltage_trace)
-                inhib_timeRange = electric_slide(time_points, inhib_voltage_trace)
-                return excite_timeRange, inhib_timeRange
+                time_ranges = {}
+
+                for gid in neuron_gids:
+                    # Get the voltage trace for the neuron
+                    voltage_trace = sim_obj.allSimData['soma_voltage'][gid]
+                    # Create a zip object from time_points and voltage trace
+                    pairs = zip(time_points, voltage_trace)
+                    # Filter voltage trace based on filtered time_points
+                    voltage_trace = [v for t, v in pairs if t >= timeVector[0] and t <= timeVector[-1]]
+                    # Filter time_points
+                    time_points_filtered = [t for t in time_points if t >= timeVector[0] and t <= timeVector[-1]]
+                    # Get time range
+                    time_range = electric_slide(time_points_filtered, voltage_trace)
+                    # Store time range in dictionary
+                    time_ranges[gid] = time_range
+
+                return time_ranges
         def plot_trace_example():
             # Attempt to generate sample trace for an excitatory example neuron
             try:
@@ -732,51 +732,53 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
 
                 sim_obj = netpyne.sim
                 timeVector = np.array(net_activity_metrics['timeVector']*1000) #convert back to ms
-                excite_timeVector, inhib_timeVector = most_active_time_range(timeVector, sim_obj)
-                timeRanges = [excite_timeVector, inhib_timeVector]
-                titles = ['E0_highFR', 'I0_highFR']
+                timeRanges = most_active_time_range(timeVector, sim_obj)
+                #timeRanges = [excite_timeVector, inhib_timeVector]
+                #titles = ['E0_highFR', 'I0_highFR']
                 import matplotlib.pyplot as plt
                 import matplotlib.image as mpimg
                 # Create individual plots and save as PNG
-                for i, timeRange in enumerate(timeRanges):
-                    if i == 0: include = ['E']
-                    else: include = ['I']
-                    title = titles[i]
-                    # Prepare the sample trace
+                num_cells = len(timeRanges)
+                fig_height_per_cell = USER_plotting_params['figsize'][1] / num_cells
+                titles = []
+
+                for gid, timeRange in timeRanges.items():
+                    #include = [gid]
+                    gid_num = int(gid.split('_')[-1])
+                    if gid_num < 400 * .3: 
+                        title = f'{gid}_excitatory'
+                        type = 'E'
+                        num = gid_num
+                    else: 
+                        title = f'{gid}_inibitory'
+                        type = 'I'
+                        num = gid_num - 400 * .3
+                    titles.append(title)
+                    include =[type, num]
                     sample_trace = sim_obj.analysis.plotTraces(
-                        #include=[('E', 0), ('I', 0)],
                         include=include,
-                        overlay=False,
+                        overlay=True,
                         oneFigPer='trace',
                         title=title,
                         timeRange=timeRange,
                         showFig=False,
-                        figSize=(USER_plotting_params['figsize'][0], USER_plotting_params['figsize'][1]/2)
+                        figSize=(USER_plotting_params['figsize'][0], fig_height_per_cell)
                     )
-                    # Get the figure
                     fig = sample_trace[0]['_trace_soma_voltage']
-                    # Add title to the figure
                     fig.suptitle(title)
-                    # Move title all the way to the left
                     fig.tight_layout(rect=[0, 0.03, 1, 1])
-                    # Save the figure with the title
                     fig_path_path = f'{fig_path}_{title}.png'
                     fig.savefig(fig_path_path)
 
-                # Create a composite figure
-                fig, axs = plt.subplots(2, 1, figsize=USER_plotting_params['figsize'])
+                fig, axs = plt.subplots(num_cells, 1, figsize=USER_plotting_params['figsize'])
                 for i, title in enumerate(titles):
-                    # Load the image
                     img = mpimg.imread(f'{fig_path}_{title}.png')
-                    # Add the image to the subplot
                     axs[i].imshow(img)
                     axs[i].axis('off')
 
-                # Adjust the layout
                 fig.tight_layout(rect=[0, 0.03, 1, 1])
-
-                # Save the composite figure
                 fig.savefig(f'{fig_path}_combined.png')
+                print(f'Sample trace plot saved to {fig_path}_combined.png')
                 #fig.suptitle('Middlemost 1 second of simulation')
                 # Save the figure with the title
                 #fig.savefig(sample_trace_path_E)

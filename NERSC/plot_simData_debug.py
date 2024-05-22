@@ -166,6 +166,7 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
                  and '_params_plot.png' not in f
                  and not 'E0' in f
                  and not 'I0' in f
+                 and not 'cell' in f
                  and not '_sample_trace.png' in f
                  and not 'connections' in f
                 ]
@@ -187,6 +188,7 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path = Non
                 if 'E0' in file or 'I0' in file: continue
                 if '_sample_trace.png' in file: continue
                 if 'connections' in file: continue
+                if 'cell' in file: continue
                 # Open the image file
                 img = Image.open(os.path.join(root, file))
                 # Convert the image to RGB (required by reportlab)
@@ -555,9 +557,11 @@ if __name__ == '__main__':
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run29_64proc',
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run30_128proc',
             
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240521_Run1_overnight_debug',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240521_Run1_overnight_debug',
             
-            './NERSC/output/240521_Run2_overnight_reg',
+            #'./NERSC/output/240521_Run2_overnight_reg',
+
+            './NERSC/output/240522_Run3_it_srun_sims',
 
             ]
         
