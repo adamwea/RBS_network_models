@@ -29,6 +29,7 @@ if cfg.networkType == '22May24':
 	cfg.printPopAvgRates = [100, cfg.duration]
 
 	#http://doc.netpyne.org/user_documentation.html#simconfig-recordtraces
+	cfg.recordTraces['soma_voltage'] = { "sec": "soma", "loc": 0.5, "var": "v"}	
 	from USER_const_net_params import netParams
 	num_Ecells = netParams.popParams['E']['numCells']
 	num_Icells = netParams.popParams['I']['numCells']
@@ -39,6 +40,7 @@ if cfg.networkType == '22May24':
 	I_cells = random.sample(range(num_Icells), min(2, num_Icells))
 
 	cfg.recordCells = [('E', E_cells), ('I', I_cells)]
+	cfg.recordCells = [('E', 0), ('I', 0)]
 	print(cfg.recordCells)
 
 if cfg.networkType == 'pre13Apr24':
@@ -64,6 +66,7 @@ if cfg.networkType == 'pre13Apr24':
 	cfg.printPopAvgRates = [100, cfg.duration]
 
 	#http://doc.netpyne.org/user_documentation.html#simconfig-recordtraces
+	cfg.recordTraces['soma_voltage'] = { "sec": "soma", "loc": 0.5, "var": "v"}	
 	from USER_const_net_params import netParams
 	num_Ecells = netParams.popParams['E']['numCells']
 	num_Icells = netParams.popParams['I']['numCells']

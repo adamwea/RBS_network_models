@@ -269,7 +269,7 @@ def main():
 '''Main code'''
 if __name__ == '__main__':
     #allow for running in vscode for debugging
-    run_in_vscode = False
+    run_in_vscode = True
     
     '''USER Inputs'''
     USER_max_generations=10

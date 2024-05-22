@@ -285,8 +285,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             print(f'Error calculating big burst peak fitness.')
             print(f'Error: {e}')
             fitnessVals['BigBurstVal_Fitness'] = {'Value': None, 'Fit': maxFitness}
-            print('Big Burst Peak: %.3f, Fitness: %.3f' % (None, maxFitness))
-
+            print('Big Burst Peak: %s, Fitness: %.3f' % (str(None), maxFitness))
         try:
             assert len(burstPeakValues) > 0, 'Error: burstPeakValues has no elements. BurstVal_fitness set to maxFitness.'
             # Number of big bursts
@@ -303,8 +302,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             print(f'Error calculating number of big bursts fitness.')
             print(f'Error: {e}')
             fitnessVals['numBig_Fitness'] = {'Value': None, 'Fit': maxFitness}
-            print('Number of Big Bursts: %.3f, Fitness: %.3f' % (None, maxFitness))
-
+            print('Number of Big Bursts: %s, Fitness: %.3f' % (str(None), maxFitness))
         try:
             assert len(burstPeakValues) > 0, 'Error: burstPeakValues has no elements. BurstVal_fitness set to maxFitness.'
             # Small bursts peak fitness
@@ -346,8 +344,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             print(f'Error calculating number of small bursts fitness.')
             print(f'Error: {e}')
             fitnessVals['numSmall_Fitness'] = {'Value': None, 'Fit': maxFitness}
-            print('Number of Small Bursts: %.3f, Fitness: %.3f' % (None, maxFitness))
-
+            print('Number of Small Bursts: %s, Fitness: %.3f' % (str(None), maxFitness))
         return fitnessVals
     def fit_IBI(net_activity_metrics, fitnessVals, plot = False, **kwargs):
         try:
@@ -462,7 +459,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             #scaled_fitness_values = [value * 1000 for value in normalized_fitness_values]
             scaled_fitness_values = [value for value in normalized_fitness_values]
         else:
-            scaled_fitness_values = [1000 for _ in fitness_values] 
+            scaled_fitness_values = [1 for _ in fitness_values] 
 
         # Calculate the average of the scaled fitness values
         avg_scaled_fitness = sum(scaled_fitness_values) / len(scaled_fitness_values)
@@ -523,7 +520,8 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             average_fitness, avg_scaled_fitness = fitness_summary_metrics(fitnessVals)
             # Save the fitness results
             save_fitness_results()
-            return maxFitness
+            #this should be maxfitness
+            return average_fitness, avg_scaled_fitness
 
         ## Get the fitness values
         # Get burst peak fitness, optionally plot

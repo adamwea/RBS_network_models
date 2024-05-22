@@ -92,7 +92,8 @@ if cfg.networkType == '22May24':  # Network used for grant proposal in June 2024
 	cellRule['secs']['soma'] = {'geom': {}, 'mechs': {}}  # Initialize soma params dict
 
 	cellRule['secs']['soma']['geom'] = {
-		'diam': 'abs(normal({}, {}))'.format(diam, diam/3),  # Ensure positive diameter
+		#'diam': 'abs(normal({}, {}))'.format(diam, diam/3),  # Ensure positive diameter
+		'diam' : 'abs(normal(2,2))',
 		'L': 'abs(normal({}, {}))'.format(L, L/3),  # Ensure positive length
 		'Ra': 'abs(normal({}, {}))'.format(Ra, Ra/3)  # Ensure positive axial resistance
 	}

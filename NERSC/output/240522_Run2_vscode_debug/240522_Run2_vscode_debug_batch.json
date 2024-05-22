@@ -1,0 +1,233 @@
+{
+    "batch": {
+        "batchLabel": "240522_Run2_vscode_debug",
+        "cfgFile": "/workspaces/2DNetworkSimulations/NERSC/cfg.py",
+        "evolCfg": {
+            "crossover": 0.5,
+            "defaultFitness": 1000,
+            "evolAlgorithm": "custom",
+            "fitnessFunc": "removed",
+            "fitnessFuncArgs": {
+                "maxFitness": 1000,
+                "pop_size": 2,
+                "pops": {
+                    "IBI_targets": {
+                        "max": 24.6,
+                        "target": 8.79,
+                        "width": 11070.0
+                    },
+                    "baseline_targets": {
+                        "max": 724.599,
+                        "min": 0,
+                        "target": 294.444
+                    },
+                    "burst_peak_frequency": {
+                        "max": 1,
+                        "min": 0,
+                        "target": 0.11636363636363636
+                    },
+                    "burts_peak_targets": {
+                        "big_bursts": {
+                            "max": 1955.749,
+                            "min": 1252.317,
+                            "num_min": 0,
+                            "num_target": 31.25,
+                            "target": 1616.784,
+                            "width": 350716.0
+                        },
+                        "cutoff": 1250,
+                        "lil_bursts": {
+                            "max": 1205.884,
+                            "min": 723.599,
+                            "num_min": 0,
+                            "num_target": 68.75,
+                            "target": 402.633,
+                            "width": 1080641.25
+                        }
+                    },
+                    "rate_slope": {
+                        "target": 0.002497512709074353
+                    },
+                    "rate_targets": {
+                        "E": {
+                            "min": 0,
+                            "target": 0.8773666667
+                        },
+                        "I": {
+                            "min": 2.6321000001,
+                            "target": 4.7104651163
+                        }
+                    },
+                    "sustained_osci": {
+                        "target": 90.90303232255916
+                    },
+                    "thresh_target": {
+                        "max": 724.599,
+                        "target": 718.115
+                    }
+                }
+            },
+            "max_generations": 10,
+            "maximize": false,
+            "maxiter_wait": 14400.0,
+            "mutation_rate": 0.7,
+            "num_elites": 0,
+            "pop_size": 2,
+            "seeds": null,
+            "time_sleep": 1
+        },
+        "initCfg": {},
+        "method": "evol",
+        "netParamsFile": "/workspaces/2DNetworkSimulations/NERSC/netParams.py",
+        "optimCfg": {
+            "fitnessFunc": "removed"
+        },
+        "params": [
+            {
+                "label": "duration_seconds",
+                "values": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "label": "propVelocity",
+                "values": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "label": "probLengthConst",
+                "values": [
+                    50,
+                    3000
+                ]
+            },
+            {
+                "label": "probIE",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "probEE",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "probII",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "probEI",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "weightEI",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "weightIE",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "weightEE",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "weightII",
+                "values": [
+                    0,
+                    0.5
+                ]
+            },
+            {
+                "label": "gnabar_E",
+                "values": [
+                    0,
+                    5
+                ]
+            },
+            {
+                "label": "gkbar_E",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "gnabar_I",
+                "values": [
+                    0,
+                    3
+                ]
+            },
+            {
+                "label": "gkbar_I",
+                "values": [
+                    0,
+                    7.5
+                ]
+            },
+            {
+                "label": "tau1_exc",
+                "values": [
+                    0,
+                    10
+                ]
+            },
+            {
+                "label": "tau2_exc",
+                "values": [
+                    0,
+                    20.0
+                ]
+            },
+            {
+                "label": "tau1_inh",
+                "values": [
+                    0,
+                    10
+                ]
+            },
+            {
+                "label": "tau2_inh",
+                "values": [
+                    0,
+                    20.0
+                ]
+            }
+        ],
+        "runCfg": {
+            "coresPerNode": 4,
+            "mpiCommand": "srun",
+            "nodes": 1,
+            "nrnCommand": "nrniv",
+            "reservation": null,
+            "script": "/workspaces/2DNetworkSimulations/NERSC/init.py",
+            "skip": false,
+            "type": "mpi_bulletin"
+        },
+        "saveFolder": "/workspaces/2DNetworkSimulations/NERSC/output/240522_Run2_vscode_debug",
+        "seed": null
+    }
+}
