@@ -34,7 +34,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
     def get_network_activity_metrics(fitnessVals, plot = False):
         net_activity_metrics = {}
         #prepare raster data
-        rasterData = simData
+        rasterData = simData.copy()
         #adjust units for simulation data
         if not exp_mode:
             rasterData['spkt'] = np.array(rasterData['spkt'])/1000
@@ -91,7 +91,10 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
 
         return fitnessVals, net_activity_metrics
     def plot_burst_freq_and_IBI(fitnessVals):
-        rasterData = simData
+        rasterData = simData.copy()
+        if not exp_mode:
+            rasterData['spkt'] = np.array(rasterData['spkt'])/1000
+            rasterData['t'] = np.array(rasterData['t'])/1000
         assert USER_raster_convolve_params, 'USER_raster_convolve_params needs to be specified in USER_INPUTS.py'
         net_activity_params = USER_raster_convolve_params #{'binSize': .03*1000, 'gaussianSigma': .12*1000, 'thresholdBurst': 1.0}
         binSize = net_activity_params['binSize']
@@ -222,7 +225,10 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             fitnessVals['slopeFitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
     def plot_burst_peak_and_baseline(fitnessVals):
-        rasterData = simData
+        rasterData = simData.copy()
+        if not exp_mode:
+            rasterData['spkt'] = np.array(rasterData['spkt'])/1000
+            rasterData['t'] = np.array(rasterData['t'])/1000
         assert USER_raster_convolve_params, 'USER_raster_convolve_params needs to be specified in USER_INPUTS.py'
         net_activity_params = USER_raster_convolve_params #{'binSize': .03*1000, 'gaussianSigma': .12*1000, 'thresholdBurst': 1.0}
         binSize = net_activity_params['binSize']
@@ -511,7 +517,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
         output_path = batch_saveFolder
         print(f'Calculating net_actiity_metrics...')
         assert USER_plot_fitness_bool is not None, 'USER_plot_fitness_bool must be set in USER_INPUTS.py'
-        fitnessVals, net_activity_metrics = get_network_activity_metrics(fitnessVals, plot = USER_plot_NetworkActivity)
+        fitnessVals, net_activity_metrics = get_network_activity_metrics(fitnessVals, plot = None)
         if net_activity_metrics == {}:
             # Get the fitness summary metrics        
             average_fitness, avg_scaled_fitness = fitness_summary_metrics(fitnessVals)
@@ -551,9 +557,9 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
         save_fitness_results()
         
         #print(f'Fitness results saved to {output_path}/{gen_folder}/{simLabel}_Fitness.json')
-        if plot: plot_fitness(fitnessVals, simData, net_activity_metrics, **kwargs)
-        return avg_scaled_fitness
-    def plot_fitness(fitnessVals, simData, net_activity_metrics, **kwargs):
+        if plot: plot_fitness(fitnessVals, simData, net_activity_metrics, plot_save_path, **kwargs)
+        return average_fitness, avg_scaled_fitness
+    def plot_fitness(fitnessVals, simData, net_activity_metrics, plot_save_path, **kwargs):
         print('Plotting fitness...')
         if not exp_mode: netpyne.sim.loadAll(data_file_path)        
         if exp_mode: 
@@ -563,7 +569,10 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
         '''plotting functions'''
         def plot_network_activity_fitness(net_activity_metrics):
             #net_activity_metrics = net_activity_metrics
-            rasterData = simData
+            rasterData = simData.copy()
+            if not exp_mode:
+                rasterData['spkt'] = np.array(rasterData['spkt'])/1000
+                rasterData['t'] = np.array(rasterData['t'])/1000
             assert USER_raster_convolve_params, 'USER_raster_convolve_params needs to be specified in USER_INPUTS.py'
             net_activity_params = USER_raster_convolve_params #{'binSize': .03*1000, 'gaussianSigma': .12*1000, 'thresholdBurst': 1.0}
             binSize = net_activity_params['binSize']
@@ -606,7 +615,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
         def plot_raster():
             #Attempt to generate the raster plot
             figname = 'raster_plot.png'
-            timeVector = net_activity_metrics['timeVector']
+            timeVector = net_activity_metrics['timeVector']*1000 #convert back to ms
             timeRange = [timeVector[0], timeVector[-1]]
             #raster_plot_path = f'{batch_saveFolder}/{simLabel}_raster_plot.svg'
             job_name = os.path.basename(os.path.dirname(batch_saveFolder))
@@ -724,7 +733,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 else: raise ValueError(f'Idk how we got here. Logically.')
 
                 sim_obj = netpyne.sim
-                timeVector = np.array(net_activity_metrics['timeVector'])
+                timeVector = np.array(net_activity_metrics['timeVector']*1000) #convert back to ms
                 excite_timeVector, inhib_timeVector = most_active_time_range(timeVector, sim_obj)
                 timeRanges = [excite_timeVector, inhib_timeVector]
                 titles = ['E0_highFR', 'I0_highFR']
@@ -843,5 +852,6 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
 
     ##get fitness
     if plot is None: plot = USER_plot_fitness_bool
-    avg_scaled_fitness = get_fitness(simData, plot = plot, **kwargs)
-    return avg_scaled_fitness
+    average_fitness, avg_scaled_fitness = get_fitness(simData, plot = plot, **kwargs)
+    #return avg_scaled_fitness
+    return average_fitness
