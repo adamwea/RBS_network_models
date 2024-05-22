@@ -32,9 +32,9 @@ RUN apt-get update && \
 # Install OpenMPI and related packages
 RUN apt-get update && \
     apt-get install -y \
-        openmpi-bin \
-        openmpi-common \
-        libopenmpi-dev \
+        #openmpi-bin \
+        #openmpi-common \
+        #libopenmpi-dev \
         libucx-dev \
         libucx0 \
         libfabric-dev \
@@ -51,6 +51,7 @@ RUN mkdir -p /opt/src && cd /opt/src && \
     --prefix=/opt/openmpi \
     --with-pmix \
     --with-ucx \
+    --enable-mpi-ext \
     && \
     make -j $(nproc) && make install
 

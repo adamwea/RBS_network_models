@@ -214,7 +214,7 @@ def measure_network_activity(
     # Find the differences between the first peak time and all start times
     differences = burstPeakTimes[0] - burstPeakStarts
     # Only consider start times that are before the first peak time
-    valid_starts = np.where(differences > 0)
+    valid_starts = np.where(differences >= 0)
     # Find the start time with the smallest difference
     start = burstPeakStarts[np.argmin(differences[valid_starts])]
     start_index = np.where(timeVector == start)[0][0]
@@ -250,7 +250,8 @@ def measure_network_activity(
     # Calculate Baseline
     baseline = np.mean(firingRate)
     #measure frequency of peaks
-    peak_freq = len(burstPeakTimes) / (timeVector[-1] / 1000) #convert to seconds
+    #peak_freq = len(burstPeakTimes) / (timeVector[-1] / 1000) #convert to seconds
+    peak_freq = len(burstPeakTimes) / (timeVector[-1]) #now in seconds
     # Calculate peak variance
     peak_variance = np.var(burstPeakValues)
     # Calculate the range of burstPeakValues
@@ -268,7 +269,7 @@ def measure_network_activity(
     #IBI = IBI / 1000 #convert to seconds
     sustained_osci100 = (len(timeVector)/og_timeVector_len)*100
     measurements = {
-        'burstPeakValues': burstPeakValues-(thresholdBurst * rmsFiringRate),
+        'burstPeakValues': burstPeakValues, #-(thresholdBurst * rmsFiringRate),
         'burstPeakTimes': burstPeakTimes,
         'IBIs': IBIs,
         'firingRate': firingRate,

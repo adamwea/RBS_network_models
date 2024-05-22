@@ -272,6 +272,7 @@ if __name__ == '__main__':
     run_in_vscode = False
     
     '''USER Inputs'''
+    USER_max_generations=10
     USER_seed_evol = False
     from USER_INPUTS import *
     #USER_runCfg_type = 'mpi_direct'

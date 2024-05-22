@@ -109,6 +109,14 @@ USER_raster_convolve_params = {
     'gaussianSigma': .12*250,
     'thresholdBurst': 1.0
     }
+#Mandar KCNT1 params
+USER_raster_convolve_params = {
+    #'binSize': .03*1000,
+    'binSize': .1,
+    #'gaussianSigma': .12*1000, 
+    'gaussianSigma': .15,
+    'thresholdBurst': 1
+    }
 USER_raster_crop = None
 
 ## Overwrite and Continue

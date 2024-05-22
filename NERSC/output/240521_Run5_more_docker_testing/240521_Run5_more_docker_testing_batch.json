@@ -1,0 +1,227 @@
+{
+    "batch": {
+        "batchLabel": "240521_Run5_more_docker_testing",
+        "cfgFile": "/workspaces/2DNetworkSimulations/NERSC/cfg.py",
+        "evolCfg": {
+            "crossover": 0.5,
+            "defaultFitness": 1000,
+            "evolAlgorithm": "custom",
+            "fitnessFunc": "removed",
+            "fitnessFuncArgs": {
+                "maxFitness": 1000,
+                "pop_size": 4,
+                "pops": {
+                    "IBI_targets": {
+                        "max": 4000,
+                        "target": 3000,
+                        "width": 2000
+                    },
+                    "baseline_targets": {
+                        "max": 3,
+                        "target": 1.5,
+                        "width": 1
+                    },
+                    "burst_peak_frequency": {
+                        "min": 0.25,
+                        "target": 0.3333333333333333,
+                        "width": 0.16666666666666666
+                    },
+                    "burts_peak_targets": {
+                        "min": 8,
+                        "target": 15,
+                        "width": 2
+                    },
+                    "rate_slope": {
+                        "max": 0.5,
+                        "target": 0,
+                        "width": 0.5
+                    },
+                    "rate_targets": {
+                        "E": {
+                            "min": 1,
+                            "target": 7.5,
+                            "width": 2.5
+                        },
+                        "I": {
+                            "min": 2,
+                            "target": 30,
+                            "width": 10
+                        }
+                    },
+                    "sustained_osci": {
+                        "min": 75,
+                        "target": 100,
+                        "width": 5
+                    },
+                    "thresh_target": {
+                        "max": 7,
+                        "min": 3,
+                        "target": 5,
+                        "width": 1
+                    }
+                }
+            },
+            "max_generations": 10,
+            "maximize": false,
+            "maxiter_wait": 14400.0,
+            "mutation_rate": 0.7,
+            "num_elites": 0,
+            "pop_size": 4,
+            "seeds": null,
+            "time_sleep": 1
+        },
+        "initCfg": {},
+        "method": "evol",
+        "netParamsFile": "/workspaces/2DNetworkSimulations/NERSC/netParams.py",
+        "optimCfg": {
+            "fitnessFunc": "removed"
+        },
+        "params": [
+            {
+                "label": "duration_seconds",
+                "values": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "label": "propVelocity",
+                "values": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "label": "probLengthConst",
+                "values": [
+                    50,
+                    3000
+                ]
+            },
+            {
+                "label": "probIE",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "probEE",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "probII",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "probEI",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "weightEI",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "weightIE",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "weightEE",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "weightII",
+                "values": [
+                    0,
+                    0.5
+                ]
+            },
+            {
+                "label": "gnabar_E",
+                "values": [
+                    0,
+                    5
+                ]
+            },
+            {
+                "label": "gkbar_E",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "gnabar_I",
+                "values": [
+                    0,
+                    3
+                ]
+            },
+            {
+                "label": "gkbar_I",
+                "values": [
+                    0,
+                    7.5
+                ]
+            },
+            {
+                "label": "tau1_exc",
+                "values": [
+                    0,
+                    10
+                ]
+            },
+            {
+                "label": "tau2_exc",
+                "values": [
+                    0,
+                    20.0
+                ]
+            },
+            {
+                "label": "tau1_inh",
+                "values": [
+                    0,
+                    10
+                ]
+            },
+            {
+                "label": "tau2_inh",
+                "values": [
+                    0,
+                    20.0
+                ]
+            }
+        ],
+        "runCfg": {
+            "coresPerNode": 4,
+            "mpiCommand": "srun",
+            "nodes": 1,
+            "nrnCommand": "nrniv",
+            "reservation": null,
+            "script": "/workspaces/2DNetworkSimulations/NERSC/init.py",
+            "skip": false,
+            "type": "mpi_bulletin"
+        },
+        "saveFolder": "/workspaces/2DNetworkSimulations/NERSC/output/240521_Run5_more_docker_testing",
+        "seed": null
+    }
+}

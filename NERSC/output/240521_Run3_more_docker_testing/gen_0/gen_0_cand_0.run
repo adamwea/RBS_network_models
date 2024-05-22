@@ -1,0 +1,44 @@
+Initiating Rank: 1
+TEST CWD: /app/NERSC
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /app/NERSC/output/240521_Run3_more_docker_testing/gen_0/gen_0_cand_0_cfg.json
+Loading file /app/NERSC/output/240521_Run3_more_docker_testing/gen_0/gen_0_cand_0_cfg.json ... 
+Loading simConfig...
+Importing netParams from /app/NERSC/output/240521_Run3_more_docker_testing/240521_Run3_more_docker_testing_netParams.py
+im here second
+no simConfig found
+Flag -d not found.
+Saving netParams to /app/NERSC/output/240521_Run3_more_docker_testing/netParams_popParams.json ... 
+
+Start time:  2024-05-21 18:11:51.027708
+
+Creating network of 2 cell populations on 1 hosts...
+  Number of cells on node 0: 400 
+  Done; cell creation time = 0.14 s.
+Making connections...
+  Number of connections on node 0: 40418 
+  Done; cell connection time = 10.53 s.
+  Number of stims on node 0: 0 
+  Done; cell stims creation time = 0.00 s.
+
+Running simulation using NEURON for 1000.0 ms...
+  Done; run time = 91.22 s; real-time ratio: 0.01.
+
+Gathering data...
+  Done; gather time = 2.04 s.
+
+Analyzing...
+  Cells: 400
+  Connections: 40418 (101.05 per cell)
+  Spikes: 0 (0.00 Hz)
+  Simulated time: 1.0 s; 1 workers
+  Run time: 91.22 s
+   E : 0.000 Hz
+   I : 0.000 Hz
+Saving output as /app/NERSC/output/240521_Run3_more_docker_testing/gen_0/gen_0_cand_0_data.json ... 
+Finished saving!
+  Done; saving time = 2.45 s.
+  Done; plotting time = 0.00 s
+
+Total time = 106.40 s
