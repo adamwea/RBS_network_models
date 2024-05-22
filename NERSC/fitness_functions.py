@@ -323,7 +323,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             print(f'Error calculating small burst peak fitness.')
             print(f'Error: {e}')
             fitnessVals['SmallBurstVal_Fitness'] = {'Value': None, 'Fit': maxFitness}
-            print('Small Burst Peak: %.3f, Fitness: %.3f' % (None, maxFitness))
+            print(f'Small Burst Peak: {None}, Fitness: %.3f' % (maxFitness,))
 
         try:
             assert len(burstPeakValues) > 0, 'Error: burstPeakValues has no elements. BurstVal_fitness set to maxFitness.'

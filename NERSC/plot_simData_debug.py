@@ -450,7 +450,7 @@ def plot_elites(job_dir):
 
         enablePrint()    
         print(f"Collecting Elites...")
-        blockPrint()
+        blockPrint()    
 
         elite_paths = get_elite_paths(gen_dir)
         
@@ -503,13 +503,13 @@ if __name__ == '__main__':
     new_plots = True
 
     #set to True to print verbose output
-    verbose = False
+    verbose = True
 
     #HOF Mode
     HOF_mode = False
     
     if HOF_mode:
-        new_plots = True
+        #new_plots = True
         HOF_dirs = HOF_get_dirs()
         #these should be relative paths, get full paths
         HOF_dirs = [f'.{f}' for f in HOF_dirs]
@@ -560,7 +560,7 @@ if __name__ == '__main__':
 
             ]
         
-        for job_dir in job_dirs: job_dir = os.path.abspath(job_dir)
+        job_dirs = [os.path.abspath(job_dir) for job_dir in job_dirs] #: job_dir = os.path.abspath(job_dir)
             
             #
         
