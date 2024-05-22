@@ -1,0 +1,408 @@
+srun: Job 25927179 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=25927179.1
+NEURON -- VERSION 8.2.4 HEAD (1d87d5d39) 2024-02-09
+Duke, Yale, and the BlueBrain Project -- Copyright 1984-2022
+See http://neuron.yale.edu/neuron/credits
+
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+Traceback (most recent call last):
+  File "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py", line 22, in <module>
+    sim.createSimulateAnalyze(netParams=netParams, simConfig=simConfig)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 213, in createSimulateAnalyze
+    (pops, cells, conns, rxd, stims, simData) = sim.create(netParams, simConfig, output=True)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/sim/wrappers.py", line 57, in create
+    cells = sim.net.createCells()  # instantiate network cells based on defined populations
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/network.py", line 99, in createCells
+    newCells = ipop.createCells()  # create cells for this pop using Pop method
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 86, in createCells
+    cells = self.createCellsFixedNum()
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/network/pop.py", line 195, in createCellsFixedNum
+    cells.append(self.cellModelClass(gid, cellTags))  # instantiate Cell object
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 59, in __init__
+    self.create()  # create cell
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 116, in create
+    self.createNEURONObj(
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 352, in createNEURONObj
+    self._setGeometryParams(sectName, sectParams, cellType, cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 401, in _setGeometryParams
+    geomParamValue = self.__evaluateCellParamsStringFunc(func, vars, sec, cellVars=cellVars)
+  File "/opt/venv/lib/python3.8/site-packages/netpyne/cell/compartCell.py", line 592, in __evaluateCellParamsStringFunc
+    return func(**args)
+  File "<string>", line 1, in <lambda>
+AttributeError: 'hoc.HocObject' object has no attribute 'rand'
+srun: error: nid004927: tasks 0-15: Exited with exit code 1
+srun: Terminating StepId=25927179.1
