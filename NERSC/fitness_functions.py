@@ -739,11 +739,14 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                 import matplotlib.image as mpimg
                 # Create individual plots and save as PNG
                 for i, timeRange in enumerate(timeRanges):
+                    if i == 0: include = ['E']
+                    else: include = ['I']
                     title = titles[i]
                     # Prepare the sample trace
                     sample_trace = sim_obj.analysis.plotTraces(
-                        include=[('E', 0), ('I', 0)],
-                        overlay=True,
+                        #include=[('E', 0), ('I', 0)],
+                        include=include,
+                        overlay=False,
                         oneFigPer='trace',
                         title=title,
                         timeRange=timeRange,

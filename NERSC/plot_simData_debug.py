@@ -543,18 +543,19 @@ if __name__ == '__main__':
             # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run14_OMPTest',
             # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run15_OMPTest2'
 
-            './NERSC/output/240517_Run1_best_case',
+            #'./NERSC/output/240517_Run1_best_case',
 
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run22_2proc',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run23_4proc',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run24_8proc',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run25_16proc',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run26_8proc',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run27_16proc',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run28_32proc',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run29_64proc',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run30_128proc',
-            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240521_Run1_overnight_debug',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run22_2proc',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run23_4proc',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run24_8proc',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run25_16proc',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run26_8proc',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run27_16proc',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run28_32proc',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run29_64proc',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240511_Run30_128proc',
+            
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240521_Run1_overnight_debug',
             
             './NERSC/output/240521_Run2_overnight_reg',
 
