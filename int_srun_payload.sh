@@ -1,6 +1,6 @@
 ###options
 Duration_Seconds=15
-Batch_Run_Label='it_srun_sims_2nodes'
+Batch_Run_Label='payload_test'
 nodes=$SLURM_NNODES #hpc
 #nodes=2 #laptop or server
 OMP_threads_per_process=1 #recomended 1 cpu per task NERSC, https://docs.nersc.gov/development/languages/python/parallel-python/#numpy-and-nested-threading
@@ -50,9 +50,41 @@ cd NERSC
 #export PMIX_MCA_gds=hash
 #python3 batchRun_srun.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
 module load parallel
-njobs=$SLURM_NNODES
+# njobs=$SLURM_NNODES
+# echo ${njobs}
+#delete input.txt if it exists
+rm -f commands.txt
+#parallel --citation
+#parallel --jobs ${njobs} ./payload.sh argument_{} ::: input.tx
+
+#parallel --jobs ${njobs} python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+#python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+
+#make sure batch script is only running on one core
+echo "srun -N 1 -n 1 -c 1 python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}" > commands.txt
+#python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+njobs=$((SLURM_NNODES+1))
+#njobs=$((4+1))
 echo ${njobs}
-parallel -j ${njobs} python3 batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label} ::: input.txt
+#srun -N 1 -n 1 -c 1 python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
+
+#test 1: /usr/bin/bash: argument_srun: command not found
+#parallel --jobs ${njobs} argument_{} :::: commands.txt
+
+#test2:
+# - batchRun_payload.py runs. Not sure if parallel sruns are working.
+# - I'm giving it 12 minutes to show evidence of running in parallel.
+# - doesnt seem to start after running batchRun_payload.py. Probably because I didnt srun so it only does 1 job at a time.
+#parallel --jobs ${njobs} < commands.txt
+
+#test3:
+# - now not even the first command is running.
+# - setting 12 minute time limit.
+# - 
+srun parallel --jobs ${njobs} < commands.txt
+
+
+
 
 
 # srun \

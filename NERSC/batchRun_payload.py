@@ -276,7 +276,7 @@ def main():
 if __name__ == '__main__':
     #allow for running in vscode for debugging
     run_in_vscode = True
-    #run_in_vscode = False
+    run_in_vscode = False
     
     '''USER Inputs'''
     from USER_INPUTS import *
@@ -284,8 +284,8 @@ if __name__ == '__main__':
     USER_runCfg_type = 'mpi_direct'
     #USER_runCfg_type = 'mpi_bulletin'
     USER_pop_size = 64
-    #USER_pop_size = 4
-    USER_frac_elites = 0.1 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
+    USER_pop_size = 4
+    USER_frac_elites = 0.15 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
     USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 else 1
     #USER_pop_size = 4 #laptop
     USER_nodes = 1
@@ -300,12 +300,18 @@ if __name__ == '__main__':
     #USER_nrnCommand = f'nrniv'
     
     '''HACkz'''
-    HACKz = f'echo $(pwd)\
-        \ncd NERSC\
+    ## echo "srun -n 1 ./my_program arg3" >> commands.txt do this instead??
+    # HACKz = f'\
+    #     echo $(pwd)\
+    #     \ncd NERSC\
+    #     \npython srun_extractor.py'  
+    HACKz = f'\
+        \necho $(pwd)\
         \npython srun_extractor.py'       
     USER_mpiCommand = 'srun -N 1'
     HACKz_mpiCommand = f'{HACKz} {USER_mpiCommand}'
     USER_mpiCommand = HACKz_mpiCommand
+    print(f'USER_mpiCommand: {USER_mpiCommand}')
     '''HACKz''' 
 
     USER_cores_per_node = USER_mpis_per_batch 

@@ -7,6 +7,7 @@ plots_dir = '/home/adamm/adamm/Documents/GithubRepositories/2DNetworkSimulations
 #check if exists
 if not os.path.exists(plots_dir): plots_dir = '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/plots'
 if not os.path.exists(plots_dir): raise FileNotFoundError
+print(f'plots_dir: {plots_dir}')
 
 
 if HOF:
@@ -23,9 +24,12 @@ for job_dir in job_dirs:
     #print(f'Creating PDF report for {job_dir}')
     
     # Create a PDF writer object
+    print(f'job_dir: {job_dir}')
     if HOF == False: pdf_writer = PyPDF2.PdfWriter()
+    #print(f'pdf_writer: {pdf_writer}')
     
     gen_dirs = [f.path for f in os.scandir(job_dir) if f.is_dir() and 'gen' in f.name]
+    #print(f'gen_dirs: {gen_dirs}')
 
     #sort gendirs numerically such that, gen_9 comes before gen_10
     gen_dirs = sorted(gen_dirs, key=lambda x: int(x.split('_')[-1]))
@@ -54,18 +58,36 @@ for job_dir in job_dirs:
             file_path = os.path.join(dirpath, filename)
             # print(f'Adding {file_path} to the PDF')
 
+            # if filename.endswith('.pdf'):
+            #     #print(f'Adding {filename} to the PDF')
+            #     try:
+            #         pdf_file_path = os.path.join(dirpath, filename)
+            #         assert os.path.exists(pdf_file_path), f'{pdf_file_path} does not exist'
+            #         #open the pdf in vscode
+            #         #os.system(f'code {pdf_file_path}'
+            #         pdf_file_obj = open(pdf_file_path, 'rb')
+            #         pdf_reader = PyPDF2.PdfReader(pdf_file_obj)
+            #         for page in range(len(pdf_reader.pages)):
+            #             pdf_writer.add_page(pdf_reader.pages[page])
+            #         #print(f'Added {filename} to the PDF')
+            #     except Exception as e:
+            #         print(f'Error: {e}')
+            #         pass
+
+            from pdfrw import PdfReader, PdfWriter
+            from time import sleep
+
             if filename.endswith('.pdf'):
-                #print(f'Adding {filename} to the PDF')
                 try:
                     pdf_file_path = os.path.join(dirpath, filename)
-                    pdf_file_obj = open(pdf_file_path, 'rb')
-                    pdf_reader = PyPDF2.PdfReader(pdf_file_obj)
-                    for page in range(len(pdf_reader.pages)):
-                        pdf_writer.add_page(pdf_reader.pages[page])
-                    #print(f'Added {filename} to the PDF')
+                    assert os.path.exists(pdf_file_path), f'{pdf_file_path} does not exist'
+                    pdf_reader = PdfReader(pdf_file_path)
+                    for page in pdf_reader.pages:
+                        pdf_writer.add_page(page)
+                    
                 except Exception as e:
                     print(f'Error: {e}')
-                    pass
+                    sleep(50) #sleep for 50 seconds
     
     #save pdf will all HOFs if HOF true
     if not HOF:

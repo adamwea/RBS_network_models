@@ -1,6 +1,6 @@
 ###options
 Duration_Seconds=15
-Batch_Run_Label='it_srun_sims_2nodes'
+Batch_Run_Label='it_srun_sims_8nodes'
 nodes=$SLURM_NNODES #hpc
 #nodes=2 #laptop or server
 OMP_threads_per_process=1 #recomended 1 cpu per task NERSC, https://docs.nersc.gov/development/languages/python/parallel-python/#numpy-and-nested-threading
