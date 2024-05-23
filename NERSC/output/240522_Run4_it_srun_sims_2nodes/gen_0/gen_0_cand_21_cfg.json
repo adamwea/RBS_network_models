@@ -21,10 +21,10 @@
         "duration_seconds": 15.0,
         "filename": "model_output",
         "gatherOnlySimData": false,
-        "gkbar_E": 0.7276101166845532,
-        "gkbar_I": 6.18250347046887,
-        "gnabar_E": 1.2510990273831957,
-        "gnabar_I": 1.6865775843506834,
+        "gkbar_E": 0.4123219238879663,
+        "gkbar_I": 4.776495401470455,
+        "gnabar_E": 3.2172296831149927,
+        "gnabar_I": 1.794027158155935,
         "gpu": false,
         "hParams": {
             "celsius": 6.3,
@@ -41,11 +41,11 @@
         ],
         "printRunTime": false,
         "printSynsAfterRule": false,
-        "probEE": 0.6751043890729672,
-        "probEI": 0.49701781861577543,
-        "probIE": 0.6074663438906808,
-        "probII": 0.9031744645012575,
-        "probLengthConst": 1480.2119214275885,
+        "probEE": 0.446261842975626,
+        "probEI": 0.9036681015195119,
+        "probIE": 0.35640085940840815,
+        "probII": 0.6724096393946392,
+        "probLengthConst": 181.80366773716318,
         "propVelocity": 1.0,
         "pt3dRelativeToCellLocation": true,
         "rand123GlobalIndex": null,
@@ -53,11 +53,17 @@
         "recordCells": [
             [
                 "E",
-                0
+                [
+                    146,
+                    194
+                ]
             ],
             [
                 "I",
-                0
+                [
+                    53,
+                    74
+                ]
             ]
         ],
         "recordCellsSpikes": -1,
@@ -102,19 +108,19 @@
             "stim": 1
         },
         "simLabel": "gen_0_cand_21",
-        "tau1_exc": 5.464148257257585,
-        "tau1_inh": 0.4555394770753207,
-        "tau2_exc": 11.28888908879908,
-        "tau2_inh": 11.953644847024174,
+        "tau1_exc": 6.617747544387319,
+        "tau1_inh": 6.29480983572268,
+        "tau2_exc": 10.904893030015996,
+        "tau2_inh": 15.23088193881722,
         "timestampFilename": false,
         "timing": true,
         "tstop": 1000.0,
         "use_fast_imem": false,
         "validateNetParams": false,
         "verbose": false,
-        "weightEE": 0.9133044300976617,
-        "weightEI": 0.39993224433952723,
-        "weightIE": 0.28520700806992916,
-        "weightII": 0.33049648727280967
+        "weightEE": 0.415430900728198,
+        "weightEI": 0.9252819200042325,
+        "weightIE": 0.866682613197055,
+        "weightII": 0.4321365551426974
     }
 }
