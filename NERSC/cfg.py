@@ -40,7 +40,7 @@ if cfg.networkType == '22May24':
 	I_cells = random.sample(range(num_Icells), min(2, num_Icells))
 
 	cfg.recordCells = [('E', E_cells), ('I', I_cells)]
-	cfg.recordCells = [('E', 0), ('I', 0)]
+	#cfg.recordCells = [('E', 0), ('I', 0)]
 	print(cfg.recordCells)
 
 if cfg.networkType == 'pre13Apr24':

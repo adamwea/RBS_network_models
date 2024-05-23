@@ -44,7 +44,9 @@ def plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTime
     plt.title('Network Activity', fontsize=title_font)
 
     # Plot the threshold line and burst peaks
-    plt.plot(np.arange(timeVector[-1]), thresholdBurst * rmsFiringRate * np.ones(np.ceil(timeVector[-1]).astype(int)), color='gray')
+    #plt.plot(np.arange(timeVector[-1]), thresholdBurst * rmsFiringRate * np.ones(np.ceil(timeVector[-1]).astype(int)), color='gray')
+    #rewrite this line using axhline
+    plt.axhline(thresholdBurst * rmsFiringRate, color='gray', linestyle='--')
     plt.plot(burstPeakTimes, burstPeakValues, 'or')  # Plot burst peaks as red circles
 
     default_name = 'NetworkActivity.png'
