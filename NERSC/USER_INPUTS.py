@@ -53,9 +53,9 @@ assert os.path.exists(USER_cfgFile), f'cfgFile does not exist: {USER_cfgFile}'
 assert os.path.exists(USER_netParamsFile), f'netParamsFile does not exist: {USER_netParamsFile}'
 
 '''Overwrite Inputs'''
-USER_skip = False #Skip running the simulation if data already exist
+USER_skip = True #Skip running the simulation if data already exist
 USER_overwrite = False #Overwrite existing batch_run with same name
-USER_continue = False #Continue from last completed simulation
+USER_continue = True #Continue from last completed simulation
 if USER_continue: USER_skip = True #continue will re-run existing simulations if skip is False
 
 '''Evol Params'''

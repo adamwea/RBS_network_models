@@ -1,4 +1,78 @@
+srun: Job 25938924 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 25938924 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=25938924.2
 NEURON -- VERSION 8.2.4 HEAD (1d87d5d39) 2024-02-09
 Duke, Yale, and the BlueBrain Project -- Copyright 1984-2022
 See http://neuron.yale.edu/neuron/credits
 
+MPICH ERROR [Rank 16] [job id 25938924.2] [Wed May 22 19:41:57 2024] [nid006981] - Abort(812212879) (rank 16 in comm 0): Fatal error in PMPI_Finalize: Other MPI error, error stack:
+PMPI_Finalize(214)..........................: MPI_Finalize failed
+PMPI_Finalize(161)..........................: 
+MPID_Finalize(708)..........................: 
+MPIDI_OFI_mpi_finalize_hook(1028)...........: 
+MPIR_CRAY_Allreduce(576)....................: 
+MPIR_Allreduce_impl(326)....................: 
+MPIR_Allreduce_intra_auto(238)..............: 
+MPIR_Allreduce_intra_recursive_doubling(192): 
+MPIC_Sendrecv(338)..........................: 
+MPIC_Wait(71)...............................: 
+MPIR_Wait_impl(41)..........................: 
+MPID_Progress_wait(184).....................: 
+MPIDI_Progress_test(80).....................: 
+MPIDI_OFI_handle_cq_error(1062).............: OFI poll failed (ofi_events.c:1064:MPIDI_OFI_handle_cq_error:Input/output error - VNI_NOT_FOUND)
+
+aborting job:
+MPICH ERROR [Rank 8] [job id 25938924.2] [Wed May 22 19:41:57 2024] [nid004790] - Abort(812212879) (rank 8 in comm 0): Fatal error in PMPI_Finalize: Other MPI error, error stack:
+PMPI_Finalize(214)..........................: MPI_Finalize failed
+PMPI_Finalize(161)..........................: 
+MPID_Finalize(708)..........................: 
+MPIDI_OFI_mpi_finalize_hook(1028)...........: 
+MPIR_CRAY_Allreduce(576)....................: 
+MPIR_Allreduce_impl(326)....................: 
+MPIR_Allreduce_intra_auto(238)..............: 
+MPIR_Allreduce_intra_recursive_doubling(192): 
+MPIC_Sendrecv(338)..........................: 
+MPIC_Wait(71)...............................: 
+MPIR_Wait_impl(41)..........................: 
+MPID_Progress_wait(184).....................: 
+MPIDI_Progress_test(80).....................: 
+MPIDI_OFI_handle_cq_error(1062).............: OFI poll failed (ofi_events.c:1064:MPIDI_OFI_handle_cq_error:Input/output error - VNI_NOT_FOUND)
+
+aborting job:
+Fatal error in PMPI_Finalize: Other MPI error, error stack:
+PMPI_Finalize(214)..........................: MPI_Finalize failed
+PMPI_Finalize(161)..........................: 
+MPID_Finalize(708)..........................: 
+MPIDI_OFI_mpi_finalize_hook(1028)...........: 
+MPIR_CRAY_Allreduce(576)....................: 
+MPIR_Allreduce_impl(326)....................: 
+MPIR_Allreduce_intra_auto(238)..............: 
+MPIR_Allreduce_intra_recursive_doubling(192): 
+MPIC_Sendrecv(338)..........................: 
+MPIC_Wait(71)...............................: 
+MPIR_Wait_impl(41)..........................: 
+MPID_Progress_wait(184).....................: 
+MPIDI_Progress_test(80).....................: 
+MPIDI_OFI_handle_cq_error(1062).............: OFI poll failed (ofi_events.c:1064:MPIDI_OFI_handle_cq_error:Input/output error - VNI_NOT_FOUND)
+Fatal error in PMPI_Finalize: Other MPI error, error stack:
+PMPI_Finalize(214)..........................: MPI_Finalize failed
+PMPI_Finalize(161)..........................: 
+MPID_Finalize(708)..........................: 
+MPIDI_OFI_mpi_finalize_hook(1028)...........: 
+MPIR_CRAY_Allreduce(576)....................: 
+MPIR_Allreduce_impl(326)....................: 
+MPIR_Allreduce_intra_auto(238)..............: 
+MPIR_Allreduce_intra_recursive_doubling(192): 
+MPIC_Sendrecv(338)..........................: 
+MPIC_Wait(71)...............................: 
+MPIR_Wait_impl(41)..........................: 
+MPID_Progress_wait(184).....................: 
+MPIDI_Progress_test(80).....................: 
+MPIDI_OFI_handle_cq_error(1062).............: OFI poll failed (ofi_events.c:1064:MPIDI_OFI_handle_cq_error:Input/output error - VNI_NOT_FOUND)
+srun: error: nid004554: tasks 0-7: Killed
+srun: Terminating StepId=25938924.2
+srun: error: nid006981: task 16: Exited with exit code 255
+srun: error: nid004790: task 8: Exited with exit code 255
+srun: error: nid006981: tasks 17-23: Terminated
+srun: error: nid004790: tasks 9-15: Terminated
+srun: Force Terminated StepId=25938924.2
