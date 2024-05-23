@@ -282,7 +282,7 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path=None)
     c.save()
     #open the pdf
     #evince not found
-    os.system(f'evince {os.path.join(cand_plot_path, f"{simLabel}.pdf")}')
+    #os.system(f'evince {os.path.join(cand_plot_path, f"{simLabel}.pdf")}')
     print(f"PDF saved to {os.path.join(cand_plot_path, f'{simLabel}.pdf')}")
 
 def recalc_fitness(data_file_path):
