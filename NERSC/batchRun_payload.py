@@ -275,7 +275,8 @@ def main():
 '''Main code'''
 if __name__ == '__main__':
     #allow for running in vscode for debugging
-    run_in_vscode = False
+    run_in_vscode = True
+    #run_in_vscode = False
     
     '''USER Inputs'''
     from USER_INPUTS import *
@@ -297,7 +298,16 @@ if __name__ == '__main__':
     USER_nrnCommand = f'--cpu_bind=cores {USER_shifterCommmand} nrniv'
     #USER_nrnCommand = f'nrniv -mpi -python'
     #USER_nrnCommand = f'nrniv'
-    USER_mpiCommand = 'srun'
+    
+    '''HACkz'''
+    HACKz = f'echo $(pwd)\
+        \ncd NERSC\
+        \npython srun_extractor.py'       
+    USER_mpiCommand = 'srun -N 1'
+    HACKz_mpiCommand = f'{HACKz} {USER_mpiCommand}'
+    USER_mpiCommand = HACKz_mpiCommand
+    '''HACKz''' 
+
     USER_cores_per_node = USER_mpis_per_batch 
     if run_in_vscode: 
         USER_pop_size = 4
