@@ -289,7 +289,7 @@ if __name__ == '__main__':
     #USER_pop_size = 4 #laptop
     USER_nodes = 1
     cores_per_perlmutter = 128 #128 or 256, pending debug
-    USER_mpis_per_batch = 16 #16 fits nicely into 400 cells and 256 cores
+    USER_mpis_per_batch = 32 #16 fits nicely into 400 cells and 256 cores
     #USER_mpis_per_batch = 8 #laptop
     USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5' 
     USER_pop_size = USER_pop_size

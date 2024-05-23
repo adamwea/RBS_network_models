@@ -513,13 +513,13 @@
             }
         ],
         "runCfg": {
-            "coresPerNode": 16,
+            "coresPerNode": 32,
             "mpiCommand": "srun",
             "nodes": 1,
             "nrnCommand": "--cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 nrniv",
             "reservation": null,
             "script": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py",
-            "skip": false,
+            "skip": true,
             "type": "mpi_direct"
         },
         "saveFolder": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240522_Run4_it_srun_sims_2nodes",

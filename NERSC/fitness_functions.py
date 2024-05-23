@@ -157,7 +157,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             sustained_osci_target = pops['sustained_osci']
 
             # Calculate the fitness as the absolute difference between the sustain duration and the target sustain duration
-            sustain_fit = min(np.exp((sustained_osci_target['target'] - sustained_osci100)), maxFitness
+            sustain_fit = min(np.exp(np.abs(sustained_osci_target['target'] - sustained_osci100)), maxFitness
                              ) # if sustained_osci100 > sustained_osci_target['min'] else maxFitness
 
             # Print the sustain duration and its fitness

@@ -10,8 +10,8 @@ import json
 #from USER_INPUTS import USER_run_label
 # from USER_INPUTS import USER_overwrite
 # from USER_INPUTS import USER_continue
-USER_continue = False #Continue the previous run without deleting it
-USER_overwrite = True #Delete the previous run and start a new one
+USER_continue = True #Continue the previous run without deleting it
+USER_overwrite = False #Delete the previous run and start a new one
 try: USER_run_label = sys.argv[-1] ### Change this to a unique name for the batch run
 except: USER_run_label = 'USER_int_debug' ### Change this to a unique name for the batch run
 
