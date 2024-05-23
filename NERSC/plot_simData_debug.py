@@ -512,11 +512,11 @@ if __name__ == '__main__':
     cand = None
 
     #set to True to plot all candidates, regardless of whether they have already been plotted
-    new_plots = True
+    new_plots = False
     new_pdfs = True
 
     #set to True to print verbose output
-    verbose = True
+    verbose = False
 
     #HOF Mode
     HOF_mode = False
