@@ -280,11 +280,11 @@ if __name__ == '__main__':
     
     '''USER Inputs'''
     from USER_INPUTS import *
-    USER_max_generations=3000
+    USER_max_generations=300
     USER_runCfg_type = 'mpi_direct'
     #USER_runCfg_type = 'mpi_bulletin'
     USER_pop_size = 64
-    USER_pop_size = 4
+    #USER_pop_size = 8
     USER_frac_elites = 0.15 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
     USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 else 1
     #USER_pop_size = 4 #laptop
@@ -300,12 +300,9 @@ if __name__ == '__main__':
     #USER_nrnCommand = f'nrniv'
     
     '''HACkz'''
-    ## echo "srun -n 1 ./my_program arg3" >> commands.txt do this instead??
-    # HACKz = f'\
-    #     echo $(pwd)\
-    #     \ncd NERSC\
-    #     \npython srun_extractor.py'  
+    #include sleep to allow watcher to catch up
     HACKz = f'\
+        \nsleep 2\
         \necho $(pwd)\
         \npython srun_extractor.py'       
     USER_mpiCommand = 'srun -N 1'

@@ -327,7 +327,7 @@ def plot_elite_paths(elite_paths, HOF_path = None):
 
     elite_paths = sorted(elite_paths.items(), key=lambda x: x[1]['avgScaledFitness'], reverse=False)
     num_elites = batch_data['batch']['evolCfg']['num_elites']
-    num_elites = len(elite_paths)
+    #num_elites = len(elite_paths)
     if not HOF_mode: elite_paths_cull = elite_paths[:num_elites]
     else: elite_paths_cull = elite_paths
     for simLabel, data in elite_paths_cull:
@@ -444,6 +444,8 @@ def plot_elites(job_dir):
 
     #sort gendirs numerically such that, gen_9 comes before gen_10
     gen_dirs = sorted(gen_dirs, key=lambda x: int(x.split('_')[-1])) 
+    #reverse sort
+    gen_dirs = gen_dirs[::-1]
     
     for gen_dir in gen_dirs:
         #skip if gen_dir is less than start_gen
@@ -572,8 +574,11 @@ if __name__ == '__main__':
             
             # './NERSC/output/240521_Run2_overnight_reg',
 
-            './NERSC/output/240522_Run3_it_srun_sims',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240522_Run4_it_srun_sims_2nodes',
+            #'./NERSC/output/240522_Run3_it_srun_sims',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240522_Run4_it_srun_sims_2nodes',
+
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run9_it_srun_sims_8nodes',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run10_payload_test',
 
             ]
         

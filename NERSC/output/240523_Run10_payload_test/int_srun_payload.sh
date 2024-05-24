@@ -61,7 +61,6 @@ rm -f commands.txt
 #python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
 
 #make sure batch script is only running on one core
-echo "srun -N 1 -n 1 -c 1 python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}" > commands.txt
 #python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
 njobs=$((SLURM_NNODES+1))
 #njobs=$((4+1))
@@ -69,17 +68,71 @@ echo ${njobs}
 #srun -N 1 -n 1 -c 1 python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}
 
 #test 1: /usr/bin/bash: argument_srun: command not found
+#echo "srun -N 1 -n 1 -c 1 python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}" > commands.txt
 #parallel --jobs ${njobs} argument_{} :::: commands.txt
 
 #test2:
 # - batchRun_payload.py runs. Not sure if parallel sruns are working.
 # - I'm giving it 12 minutes to show evidence of running in parallel.
 # - doesnt seem to start after running batchRun_payload.py. Probably because I didnt srun so it only does 1 job at a time.
+#echo "srun -N 1 -n 1 -c 1 python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}" > commands.txt
 #parallel --jobs ${njobs} < commands.txt
 
 #test3:
-# - 
-srun parallel --jobs ${njobs} < commands.txt
+# - now not even the first command is running.
+# - setting 12 minute time limit.
+# - Nope this doesnt work. Nothing runs.
+#echo "srun -N 1 -n 1 -c 1 python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}" > commands.txt
+#srun parallel --jobs ${njobs} < commands.txt
+
+#test 4:
+# - trying ::::
+# - takes a few minutes, but this runs the first python command at least.
+# - yea it get's stuck after the first command. probably waiting for the first command to finish....which it never will.
+#echo "python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}" > commands.txt
+#parallel --jobs ${njobs} echo :::: commands.txt
+#parallel --jobs ${njobs} :::: commands.txt
+
+#test 5:
+# - trying infinite loop
+# - putting $ in python command makes it run in the background...sick
+max_gens=300
+# gen_pop=$SLURM_NNODES
+# njobs=$((SLURM_NNODES))
+gen_pop=8 #one job and one pop per socket
+njobs=8
+gen_count=0
+python batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label} & export PID=$!
+#init
+echo '' > commands.txt
+bash wait_for_commands.sh $gen_pop
+echo "Commands added to commands.txt"
+
+while (($gen_count < $max_gens)); do
+    # Run Init commands
+    # echo '' > commands.txt
+    # bash wait_for_commands.sh $gen_pop
+    #echo "Commands added to commands.txt"
+
+    # Run commands in parallel and clear commands.txt
+    echo "Running commands in parallel"
+    parallel --jobs ${njobs} echo :::: commands.txt
+    parallel --jobs ${njobs} :::: commands.txt
+    echo '' > commands.txt
+    
+    # re-init
+    bash wait_for_commands.sh $gen_pop
+    echo "Parallel commands finished"
+    echo "Commands added to commands.txt"
+    gen_count=$((gen_count+1))
+    
+    # # Optional: add a delay to avoid rapid looping
+    # echo "Sleeping for 1 second"
+    # sleep 1
+    # #break
+done
+#parallel --jobs ${njobs} echo :::: commands.txt
+
 
 
 
@@ -97,4 +150,3 @@ srun parallel --jobs ${njobs} < commands.txt
 #     mpiexec -n ${total_cores} &&\
 #     nrniv -mpi -python batchRun_mpi.py \
 #     -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}"
-
