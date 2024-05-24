@@ -1,15 +1,14 @@
 '''imports'''
-import os
-import netpyne
 import subprocess
+import sys, os
 from fitness_functions import fitnessFunc
 from fitness_config import *
 import pandas as pd
 import json
-import os
 from reportlab.pdfgen import canvas
 from PIL import Image
-import sys, os
+from netpyne import sim
+
 import datetime
 from USER_INPUTS import *
 from reportlab.lib.pagesizes import letter
@@ -291,10 +290,10 @@ def recalc_fitness(data_file_path):
     
     print(f"Recalculating Fitness for {os.path.basename(data_file_path)}")
     #load the data file using netpyne loadall
-    netpyne.sim.loadAll(data_file_path)
-    simData = netpyne.sim.allSimData
-    batch_saveFolder = netpyne.sim.cfg.saveFolder
-    simLabel = netpyne.sim.cfg.simLabel
+    sim.loadAll(data_file_path)
+    simData = sim.allSimData
+    batch_saveFolder = sim.cfg.saveFolder
+    simLabel = sim.cfg.simLabel
 
     #pathing
     NERSC_path = os.path.dirname(os.path.realpath(__file__))
@@ -518,14 +517,14 @@ if __name__ == '__main__':
     new_pdfs = True
 
     #set to True to print verbose output
-    verbose = False
+    verbose = True
 
     #elites
     #USER_num_elites = None
     USER_num_elites = 10
 
     #HOF Mode
-    HOF_mode = True
+    HOF_mode = False
     
     if HOF_mode:
         #new_plots = True
@@ -582,14 +581,14 @@ if __name__ == '__main__':
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240522_Run4_it_srun_sims_2nodes',
 
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run9_it_srun_sims_8nodes',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run10_payload_test',
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run11_payload_test_at_scale',
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run10_payload_test',
+            # '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run11_payload_test_at_scale',
+
+            './NERSC/output/240524_Run2_Figure_Sims',
 
             ]
         
-        job_dirs = [os.path.abspath(job_dir) for job_dir in job_dirs] #: job_dir = os.path.abspath(job_dir)
-            
-            #
+        job_dirs = [os.path.abspath(job_dir) for job_dir in job_dirs] # get full paths
         
         #run plot_elites    
         for job_dir in job_dirs:

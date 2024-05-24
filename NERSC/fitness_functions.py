@@ -646,6 +646,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
         def most_active_time_range(timeVector, sim_obj):
                 '''subfunc'''
                 def electric_slide(time_points, voltage_trace):
+                    #print('Getting most active time range...')
                     #spike threshold, anything above zero is a spike
                     spike_threshold = 0
                     
@@ -660,22 +661,24 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
                     max_spike_count = 0
                     max_spike_start_time = None
 
+                    # Convert the voltage trace to an array once, outside the loop
+                    voltage_trace = np.array(voltage_trace)
+
+                    # Detect zero-crossings for the entire voltage trace
+                    zero_crossings = np.where(np.diff(np.sign(voltage_trace)))[0]
+                    zero_crossing_times = time_points[zero_crossings]
+
+                    # Initialize the maximum spike count and start time
+                    max_spike_count = 0
+                    max_spike_start_time = None
+
                     # Slide the window over the voltage trace
                     for start_time in np.arange(time_points[0], time_points[-1] - window_size + step_size, step_size):
                         # Get the end time of the current window
                         end_time = start_time + window_size
 
-                        # Get the voltage trace for the current window
-                        voltage_trace = np.array(voltage_trace)
-                        window_voltage_trace = voltage_trace[(time_points >= start_time) & (time_points < end_time)]
-
-                        # print(f'test')
-                        # sys.exit()
-                        # Detect zero-crossings: points where the signal changes from positive to negative
-                        zero_crossings = np.where(np.diff(np.sign(window_voltage_trace)) < spike_threshold)[0]
-
-                        # Count the number of zero-crossings, which corresponds to the number of spikes
-                        spike_count = len(zero_crossings)
+                        # Count the number of zero-crossings in the current window
+                        spike_count = np.sum((zero_crossing_times >= start_time) & (zero_crossing_times < end_time))
 
                         # If the current window has more spikes than the previous maximum, update the maximum
                         if spike_count > max_spike_count:
@@ -732,6 +735,7 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
 
                 sim_obj = netpyne.sim
                 timeVector = np.array(net_activity_metrics['timeVector']*1000) #convert back to ms
+                print('Getting most active time ranges for sample traces...')
                 timeRanges = most_active_time_range(timeVector, sim_obj)
                 #timeRanges = [excite_timeVector, inhib_timeVector]
                 #titles = ['E0_highFR', 'I0_highFR']

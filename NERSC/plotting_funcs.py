@@ -12,7 +12,6 @@ from scipy.signal import convolve, find_peaks
 from scipy.stats import norm
 from scipy.signal import butter, filtfilt
 from scipy import stats
-#from USER_INPUTS import *
 
 def plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTimes, burstPeakValues, thresholdBurst, rmsFiringRate): #rasterData, min_peak_distance = 1.0, binSize=0.02*1000, gaussianSigma=0.16*1000, thresholdBurst=1.2, figSize=(10, 6), saveFig=False, timeRange = None, figName='NetworkActivity.png'):
     
@@ -24,11 +23,10 @@ def plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTime
     # Plot
     plt.subplot(1, 1, 1)
     plt.plot(timeVector, firingRate, color='black')
-    plt.xlim([timeVector[0], timeVector[-1]])  # Restrict the plot to the first and last 100 ms    
+    plt.xlim([timeVector[0], timeVector[-1]])  # Restrict the plot to the first and last 100 ms   
 
     fig_ylim = plotting_params['ylim']
     if fig_ylim:       
-        #assert fig_ylim, 'ylim must be set to a list of two integers' #e.g. [1.5, 5]
         plt.ylim(fig_ylim)  # Set y-axis limits to min and max of firingRate
     else:
         yhigh100 = plotting_params['yhigh100']
@@ -36,7 +34,6 @@ def plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTime
         assert yhigh100, 'USER_Activity_yhigh100 must be set to a float' #e.g. 1.05
         assert ylow100, 'USER_Activity_ylow100 must be set to a float' #e.g. 0.95
         plt.ylim([min(firingRate)*ylow100, max(firingRate)*yhigh100])  # Set y-axis limits to min and max of firingRate
-    #plt.ylabel('Firing Rate [Hz]')
     plt.ylabel('Spike Count')
     plt.xlabel('Time [s]')
     title_font = plotting_params['title_font']
@@ -44,9 +41,7 @@ def plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTime
     plt.title('Network Activity', fontsize=title_font)
 
     # Plot the threshold line and burst peaks
-    #plt.plot(np.arange(timeVector[-1]), thresholdBurst * rmsFiringRate * np.ones(np.ceil(timeVector[-1]).astype(int)), color='gray')
-    #rewrite this line using axhline
-    plt.axhline(thresholdBurst * rmsFiringRate, color='gray', linestyle='--')
+    plt.axhline(thresholdBurst * rmsFiringRate, color='gray', linestyle='--', label='Threshold')
     plt.plot(burstPeakTimes, burstPeakValues, 'or')  # Plot burst peaks as red circles
 
     default_name = 'NetworkActivity.png'
@@ -59,7 +54,7 @@ def plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTime
         if targets is not None:
             peak_amp_target = targets['pops']['burts_peak_targets']['big_bursts']['target']
             baseline_target = targets['pops']['baseline_targets']['target']
-            plt.axhline(peak_amp_target, color='r', linestyle='--', label='Big Burst Target')
+            plt.axhline(peak_amp_target, color='r', linestyle='--', label='Burst Target')
             plt.axhline(baseline_target, color='b', linestyle='--', label='Baseline Target')
             plt.legend()
     
