@@ -277,32 +277,38 @@ if __name__ == '__main__':
     #allow for running in vscode for debugging
     run_in_vscode = True
     run_in_vscode = False
+    rerun_mode = True
     
     '''USER Inputs'''
     from USER_INPUTS import *
-    USER_max_generations=300
+    USER_HOF = f'{script_path}/HOF/hof.csv' #seed gen 0 with solutions in HOF.csv
+    if rerun_mode: USER_HOF = f'{script_path}/rerun/rerun.csv' #seed gen 0 with solutions in HOF.csv
+    USER_max_generations=3000
+    if rerun_mode: USER_max_generations=1
     USER_runCfg_type = 'mpi_direct'
     #USER_runCfg_type = 'mpi_bulletin'
-    USER_pop_size = 64
+    USER_pop_size = 200
     #USER_pop_size = 8
+    if rerun_mode: USER_pop_size = len(pd.read_csv(USER_HOF).values.flatten())
     USER_frac_elites = 0.15 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
     USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 else 1
     #USER_pop_size = 4 #laptop
     USER_nodes = 1
     cores_per_perlmutter = 128 #128 or 256, pending debug
-    USER_mpis_per_batch = 32 #16 fits nicely into 400 cells and 256 cores
+    USER_mpis_per_batch = 16 #16 fits nicely into 400 cells and 256 cores
     #USER_mpis_per_batch = 8 #laptop
     USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5' 
     USER_pop_size = USER_pop_size
     USER_nodes = USER_nodes
     USER_nrnCommand = f'--cpu_bind=cores {USER_shifterCommmand} nrniv'
+    #USER_nrnCommand = f'--sockets-per-node 1 --cpu_bind=cores {USER_shifterCommmand} nrniv'
     #USER_nrnCommand = f'nrniv -mpi -python'
     #USER_nrnCommand = f'nrniv'
     
     '''HACkz'''
     #include sleep to allow watcher to catch up
     HACKz = f'\
-        \nsleep 2\
+        \nsleep 4\
         \necho $(pwd)\
         \npython srun_extractor.py'       
     USER_mpiCommand = 'srun -N 1'
