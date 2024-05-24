@@ -1,5 +1,4 @@
-from netpyne import specs    
-
+from netpyne import specs  
 '''network parameters held constant across simulations'''
 version = '23May2024' # version of network
 
