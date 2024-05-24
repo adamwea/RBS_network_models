@@ -284,7 +284,6 @@ def generate_pdf_page(data_file_path, elite_paths_cull, gen_rank, HOF_path=None)
     #evince not found
     #os.system(f'evince {os.path.join(cand_plot_path, f"{simLabel}.pdf")}')
     print(f"PDF saved to {os.path.join(cand_plot_path, f'{simLabel}.pdf')}")
-
 def recalc_fitness(data_file_path):
     #assert that data_file_path exists, if it doesnt, probably wokring with locally instead of on NERSC
     try: assert os.path.exists(data_file_path), f"Error: {data_file_path} does not exist."
@@ -327,6 +326,7 @@ def plot_elite_paths(elite_paths, HOF_path = None):
 
     elite_paths = sorted(elite_paths.items(), key=lambda x: x[1]['avgScaledFitness'], reverse=False)
     num_elites = batch_data['batch']['evolCfg']['num_elites']
+    if USER_num_elites is not None: num_elites = USER_num_elites
     #num_elites = len(elite_paths)
     if not HOF_mode: elite_paths_cull = elite_paths[:num_elites]
     else: elite_paths_cull = elite_paths
@@ -445,7 +445,7 @@ def plot_elites(job_dir):
     #sort gendirs numerically such that, gen_9 comes before gen_10
     gen_dirs = sorted(gen_dirs, key=lambda x: int(x.split('_')[-1])) 
     #reverse sort
-    gen_dirs = gen_dirs[::-1]
+    #gen_dirs = gen_dirs[::-1]
     
     for gen_dir in gen_dirs:
         #skip if gen_dir is less than start_gen
@@ -520,6 +520,10 @@ if __name__ == '__main__':
     #set to True to print verbose output
     verbose = False
 
+    #elites
+    #USER_num_elites = None
+    USER_num_elites = 10
+
     #HOF Mode
     HOF_mode = False
     
@@ -577,8 +581,9 @@ if __name__ == '__main__':
             #'./NERSC/output/240522_Run3_it_srun_sims',
             #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240522_Run4_it_srun_sims_2nodes',
 
-            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run9_it_srun_sims_8nodes',
-            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run10_payload_test',
+            #'/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run9_it_srun_sims_8nodes',
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run10_payload_test',
+            '/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240523_Run11_payload_test_at_scale',
 
             ]
         
