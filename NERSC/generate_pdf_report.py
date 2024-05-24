@@ -39,8 +39,9 @@ for job_dir in job_dirs:
         #print(gen_dir)
         
         #print(f'Adding {gen_dir} to the PDF')
-        cand_dirs = [f.path for f in os.scandir(gen_dir) if 'cand' in f.name and '.pdf' in f.name]
+        cand_dirs = [f.path for f in os.scandir(gen_dir) if 'cand' in f.name and '.pdf' in f.name and 'repaired' not in f.name]
         #print(f'cand_dirs: {cand_dirs}')
+        #if 'repairs' in gen_dir: continue
         cand_dirs = sorted(cand_dirs, key=lambda x: int(x.split('_')[-1].replace('.pdf','')))
         #import sys
         #sys.exit()
@@ -55,6 +56,7 @@ for job_dir in job_dirs:
             # If the file is a PDF, add it to the PDF writer
             filename = os.path.basename(cand_dir)
             dirpath = os.path.dirname(cand_dir)
+            if '.archive' in dirpath: continue
             file_path = os.path.join(dirpath, filename)
             # print(f'Adding {file_path} to the PDF')
 
@@ -74,20 +76,41 @@ for job_dir in job_dirs:
             #         print(f'Error: {e}')
             #         pass
 
-            from pdfrw import PdfReader, PdfWriter
+            #from pdfrw import PdfReader, PdfWriter
             from time import sleep
+            from PyPDF2 import PdfReader
+
+            import os
+            import subprocess
+
+            def repair_pdf(input_file, output_file):
+                gs_command = f"gs -o {output_file} -sDEVICE=pdfwrite -dPDFSETTINGS=/prepress {input_file}"
+                subprocess.run(gs_command, shell=True, check=True)
 
             if filename.endswith('.pdf'):
                 try:
                     pdf_file_path = os.path.join(dirpath, filename)
                     assert os.path.exists(pdf_file_path), f'{pdf_file_path} does not exist'
-                    pdf_reader = PdfReader(pdf_file_path)
-                    for page in pdf_reader.pages:
-                        pdf_writer.add_page(page)
+                    #pdf_reader = PdfReader(pdf_file_path)
+                    # Usage
+                    input_file = pdf_file_path
+                    output_file = pdf_file_path.replace('.pdf', '_repaired.pdf')
+                    #os.system(f'evince {input_file}')
+                    repair_pdf(input_file, output_file)
+                    #evince pdf_file_path
+                    #os.system(f'evince {output_file}')
+                    with open(output_file, 'rb') as f:
+                        pdf_reader = PdfReader(f)
+                        pdf_writer.add_page(pdf_reader.pages[0])
+                    # for i, page in enumerate(pdf_reader.pages):
+                    #     try:
+                    #         pdf_writer.add_page(page)
+                    #     except Exception as e:
+                    #         print(f"Error on page {i}: {e}")
                     
                 except Exception as e:
                     print(f'Error: {e}')
-                    sleep(50) #sleep for 50 seconds
+                    #sleep(50) #sleep for 50 seconds
     
     #save pdf will all HOFs if HOF true
     if not HOF:

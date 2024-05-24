@@ -525,7 +525,7 @@ if __name__ == '__main__':
     USER_num_elites = 10
 
     #HOF Mode
-    HOF_mode = False
+    HOF_mode = True
     
     if HOF_mode:
         #new_plots = True
