@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 #print(f'rank: {rank}')
 #sys.exit()
 
-'''functions'''
+'''Functions'''
 ## Function to serialize the batch_config dictionary
 class batchcfgEncoder(json.JSONEncoder):
     def default(self, obj):
@@ -274,38 +274,17 @@ def main():
 
 '''Main code'''
 if __name__ == '__main__':
-    #allow for running in vscode for debugging
-    run_in_vscode = True
-    run_in_vscode = False
-    rerun_mode = False
-    
-    '''USER Inputs'''
-    from USER_INPUTS import *
-    USER_HOF = f'{script_path}/HOF/hof.csv' #seed gen 0 with solutions in HOF.csv
-    if rerun_mode: USER_HOF = f'{script_path}/rerun/rerun.csv' #seed gen 0 with solutions in HOF.csv
-    USER_max_generations=3000
-    if rerun_mode: USER_max_generations=1
+
+    '''MPI Command Options'''
     USER_runCfg_type = 'mpi_direct'
     #USER_runCfg_type = 'mpi_bulletin'
-    USER_pop_size = 64
-    #USER_pop_size = 8
-    if rerun_mode: USER_pop_size = len(pd.read_csv(USER_HOF).values.flatten())
-    USER_frac_elites = 0.15 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
-    USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 else 1
-    #USER_pop_size = 4 #laptop
-    USER_nodes = 1
-    cores_per_perlmutter = 128 #128 or 256, pending debug
-    USER_mpis_per_batch = 16 #16 fits nicely into 400 cells and 256 cores
-    #USER_mpis_per_batch = 8 #laptop
-    USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5' 
-    USER_pop_size = USER_pop_size
-    USER_nodes = USER_nodes
+    USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5'
     #USER_nrnCommand = f'--cpu_bind=cores {USER_shifterCommmand} nrniv'
     USER_nrnCommand = f'--sockets-per-node 1 --cpu_bind=cores {USER_shifterCommmand} nrniv'
-    #USER_nrnCommand = f'nrniv -mpi -python'
-    #USER_nrnCommand = f'nrniv'
+    USER_mpis_per_batch = 16 #16 fits nicely into 143 ish cells (KCNT1 WT)
+    USER_cores_per_node = USER_mpis_per_batch
     
-    '''HACkz'''
+    '''HACkz (send srun commands to command.txt via srun_extractor.py)'''
     #include sleep to allow watcher to catch up
     HACKz = f'\
         \nsleep 4\
@@ -315,16 +294,37 @@ if __name__ == '__main__':
     HACKz_mpiCommand = f'{HACKz} {USER_mpiCommand}'
     USER_mpiCommand = HACKz_mpiCommand
     print(f'USER_mpiCommand: {USER_mpiCommand}')
-    '''HACKz''' 
 
-    USER_cores_per_node = USER_mpis_per_batch 
+    '''Modes'''
+    #allow for running in vscode for debugging
+    #run_in_vscode = True
+    run_in_vscode = False
+    rerun_mode = False
+    #rerun_mode = True
+    
+    '''Batch Options'''
+    from USER_INPUTS import *
+    USER_nodes = 1  #Using the payload method, this doesnt really matter. 
+                    #It's important that each command is run on a single node, so it's hardcoded in.
+    USER_HOF = f'{script_path}/HOF/hof.csv' #seed gen 0 with solutions in HOF.csv
+    if rerun_mode: USER_HOF = f'{script_path}/rerun/rerun.csv' #seed gen 0 with solutions in HOF.csv
+    USER_frac_elites = 0.15 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
+        
+    '''args'''
+    USER_max_generations=3000
+    if rerun_mode: USER_max_generations=1 #override max_generations with 1 for rerun mode
+    USER_pop_size = 64
+    if rerun_mode: USER_pop_size = len(pd.read_csv(USER_HOF).values.flatten()) #override pop_size with HOF size
+    USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 else 1
     if run_in_vscode: 
         USER_pop_size = 4
         USER_run_label = 'vscode_debug'
         run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = False)
     else: USER_run_label = sys.argv[-1]
-    #name_of_this_script = os.path.basename(__file__)
-    #if sys.argv[-1] == name_of_this_script: USER_run_label = 'default'
+    
+    '''Init'''
     run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = True)
     USER_run_path = run_path
+
+    '''Run'''
     main()

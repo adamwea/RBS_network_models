@@ -207,6 +207,22 @@ def measure_network_activity(
     #convert peak indices to times
     burstPeakTimes = timeVector[peaks]  # Convert peak indices to times
     burstPeakValues = properties['peak_heights']  # Get the peak values
+
+    from scipy.signal import argrelmax
+    # Convert min_peak_distance from ms to seconds
+    min_peak_distance = 10 #ms
+    min_peak_distance /= 1000
+    # Calculate the minimum number of samples apart a peak must be from its neighbors
+    distance = int(min_peak_distance / np.median(np.diff(burstPeakTimes)))
+    # Find the indices of the burst peak times that are at least 'distance' samples apart
+    indices = argrelmax(burstPeakTimes, order=distance)
+    # Use the indices to get the burst peak times and values that are more than 10 ms apart
+    filtered_burstPeakTimes = burstPeakTimes[indices]
+    filtered_burstPeakValues = burstPeakValues[indices]
+    burstPeakTimes = filtered_burstPeakTimes
+    burstPeakValues = filtered_burstPeakValues
+
+    # Quality Control - which, currently, does nothing
     burstPeakTimes, burstPeakValues, burstPeakStarts, burstPeakEnds = burstPeakQualityControl(burstPeakTimes, burstPeakValues)
 
     ##Adjust lengths of timeVector and firingRate to start with the latest start before earliest peak and earliest end after latest peak

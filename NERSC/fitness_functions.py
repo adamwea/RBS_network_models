@@ -437,7 +437,18 @@ def fitnessFunc(simData, plot = False, simLabel = None, data_file_path = None, b
             fitnessVals['E_rate_fitness'] = {'Value': None, 'Fit': maxFitness}
             fitnessVals['I_rate_fitness'] = {'Value': None, 'Fit': maxFitness}
             return fitnessVals
+    def prioritize_fitness(fitnessVals):
+        #LOGIC:
+        #1. Firing Rates. Neurons firing in a healthy range is the most important.
+        # - If either E or I rate is fitness is 1000, set all non-rate fitness values to 1000
+        #2. ISI. TODO: Implement this
+        
+        return fitnessVals
+
     def fitness_summary_metrics(fitnessVals):
+        priortize = True
+        if priortize == True: fitnessVals = prioritize_fitness(fitnessVals)
+        
         # Extract fitness values
         fitness_values = {key: fitnessVals[key]['Fit'] for key in fitnessVals if isinstance(fitnessVals[key], dict) and 'Fit' in fitnessVals[key]}
 

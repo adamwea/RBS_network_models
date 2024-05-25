@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --job-name=last_min_evol
+#SBATCH --job-name=50nodes
 #SBATCH -A m2043
-#SBATCH -t 00:30:00
-#SBATCH -N 8
+#SBATCH -t 10:00:00
+#SBATCH -N 50
 #SBATCH --mail-user=amwe@ucdavis.edu
 #SBATCH --mail-type=ALL
-#SBATCH -q debug
+#SBATCH -q regular
 #SBATCH -C cpu
 #SBATCH --exclusive
 #SBATCH --output=./NERSC/output/latest_job_init_error.txt
@@ -25,7 +25,7 @@ max_gens=3000 #number of generations to run, generally a high number to allow fo
 #max_gens=1 #override as needed
 njobs=$((nodes*2)) #generally 2 jobs per node, 1 per socket
 #njobs=2 #override as needed
-gen_pop=64 #population per generation
+gen_pop=200 #population per generation
 
 ### PARALLELIZATION PARAMS
 OMP_threads_per_process=1 #recomended 1 cpu per process NERSC, https://docs.nersc.gov/development/languages/python/parallel-python/#numpy-and-nested-threading
