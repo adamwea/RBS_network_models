@@ -1,1 +1,0 @@
-python3 batchRun_payload.py -rp ${container_run_path} -d ${Duration_Seconds} -l ${Batch_Run_Label}

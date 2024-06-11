@@ -20,8 +20,8 @@ def blockPrint():
     sys.stdout = open(os.devnull, 'w')
 def enablePrint():
     sys.stdout = sys.__stdout__
-def calc_fitness(simData, fitness_save_path):
-    avgScaledFitness = fitnessFunc(simData, plot = True, data_file_path = None, fitness_save_path = fitness_save_path, exp_mode = True, **kwargs)
+def calc_fitness(simData, fitness_save_path, data_file_path):
+    avgScaledFitness = fitnessFunc(simData, plot = True, data_file_path = data_file_path, fitness_save_path = fitness_save_path, exp_mode = True, **kwargs)
     return avgScaledFitness
 def create_simulated_sim_obj(exp_data_files):       
     elite_paths = {}        
@@ -105,7 +105,8 @@ def fit_exp_data(exp_dir):
     simData = create_simulated_sim_obj(exp_data_files)
     fitness_save_path = os.path.abspath(xlsx_file)
     fitness_save_path = os.path.dirname(xlsx_file)
-    avgScaledFitness = calc_fitness(simData, fitness_save_path = fitness_save_path)                            
+    data_file_path = npz_file
+    avgScaledFitness = calc_fitness(simData, fitness_save_path = fitness_save_path, data_file_path = data_file_path)                            
 
 if __name__ == '__main__':
     kwargs = fitnessFuncArgs
@@ -116,9 +117,7 @@ if __name__ == '__main__':
     #set to True to print verbose output
     verbose = True
 
-    exp_dirs = [
-        './BigData/wt',
-        ]
+    exp_dirs = ['./experimental_data/KCNT1/wt',]
         
     #run plot_elites    
     for exp_dir in exp_dirs:

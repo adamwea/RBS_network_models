@@ -22,19 +22,13 @@ from netpyne.batch import Batch
 from fitness_functions import *
 from fitness_config import *
 from evol_param_setup import evol_param_space
-#from batch_config_setup import *
-from USER_init_new_batch import init_new_batch  
 
 ## Logger
 import logging
-#set up logging
 script_dir = os.path.dirname(os.path.realpath(__file__))
 log_file = f'{script_dir}/batchRun.log'
 logging.basicConfig(filename=log_file, level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
-# Define a logger
 logger = logging.getLogger(__name__)
-#print(f'rank: {rank}')
-#sys.exit()
 
 '''Functions'''
 ## Function to serialize the batch_config dictionary
@@ -44,67 +38,51 @@ class batchcfgEncoder(json.JSONEncoder):
             return str(obj)
         return super().default(obj)
 def get_HOF_seeds():
-    #seeded_HOF_cands = ['.'+'/NERSC/output/240430_Run2_debug_node_run/gen_5/gen_5_cand_39_cfg.json']
-    #import list of paths from .csv USER_HOF
+
     print(f'Loading Hall of Fame from {USER_HOF}')
     assert os.path.exists(USER_HOF), f'USER_HOF file not found: {USER_HOF}'
-    #print(f'Loading Hall of Fame from {USER_HOF}')
-
     seeded_HOF_cands = pd.read_csv(USER_HOF).values.flatten()
     seeded_HOF_cands = [cfg.replace('_data', '_cfg') for cfg in seeded_HOF_cands]
     seeded_HOF_cands = [os.path.abspath(f'./{cfg}') for cfg in seeded_HOF_cands]
-    #compensate for running in NERSC dir...this is bad code...fix later
-    #seeded_HOF_cands = [cfg.replace('NERSC/NERSC', 'NERSC') for cfg in seeded_HOF_cands if 'NERSC/NERSC' in cfg]
     for cfg in seeded_HOF_cands:
         if 'NERSC/NERSC' in cfg: 
             seeded_HOF_cands[seeded_HOF_cands.index(cfg)] = cfg.replace('NERSC/NERSC', 'NERSC')
         else: continue
 
-    #print(f'Loaded {len(seeded_HOF_cands)} Hall of Fame candidates')
-
-    #get abs path
     seeds = []
-    #i=0
     for cfg in seeded_HOF_cands:
-        #cfg = os.path.abspath(cfg)
-        #print(f'Loading Hall of Fame candidate: {cfg}')
-        print(cfg)
-        if not os.path.exists(cfg): cfg = None #check if file exists, else set to None
-        print(cfg)
-        #print(f'Loading Hall of Fame candidate: {cfg}')
-        #selected_cand_cfg = None        
+        if not os.path.exists(cfg): cfg = None #check if file exists, else set to None       
         if cfg is not None:    
+            
+            # open cfg file and extract simConfig
             with open(cfg, 'r') as f:
                 seed = json.load(f)
             seed = seed['simConfig']
+            
             #only keep overlap with USER_evelo_param_space.py
             seed = {
                 key: evol_param_space[key][0] if evol_param_space[key][0] == evol_param_space[key][1] 
                 else seed[key] for key in evol_param_space if key in seed
             }
-            #get rid of keys, just make list of values
-            seed = list(seed.values())
-            #make sure all values are floats
-            seed = [float(val) for val in seed]
+
+            seed = list(seed.values()) #get rid of keys, just make list of values
+            seed = [float(val) for val in seed] #make sure all values are floats
             seeds.append(seed)
+            print(f'Successfully loaded seed from {cfg}')
             if len(seeds) >= USER_pop_size: break
         else: continue
-        #seed = [] #set to empty dict for compatibility with NetPyNE Batch
-        #sys.exit()
+
     print(f'Loaded {len(seeds)} seeds from Hall of Fame')
-    #sys.exit()
     assert len(seeds) > 0, 'No seeds loaded from Hall of Fame'
     return seeds
 def get_batch_config(batch_config_options = None):
     
-    USER_seed_evol = True
     #if rank == 0:
     #print(f'rank zero getting seeds')
     if USER_seed_evol == True:
         HOF_seeds = get_HOF_seeds()
         #load HOF of previous runs
     else: HOF_seeds = {}
-    #else: HOF_seeds = {}
     
     # Extract the parameters
     run_path =  batch_config_options['run_path']
@@ -210,32 +188,23 @@ def init_batch_cfg():
     batch_config_options = {
         "run_path": run_path,
         'batchLabel': os.path.basename(run_path),
-        #"initCfg": initCfg,
     }
     
     # Get the directory of the current script
     script_dir = os.path.dirname(os.path.realpath(__file__))
-    logging.info(f'Batch script path: {script_dir}')
 
     ## Output path
     output_path = f'{script_dir}/output/' 
-    #print(f'Output path: {output_path}')
-    # Check if the output directory exists, if not, create it
     if not os.path.exists(output_path):
         os.makedirs(output_path)
-    logging.info(f'Output path: {output_path}')
-    
-    #batch_run_path = run_path
 
     #Generate batch config from batch_config_options
     batch_config = get_batch_config(batch_config_options = batch_config_options)
-    # logging.info(f'Batch config: {batch_config}')
-    # #extract_batch params
     batch_run_path =  batch_config['saveFolder']
+
     # # Save batch_config in run_path as JSON    
     with open(f'{batch_run_path}/batch_config.json', 'w') as f:
         json.dump(batch_config, f, cls = batchcfgEncoder, indent =4)
-    logging.info(f'Batch config saved in {batch_run_path}/batch_config.json')
 
     #Validate batch_config before running
     assert 'method' in batch_config, 'method must be specified in batch_config'
@@ -244,87 +213,26 @@ def init_batch_cfg():
 
     return batch_config
 def main():
-    logging.info(f'Batch run script started')
-    # logging.info(f'Timer Started: {datetime.datetime.now()}')
-
-    # # Start timers
-    # start_time_wall = datetime.datetime.now()
-    # start_time_cpu = time.process_time()
 
     # Run batch
     run_batch = True
     if run_batch:    
-        print('Initializing batch config')
-        logging.info(f'Initializing batch config')        
+        print('Initializing batch config')    
         batch_config = init_batch_cfg()
         print(f'Running batch: {batch_config["batchLabel"]}')
-        logging.info(f'Running batch: {batch_config["batchLabel"]}')
         batchRun(batch_config = batch_config)
         print(f'Batch run completed')
-        logging.info(f'Batch run completed')
-
-    # End timers
-    # end_time_wall = datetime.datetime.now()
-    # end_time_cpu = time.process_time()
-
-    # logging.info(f'Timer Ended: {end_time_wall}')
-    # logging.info(f'Total CPU Time: {end_time_cpu - start_time_cpu}')
-    # logging.info(f'Total Time Elapsed: {end_time_wall - start_time_wall}')
-    # logging.info(f'Estimated Wait Time: {end_time_wall - start_time_wall - datetime.timedelta(seconds=end_time_cpu - start_time_cpu)}')
 
 '''Main code'''
 if __name__ == '__main__':
-
-    '''MPI Command Options'''
-    USER_runCfg_type = 'mpi_direct'
-    #USER_runCfg_type = 'mpi_bulletin'
-    USER_shifterCommmand = 'shifter --image=adammwea/netpyneshifter:v5'
-    #USER_nrnCommand = f'--cpu_bind=cores {USER_shifterCommmand} nrniv'
-    USER_nrnCommand = f'--sockets-per-node 1 --cpu_bind=cores {USER_shifterCommmand} nrniv'
-    USER_mpis_per_batch = 16 #16 fits nicely into 143 ish cells (KCNT1 WT)
-    USER_cores_per_node = USER_mpis_per_batch
-    
-    '''HACkz (send srun commands to command.txt via srun_extractor.py)'''
-    #include sleep to allow watcher to catch up
-    HACKz = f'\
-        \nsleep 4\
-        \necho $(pwd)\
-        \npython srun_extractor.py'       
-    USER_mpiCommand = 'srun -N 1'
-    HACKz_mpiCommand = f'{HACKz} {USER_mpiCommand}'
-    USER_mpiCommand = HACKz_mpiCommand
-    print(f'USER_mpiCommand: {USER_mpiCommand}')
-
-    '''Modes'''
-    #allow for running in vscode for debugging
-    #run_in_vscode = True
-    run_in_vscode = False
-    rerun_mode = False
-    #rerun_mode = True
-    
-    '''Batch Options'''
-    from USER_INPUTS import *
-    USER_nodes = 1  #Using the payload method, this doesnt really matter. 
-                    #It's important that each command is run on a single node, so it's hardcoded in.
-    USER_HOF = f'{script_path}/HOF/hof.csv' #seed gen 0 with solutions in HOF.csv
-    if rerun_mode: USER_HOF = f'{script_path}/rerun/rerun.csv' #seed gen 0 with solutions in HOF.csv
-    USER_frac_elites = 0.15 # must be 0 < USER_frac_elites < 1. This is the fraction of elites in the population.
-        
-    '''args'''
-    USER_max_generations=3000
-    if rerun_mode: USER_max_generations=1 #override max_generations with 1 for rerun mode
-    USER_pop_size = 64
-    if rerun_mode: USER_pop_size = len(pd.read_csv(USER_HOF).values.flatten()) #override pop_size with HOF size
-    USER_num_elites = int(USER_frac_elites * USER_pop_size) if USER_frac_elites > 0 else 1
-    if run_in_vscode: 
-        USER_pop_size = 4
-        USER_run_label = 'vscode_debug'
-        run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = False)
-    else: USER_run_label = sys.argv[-1]
-    
+ 
     '''Init'''
-    run_path, run_name, _ = init_new_batch(USER_run_label, run_path_only = True)
-    USER_run_path = run_path
-
+    from USER_INPUTS import *
+    #if USER_Run_label is not defined, set to 'vscode'
+    #this assumes that if the script is being run in vscode debugger, the USER_Run_label is undefined.
+    #USER_runCfg_type will be set to 'mpi_bulletin' in USER_INPUTS in this case.
+    from init_batch_run import init_batch_run
+    if 'vscode' in USER_run_label: run_path, run_name, _ = init_batch_run(USER_run_label, run_path_only = False)
+    
     '''Run'''
     main()

@@ -11,9 +11,9 @@ import sys
 
 # read cfg and netParams from command line arguments if available; otherwise use default
 #simConfig, netParams = sim.readCmdLineArgs(simConfigDefault='simConfig.py', netParamsDefault='netParams.py')
-print('TEST CWD:', os.getcwd())
 if 'NERSC' not in os.getcwd():
     os.chdir('NERSC')
+print('CWD:', os.getcwd())
 simConfig, netParams = sim.readCmdLineArgs(simConfigDefault='cfg.py', netParamsDefault='netParams.py')
 #sys.exit()
 

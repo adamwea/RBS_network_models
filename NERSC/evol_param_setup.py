@@ -9,7 +9,7 @@ Define the parameter space for the evolutionary search
 '''
 ## Add USER_Inputs
 from USER_INPUTS import *
-from USER_evol_param_space import params
+from evol_param_space import params
 #assert USER_seconds, 'USER_seconds must be specified in USER_INPUTS.py'
 #seconds = USER_seconds
 #print(f"Duration: {seconds} seconds")
@@ -43,7 +43,7 @@ def define_population_params(batch_run_path = None):
             return netParams
         except: pass
 
-    from USER_const_net_params import netParams
+    from netParams_constant import netParams
         
     ##Save network params to file
     netParams.save(full_path)
