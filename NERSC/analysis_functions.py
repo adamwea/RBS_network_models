@@ -2,10 +2,195 @@ import numpy as np
 import statistics as stats
 from USER_INPUTS import *
 from scipy.signal import convolve, find_peaks, butter, filtfilt
-from scipy.stats import linregress, norm, stats
+from scipy.stats import linregress, norm, stats, gaussian_kde
 from helper_functions import load_clean_sim_object
 import netpyne
 #from plotting_functions import *
+
+'''optimizing functions'''
+def analyze_network_activity(rasterData, conv_params = None):
+    '''subfunctions'''
+    def bimodality_metric(values, bandwidth='scott'):
+        # Estimate the density using KDE
+        kde = gaussian_kde(values, bw_method=bandwidth)
+        x = np.linspace(min(values), max(values), 1000)
+        density = kde(x)
+        
+        # Find local maxima (modes) in the density estimate
+        peaks, _ = find_peaks(density)
+        
+        # Ensure there are at least two peaks (modes)
+        if len(peaks) < 2:
+            return None, None  # Not bimodal
+        
+        # Identify the local minimum between the two highest modes
+        peak_values = density[peaks]
+        highest_peaks = peaks[np.argsort(peak_values)[-2:]]  # Get indices of the two highest peaks
+        min_index = min(highest_peaks)
+        max_index = max(highest_peaks)
+        
+        # Find the local minimum between the two highest peaks
+        local_min = np.argmin(density[min_index:max_index]) + min_index
+        
+        # Calculate the bimodality metric (difference between the heights of the modes and the local minimum)
+        bimodality_metric = (density[highest_peaks[0]] + density[highest_peaks[1]]) / (2 * density[local_min])
+        
+        return bimodality_metric, x[local_min]
+
+        # # Example usage:
+        # values = np.random.normal(loc=0, scale=1, size=500).tolist() + np.random.normal(loc=5, scale=1, size=500).tolist()
+        # metric, threshold = bimodality_metric(values)
+        # print(f"Bimodality Metric: {metric}")
+        # print(f"Intersection Threshold: {threshold}")
+    def apply_min_distance_between_peaks():
+        try:
+            assert len(burstPeakValues) > 1, 'There must be at least 2 peaks to adjust minimum peak distance'
+            if min_peak_distance is None: min_peak_distance = 1 #seconds
+            else: min_peak_distance = min_peak_distance #seconds
+            #min_peak_distance /= 1000 #convert to seconds
+            #avg_IBI = np.mean(np.diff(burstPeakTimes))
+            #print(f'Average IBI before 10s correction: {avg_IBI}')
+            #avg_IBI = np.mean(np.diff(burstPeakTimes))
+            #print(f'Average IBI before 10s correction: {avg_IBI}')
+            culled_peak_times = [burstPeakTimes[0]]  # Start with the first peak
+            culled_peak_values = [burstPeakValues[0]]  # Start with the first peak value
+            for peak in range(1, len(burstPeakTimes)):
+                if burstPeakTimes[peak] - culled_peak_times[-1] < min_peak_distance:  # Compare with the last added peak
+                    if burstPeakValues[peak] > culled_peak_values[-1]:  # If current peak has higher amplitude
+                        culled_peak_times[-1] = burstPeakTimes[peak]  # Replace the last added peak
+                        culled_peak_values[-1] = burstPeakValues[peak]  # Replace the last added peak value
+                else:  # If not less than 10s apart
+                    culled_peak_times.append(burstPeakTimes[peak])
+                    culled_peak_values.append(burstPeakValues[peak])
+
+            burstPeakValues = culled_peak_values
+            burstPeakTimes = culled_peak_times
+            #avg_IBI = np.mean(np.diff(burstPeakTimes))
+            #print(f'Average IBI after 10s correction: {avg_IBI}')
+        except Exception as e: 
+            print(e)
+            pass
+    
+    ''' Init'''
+    assert rasterData is not None, 'rasterData must be specified'
+
+    '''convolution parameters'''    
+    default_params = {'binSize': .1, 'gaussianSigma': .15, 'thresholdBurst': 1.0, 'min_peak_distance': 1,} #seconds
+    if conv_params is None: conv_params = default_params
+    assert 'binSize' in conv_params, 'binSize must be specified'
+    assert 'gaussianSigma' in conv_params, 'gaussianSigma must be specified'
+    assert 'thresholdBurst' in conv_params, 'thresholdBurst must be specified'
+    #min_peak_distance = None, binSize=None, gaussianSigma=None, 
+    #thresholdBurst = None, plot=False, plotting_params = None, crop = None): # thresholdBurst=1.2, crop = None): #, figSize=(10, 6), saveFig=False, figName='NetworkActivity.png'):
+
+    '''Get relative spike time data'''
+    assert 'spkt' in rasterData or 'spkTimes' in rasterData, 'Error: No spike times found in rasterData'
+    if 'spkt' in rasterData: SpikeTimes = rasterData['spkt']
+    elif 'spkTimes' in rasterData: SpikeTimes = rasterData['spkTimes']
+    else: return None
+    relativeSpikeTimes = (np.array(SpikeTimes) - SpikeTimes[0])#/1000  # Set the first spike time to 0 and convert to seconds
+
+    ''' Convolve Spike Data '''    
+    # Step 1: Bin all spike times into small time windows
+    binSize = conv_params['binSize']
+    timeVector = np.arange(0, max(relativeSpikeTimes) + binSize, binSize)  # Time vector for binning
+    binnedTimes, _ = np.histogram(relativeSpikeTimes, bins=timeVector)  # Bin spike times
+    binnedTimes = np.append(binnedTimes, 0)  # Append 0 to match MATLAB's binnedTimes length
+
+    # Step 2: Smooth the binned spike times with a Gaussian kernel
+    gaussianSigma = conv_params['gaussianSigma']
+    kernelRange = np.arange(-3*gaussianSigma, 3*gaussianSigma + binSize, binSize)  # Range for Gaussian kernel
+    kernel = norm.pdf(kernelRange, 0, gaussianSigma)  # Gaussian kernel
+    kernel *= binSize  # Normalize kernel by bin size
+    firingRate = convolve(binnedTimes, kernel, mode='same') / binSize  # Convolve and normalize by bin size
+
+    # Step 4: Peak detection on the smoothed and cropped firing rate curve
+    min_peak_distance = conv_params['min_peak_distance']
+    thresholdBurst = conv_params['thresholdBurst']
+    rmsFiringRate = np.sqrt(np.mean(firingRate**2))  # Calculate RMS of the firing rate
+    min_distance_samples = min_peak_distance / binSize
+    peaks, properties = find_peaks(firingRate, height=thresholdBurst * rmsFiringRate, distance=min_distance_samples)  # Find peaks above the threshold
+    #convert peak indices to times
+    burstPeakTimes = timeVector[peaks]  # Convert peak indices to times
+    burstPeakValues = properties['peak_heights']  # Get the peak values
+
+    # Step 5: Apply minimum peak distance
+    #apply_min_distance_between_peaks()
+        
+    '''
+    Network Metric Outputs
+    '''
+    #fireing_rate
+    firing_rate = firingRate
+
+    # Calculate Baseline
+    try: baseline = np.mean(firing_rate)
+    except: baseline = None
+
+    #time_vector
+    time_vector = timeVector
+
+    #measure frequency of peaks
+    try: 
+        assert len(burstPeakTimes) > 0, 'Error: No burst peaks found. peak_freq set to None.'
+        assert len(burstPeakTimes) > 1, 'Error: Only one burst peak found. peak_freq set to None.'
+        burst_freq = len(burstPeakTimes) / (time_vector[-1]) #now in seconds
+    except: burst_freq = None
+
+    #burst_times
+    try: burst_times = np.array(burstPeakTimes)
+    except: burst_times = None
+
+    #burst_vals
+    try: burst_vals = np.array(burstPeakValues)
+    except: burst_vals = None
+
+    #find biomdality in burst_vals
+    try: bimodality_val, bimodality_threshold = bimodality_metric(burst_vals)
+    except: bimodality_val, bimodality_threshold = None, None
+
+    #big_burst_vals
+    try: big_burst_vals = burst_vals[burst_vals > bimodality_threshold]
+    except: big_burst_vals = None
+
+    #big_burst_times
+    try: big_burst_times = burst_times[burst_vals > bimodality_threshold]
+    except: big_burst_times = None
+
+    #small_burst_vals
+    try: small_burst_vals = burst_vals[burst_vals < bimodality_threshold]
+    except: small_burst_vals = None
+
+    #small_burst_times
+    try: small_burst_times = burst_times[burst_vals < bimodality_threshold]
+    except: small_burst_times = None
+    
+    #measure IBI
+    try: IBIs = np.diff(burst_times) 
+    except: IBIs = None
+
+    #burst_threshold
+    burst_threshold = thresholdBurst * rmsFiringRate
+
+    '''return measurements'''
+    measurements = {
+        'burst_vals': burst_vals, #-(thresholdBurst * rmsFiringRate),
+        'burst_times': burst_times,
+        'IBIs': IBIs,
+        'firing_rate': firing_rate,
+        'time_vector': time_vector,
+        'baseline': baseline,
+        'burst_freq': burst_freq,
+        'burst_threshold': burst_threshold,
+        'bimodal_val': bimodality_val,
+        'bimodal_threshold': bimodality_threshold,
+        'big_burst_vals': big_burst_vals,
+        'big_burst_times': big_burst_times,
+        'small_burst_vals': small_burst_vals,
+        'small_burst_times': small_burst_times,
+    }    
+    return measurements 
+
 
 '''analysis functions'''
 def measure_network_activity(
@@ -158,7 +343,7 @@ def measure_network_activity(
 
     trim = False
     if trim:
-            # Quality Control - which, currently, does nothing
+        # Quality Control - which, currently, does nothing
         burstPeakTimes, burstPeakValues, burstPeakStarts, burstPeakEnds = burstPeakQualityControl(burstPeakTimes, burstPeakValues)
         ##Adjust lengths of timeVector and firingRate to start with the latest start before earliest peak and earliest end after latest peak
         #get the latest start before the earliest pe

@@ -25,20 +25,27 @@ import shutil
 import inspect
 
 import netpyne
+import sys
 
 '''helper functions'''
+def blockPrint():
+    sys.stdout = open(os.devnull, 'w')
+def enablePrint():
+    sys.stdout = sys.__stdout__
+def exec_print(verbose=False, *args, **kwargs):
+    enablePrint()
+    print(*args, **kwargs)
+    if not verbose: blockPrint()
 def load_clean_sim_object(data_file_path):
         # #netpyne.sim.initialize() #initialize netpyne
         # print('Loading data from:', data_file_path)
         # netpyne.sim.loadAll(data_file_path)
-        print('clearing all data')
+        # print('clearing all data')
         try: netpyne.sim.clearAll() #clear all sim data
         except: pass
-        print('loading all data')
+        #print('loading all data')
         netpyne.sim.loadAll(data_file_path)
-        #print('test concluded')
-   
-
+        #print('test concluded')  
 def get_walltime_per_sim(USER_walltime_per_gen, USER_pop_size, USER_nodes):
     USER_walltime_per_gen_hours = int(USER_walltime_per_gen.split(':')[0])
     USER_walltime_per_gen_hours = USER_walltime_per_gen_hours / USER_nodes
@@ -55,7 +62,6 @@ def get_walltime_per_sim(USER_walltime_per_gen, USER_pop_size, USER_nodes):
     hours, remainder = divmod(USER_walltime_per_sim_seconds, 3600)
     minutes, seconds = divmod(remainder, 60)
     return "{:02}:{:02}:{:02}".format(int(hours), int(minutes), int(seconds))
-
 def find_batch_object_and_sim_label():
     # Get the current frame
     current_frame = inspect.currentframe()  
@@ -75,7 +81,6 @@ def find_batch_object_and_sim_label():
     # If no Batch object is found, print a message and return None
     print("Batch object not found in the caller frames.")
     return None, None
-
 def move_btr_files():
     try:
         # List all files in the current working directory
@@ -101,7 +106,6 @@ def move_btr_files():
         
     except Exception as e:
         print("Failed to move files:", e)
-
 def get_batchrun_info(root, file):
     file_path = os.path.join(root, file)
     batchrun_folder = os.path.basename(os.path.normpath(root))    

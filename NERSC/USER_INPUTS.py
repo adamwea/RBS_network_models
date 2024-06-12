@@ -153,7 +153,7 @@ USER_plotting_params = {
 USER_raster_convolve_params = {
     'binSize': .1,
     'gaussianSigma': .15,
-    'thresholdBurst': 2.0,
+    'thresholdBurst': 1.0,
     'min_peak_distance': 1, #sec
     }
 USER_raster_crop = None

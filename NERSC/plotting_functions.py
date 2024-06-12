@@ -1,14 +1,220 @@
-from USER_INPUTS import *
+#from USER_INPUTS import *
 import numpy as np
-#from analysis_functions import *
-from analysis_functions import measure_network_activity
 from matplotlib import pyplot as plt
 import netpyne
 import json
-# import numpy as np
-# import matplotlib.pyplot as plt
+from helper_functions import load_clean_sim_object
 
-'''Report Plotting'''
+'''newer functions - phasing in'''
+def plot_experimental_raster(data_path, save_fig=None, sampling_rate=10000, xlim_start=30000, xlim_end=300000, figsize=None, dpi=600):
+    """
+    Plot a raster plot of spike trains with the top 30% of firing neurons in gold and the rest in light blue.
+    
+    Parameters:
+    - real_spike_data: List of lists or numpy array, each inner list/array represents a spike train.
+    - sampling_rate: Sampling rate in Hz, default is 10000.
+    - xlim_start: Start of the x-axis in milliseconds, default is 30000 (30 seconds).
+    - xlim_end: End of the x-axis in milliseconds, default is 300000 (300 seconds).
+    """
+
+    real_spike_data=np.load(data_path, allow_pickle = True)
+    real_spike_data=real_spike_data['spike_array']
+    print('data loaded')
+    
+    # Ensure real_spike_data is a numpy array
+    real_spike_data = np.array(real_spike_data)
+    
+    # Sort the spike trains by firing rate, highest to lowest
+    real_spike_data = sorted(real_spike_data, key=lambda x: np.sum(x), reverse=False)
+
+    #clear real_spike_data to conserve RAM...
+    #real_spike_data = []
+    
+    # Convert the sorted list back to a numpy array for plotting
+    real_spike_data = np.array(real_spike_data)
+    
+    # Calculate the threshold for the bottom 70% of firing neurons
+    num_neurons = len(real_spike_data)
+    bottom_70_percent_threshold = int(0.7 * num_neurons)
+    
+    # Plot raster plot of spike trains
+    if figsize is None: figsize = (20, 10)
+    else: pass #if figsize is provided, use it
+    fig, ax = plt.subplots(figsize=figsize)
+    
+    # Loop through each spike train and plot the spikes
+    for neuron_id, spike_train in enumerate(real_spike_data):
+        spike_times = np.where(spike_train == 1)[0] / sampling_rate #* 1000  # Convert to milliseconds
+        color = '#FFD700' if neuron_id > bottom_70_percent_threshold else '#ADD8E6'
+        ax.vlines(spike_times, neuron_id + 0.5, neuron_id + 1.5, color=color)
+    
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('IPNs')
+    ax.set_title('Spike Raster Plot')
+    ax.set_ylim(0, len(real_spike_data) + 0.5)  # Ensure correct y-axis direction
+    ax.set_xlim(xlim_start, xlim_end)  # Set x-axis limits based on parameters
+    #label x_lim offset
+    #ax.set_xticks(np.arange(0, xlim_end-xlim_start+1, 30))
+    
+    raster_fig= plt.figure()
+    if save_fig is not None:
+        if '.png' in save_fig: fig.savefig(save_fig, dpi=600)
+        if '.svg' in save_fig: fig.savefig(save_fig)
+        else:
+            try: fig.savefig(save_fig)
+            except: raise Exception(f"Error: Invalid file format. Please try .png or .svg.")
+    else: plt.show()
+    return raster_fig
+def create_sim_obj_from_experimental_data(npz_file_path, xlsx_file_path, verbose=False):       
+    #elite_paths = {}        
+    # for file in exp_data_files:
+    #     #get absolute path
+    #     file = os.path.abspath(file)
+    #     print(file)
+    #     if '.xlsx' in file:
+    #         xlsx_file = file
+    #     if '.npz' in file:
+    #         npz_file = file
+
+    assert os.path.exists(npz_file_path), f"Error: {npz_file_path} does not exist."
+    assert os.path.exists(xlsx_file_path), f"Error: {xlsx_file_path} does not exist."    
+    xlsx_data = pd.read_excel(xlsx_file_path)
+    avgRate = xlsx_data['firing_rate'].values
+    avgRate = np.nanmean(avgRate)
+    I_cells = xlsx_data[xlsx_data['firing_rate'] > xlsx_data['firing_rate'].quantile(0.7)]     #get all rows where firing rate is in the top 30% of all firing rates
+    E_cells = xlsx_data[xlsx_data['firing_rate'] <= xlsx_data['firing_rate'].quantile(0.7)]     #get the remaining rows
+    avgRate_I = I_cells['firing_rate'].values     #get the avg firing rate of both I and E cells
+    avgRate_E = E_cells['firing_rate'].values
+    avgRate_I = np.nanmean(avgRate_I)
+    avgRate_E = np.nanmean(avgRate_E)
+    real_spike_data = np.load(npz_file_path, allow_pickle = True)     #load npz file
+    simData = real_spike_data['spike_array']
+    '''
+    this data is in the form of a 2D array, where each row is a neuron and each column is boolean for whether or not the neuron spiked
+    # we need to convert this into a dictionary with time domain 't', spike times 'spkt', and spike indices 'spkid'
+    # i.e. if multiple neurons fire at the same time, 'spkt' will have multiple indices in sequence with the same time value
+    # we will also need to convert the time domain to ms: time is samples at 10kHz, so 1s = 10,000 samples
+    #flatten 2D array to 1D array, where each index counts spikes at that time
+    # Assuming simData is a 2D NumPy array
+    '''
+    spikes_per_time = np.sum(simData, axis=0)
+    time_indices = np.where(spikes_per_time > 0)
+    time_indices = time_indices[0]    
+    spkt = np.array([i for i in time_indices for j in range(spikes_per_time[i])])     #create array spkt, where each index is the time of a spike
+    all_times = np.arange(simData.shape[1])     # Create an array representing all times in simData
+    spike_dict = {
+        'avgRate': avgRate,
+        'popRates': {'E': avgRate_E, 'I': avgRate_I},
+        'soma_volatage': None, #TODO: add method to get soma voltage  
+        'spkid': np.arange(len(spkt)),  # Generate a sequence of spike IDs
+        'spkt': spkt / 10000,  # Convert the time indices to seconds
+        't': all_times / 10000,        
+    }
+    #Sort spkt min to max
+    sorted_indices = np.argsort(spike_dict['spkt'])
+    spike_dict['spkt'] = spike_dict['spkt'][sorted_indices]    
+    simData = spike_dict
+    return simData
+def extract_raster_data_from_experimental_sim_obj(simData):
+    rasterData = simData.copy()
+    rasterData['spkt'] = np.array(rasterData['spkt'])#/1000
+    rasterData['t'] = np.array(rasterData['t'])#/1000
+    return rasterData
+def plot_experimental_network_activity(npz_file_path, xlsx_file_path, conv_params=None, save_fig=None, ylim=None, xlim=None, figsize = (20, 10), title_font=11, dpi=600):
+
+    '''create sim obj from experimental data'''
+    simData = create_sim_obj_from_experimental_data(npz_file_path, xlsx_file_path)
+    '''extract raster data from sim obj'''
+    rasterData = extract_raster_data_from_experimental_sim_obj(simData)
+    '''plot raster data'''
+    net_fig = plot_sim_network_activity(simData, rasterData=rasterData, conv_params = conv_params, save_fig=save_fig, ylim=ylim, xlim=xlim, figsize = figsize, title_font=title_font)
+    return net_fig
+def plot_sim_network_activity(simData, network_data=None, conv_params = None, save_fig = None, rasterData = None, ylim=None, xlim=None, figsize = None, title_font=11, dpi=600): #batch_saveFolder, plot_save_path, fitnessVals, exp_mode=False, svg_mode = False, **kwargs):
+    
+    '''init'''
+    if rasterData is None: rasterData = simData.copy() #if rasterData not provided, likely simulation case, so use simData
+    else: pass #if rasterData is provided, likely experimental case, so use rasterData
+    assert len(rasterData['spkt']) > 0, 'Error: rasterData has no elements. burstPeak, baseline, slopeFitness, and IBI fitness set to 1000.'                       
+    from USER_INPUTS import USER_svg_mode, USER_raster_convolve_params, USER_plotting_params
+    if USER_svg_mode: svg_mode = True; print('SVG mode enabled')     #activate svg mode if specified
+    if conv_params is None: 
+        assert USER_raster_convolve_params, 'USER_raster_convolve_params needs to be specified in USER_INPUTS.py'
+        conv_params = USER_raster_convolve_params #if conv_params not provided, use USER_raster_convolve_params
+    else: pass #if conv_params is provided, use it
+    assert USER_plotting_params is not None, 'USER_plotting_params must be set in USER_INPUTS.py' #check that plotting params are set
+
+    '''analysis'''
+    from analysis_functions import analyze_network_activity
+    if network_data is None: network_data = analyze_network_activity(rasterData, conv_params = conv_params)
+    else: pass #if network_data is provided, dont re-analyze, use provided data
+    assert 'firing_rate' in network_data and network_data['firing_rate'] is not None, 'Error: network_data does not contain firing_rate data.'
+    assert 'burst_times' in network_data, 'Error: network_data does not contain burst_times data.'
+    assert 'burst_vals' in network_data, 'Error: network_data does not contain burst_values data.'
+    assert 'burst_threshold' in network_data, 'Error: network_data does not contain threshold data.'
+
+    '''plotting'''    
+    if figsize is None: 
+        try: figsize = USER_plotting_params['figsize']  #if figsize is provided, use it
+        except: figsize = (20, 10)
+    assert figsize, 'figsize must be set to a tuple of two integers' #e.g. (10, 10)
+    plt.figure(figsize=figsize)     # Create a new figure with a specified size (width, height)
+    plt.subplot(1, 1, 1)
+    plt.plot(network_data['time_vector'], network_data['firing_rate'], color='black')
+    if xlim is None: plt.xlim([network_data['time_vector'][0], network_data['time_vector'][-1]]) #use full time range
+    else: plt.xlim(xlim) #use specified time range
+    if ylim is None: plt.ylim([min(network_data['firing_rate'])*0.95, max(network_data['firing_rate'])*1.05]) #use full firing rate range, with some buffer
+    else: plt.ylim(ylim) #use specified firing rate range 
+    plt.ylabel('Spike Count')
+    plt.xlabel('Time [s]')
+    assert title_font, 'title_font must be set to an interger' #e.g. {'fontsize': 11}
+    plt.title('Network Activity', fontsize=title_font)    
+    plt.plot(network_data['burst_times'], network_data['burst_vals'], 'or')  # Plot burst peaks as red circles
+    plt.axhline(network_data['burst_threshold'], color='gray', linestyle='--', label='Threshold') # Plot the threshold line
+    plt.axhline(network_data['baseline'], color='b', linestyle='--', label='Baseline') # Plot the baseline target line
+    #plot two horizontal lines for burst min and max values, label the window
+    #plt.axhline(np.nanmin(network_data['burst_vals']), color='r', linestyle='--', label='Burst Min') # Plot the burst min line
+    plt.axhline(np.nanmax(network_data['burst_vals']), color='r', linestyle='--', label='Burst Max') # Plot the burst max line
+    plt.axhline(network_data['bimodal_threshold'], color='g', linestyle='--', label='Mode') # Plot the burst target line
+    plt.legend()
+    
+    '''savefig'''
+    #net_fig = plt.figure()
+    net_fig = None
+    if save_fig is None: plt.show(bbox_inches='tight') #if save_fig is not provided, show the plot
+    else:
+        parent_dir = os.path.dirname(save_fig)
+        if not os.path.exists(parent_dir): os.makedirs(parent_dir)
+        if save_fig.endswith('.svg'): plt.savefig(save_fig, bbox_inches='tight') #if save_fig is an svg, save as svg
+        elif save_fig.endswith('.png'): plt.savefig(save_fig, dpi=600, bbox_inches='tight') #if save_fig is not an svg, save as png
+        else: 
+            try: plt.savefig(save_fig, bbox_inches='tight') #if save_fig is not a recognized format, try to save it
+            except: raise Exception(f"Error: Invalid file format. Please try .png or .svg.") #if save_fig is not a recognized format, raise an exception
+    return net_fig
+def plot_sim_raster(sim_data_path=None, save_fig=None, xlim = None, figsize=None, dpi = 600):
+    '''
+    sim_data_path: path to sim data file
+    save_fig: path to save fig
+    xlim: x-axis limits in ms as a tuple of two integers
+    figsize: tuple of two integers
+    dpi: int
+    '''
+    
+    #fig_path = os.path.join(saveFig, f'{job_name}/{gen_folder}/{simLabel}_{figname}')
+    '''init''' #sim_data_path can be passed outside of fitness function case where sim object will be in memory
+    if sim_data_path is None: assert 'net' in netpyne.sim.allSimData, 'Error: netpyne.sim must be imported to use plot_sim_raster without sim_data_path.'  #not sure if this works in fitness function case, need to test
+    else: load_clean_sim_object(sim_data_path)#if sim_data_path is provided, load the sim object        
+    simData = netpyne.sim.allSimData #extract simData from netpyne.sim
+    rasterData = simData.copy()
+    assert 't' in rasterData, 'Error: rasterData does not contain time data.'
+    time_vector = rasterData['t'] #this should be in ms
+    if xlim is None: timeRange = [time_vector[0], time_vector[-1]] # use full time range
+    else: timeRange = [xlim[0], xlim[1]] # use specified time range
+    '''handle savefig'''
+    if save_fig is None: show_fig = True
+    else: show_fig = False #if save_fig is provided, use it and dont show the plot
+    netpyne.sim.analysis.plotRaster(saveFig=save_fig, timeRange = timeRange, showFig=show_fig, labels = None, figSize=figsize, dpi=dpi)#, dpi=600)
+
+'''older functions - phasing out'''
 def plot_params(elite_paths_cull, cfg_data, params, cgf_file_path):
     
     # Nested function to plot each configuration
@@ -78,7 +284,6 @@ def plot_params(elite_paths_cull, cfg_data, params, cgf_file_path):
     ax.set_xlabel('Normalized Param Value')
     plt.tight_layout()
     return plt
-'''Simulation Plotting Functions'''
 def plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTimes, burstPeakValues, thresholdBurst, rmsFiringRate, svg_mode = False): #rasterData, min_peak_distance = 1.0, binSize=0.02*1000, gaussianSigma=0.16*1000, thresholdBurst=1.2, figSize=(10, 6), saveFig=False, timeRange = None, figName='NetworkActivity.png'):
     #activate svg mode if specified
     if USER_svg_mode: svg_mode = True; print('SVG mode enabled')
@@ -133,14 +338,16 @@ def plot_network_activity(plotting_params, timeVector, firingRate, burstPeakTime
         plt.show()
 def plot_network_activity_fitness(simData, net_activity_metrics, simLabel, batch_saveFolder, plot_save_path, fitnessVals, exp_mode=False, svg_mode = False, **kwargs):
     #activate svg mode if specified
+    from analysis_functions import measure_network_activity
+    from USER_INPUTS import USER_svg_mode, USER_raster_convolve_params, USER_plotting_params, USER_raster_crop
     if USER_svg_mode: svg_mode = True; print('SVG mode enabled')
+    assert USER_raster_convolve_params, 'USER_raster_convolve_params needs to be specified in USER_INPUTS.py'
     
     #net_activity_metrics = net_activity_metrics
     rasterData = simData.copy()
     if not exp_mode:
         rasterData['spkt'] = np.array(rasterData['spkt'])/1000
         rasterData['t'] = np.array(rasterData['t'])/1000
-    assert USER_raster_convolve_params, 'USER_raster_convolve_params needs to be specified in USER_INPUTS.py'
     net_activity_params = USER_raster_convolve_params #{'binSize': .03*1000, 'gaussianSigma': .12*1000, 'thresholdBurst': 1.0}
     binSize = net_activity_params['binSize']
     gaussianSigma = net_activity_params['gaussianSigma']
@@ -452,47 +659,3 @@ def plot_connections(plot_save_path, batch_saveFolder, simLabel, data_file_path,
         print(f'Error generating connections from Data at: {data_file_path}')
         #sample_trace_path_E = None
         pass
-'''experimental data plotting'''
-def plot_experimental_raster(real_spike_data, sampling_rate=10000, xlim_start=30000, xlim_end=300000):
-    """
-    Plot a raster plot of spike trains with the top 30% of firing neurons in gold and the rest in light blue.
-    
-    Parameters:
-    - real_spike_data: List of lists or numpy array, each inner list/array represents a spike train.
-    - sampling_rate: Sampling rate in Hz, default is 10000.
-    - xlim_start: Start of the x-axis in milliseconds, default is 30000 (30 seconds).
-    - xlim_end: End of the x-axis in milliseconds, default is 300000 (300 seconds).
-    """
-    
-    # Ensure real_spike_data is a numpy array
-    real_spike_data = np.array(real_spike_data)
-    
-    # Sort the spike trains by firing rate, highest to lowest
-    sorted_spike_data = sorted(real_spike_data, key=lambda x: np.sum(x), reverse=False)
-    
-    # Convert the sorted list back to a numpy array for plotting
-    sorted_spike_data = np.array(sorted_spike_data)
-    
-    # Calculate the threshold for the bottom 70% of firing neurons
-    num_neurons = len(sorted_spike_data)
-    bottom_70_percent_threshold = int(0.7 * num_neurons)
-    
-    # Plot raster plot of spike trains
-    fig, ax = plt.subplots(figsize=(20, 10))
-    
-    # Loop through each spike train and plot the spikes
-    for neuron_id, spike_train in enumerate(sorted_spike_data):
-        spike_times = np.where(spike_train == 1)[0] / sampling_rate * 1000  # Convert to milliseconds
-        color = '#FFD700' if neuron_id > bottom_70_percent_threshold else '#ADD8E6'
-        ax.vlines(spike_times, neuron_id + 0.5, neuron_id + 1.5, color=color)
-    
-    ax.set_xlabel('Time (ms)')
-    ax.set_ylabel('IPNs')
-    ax.set_title('Spike Raster Plot')
-    ax.set_ylim(0, len(sorted_spike_data) + 0.5)  # Ensure correct y-axis direction
-    ax.set_xlim(xlim_start, xlim_end)  # Set x-axis limits based on parameters
-    
-    plt.show()
-
-# Example usage
-# plot_experimental_data(real_spike_data, xlim_start=30000, xlim_end=300000)
