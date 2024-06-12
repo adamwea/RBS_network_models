@@ -5,6 +5,8 @@ from analysis_functions import measure_network_activity
 from matplotlib import pyplot as plt
 import netpyne
 import json
+# import numpy as np
+# import matplotlib.pyplot as plt
 
 '''Report Plotting'''
 def plot_params(elite_paths_cull, cfg_data, params, cgf_file_path):
@@ -451,5 +453,46 @@ def plot_connections(plot_save_path, batch_saveFolder, simLabel, data_file_path,
         #sample_trace_path_E = None
         pass
 '''experimental data plotting'''
-def plot_sorted_raster_plot():
-    pass 
+def plot_experimental_raster(real_spike_data, sampling_rate=10000, xlim_start=30000, xlim_end=300000):
+    """
+    Plot a raster plot of spike trains with the top 30% of firing neurons in gold and the rest in light blue.
+    
+    Parameters:
+    - real_spike_data: List of lists or numpy array, each inner list/array represents a spike train.
+    - sampling_rate: Sampling rate in Hz, default is 10000.
+    - xlim_start: Start of the x-axis in milliseconds, default is 30000 (30 seconds).
+    - xlim_end: End of the x-axis in milliseconds, default is 300000 (300 seconds).
+    """
+    
+    # Ensure real_spike_data is a numpy array
+    real_spike_data = np.array(real_spike_data)
+    
+    # Sort the spike trains by firing rate, highest to lowest
+    sorted_spike_data = sorted(real_spike_data, key=lambda x: np.sum(x), reverse=False)
+    
+    # Convert the sorted list back to a numpy array for plotting
+    sorted_spike_data = np.array(sorted_spike_data)
+    
+    # Calculate the threshold for the bottom 70% of firing neurons
+    num_neurons = len(sorted_spike_data)
+    bottom_70_percent_threshold = int(0.7 * num_neurons)
+    
+    # Plot raster plot of spike trains
+    fig, ax = plt.subplots(figsize=(20, 10))
+    
+    # Loop through each spike train and plot the spikes
+    for neuron_id, spike_train in enumerate(sorted_spike_data):
+        spike_times = np.where(spike_train == 1)[0] / sampling_rate * 1000  # Convert to milliseconds
+        color = '#FFD700' if neuron_id > bottom_70_percent_threshold else '#ADD8E6'
+        ax.vlines(spike_times, neuron_id + 0.5, neuron_id + 1.5, color=color)
+    
+    ax.set_xlabel('Time (ms)')
+    ax.set_ylabel('IPNs')
+    ax.set_title('Spike Raster Plot')
+    ax.set_ylim(0, len(sorted_spike_data) + 0.5)  # Ensure correct y-axis direction
+    ax.set_xlim(xlim_start, xlim_end)  # Set x-axis limits based on parameters
+    
+    plt.show()
+
+# Example usage
+# plot_experimental_data(real_spike_data, xlim_start=30000, xlim_end=300000)
