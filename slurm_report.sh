@@ -12,27 +12,34 @@ module load conda
 conda activate preshifter
 #job_path=NERSC/output/240529_Run1_8nodes
 #job_path=NERSC/output/240530_Run1_8nodes
-job_path=NERSC/output/240604_Run1_24n24hr
+#job_path=NERSC/output/240604_Run1_24n24hr
+job_path=NERSC/output/240808_Run1_testing
 
 #normal
 # echo "Running plot commands..."
-# python NERSC/plot_sims.py --job_dirs NERSC/output/240529_Run1_8nodes --start_gen 1 --verbose
+#python NERSC/plot_sims.py --job_dirs NERSC/output/240529_Run1_8nodes --start_gen 1 --verbose
 
 #parallel
 #final_gen=14
 #njobs=$(($SLURM_NNODES*2))
-# module load parallel
-# echo "Running commands in parallel..."
-# #seq 0 $final_gen | parallel python NERSC/plot_sims.py --job_dirs $job_path --gen {} #parallelize over generations
-# parallel_cands=512
-# num_gens=6
-# for ((par_gen=0; par_gen<=num_gens; par_gen++))
-# do
-#     seq 0 $parallel_cands | parallel -j 10 python NERSC/plot_sims.py --job_dirs $job_path --gen $par_gen --cand {} #parallelize over candidates, -j jobs at a time
-# done
+module load parallel
+echo "Running commands in parallel..."
+#seq 0 $final_gen | parallel python NERSC/plot_sims.py --job_dirs $job_path --gen {} #parallelize over generations
+parallel_cands=512
+num_gens=6
+njobs=10
+
+#debugging
+# parallel_cands=1
+# num_gens=1
+# njobs=1
+for ((par_gen=0; par_gen<=num_gens; par_gen++))
+do
+    seq 0 $parallel_cands | parallel -j $njobs python NERSC/plot_sims.py --job_dirs $job_path --gen $par_gen --cand {} #parallelize over candidates, -j jobs at a time
+done
 
 #generate pdf reports
-python NERSC/generate_pdf_reports.py
+#python NERSC/generate_pdf_reports.py
 
 #After selecting HOF additions, run the following to generate the final report
 #python NERSC/plot_sims.py --HOF

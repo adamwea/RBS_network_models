@@ -1,9 +1,10 @@
-#from USER_INPUTS import *
+from USER_INPUTS import *
 import numpy as np
 from matplotlib import pyplot as plt
 import netpyne
 import json
 from helper_functions import load_clean_sim_object
+import os
 
 '''newer functions - phasing in'''
 def plot_experimental_raster(data_path, save_fig=None, sampling_rate=10000, xlim_start=30000, xlim_end=300000, figsize=None, dpi=600):
@@ -60,6 +61,7 @@ def plot_experimental_raster(data_path, save_fig=None, sampling_rate=10000, xlim
     if save_fig is not None:
         if '.png' in save_fig: fig.savefig(save_fig, dpi=600)
         if '.svg' in save_fig: fig.savefig(save_fig)
+        #if '.pdf' in save_fig: fig.savefig(save_fig) #TODO: add pdf support
         else:
             try: fig.savefig(save_fig)
             except: raise Exception(f"Error: Invalid file format. Please try .png or .svg.")
@@ -550,6 +552,7 @@ def most_active_time_range(timeVector, sim_obj):
         return time_ranges
 def plot_trace_example(neuron_metrics, net_activity_metrics, plot_save_path, batch_saveFolder, simLabel, data_file_path, svg_mode = False):
     #activate svg mode if specified
+    svg_mode = False
     if USER_svg_mode: svg_mode = True; print('SVG mode enabled')
     # Attempt to generate sample trace for an excitatory example neuron
     try:

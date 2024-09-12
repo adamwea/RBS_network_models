@@ -376,14 +376,17 @@ def plot_elite_paths(elite_paths, HOF_path = None):
         if simData is None: 
             try:
                 exempted_print(f"Error: {simLabel} simData is None. Attempting to load...")
+                #break
                 #exempted_print(data_file_path)
-                load_clean_sim_object(data_file_path)
+                load_clean_sim_object(data_file_path)                
                 simData = netpyne.sim.allSimData
+                #break
                 #exempted_print(simData)
                 #simData = simData.allSimData
             except Exception as e: 
                 exempted_print(f"Error: {e}")
                 exempted_print(f"Error: {simLabel} simData failed to load. Skipping...")
+                #break
         
             #sys.exit() 
             #continue       
@@ -415,8 +418,10 @@ def plot_elite_paths(elite_paths, HOF_path = None):
                 simData, plot = True, simLabel = simLabel, 
                 data_file_path = data_file_path, batch_saveFolder = batch_saveFolder, 
                 fitness_save_path = fitness_save_path, plot_save_path = saveFig, **kwargs)
+            exempted_print(f'Saving to {saveFig}')
+            #sys.exit()
+            
             '''comparison plots'''
-
             '''Adjust cand_plot_path as needed'''
             if HOF_mode:
                 assert HOF_path is not None, 'Error: HOF_path is None.'
@@ -487,7 +492,7 @@ def get_elite_paths(gen_dir):
                 # exempted_print(int(gen_dir.split('_')[-1]))
                 if cand is not None:
                     if int(data_file_path.split('_')[-2]) != cand: 
-                        exempted_print(f"Skipping candidate: {os.path.basename(data_file_path)}")
+                        #exempted_print(f"Skipping candidate: {os.path.basename(data_file_path)}")
                         continue
                 if '.archive' in data_file_path: 
                     exempted_print(f"Skipping archived path: {os.path.basename(data_file_path)}")

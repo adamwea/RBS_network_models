@@ -1,1 +1,0 @@
-mpiexec -n 4 nrniv -mpi test0.hoc

@@ -985,6 +985,8 @@ def fitnessFunc(simData, plot = None, simLabel = None, data_file_path = None, ba
         
         '''plotting'''
         plot_network_activity_fitness(simData, net_activity_metrics, simLabel, batch_saveFolder, plot_save_path, fitnessVals, exp_mode=exp_mode, **kwargs)
+        print(f'Fitness plots saved to {plot_save_path}/{simLabel}_Fitness')
+
         if not exp_mode: plot_raster(net_activity_metrics, plot_save_path, batch_saveFolder, simLabel, data_file_path)
         if not exp_mode: plot_trace_example(neuron_metrics, net_activity_metrics, plot_save_path, batch_saveFolder, simLabel, data_file_path)
         if not exp_mode: plot_connections(plot_save_path, batch_saveFolder, simLabel, data_file_path)
@@ -1012,7 +1014,7 @@ def fitnessFunc(simData, plot = None, simLabel = None, data_file_path = None, ba
     average_fitness, avg_scaled_fitness, fitnessVals, net_activity_metrics, neuron_metrics, priority_level = get_fitness(**kwargs)
     #print(f'Fitness results saved to {output_path}/{gen_folder}/{simLabel}_Fitness.json')
     if plot is None: plot = USER_plot_fitness
-    if priority_level < 3: plot = False #if priority level is 1 or 2, FRs, ISIs, and/or baseline not good. Not worth looking at.
+    if priority_level < 3: plot = False; print(f'Simulation {simLabel} priority level is {priority_level}. Not worth plotting.') #if priority level is 1 or 2, FRs, ISIs, and/or baseline not good. Not worth looking at.
     if plot: 
         plot_fitness(fitnessVals, net_activity_metrics, neuron_metrics, simData, plot_save_path, simLabel, batch_saveFolder, **kwargs)
     #return avg_scaled_fitness

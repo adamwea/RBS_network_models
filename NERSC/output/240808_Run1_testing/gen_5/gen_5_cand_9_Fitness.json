@@ -1,0 +1,123 @@
+{
+    "E_rate_fit": {
+        "Value": 6.049337390826008,
+        "Fit": 591.945002982571,
+        "Features": {
+            "E_rate_mean": 6.049337390826008,
+            "E_rate_fitness": 750.2502752746266,
+            "stdev": 14.668274609727556,
+            "stdev_fitness": 1000,
+            "kurtosis": 19.972940984569277,
+            "kurtosis_fitness": 1000,
+            "skewness": 4.259995832708504,
+            "skew_fitness": 25.584733673086497,
+            "fitness": 591.945002982571
+        }
+    },
+    "I_rate_fit": {
+        "Value": 0.8484262050733022,
+        "Fit": 292.7108341859799,
+        "Features": {
+            "I_rate_mean": 0.8484262050733022,
+            "I_rate_fitness": 866.800072816897,
+            "stdev": 1.5157690597043525,
+            "stdev_fitness": 2.566488811152398,
+            "kurtosis": 4.258055150555044,
+            "kurtosis_fitness": 8.901278394034668,
+            "skewness": 2.329459861909129,
+            "skew_fitness": 2.431151347007948,
+            "fitness": 292.7108341859799
+        }
+    },
+    "E_ISI_fit": {
+        "Value": 8.021958401185168,
+        "Fit": 585.8827821054188,
+        "Features": {
+            "E_ISI_mean": 8.021958401185168,
+            "E_ISI_fitness": 740.2602817059673,
+            "stdev": 15.816938050651787,
+            "stdev_fitness": 1000,
+            "kurtosis": 11.38032240140077,
+            "kurtosis_fitness": 1000,
+            "skewness": 3.3203877631424303,
+            "skew_fitness": 17.388064610289003,
+            "fitness": 585.8827821054188
+        }
+    },
+    "I_ISI_fit": {
+        "Value": 20.69332103665773,
+        "Fit": 313.7025002689189,
+        "Features": {
+            "I_ISI_mean": 20.69332103665773,
+            "I_ISI_fitness": 866.8001393400259,
+            "stdev": 31.69758060311316,
+            "stdev_fitness": 1000,
+            "kurtosis": 3.216392420159642,
+            "kurtosis_fitness": 68.77666855181867,
+            "skewness": 2.054501582712456,
+            "skew_fitness": 5.5306929149121276,
+            "fitness": 313.7025002689189
+        }
+    },
+    "baseline_fit": {
+        "Value": 459.2384039915714,
+        "Fit": 420.6539840977303
+    },
+    "IBI_fitness": {
+        "Value": 1.791304347826087,
+        "Fit": 247.335046192095,
+        "Features": {
+            "avg_IBI": {
+                "Value": 1.791304347826087,
+                "Fit": 842.5490001725794
+            },
+            "Stdev": {
+                "Value": 0.6537770152225219,
+                "Fit": 144.42938094269732
+            },
+            "Skew": {
+                "Value": 0.7329823815059543,
+                "Fit": 1.1779799454984436
+            },
+            "Kurtosis": {
+                "Value": -0.00535380003791186,
+                "Fit": 1.183823707604821
+            }
+        }
+    },
+    "burst_frequency_fitness": {
+        "Value": 0.5606060606060606,
+        "Fit": 922.8243397308261
+    },
+    "big_burst_fit": {
+        "Value": null,
+        "Fit": 1000
+    },
+    "small_burst_fit": {
+        "Value": 521.398202634043,
+        "Fit": 854.5951179714939,
+        "features": {
+            "StdDev": 54.24467634125225,
+            "Kurtosis": 72.91961423517188,
+            "Skewness": 7.0564936268757465,
+            "StdDevFit": 1000,
+            "KurtosisFit": 1000,
+            "SkewnessFit": 423.78046834150894
+        }
+    },
+    "thresh_fit": {
+        "Value": 462.02951124190537,
+        "Fit": 444.2581223593877
+    },
+    "bimodal_burst_fit": {
+        "Value": null,
+        "Fit": 1000
+    },
+    "slope_fit": {
+        "Value": -0.0027213782092389838,
+        "Fit": 1.0012794395761118
+    },
+    "maxFitness": 1000,
+    "average_fitness": 556.2424174444998,
+    "average_scaled_fitness": 0.5557976467611905
+}
