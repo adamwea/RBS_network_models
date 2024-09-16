@@ -17,13 +17,13 @@
 # Q0S JOB: 
 #   sbatch slurm_payload.sh
 # INTERACTIVE NODE:
-#   salloc #--nodes=2 -C cpu -q interactive -t 04:00:00 --exclusive --image=adammwea/netpyneshifter:v5
+#   salloc --nodes=2 -C cpu -q interactive -t 04:00:00 --exclusive --image=adammwea/netpyneshifter:v5
 # bash slurm_payload.sh
 
 ### OPTIONS
 Batch_Run_Label=$SLURM_JOB_NAME #Label for the batch run. This will be 'interactive in the case of an interactive node runs'
 [ -z "$Batch_Run_Label" ] && Batch_Run_Label="login" # If running on login node, Batch_Run_Label will be empty. Set it to 'login' in this case.
-Duration_Seconds=330 #Simulation Duration in seconds
+Duration_Seconds=180 #Simulation Duration in seconds
 nodes=$SLURM_NNODES #hpc, number of nodes as requested by salloc
 #nodes=1 #override as needed. If running on laptop or server, number of nodes is 1. #NOTE: if running on a laptop or server, you will probably need to run in docker container with srun and slurm installed.
 max_gens=3000 #number of generations to run, generally a high number to allow for convergence
