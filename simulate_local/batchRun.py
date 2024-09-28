@@ -1,10 +1,5 @@
 ''' 
-This file is a *highly* modified version of the file batchRun.py 
-from the NetPyNE tutorial 9. 
-
 Evolutionary algorithm optimization of a network using NetPyNE
-
-To run use: mpiexec -np [num_cores] nrniv -mpi batchRun.py
 '''
 
 '''
@@ -16,23 +11,31 @@ import json
 import os
 import pandas as pd
 
-## Submodule Imports
-sys.path.insert(0, 'submodules/netpyne')
-from netpyne.batch import Batch
-sys.path.insert(0, 'submodules/MEA_Analysis')
-from MEA_analysis import *
-
-## Local Imports
-from fitness_functions import *
-from fitness_tunnings import *
-from evol_param_setup import evol_param_space
-
 ## Logger
 import logging
 script_dir = os.path.dirname(os.path.realpath(__file__))
 log_file = f'{script_dir}/batchRun.log'
 logging.basicConfig(filename=log_file, level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
+
+## Get user arguments
+sys.path.insert(0, 'simulate_config_files')
+from simulate_config_files import parse_user_args
+parse_user_args.main()
+from temp_user_args import *
+
+## Import Local Modules
+sys.path.insert(0, 'submodules/netpyne')
+sys.path.insert(0, 'simulate_plotting')
+sys.path.insert(0, 'simulate_analysis')
+sys.path.insert(0, 'simulate_local')
+from simulate_analysis import *
+from fitness_functions import *
+from fitness_tunnings import *
+from evol_param_setup import evol_param_space
+
+## Submodule Imports
+from netpyne.batch import Batch
 
 '''Functions'''
 ## Function to serialize the batch_config dictionary
@@ -86,7 +89,8 @@ def get_batch_config(batch_config_options = None):
     if USER_seed_evol == True:
         HOF_seeds = get_HOF_seeds()
         #load HOF of previous runs
-    else: HOF_seeds = {}
+    #else: HOF_seeds = {}
+    else: HOF_seeds = None
     
     # Extract the parameters
     run_path =  batch_config_options['run_path']
@@ -99,7 +103,7 @@ def get_batch_config(batch_config_options = None):
         'batchLabel': batch_label,
         'saveFolder': run_path,
         'method': USER_method,
-        'cfgFile': USER_cfgFile,
+        'cfgFile': USER_cfg_file,
         'netParamsFile': USER_netParamsFile,
         #'initCfg': initCfg,
         'runCfg': {
@@ -185,7 +189,6 @@ def init_batch_cfg():
     '''
     Generate Config
     '''
-    
     ##Create a dictionary with the given variables and their values
     run_path = USER_run_path
     print('runpath:',run_path)
@@ -216,6 +219,8 @@ def init_batch_cfg():
     assert 'batchLabel' in batch_config, 'batchLabel must be specified in batch_config'
 
     return batch_config
+
+'''Main code'''
 def main():
 
     # Run batch
@@ -227,16 +232,7 @@ def main():
         batchRun(batch_config = batch_config)
         print(f'Batch run completed')
 
-'''Main code'''
-if __name__ == '__main__':
- 
-    '''Init'''
-    from USER_INPUTS import *
-    #if USER_Run_label is not defined, set to 'vscode'
-    #this assumes that if the script is being run in vscode debugger, the USER_Run_label is undefined.
-    #USER_runCfg_type will be set to 'mpi_bulletin' in USER_INPUTS in this case.
-    from init_batch_run import init_batch_run
-    if 'vscode' in USER_run_label: run_path, run_name, _ = init_batch_run(USER_run_label, run_path_only = False)
-    
+
+if __name__ == '__main__':    
     '''Run'''
     main()

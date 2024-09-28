@@ -1,6 +1,4 @@
-import sys
-sys.path.append('/home/adamm/workspace/network_simulations/')
-from USER_INPUTS import *
+from temp_user_args import *
 import numpy as np
 from matplotlib import pyplot as plt
 import netpyne
@@ -48,8 +46,7 @@ def plot_experimental_raster(data_path, save_fig=None, sampling_rate=10000, xlim
     # Loop through each spike train and plot the spikes
     for neuron_id, spike_train in enumerate(real_spike_data):
         spike_times = np.where(spike_train == 1)[0] / sampling_rate #* 1000  # Convert to milliseconds
-        #color = '#FFD700' if neuron_id > bottom_70_percent_threshold else '#ADD8E6'
-        color = '#ADD8E6'
+        color = '#FFD700' if neuron_id > bottom_70_percent_threshold else '#ADD8E6'
         ax.vlines(spike_times, neuron_id + 0.5, neuron_id + 1.5, color=color)
     
     ax.set_xlabel('Time (s)')
@@ -614,8 +611,7 @@ def plot_trace_example(neuron_metrics, net_activity_metrics, plot_save_path, bat
             t = sample_trace[1]['tracesData'][0]['t']
             if len(v) > len(t): v = v[:len(t)]
             if len(t) > len(v): t = t[:len(v)]
-            #color = 'gold' if type == 'I' else 'blue'
-            color = 'blue'
+            color = 'gold' if type == 'I' else 'blue'
             axs[i].plot(t, v, color=color)
             axs[i].set_title(title)
             #if inhib, make line yellow, else blue

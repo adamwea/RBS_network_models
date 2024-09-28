@@ -1,6 +1,5 @@
 from netpyne import specs
-from USER_INPUTS import USER_seconds
-#from __main__ import USER_seconds #import user seconds which should have been declared in the batchRun script
+from temp_user_args import USER_seconds #import user seconds which should have been declared in the batchRun script
 
 ## Evol Params
 params = specs.ODict()

@@ -7,8 +7,6 @@ import sys
 '''
 Define the parameter space for the evolutionary search
 '''
-## Add USER_Inputs
-from USER_INPUTS import *
 from evol_param_space import params
 #assert USER_seconds, 'USER_seconds must be specified in USER_INPUTS.py'
 #seconds = USER_seconds
@@ -38,7 +36,9 @@ def define_population_params(batch_run_path = None):
 
     ## Check if file exists, if so, return
     if os.path.exists(full_path):
-        try: 
+        try:
+            #sys.exit()
+ 
             netParams = sim.loadNetParams(filename+'.json', setLoaded=False)
             return netParams
         except: pass

@@ -1,0 +1,12 @@
+{
+    "name": "NetPyNE Dev Container",
+    "workspaceFolder": "/app",  // Set the default folder to open
+    "extensions": [
+        "ms-python.python"
+    ],
+    "mounts": [
+        "source=/home/adamm/workspace/network_simulations,target=/app,type=bind",
+        "source=/mnt/ben-shalom_nas,target=/data,type=bind"
+    ],
+    //"postCreateCommand": "pip install -r requirements.txt"
+}
