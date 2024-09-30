@@ -1,10 +1,17 @@
 # Prior to development do the following:
 docker pull adammwea/netpyneshifter:v5
 
-# Run Docker indefinitely detatched
+# Run Docker indefinitely detatched - RBSLabServer1
 docker run -d --rm \
   -v /home/adamm/workspace/network_simulations:/app \
   -v /mnt/ben-shalom_nas:/data \
+  -w /app adammwea/netpyneshifter:v5 \
+  tail -f /dev/null
+
+# Run Docker indefinitely detatched - AWDesktop
+docker run -d --rm \
+  -v /home/adamm/RBS_network_simulations:/app \
+  -v '/mnt/d/OneDrive - University of California, Davis/Data to Analyze this Weekend':/data \
   -w /app adammwea/netpyneshifter:v5 \
   tail -f /dev/null
 
