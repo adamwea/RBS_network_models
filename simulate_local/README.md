@@ -3,7 +3,7 @@ docker pull adammwea/netpyneshifter:v5
 
 # Run Docker indefinitely detatched - RBSLabServer1
 docker run -d --rm \
-  -v /home/adamm/workspace/network_simulations:/app \
+  -v /home/adamm/workspace/RBS_network_simulations:/app \
   -v /mnt/ben-shalom_nas:/data \
   -w /app adammwea/netpyneshifter:v5 \
   tail -f /dev/null
