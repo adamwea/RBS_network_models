@@ -52,10 +52,17 @@ main_repo=$(git rev-parse --show-toplevel)
 # Commit and push changes in the main repo
 commit_and_push "$main_repo"
 
-# Loop through submodules and commit/push changes
+# Loop through submodules and commit/push changes directly without function call
 echo "Processing submodules..."
 git submodule foreach --recursive '
-    commit_and_push "$(pwd)"
+    echo "Processing submodule: $(pwd)"
+    git add .
+    if [[ -n $(git status --porcelain) ]]; then
+        git commit -m "'"$commit_message"'"
+        git push
+    else
+        echo "No changes to commit in $(pwd)"
+    fi
 '
 
 echo "All repositories processed successfully!"
