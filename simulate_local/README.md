@@ -3,8 +3,10 @@ docker pull adammwea/netpyneshifter:v5
 
 # Run Docker indefinitely detatched - RBSLabServer1
 docker run -d --rm \
+  --gpus all \
   -v /home/adamm/workspace/RBS_network_simulations:/app \
   -v /mnt/ben-shalom_nas:/data \
+  -v /var/run/docker.sock:/var/run/docker.sock \
   -w /app adammwea/netpyneshifter:v5 \
   tail -f /dev/null
 

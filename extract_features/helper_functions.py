@@ -91,3 +91,34 @@ def process_csv_to_dict(df, h5_parent_dirs, allowed_scan_types=None):
             print(row)
     
     return dict(data_dict)
+
+# import json
+# import os
+# import requests
+# from notebook import notebookapp
+# import ipykernel
+
+# def get_notebook_path():
+#     # Get the connection file for the current kernel
+#     connection_file = os.path.basename(ipykernel.connect.get_connection_file())
+#     kernel_id = connection_file.split('-', 1)[1].split('.')[0]
+
+#     # Get the list of running notebooks
+#     servers = list(notebookapp.list_running_servers())
+
+#     for server in servers:
+#         try:
+#             # Get the sessions for each server
+#             response = requests.get(f"{server['url']}api/sessions", params={'token': server.get('token', '')})
+#             response.raise_for_status()  # Check for request errors
+#             sessions = response.json()
+
+#             # Find the notebook file in the sessions
+#             for sess in sessions:
+#                 if sess['kernel']['id'] == kernel_id:
+#                     return os.path.join(server['notebook_dir'], sess['notebook']['path'])
+#         except requests.RequestException as e:
+#             print(f"Error retrieving the notebook path: {e}")
+#             return None
+
+#     return None
