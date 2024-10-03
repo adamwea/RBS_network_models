@@ -21,6 +21,7 @@ logger = logging.getLogger(__name__)
 ## Get user arguments
 sys.path.insert(0, 'simulate_config_files')
 from simulate_config_files import parse_user_args
+from simulate_config_files import evol_param_space
 parse_user_args.main()
 from temp_user_args import *
 
@@ -32,7 +33,6 @@ sys.path.insert(0, 'simulate_local')
 from simulate_analysis import *
 from fitness_functions import *
 from fitness_tunnings import *
-from evol_param_setup import evol_param_space
 
 ## Submodule Imports
 from netpyne.batch import Batch
