@@ -18,24 +18,28 @@ log_file = f'{script_dir}/batchRun.log'
 logging.basicConfig(filename=log_file, level=logging.INFO, format='[%(asctime)s] %(levelname)s: %(message)s')
 logger = logging.getLogger(__name__)
 
+#append submodules to python path
+sys.path.insert(0, './submodules/netpyne')
+from netpyne.batch import Batch
+
 ## Get user arguments
-sys.path.insert(0, 'simulate_config_files')
+#sys.path.insert(0, './simulate_config_files')
 from simulate_config_files import parse_user_args
-from simulate_config_files import evol_param_space
+from simulate_config_files.evol_param_setup import evol_param_space
 parse_user_args.main()
 from temp_user_args import *
 
+## Append local directories to path
+sys.path.insert(0, './plotting_functions')
+
 ## Import Local Modules
-sys.path.insert(0, 'submodules/netpyne')
-sys.path.insert(0, 'simulate_plotting')
-sys.path.insert(0, 'simulate_analysis')
-sys.path.insert(0, 'simulate_local')
-from simulate_analysis import *
 from fitness_functions import *
 from fitness_tunnings import *
 
-## Submodule Imports
-from netpyne.batch import Batch
+# sys.path.insert(0, 'simulate_plotting')
+# sys.path.insert(0, 'simulate_analysis')
+# sys.path.insert(0, 'simulate_local')
+# from simulate_analysis import *
 
 '''Functions'''
 ## Function to serialize the batch_config dictionary

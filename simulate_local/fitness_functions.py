@@ -15,8 +15,8 @@ from scipy.stats import linregress, norm, stats
 # Local application imports
 from temp_user_args import *
 from helper_functions import load_clean_sim_object, find_batch_object_and_sim_label
-from plotting_functions import plot_network_activity_fitness, plot_raster, plot_trace_example, plot_connections
-from analysis_functions import get_network_activity_metrics, get_individual_neuron_metrics
+from plotting_functions.plotting_functions_dep import plot_network_activity_fitness, plot_raster, plot_trace_example, plot_connections
+from simulate_analysis.analysis_functions_dep import get_network_activity_metrics, get_individual_neuron_metrics
 
 '''tunable fitness functions'''
 def fit_baseline(net_activity_metrics, **kwargs):

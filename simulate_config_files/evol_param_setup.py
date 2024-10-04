@@ -7,7 +7,7 @@ import sys
 '''
 Define the parameter space for the evolutionary search
 '''
-from evol_param_space import params
+from simulate_config_files.evol_param_space import params
 #assert USER_seconds, 'USER_seconds must be specified in USER_INPUTS.py'
 #seconds = USER_seconds
 #print(f"Duration: {seconds} seconds")
