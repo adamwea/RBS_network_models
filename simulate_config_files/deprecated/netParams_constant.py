@@ -1,10 +1,10 @@
 from netpyne import specs  
 '''network parameters held constant across simulations'''
-version = '27Sep24' # version of network
+version = '07Oct24' # version of network
 
 
-'''27Sep24'''
-if version == '27Sep24':
+'''07Oct24'''
+if version == '07Oct24':
     ## Hold Neuron Locations Constant Across Simulations
     netParams = specs.NetParams()   # object of class NetParams to store the network parameters
 

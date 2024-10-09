@@ -1,16 +1,17 @@
 from netpyne import specs
 cfg = specs.SimConfig()
+#from simulate_config_files import *
 
 # --------------------------------------------------------
 # network iterations
 # --------------------------------------------------------
-cfg.networkType = '27Sep24' 
+cfg.networkType = '07Oct24' 
 #cfg.networkType = '05June24' #Updating complexity of network, grant due in June 2024 was extended
 #cfg.networkType = '22May24' #Network used for grant proposal in June 2024
 #cfg.networkType = 'pre13Apr24' #Network used for grant proposal in 01Apr24
-if cfg.networkType == '27Sep24':
+if cfg.networkType == '07Oct24':
 	import random
-	from netParams_constant import netParams
+	from simulate_config_files.deprecated.netParams_constant import netParams
 
 	cfg.cache_efficient = True 	#cache_efficient - Use CVode cache_efficient option to optimize load when running on many cores (default: False)
 	print('im here first')
@@ -57,7 +58,7 @@ if cfg.networkType == '22May24':
 
 	#http://doc.netpyne.org/user_documentation.html#simconfig-recordtraces
 	cfg.recordTraces['soma_voltage'] = { "sec": "soma", "loc": 0.5, "var": "v"}	
-	from netParams_constant import netParams
+	from simulate_config_files.deprecated.netParams_constant import netParams
 	num_Ecells = netParams.popParams['E']['numCells']
 	num_Icells = netParams.popParams['I']['numCells']
 	import random
@@ -71,7 +72,7 @@ if cfg.networkType == '22May24':
 	print(cfg.recordCells)
 elif cfg.networkType == '05June24':
 	import random
-	from netParams_constant import netParams
+	from simulate_config_files.deprecated.netParams_constant import netParams
 
 	cfg.cache_efficient = True 	#cache_efficient - Use CVode cache_efficient option to optimize load when running on many cores (default: False)
 	print('im here first')
@@ -118,7 +119,7 @@ if cfg.networkType == '22May24':
 
 	#http://doc.netpyne.org/user_documentation.html#simconfig-recordtraces
 	cfg.recordTraces['soma_voltage'] = { "sec": "soma", "loc": 0.5, "var": "v"}	
-	from netParams_constant import netParams
+	from simulate_config_files.deprecated.netParams_constant import netParams
 	num_Ecells = netParams.popParams['E']['numCells']
 	num_Icells = netParams.popParams['I']['numCells']
 	import random
@@ -154,7 +155,7 @@ if cfg.networkType == 'pre13Apr24':
 
 	#http://doc.netpyne.org/user_documentation.html#simconfig-recordtraces
 	cfg.recordTraces['soma_voltage'] = { "sec": "soma", "loc": 0.5, "var": "v"}	
-	from netParams_constant import netParams
+	from simulate_config_files.deprecated.netParams_constant import netParams
 	num_Ecells = netParams.popParams['E']['numCells']
 	num_Icells = netParams.popParams['I']['numCells']
 	import random

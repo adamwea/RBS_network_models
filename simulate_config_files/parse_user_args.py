@@ -14,7 +14,7 @@ DEFAULT_USER_SEED_EVOL = False
 DEFAULT_METHOD = 'evol'
 DEFAULT_CFG_FILE = 'simulate_config_files/cfg.py'
 DEFAULT_NETPARAMSFILE = 'simulate_config_files/netParams.py'
-DEFAULT_INIT_SCRIPT = 'simulate_config_files/runcfg_init.py'
+DEFAULT_INIT_SCRIPT = 'simulate_config_files/init.py'
 DEFAULT_NRNCOMMAND = 'nrniv'
 DEFAULT_NODES = 1
 DEFAULT_CORES_PER_NODE = 1
@@ -25,6 +25,8 @@ DEFAULT_CROSSOVER_RATE = 0.5
 DEFAULT_TIME_SLEEP = 10 #seconds
 DEFAULT_MAXITER_WAIT = 50 #iterations
 DEFAULT_PLOT_FITNESS = False #plot fitness while simulation is running - less efficient to do so
+DEFAULT_CONTINUE = False
+DEFAULT_OVERWRITE = False
 
 # Global Variables (for export)
 USER_seconds = None
@@ -54,6 +56,8 @@ USER_crossover = None
 USER_time_sleep = None
 USER_maxiter_wait = None
 USER_plot_fitness = None
+USER_continue = None
+USER_overwrite = None
 
 # Function to handle argument parsing
 def parse_arguments():
@@ -207,8 +211,9 @@ def init_batch_pathing(USER_run_label=None, run_path_only=False):
     if USER_overwrite or USER_continue:
         if prev_run_name in existing_runs:
             if USER_overwrite and os.path.exists(prev_run_path):
-                if not run_path_only:
-                    shutil.rmtree(prev_run_path)
+                #if not run_path_only:
+                    #shutil.rmtree(prev_run_path)
+                shutil.rmtree(prev_run_path)
                 run_path = prev_run_path   
             elif USER_continue and os.path.exists(prev_run_path):
                 run_path = prev_run_path
@@ -252,6 +257,8 @@ def save_config_to_file():
         f.write(f"USER_plot_fitness = {USER_plot_fitness}\n")
         f.write(f"USER_mpiCommand = '{USER_mpiCommand}'\n")
         f.write(f"USER_nrnCommand = '{USER_nrnCommand}'\n")
+        f.write(f"USER_continue = {USER_continue}\n")
+        f.write(f"USER_overwrite = {USER_overwrite}\n")
 
 
         # f.write("USER_mpiCommand = '''")
@@ -259,10 +266,14 @@ def save_config_to_file():
         # f.write("'''\n")
 
 # Main function
-def main():
-    global USER_run_path, USER_output_path, USER_HOF, USER_cfg_file, USER_netParamsFile, USER_init_script
+def main(**kwargs):
+    global USER_run_path, USER_output_path, USER_HOF, USER_cfg_file, USER_netParamsFile, USER_init_script, USER_continue, USER_overwrite
 
+    # Parse the arguments
     args = parse_arguments()
+    for key, value in kwargs.items():
+        if value is not None:
+            setattr(args, key, value)
     configure_run(args)
     
     # Initialize batch run and save the results

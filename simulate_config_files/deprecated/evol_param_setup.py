@@ -43,7 +43,7 @@ def define_population_params(batch_run_path = None):
             return netParams
         except: pass
 
-    from netParams_constant import netParams
+    from simulate_config_files.deprecated.netParams_constant import netParams
         
     ##Save network params to file
     netParams.save(full_path)

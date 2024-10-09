@@ -25,8 +25,7 @@ from netpyne.batch import Batch
 ## Get user arguments
 #sys.path.insert(0, './simulate_config_files')
 from simulate_config_files import parse_user_args
-from simulate_config_files.evol_param_setup import evol_param_space
-parse_user_args.main()
+from simulate_config_files.deprecated.evol_param_setup import evol_param_space
 from temp_user_args import *
 
 ## Append local directories to path
@@ -225,7 +224,9 @@ def init_batch_cfg():
     return batch_config
 
 '''Main code'''
-def main():
+def main(**kwargs):
+    # Parse user arguments
+    parse_user_args.main(**kwargs)
 
     # Run batch
     run_batch = True
@@ -239,4 +240,8 @@ def main():
 
 if __name__ == '__main__':    
     '''Run'''
-    main()
+    kwargs = {
+        'continue_run': False,
+        'overwrite': True,
+    }
+    main(**kwargs)
