@@ -1,0 +1,126 @@
+{
+    "batch": {
+        "batchLabel": "aw_grid",
+        "cfgFile": "cfg.py",
+        "evolCfg": {
+            "fitnessFunc": "removed"
+        },
+        "initCfg": {},
+        "method": "grid",
+        "netParamsFile": "netParams.py",
+        "params": [
+            {
+                "label": "probEall",
+                "values": [
+                    0.002,
+                    0.02,
+                    0.2,
+                    2.0,
+                    20.0
+                ]
+            },
+            {
+                "label": "weightEall",
+                "values": [
+                    0.0025
+                ]
+            },
+            {
+                "label": "probIE",
+                "values": [
+                    0.4
+                ]
+            },
+            {
+                "label": "weightIE",
+                "values": [
+                    0.05
+                ]
+            },
+            {
+                "label": "stimWeight",
+                "values": [
+                    0.02
+                ]
+            },
+            {
+                "label": "propVelocity",
+                "values": [
+                    100.0
+                ]
+            },
+            {
+                "label": "gnabar_E",
+                "values": [
+                    0.2
+                ]
+            },
+            {
+                "label": "gkbar_E",
+                "values": [
+                    0.05
+                ]
+            },
+            {
+                "label": "gnabar_I",
+                "values": [
+                    0.15
+                ]
+            },
+            {
+                "label": "gkbar_I",
+                "values": [
+                    0.05
+                ]
+            },
+            {
+                "label": "tau1_exc",
+                "values": [
+                    0.8
+                ]
+            },
+            {
+                "label": "tau2_exc",
+                "values": [
+                    6.0
+                ]
+            },
+            {
+                "label": "tau1_inh",
+                "values": [
+                    0.8
+                ]
+            },
+            {
+                "label": "tau2_inh",
+                "values": [
+                    9.0
+                ]
+            },
+            {
+                "label": "stim_rate",
+                "values": [
+                    15.0
+                ]
+            },
+            {
+                "label": "stim_noise",
+                "values": [
+                    0.4
+                ]
+            }
+        ],
+        "runCfg": {
+            "allocation": "default",
+            "coresPerNode": 2,
+            "mpiCommand": "mpirun",
+            "nodes": 4,
+            "reservation": null,
+            "script": "init.py",
+            "skip": true,
+            "type": "mpi_bulletin"
+        },
+        "saveFolder": "./aw_grid",
+        "seed": null
+    }
+}

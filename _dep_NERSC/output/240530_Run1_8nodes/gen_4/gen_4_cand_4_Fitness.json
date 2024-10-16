@@ -1,0 +1,91 @@
+{
+    "E_rate_fit": {
+        "Value": 47.640409997210426,
+        "Fit": 330.8589219239547,
+        "Features": {
+            "E_rate_mean": 47.640409997210426,
+            "E_rate_fitness": 990.0100264528108,
+            "stdev": 23.407883688321096,
+            "stdev_fitness": 1000,
+            "kurtosis": -0.16025720115516773,
+            "kurtosis_fitness": 1.2907935717797265,
+            "skewness": 1.261687666207887,
+            "skew_fitness": 1.275945747273415,
+            "fitness": 330.8589219239547
+        }
+    },
+    "I_rate_fit": {
+        "Value": null,
+        "Fit": 1000
+    },
+    "E_ISI_fit": {
+        "Value": 0.053937785607725844,
+        "Fit": 865.5172034831717,
+        "Features": {
+            "E_ISI_mean": 0.053937785607725844,
+            "E_ISI_fitness": 990.0100141634201,
+            "stdev": 0.09833488169862797,
+            "stdev_fitness": 1.7338882048864885,
+            "kurtosis": 53.291799602394356,
+            "kurtosis_fitness": 1000,
+            "skewness": 6.872377044406037,
+            "skew_fitness": 606.5415962860948,
+            "fitness": 865.5172034831717
+        }
+    },
+    "I_ISI_fit": {
+        "Value": null,
+        "Fit": 1000
+    },
+    "baseline_fit": {
+        "Value": 200.1966928446688,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "IBI_fitness": {
+        "Value": null,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "burst_frequency_fitness": {
+        "Value": null,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "big_burst_fit": {
+        "Value": null,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "small_burst_fit": {
+        "Value": 1052.9904653627416,
+        "Fit": 1000,
+        "features": {
+            "StdDev": 0.0,
+            "Kurtosis": NaN,
+            "Skewness": NaN,
+            "StdDevFit": 1000,
+            "KurtosisFit": NaN,
+            "SkewnessFit": NaN
+        },
+        "deprioritized": true
+    },
+    "thresh_fit": {
+        "Value": 406.445827006981,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "bimodal_burst_fit": {
+        "Value": null,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "slope_fit": {
+        "Value": -0.005245026758314291,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "maxFitness": 1000,
+    "average_fitness": 933.0313437839272,
+    "average_scaled_fitness": 0.8999184799584788
+}
