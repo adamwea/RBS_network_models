@@ -1,0 +1,44 @@
+Initiating Rank: 0
+CWD: /app
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /app/simulation_output/240930_Run1_vscode/gen_0/gen_0_cand_2_cfg.json
+Loading file /app/simulation_output/240930_Run1_vscode/gen_0/gen_0_cand_2_cfg.json ... 
+Loading simConfig...
+Importing netParams from /app/simulation_output/240930_Run1_vscode/240930_Run1_vscode_netParams.py
+im here second
+Loading file netParams_popParams.json ... 
+Saving netParams to /app/simulation_output/240930_Run1_vscode/netParams_popParams.json ... 
+
+Start time:  2024-09-30 05:03:02.284136
+
+Creating network of 2 cell populations on 1 hosts...
+  Number of cells on node 0: 143 
+  Done; cell creation time = 0.04 s.
+Making connections...
+  Number of connections on node 0: 4329 
+  Done; cell connection time = 1.76 s.
+  Number of stims on node 0: 0 
+  Done; cell stims creation time = 0.00 s.
+Recording 4 traces of 1 types on node 0
+
+Running simulation using NEURON for 1000.0 ms...
+  Done; run time = 10.48 s; real-time ratio: 0.10.
+
+Gathering data...
+  Done; gather time = 0.22 s.
+
+Analyzing...
+  Cells: 143
+  Connections: 4329 (30.27 per cell)
+  Spikes: 1383 (9.67 Hz)
+  Simulated time: 1.0 s; 1 workers
+  Run time: 10.48 s
+   E : 11.022 Hz
+   I : 1.964 Hz
+Saving output as /app/simulation_output/240930_Run1_vscode/gen_0/gen_0_cand_2_data.json ... 
+Finished saving!
+  Done; saving time = 0.40 s.
+  Done; plotting time = 0.00 s
+
+Total time = 12.91 s

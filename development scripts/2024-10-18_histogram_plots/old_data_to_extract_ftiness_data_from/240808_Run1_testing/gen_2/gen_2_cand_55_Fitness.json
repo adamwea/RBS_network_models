@@ -1,0 +1,91 @@
+{
+    "E_rate_fit": {
+        "Value": 27.77875992311053,
+        "Fit": 301.01315385365484,
+        "Features": {
+            "E_rate_mean": 27.77875992311053,
+            "E_rate_fitness": 900.1001158202225,
+            "stdev": 26.875221950279254,
+            "stdev_fitness": 1000,
+            "kurtosis": -0.4989751983239592,
+            "kurtosis_fitness": 1.811173899523211,
+            "skewness": 0.897401517020954,
+            "skew_fitness": 1.1281718412187316,
+            "fitness": 301.01315385365484
+        }
+    },
+    "I_rate_fit": {
+        "Value": null,
+        "Fit": 1000
+    },
+    "E_ISI_fit": {
+        "Value": 2.065444347590963,
+        "Fit": 966.7000335727907,
+        "Features": {
+            "E_ISI_mean": 2.065444347590963,
+            "E_ISI_fitness": 900.100100718372,
+            "stdev": 11.945426712888937,
+            "stdev_fitness": 1000,
+            "kurtosis": 86.59859679843565,
+            "kurtosis_fitness": 1000,
+            "skewness": 9.236861949798504,
+            "skew_fitness": 1000,
+            "fitness": 966.7000335727907
+        }
+    },
+    "I_ISI_fit": {
+        "Value": null,
+        "Fit": 1000
+    },
+    "baseline_fit": {
+        "Value": 1156.2331146100146,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "IBI_fitness": {
+        "Value": null,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "burst_frequency_fitness": {
+        "Value": null,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "big_burst_fit": {
+        "Value": 2350.286413562068,
+        "Fit": 1000,
+        "features": {
+            "StdDev": 0.0,
+            "Kurtosis": NaN,
+            "Skewness": NaN,
+            "StdDevFit": 1000,
+            "KurtosisFit": 1000,
+            "SkewnessFit": 1000
+        },
+        "deprioritized": true
+    },
+    "small_burst_fit": {
+        "Value": null,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "thresh_fit": {
+        "Value": 2323.13625079442,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "bimodal_burst_fit": {
+        "Value": null,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "slope_fit": {
+        "Value": -0.004614035282212699,
+        "Fit": 1000,
+        "deprioritized": true
+    },
+    "maxFitness": 1000,
+    "average_fitness": 938.9760989522038,
+    "average_scaled_fitness": 0.9126966388792104
+}

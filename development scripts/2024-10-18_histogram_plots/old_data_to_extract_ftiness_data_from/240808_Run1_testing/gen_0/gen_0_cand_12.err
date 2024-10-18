@@ -1,0 +1,7 @@
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+srun: error: nid006531: task 25: Exited with exit code 1
+srun: Terminating StepId=26413848.11
+slurmstepd: error: *** STEP 26413848.11 ON nid006531 CANCELLED AT 2024-06-05T01:10:08 ***
+srun: error: nid006531: tasks 0,4,6,8,11-12,16,18,20-22,24,26-28,30-32,39,46: Terminated
+srun: error: nid006531: tasks 1-3,5,7,9-10,13-15,17,19,23,29,33-38,40-45,47: Killed
+srun: Force Terminated StepId=26413848.11
