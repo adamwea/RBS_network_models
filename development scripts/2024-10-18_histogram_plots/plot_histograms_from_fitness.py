@@ -3,7 +3,7 @@ import json
 import pandas as pd
 import matplotlib.pyplot as plt
 import matplotlib
-matplotlib.use('TkAgg')  # or 'Agg' if you don't need interactive plots
+#matplotlib.use('TkAgg')  # or 'Agg' if you don't need interactive plots
 
 # Data extraction functions
 
@@ -242,9 +242,72 @@ def plot_candidates_per_generation(fitness_df, fitness_type=None, exclude_no_val
 
         # Show the plot in VS Code
         # plt.show()
+        
+def plot_fitness_histogram(fitness_df, fitness_type, pops_df, target_type, bin_width=None):
+    """Plot histogram for a specific fitness type with modular bin width and target features."""
+    # Filter the DataFrame for the specified fitness type
+    fitness_type_df = fitness_df[fitness_df['Type'] == fitness_type]
 
+    # Exclude candidates with no value
+    fitness_type_df = fitness_type_df[fitness_type_df['Value'].notnull()]
+    
+    # Save the data to a CSV file
+    fitness_type_df.to_csv(f'{fitness_type}_data.csv', index=False)
+    
+    # If bin width is not specified, calculate it based on the data
+    if bin_width is None:
+        data_range = fitness_type_df['Value'].max() - fitness_type_df['Value'].min()
+        bin_width = data_range / 100  # 1% increments of the range
+
+    # Calculate the number of bins
+    num_bins = int(data_range / bin_width) + 1
+
+    # Plot histogram
+    plt.figure(figsize=(12, 6))
+    plt.hist(fitness_type_df['Value'], bins=num_bins, color='blue', alpha=0.7)
+    plt.title(f'Histogram of {fitness_type} Values')
+    plt.xlabel('Value')
+    plt.ylabel('Candidate Count')
+    plt.grid(axis='y')
+
+    # Plot target features as vertical lines
+    for run in fitness_type_df['Simulation_Run'].unique():
+        #target_info = pops_df[f'{fitness_type}_target'].values[0]
+        #taget info = fitness_type without _fitness and + _target
+        #replace _fitness with _target
+        #current_fit_type = fitness_type
+        #target_info = pops_df[f'{fitness_type.replace("_fitness", "_target")}'].values[0]
+        target_info = pops_df[f'{target_type}'].values[0]
+        if isinstance(target_info, dict):
+            min_value = target_info.get('min', None)
+            max_value = target_info.get('max', None)
+            target_value = target_info.get('target', None)
+
+            if min_value is not None:
+                plt.axvline(x=min_value, color='black', linestyle='--', label='min' if run == fitness_type_df['Simulation_Run'].unique()[0] else "")
+            if max_value is not None:
+                plt.axvline(x=max_value, color='black', linestyle='--', label='max' if run == fitness_type_df['Simulation_Run'].unique()[0] else "")
+            if target_value is not None:
+                plt.axvline(x=target_value, color='red', linestyle='--', label='target' if run == fitness_type_df['Simulation_Run'].unique()[0] else "")
+
+    plt.legend()
+
+    # Adjust layout
+    plt.tight_layout()
+
+    # Save the plot to a file
+    plot_file = f"{fitness_type}_histogram.png"
+    plt.savefig(plot_file)
+    print(f"Plot saved to {plot_file}")
+
+    # Show the plot in VS Code
+    # plt.show()
+
+
+''' Main script '''
 # Define the directory containing the JSON files
-base_dir = '/home/adamm/RBS_network_simulations/development scripts/2024-10-18_histogram_plots/old_data_to_extract_ftiness_data_from'
+base_dir = './development scripts/2024-10-18_histogram_plots/old_data_to_extract_ftiness_data_from'
+base_dir = os.path.abspath(base_dir)
 
 # Initialize lists to hold the data
 fitness_data_list = []
@@ -262,11 +325,84 @@ pops_output_file = os.path.join(base_dir, 'pops_data.csv')
 fitness_df.to_csv(fitness_output_file, index=False)
 pops_df.to_csv(pops_output_file, index=False)
 
-# Plot the histogram for burst_frequency_fitness values
-plot_burst_frequency_fitness(fitness_df, pops_df, exclude_no_value=True)
-plot_candidates_per_generation(fitness_df, fitness_type='burst_frequency_fitness', exclude_no_value=True)
+'''Old Code, it still works, just not what Roy was looking for'''
 
-print(f"Fitness data extracted and saved to {fitness_output_file}")
-print(f"Pops data extracted and saved to {pops_output_file}")
+# # Plot the histogram for burst_frequency_fitness values
+# plot_burst_frequency_fitness(fitness_df, pops_df, exclude_no_value=True)
+# plot_candidates_per_generation(fitness_df, fitness_type='burst_frequency_fitness', exclude_no_value=True)
 
-# 
+# print(f"Fitness data extracted and saved to {fitness_output_file}")
+# print(f"Pops data extracted and saved to {pops_output_file}")
+
+'''New Code'''
+
+# plot histogram for all fitness types
+try:
+    plot_fitness_histogram(fitness_df, 'burst_frequency_fitness', pops_df, 'burst_frequency_target')
+except Exception as e:
+    print(f"Error plotting burst_frequency_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'thresh_fit', pops_df, 'threshold_target')
+except Exception as e:
+    print(f"Error plotting threshold_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'slope_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting slope_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'sustained_activity_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting sustained_activity_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'baseline_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting baseline_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'big_burst_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting big_burst_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'small_burst_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting small_burst_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'bimodal_burst_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting bimodal_burst_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'IBI_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting IBI_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'E_rate_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting E_rate_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'I_rate_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting I_rate_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'E_ISI_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting E_ISI_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'I_ISI_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting I_ISI_fitness: {e}")
+
+try:
+    plot_fitness_histogram(fitness_df, 'bimodality_fitness', pops_df)
+except Exception as e:
+    print(f"Error plotting bimodality_fitness: {e}")

@@ -1,0 +1,136 @@
+{
+    "batchLabel": "241003_Run12_vscode",
+    "saveFolder": "/app/simulation_output/241003_Run12_vscode",
+    "method": "evol",
+    "cfgFile": "/app/simulate_config_files/cfg.py",
+    "netParamsFile": "/app/simulate_config_files/netParams.py",
+    "runCfg": {
+        "type": "mpi_bulletin",
+        "script": "/app/simulate_config_files/runcfg_init.py",
+        "mpiCommand": "mpirun",
+        "nrnCommand": "nrniv",
+        "nodes": 1,
+        "coresPerNode": 1,
+        "reservation": null,
+        "skip": false
+    },
+    "evolCfg": {
+        "evolAlgorithm": "custom",
+        "fitnessFunc": "<function fitnessFunc at 0x79d1e409e160>",
+        "fitnessFuncArgs": {
+            "pops": {
+                "num_bursts_target": {},
+                "E_rate_target": {
+                    "target": 0.8773666667,
+                    "width": 424.0,
+                    "max": 2.13465,
+                    "min": 0.32015,
+                    "stdev": 0.454,
+                    "skew": 1.018,
+                    "kurtosis": 0.095
+                },
+                "I_rate_target": {
+                    "target": 4.7104651163,
+                    "width": 2180.0,
+                    "max": 13.604500000000002,
+                    "min": 1.9538333333333333,
+                    "stdev": 2.4583078031387076,
+                    "skew": 1.4410949114139207,
+                    "kurtosis": 2.0718602443529788
+                },
+                "E_ISI_target": {
+                    "target": 1.4235002806463521,
+                    "width": 616.6771305418719,
+                    "max": 3.1030755,
+                    "min": 0.4641714039408867,
+                    "stdev": 0.6487012855947434,
+                    "skew": 0.4646037342251692,
+                    "kurtosis": -0.7503793922021273
+                },
+                "I_ISI_target": {
+                    "target": 0.26324381530063906,
+                    "width": 81.80716885790484,
+                    "max": 0.5105243181818182,
+                    "min": 0.0733189024704066,
+                    "stdev": 0.11349480200712236,
+                    "skew": 0.3441884739586352,
+                    "kurtosis": -1.0144721473791476
+                },
+                "baseline_target": {
+                    "target": 289.929,
+                    "width": 718.115,
+                    "max": 718.115,
+                    "min": 0,
+                    "scale_factor": 2.0
+                },
+                "big-small_cutoff": 1250,
+                "big_burst_target": {
+                    "target": 1616.7837258361646,
+                    "max": 1954.7494420346768,
+                    "min": 1253.316936848065,
+                    "width": 350716.25259330584,
+                    "stdev": 204.922,
+                    "skew": -0.20136526164128335,
+                    "kurtosis": -0.9145778975934289
+                },
+                "small_burst_target": {
+                    "target": 402.633,
+                    "max": 1205.884,
+                    "min": 723.599,
+                    "width": 1080641.25,
+                    "stdev": 124.560197413713,
+                    "skew": 1.0072780690750132,
+                    "kurtosis": 0.18082015049176414
+                },
+                "bimodal_burst_target": {
+                    "target": 0.5,
+                    "mean": 1138.973614714823,
+                    "stdev": 372.14563335805457,
+                    "min": 756.1386713993633,
+                    "max": 1954.7494420346768,
+                    "skew": 0.7885775193441444,
+                    "kurtosis": -0.8282603799279
+                },
+                "IBI_target": {
+                    "target": 8.79,
+                    "width": 10620.0,
+                    "max": 23.6,
+                    "min": 2.5,
+                    "stdev": 5.626567690116464,
+                    "skew": 0.8967834423955664,
+                    "kurtosis": -0.17410342980963867
+                },
+                "burst_frequency_target": {
+                    "target": 0.1,
+                    "max": 1,
+                    "min": 0,
+                    "scale_factor": 2.5
+                },
+                "threshold_target": {
+                    "target": 718.115,
+                    "min": 288.929,
+                    "max": 725.599,
+                    "scale_factor": 1
+                },
+                "sustained_activity_target": {
+                    "target": 90.90303232255916
+                },
+                "slope_target": {
+                    "target": -0.004
+                }
+            },
+            "maxFitness": 1000,
+            "pop_size": 10
+        },
+        "pop_size": 10,
+        "num_elites": 1,
+        "mutation_rate": 0.1,
+        "crossover": 0.5,
+        "maximize": false,
+        "max_generations": 1,
+        "time_sleep": 10,
+        "maxiter_wait": 50,
+        "defaultFitness": 1000,
+        "seeds": null
+    }
+}

@@ -1,0 +1,22 @@
+Warning: no DISPLAY environment variable.
+--No graphics will be displayed.
+NEURON -- VERSION 8.2.6 HEAD (078a34a9d) 2024-07-24
+Duke, Yale, and the BlueBrain Project -- Copyright 1984-2022
+See http://neuron.yale.edu/neuron/credits
+
+Traceback (most recent call last):
+  File "/app/simulate_config_files/runcfg_init.py", line 22, in <module>
+    simConfig, netParams = sim.readCmdLineArgs(simConfigDefault='cfg.py', netParamsDefault='netParams.py')
+  File "/app/submodules/netpyne/netpyne/sim/setup.py", line 283, in readCmdLineArgs
+    netParamsModule = sim.loadPythonModule(netParamsPath)
+  File "/app/submodules/netpyne/netpyne/sim/utils.py", line 30, in loadPythonModule
+    loader.exec_module(module)
+  File "<frozen importlib._bootstrap_external>", line 843, in exec_module
+  File "<frozen importlib._bootstrap>", line 219, in _call_with_frames_removed
+  File "/app/simulation_output/241007_Run6_vscode/241007_Run6_vscode_netParams.py", line 168, in <module>
+    neurons, connections = create_network(cfg, numExcitatory=100, numInhibitory=43, dist_matrix={})  # Replace dist_matrix with actual data
+  File "/app/simulation_output/241007_Run6_vscode/241007_Run6_vscode_netParams.py", line 104, in create_network
+    dist_3D = dist_matrix[pre['id'], post['id']]  # Placeholder for 3D distance
+KeyError: 'id'
+0 /opt/venv/bin/nrniv: can't open simConfig=/app/simulation_output/241007_Run6_vscode/gen_0/gen_0_cand_2_cfg.json
+Could not open netParams=/app/simulation_output/241007_Run6_vscode/241007_Run6_vscode_netParams.py
