@@ -12,10 +12,10 @@ from simulation_fitness_functions.fit_burst_amplitude import fit_big_burst_ampli
 from simulation_fitness_functions.fit_network_IBI import fit_IBI 
 from simulation_fitness_functions.fit_sustain import fit_sustain
 from simulation_fitness_functions.fit_rate_slope import fit_rate_slope
-from simulation_analysis_functions.network_activity_metrics import get_simulated_network_activity_metrics
-from simulation_analysis_functions.individual_neuron_metrics import get_individual_neuron_metrics
+from analysis_functions.network_activity_metrics import get_simulated_network_activity_metrics
+from analysis_functions.individual_neuron_metrics import get_individual_neuron_metrics
 
-def fitnessFunc(simObj):
+def fitnessFunc(**kwargs):
     
     def get_fitness():
         '''Main fitness calculation function'''

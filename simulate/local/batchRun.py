@@ -19,21 +19,21 @@ logging.basicConfig(filename=log_file, level=logging.INFO, format='[%(asctime)s]
 logger = logging.getLogger(__name__)
 
 #append submodules to python path
-sys.path.insert(0, './submodules/netpyne')
+netpyne_path = os.path.abspath('./submodules/netpyne')
+sys.path.insert(0, netpyne_path)
+import netpyne
 from netpyne.batch import Batch
+#prove that netpyne.batch imported from submodules/netpyne instead of local netpyne
+#print(f'netpyne.batch imported from: {os.path.abspath(netpyne.__file__)}')
 
 ## Get user arguments
 #sys.path.insert(0, './simulate_config_files')
-from simulation_config_files import parse_user_args
-from simulation_config_files import evolutionary_parameter_space
+from simulate._config_files import parse_user_args
+from simulate._config_files import evolutionary_parameter_space
 from simulate._temp_files.temp_user_args import *
 
 ## Append local directories to path
 sys.path.insert(0, './plotting_functions')
-
-## Import Local Modules
-from simulate_local.archive.fitness_functions import *
-from simulate_local.archive.fitness_tunnings import *
 
 '''Functions'''
 ## Function to serialize the batch_config dictionary
@@ -42,6 +42,8 @@ class batchcfgEncoder(json.JSONEncoder):
         if callable(obj):
             return str(obj)
         return super().default(obj)
+
+## Function to get HOF seeds
 def get_HOF_seeds():
 
     print(f'Loading Hall of Fame from {USER_HOF}')
@@ -80,6 +82,8 @@ def get_HOF_seeds():
     print(f'Loaded {len(seeds)} seeds from Hall of Fame')
     assert len(seeds) > 0, 'No seeds loaded from Hall of Fame'
     return seeds
+
+## Function to get the batch_config dictionary
 def get_batch_config(batch_config_options = None):
     
     #if rank == 0:
@@ -138,6 +142,8 @@ def get_batch_config(batch_config_options = None):
     }
 
     return batch_config
+
+## Function to run the batch
 def batchRun(batch_config = None):
     
     #Get batch_config
@@ -181,6 +187,8 @@ def batchRun(batch_config = None):
 
     #run batch
     batch.run()
+
+## Function to initialize the batch config
 def init_batch_cfg():
     '''
     Generate Config
