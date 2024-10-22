@@ -243,8 +243,17 @@ def plot_candidates_per_generation(fitness_df, fitness_type=None, exclude_no_val
         # Show the plot in VS Code
         # plt.show()
         
-def plot_fitness_histogram(fitness_df, fitness_type, pops_df, target_type, bin_width=None):
-    """Plot histogram for a specific fitness type with modular bin width and target features."""
+def plot_fitness_histogram(fitness_df, fitness_type, pops_df, target_type, bin_width=None, mode='value'):
+    """Plot histogram for a specific fitness type with modular bin width and target features.
+    
+    Args:
+        fitness_df (pd.DataFrame): DataFrame containing fitness data.
+        fitness_type (str): The type of fitness to plot.
+        pops_df (pd.DataFrame): DataFrame containing pops data.
+        target_type (str): The type of target to plot.
+        bin_width (float, optional): Width of the bins in the histogram. Defaults to None.
+        mode (str, optional): Mode of the histogram ('value' or 'rms_diff'). Defaults to 'value'.
+    """
     # Filter the DataFrame for the specified fitness type
     fitness_type_df = fitness_df[fitness_df['Type'] == fitness_type]
 
@@ -262,33 +271,42 @@ def plot_fitness_histogram(fitness_df, fitness_type, pops_df, target_type, bin_w
     # Calculate the number of bins
     num_bins = int(data_range / bin_width) + 1
 
+    # Prepare the data for plotting
+    if mode == 'rms_diff':
+        fitness_type_df['RMS_Diff'] = fitness_type_df.apply(lambda row: row['Value'] - pops_df[pops_df['Simulation_Run'] == row['Simulation_Run']][target_type].values[0]['target'], axis=1)
+        plot_data = fitness_type_df['RMS_Diff']
+        plot_title = f'Histogram of RMS Difference for {fitness_type}'
+        x_label = 'RMS Difference'
+    else:
+        plot_data = fitness_type_df['Value']
+        plot_title = f'Histogram of {fitness_type} Values'
+        x_label = 'Value'
+
     # Plot histogram
     plt.figure(figsize=(12, 6))
-    plt.hist(fitness_type_df['Value'], bins=num_bins, color='blue', alpha=0.7)
-    plt.title(f'Histogram of {fitness_type} Values')
-    plt.xlabel('Value')
+    plt.hist(plot_data, bins=num_bins, color='blue', alpha=0.7)
+    plt.title(plot_title)
+    plt.xlabel(x_label)
     plt.ylabel('Candidate Count')
     plt.grid(axis='y')
 
     # Plot target features as vertical lines
-    for run in fitness_type_df['Simulation_Run'].unique():
-        #target_info = pops_df[f'{fitness_type}_target'].values[0]
-        #taget info = fitness_type without _fitness and + _target
-        #replace _fitness with _target
-        #current_fit_type = fitness_type
-        #target_info = pops_df[f'{fitness_type.replace("_fitness", "_target")}'].values[0]
-        target_info = pops_df[f'{target_type}'].values[0]
-        if isinstance(target_info, dict):
-            min_value = target_info.get('min', None)
-            max_value = target_info.get('max', None)
-            target_value = target_info.get('target', None)
+    if mode == 'rms_diff':
+        plt.axvline(x=0, color='red', linestyle='--', label='target')
+    else:
+        for run in fitness_type_df['Simulation_Run'].unique():
+            target_info = pops_df[pops_df['Simulation_Run'] == run][target_type].values[0]
+            if isinstance(target_info, dict):
+                min_value = target_info.get('min', None)
+                max_value = target_info.get('max', None)
+                target_value = target_info.get('target', None)
 
-            if min_value is not None:
-                plt.axvline(x=min_value, color='black', linestyle='--', label='min' if run == fitness_type_df['Simulation_Run'].unique()[0] else "")
-            if max_value is not None:
-                plt.axvline(x=max_value, color='black', linestyle='--', label='max' if run == fitness_type_df['Simulation_Run'].unique()[0] else "")
-            if target_value is not None:
-                plt.axvline(x=target_value, color='red', linestyle='--', label='target' if run == fitness_type_df['Simulation_Run'].unique()[0] else "")
+                if min_value is not None:
+                    plt.axvline(x=min_value, color='black', linestyle='--', label='min' if run == fitness_type_df['Simulation_Run'].unique()[0] else "")
+                if max_value is not None:
+                    plt.axvline(x=max_value, color='black', linestyle='--', label='max' if run == fitness_type_df['Simulation_Run'].unique()[0] else "")
+                if target_value is not None:
+                    plt.axvline(x=target_value, color='red', linestyle='--', label='target' if run == fitness_type_df['Simulation_Run'].unique()[0] else "")
 
     plt.legend()
 
@@ -296,7 +314,7 @@ def plot_fitness_histogram(fitness_df, fitness_type, pops_df, target_type, bin_w
     plt.tight_layout()
 
     # Save the plot to a file
-    plot_file = f"{fitness_type}_histogram.png"
+    plot_file = f"{fitness_type}_histogram_{mode}.png"
     plt.savefig(plot_file)
     print(f"Plot saved to {plot_file}")
 
@@ -338,71 +356,71 @@ pops_df.to_csv(pops_output_file, index=False)
 
 # plot histogram for all fitness types
 try:
-    plot_fitness_histogram(fitness_df, 'burst_frequency_fitness', pops_df, 'burst_frequency_target')
+    plot_fitness_histogram(fitness_df, 'burst_frequency_fitness', pops_df, 'burst_frequency_target', mode='rms_diff')
 except Exception as e:
     print(f"Error plotting burst_frequency_fitness: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'thresh_fit', pops_df, 'threshold_target')
+    plot_fitness_histogram(fitness_df, 'thresh_fit', pops_df, 'threshold_target', mode='rms_diff')
 except Exception as e:
-    print(f"Error plotting threshold_fitness: {e}")
+    print(f"Error plotting thresh_fit: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'slope_fitness', pops_df)
+    plot_fitness_histogram(fitness_df, 'slope_fit', pops_df, 'slope_target', mode='rms_diff')
 except Exception as e:
-    print(f"Error plotting slope_fitness: {e}")
+    print(f"Error plotting slope_fit: {e}")
+
+# try:
+#     plot_fitness_histogram(fitness_df, 'sustained_activity_fitness', pops_df, 'sustained_activity_target', mode='rms_diff')
+# except Exception as e:
+#     print(f"Error plotting sustained_activity_fitness: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'sustained_activity_fitness', pops_df)
+    plot_fitness_histogram(fitness_df, 'baseline_fit', pops_df, 'baseline_target', mode='rms_diff')
 except Exception as e:
-    print(f"Error plotting sustained_activity_fitness: {e}")
+    print(f"Error plotting baseline_fit: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'baseline_fitness', pops_df)
+    plot_fitness_histogram(fitness_df, 'big_burst_fit', pops_df, 'big_burst_target', mode='rms_diff')
 except Exception as e:
-    print(f"Error plotting baseline_fitness: {e}")
+    print(f"Error plotting big_burst_fit: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'big_burst_fitness', pops_df)
+    plot_fitness_histogram(fitness_df, 'small_burst_fit', pops_df, 'small_burst_target', mode='rms_diff')
 except Exception as e:
-    print(f"Error plotting big_burst_fitness: {e}")
+    print(f"Error plotting small_burst_fit: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'small_burst_fitness', pops_df)
+    plot_fitness_histogram(fitness_df, 'bimodal_burst_fit', pops_df, 'bimodal_burst_target', mode='rms_diff')
 except Exception as e:
-    print(f"Error plotting small_burst_fitness: {e}")
+    print(f"Error plotting bimodal_burst_fit: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'bimodal_burst_fitness', pops_df)
-except Exception as e:
-    print(f"Error plotting bimodal_burst_fitness: {e}")
-
-try:
-    plot_fitness_histogram(fitness_df, 'IBI_fitness', pops_df)
+    plot_fitness_histogram(fitness_df, 'IBI_fitness', pops_df, 'IBI_target', mode='rms_diff')
 except Exception as e:
     print(f"Error plotting IBI_fitness: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'E_rate_fitness', pops_df)
+    plot_fitness_histogram(fitness_df, 'E_rate_fit', pops_df, 'E_rate_target', mode='rms_diff')
 except Exception as e:
-    print(f"Error plotting E_rate_fitness: {e}")
+    print(f"Error plotting E_rate_fit: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'I_rate_fitness', pops_df)
+    plot_fitness_histogram(fitness_df, 'I_rate_fit', pops_df, 'I_rate_target', mode='rms_diff')
 except Exception as e:
-    print(f"Error plotting I_rate_fitness: {e}")
+    print(f"Error plotting I_rate_fit: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'E_ISI_fitness', pops_df)
+    plot_fitness_histogram(fitness_df, 'E_ISI_fit', pops_df, 'E_ISI_target', mode='rms_diff')
 except Exception as e:
-    print(f"Error plotting E_ISI_fitness: {e}")
+    print(f"Error plotting E_ISI_fit: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'I_ISI_fitness', pops_df)
+    plot_fitness_histogram(fitness_df, 'I_ISI_fit', pops_df, 'I_ISI_target', mode='rms_diff')
 except Exception as e:
-    print(f"Error plotting I_ISI_fitness: {e}")
+    print(f"Error plotting I_ISI_fit: {e}")
 
 try:
-    plot_fitness_histogram(fitness_df, 'bimodality_fitness', pops_df)
+    plot_fitness_histogram(fitness_df, 'bimodal_burst_fit', pops_df, 'bimodal_burst_target', mode='rms_diff')
 except Exception as e:
     print(f"Error plotting bimodality_fitness: {e}")
