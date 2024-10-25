@@ -1,143 +1,129 @@
-from simulation_fitness_functions.calculate_fitness import fitnessFunc
-from simulation_config_files import fitnessFuncArgs
-import os
-import sys
-sys.path.append('submodules/netpyne')
 
+import sys
+import os
+project_root = os.popen('git rev-parse --show-toplevel').read().strip() # use git to get the root directory of the project
+sys.path.insert(0, project_root)
+from modules.simulation_fitness_functions.calculate_fitness import fitnessFunc
+from simulate._config_files import fitnessFuncArgs
+import submodules.netpyne.netpyne as netpyne
 from netpyne import sim
 from copy import deepcopy
 import dill
-from netpyne import sim
 
-def extract_data_of_interest_from_sim(data_path, temp_dir="_temp-sim-files"):
+def extract_data_of_interest_from_sim(data_path, temp_dir="_temp-sim-files", load_extract=True):
+    #init and decide to load or not
+    sim.loadSimCfg(data_path)
+    simLabel = sim.cfg.simLabel
+    temp_sim_dir = os.path.join(temp_dir, simLabel)
+    pkl_file = os.path.join(temp_sim_dir, f'{simLabel}_extracted_data.pkl')
     
-    sim.loadSimCfg(data_path)           # Load the simulation configuration
-    sim.loadNet(data_path)              # Load the network
-    sim.loadNetParams(data_path)        # Load the network parameters
-    sim.loadSimData(data_path)          # Load the simulation data
+    #load extracted data if it exists
+    if os.path.exists(pkl_file) and load_extract:
+        try:
+            with open(pkl_file, 'rb') as f:
+                extracted_data = dill.load(f)
+            return extracted_data
+        except Exception as e:
+            print(f'Error loading extracted data: {e}')
+            pass    
     
-    # Copy data of interest
-    simData = sim.allSimData.copy()     # Copy the simulation data
-    cellData = sim.net.allCells.copy()   # Copy the network data
-    popData = sim.net.allPops.copy()    # Copy the population data
-
-    #Copy relevant params
+    #if it doesn't exist, load the sim data and extract the data of interest
+    sim.loadNet(data_path)
+    sim.loadNetParams(data_path)
+    sim.loadSimData(data_path)
+    
+    simData = sim.allSimData.copy()
+    cellData = sim.net.allCells.copy()
+    popData = sim.net.allPops.copy()
     simCfg = sim.cfg.__dict__.copy()
     netParams = sim.net.params.__dict__.copy()
-
-    #clear the sim object
+    
     sim.clearAll()
-
-    extracted_data= {
-        'simData': simData, # Simulated network activity data
-        'cellData': cellData, # Network data: Individual neuron data, including connectivity, synapses, etc.
-        'popData': popData, # Network data: Population data
-        'simCfg': simCfg, # Simulation configuration
-        'netParams': netParams, # Network parameters
+    
+    extracted_data = {
+        'simData': simData,
+        'cellData': cellData,
+        'popData': popData,
+        'simCfg': simCfg,
+        'netParams': netParams,
     }
-
+    
+    if not os.path.exists(temp_sim_dir):
+        os.makedirs(temp_sim_dir)
+    # save extracted data
+    with open(pkl_file, 'wb') as f:
+        dill.dump(extracted_data, f)
+    
     return extracted_data
 
-# Define the target directory
-target_dir = 'simulation_output/240808_Run1_testing_data/gen_0'
-target_dir = os.path.abspath(target_dir)
 
-# Define the directory for temp files
-temp_dir = "_temp-sim-files"
+def find_simulation_files(target_dir):
+    simulation_files = {}
+    for root, dirs, files in os.walk(target_dir):
+        for file in files:
+            if file.endswith('_data.json'):
+                data_path = os.path.join(root, file)
+                cfg_path = os.path.join(root, file.replace('_data.json', '_cfg.json'))
+                fitness_path = os.path.join(root, file.replace('_data.json', '_Fitness.json'))
+                if not os.path.exists(fitness_path):
+                    fitness_path = os.path.join(root, file.replace('_data.json', '_fitness.json'))
+                
+                if os.path.exists(cfg_path) and os.path.exists(data_path):
+                    simulation_files[file] = {
+                        'data_path': os.path.abspath(data_path),
+                        'cfg_path': os.path.abspath(cfg_path),
+                        'fitness_path': os.path.abspath(fitness_path) if os.path.exists(fitness_path) else None,
+                    }
+                else:
+                    print(f'File {cfg_path} or {data_path} not found.')
+    return simulation_files
 
-# Get all files in the target directory ending with _data.json. Walk through the directory tree and get all files.
-simulation_files = {}
-for root, dirs, files in os.walk(target_dir):
-    for file in files:
-        if file.endswith('_data.json'):
-            data_path = os.path.join(root, file)
-            data_path = os.path.abspath(data_path)
-            
-            #Find matching file with _cfg.json instead of _data.json
-            cfg_path = file.replace('_data.json', '_cfg.json')
-            cfg_path = os.path.join(root, cfg_path)
+def process_simulation_file(file_name, file_paths, selection=None):
+    if selection and selection not in file_paths['data_path']:
+        print(f'Skipping {file_name} because it does not match the selection criteria.')
+        return None, None, None
+    
+    extracted_data = extract_data_of_interest_from_sim(file_paths['data_path'])
+    kwargs = {
+        'simData': extracted_data['simData'],
+        'cellData': extracted_data['cellData'],
+        'popData': extracted_data['popData'],
+        'simCfg': extracted_data['simCfg'],
+        'netParams': extracted_data['netParams'],
+        'simLabel': extracted_data['simCfg']['simLabel'],
+        'data_file_path': file_paths['data_path'],
+        'cfg_file_path': file_paths['cfg_path'],
+        'fitness_file_path': file_paths['fitness_path'],
+        'fitnessFuncArgs': fitnessFuncArgs,
+    }
+    
+    return fitnessFunc(**kwargs)
 
-            #try to find match file with _Fitness.json instead of _data.json
-            try:
-                fitness_path = file.replace('_data.json', '_Fitness.json')
-                fitness_path = os.path.join(root, fitness_path)
-            except:
-                try: 
-                    fitness_path = file.replace('_data.json', '_fitness.json')
-                    fitness_path = os.path.join(root, fitness_path)
-                except:
-                    fitness_path = None
+def main():
+    # Set the target directory to the directory containing the simulation output
+    target_dir = os.path.abspath('simulation_output/240808_Run1_testing_data/gen_0')
+    simulation_files = find_simulation_files(target_dir)
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    bad_files_path = os.path.join(script_dir, 'bad_files.txt')
+    
+    bad_files = []
+    selection = None  # Set to a specific selection if needed
+    
+    for file_name, file_paths in simulation_files.items():
+        try:
+            average_fitness, avg_scaled_fitness, fitnessVals = process_simulation_file(file_name, file_paths, selection)
+            if average_fitness is not None:
+                print(f'Average Fitness for {file_name}: {average_fitness}')
+                print(f'Average Scaled Fitness for {file_name}: {avg_scaled_fitness}')
+                print(f'Fitness Values for {file_name}: {fitnessVals}')
+        except Exception as e:
+            print(f'Error in processing {file_name}: {e}')
+            bad_files.append(file_name)
+    
 
-            #Assert that both files exist
-            try:
-                assert os.path.exists(cfg_path), f'File {cfg_path} not found.'
-                assert os.path.exists(data_path), f'File {data_path} not found.'
-            except AssertionError as e:
-                print(e)
-                continue
+    with open(bad_files_path, 'w') as f:
+        for file in bad_files:
+            f.write(f'{file}\n')
 
-            #Add the files to the dictionary
-            simulation_files[file] = {
-                'data_path': data_path,
-                'cfg_path': cfg_path,
-                'fitness_path': fitness_path,
-            }
-
-# Prepare the fitness function arguments
-kwargs = {
-    'simData' : None,
-    'simLabel': None,
-    'data_file_path': None,
-    'batch_saveFolder': None,
-    'fitness_save_path': None,
-    'fitnessFuncArgs': fitnessFuncArgs,
-}
-
-# Iterate through the simulation data files
-bad_files = []
-selection = None
-#selection = 'gen_0_cand_0_'
-for f in simulation_files.items():
-    try:
-        #Get paths out
-        file_name = f[0]
-        data_path = f[1]['data_path']
-        cfg_path = f[1]['cfg_path']
-        fitness_path = f[1]['fitness_path']
-
-        #Apply selection if specified
-        if selection is not None and selection not in data_path:
-            print(f'Skipping {f} because it does not match the selection criteria.')
-            continue
-
-        # Load the simulation objects
-        extracted_data = extract_data_of_interest_from_sim(data_path)
-
-        # init kwargs
-        kwargs = {
-            'simData': extracted_data['simData'],
-            'cellData': extracted_data['cellData'],
-            'popData': extracted_data['popData'],
-            'simCfg': extracted_data['simCfg'],
-            'netParams': extracted_data['netParams'],
-            'simLabel': extracted_data['simCfg']['simLabel'],
-            'data_file_path': data_path,
-            'cfg_file_path': cfg_path,
-            'fitness_file_path': fitness_path,
-        }
-        
-        # Calculate the fitness
-        average_fitness, avg_scaled_fitness, fitnessVals = fitnessFunc(**kwargs)
-        
-        print(f'Average Fitness for {f}: {average_fitness}')
-        print(f'Average Scaled Fitness for {f}: {avg_scaled_fitness}')
-        print(f'Fitness Values for {f}: {fitnessVals}')
-    except Exception as e:
-        print(f'Error in processing {f}: {e}')
-        bad_files.append(f)
-        continue
-
-# Save the bad files as .txt
-with open('bad_files.txt', 'w') as f:
-    for file in bad_files:
-        f.write(f'{file}\n')
+if __name__ == "__main__":
+    main()

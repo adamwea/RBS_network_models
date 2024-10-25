@@ -1,5 +1,5 @@
 import numpy as np
-from helper_functions.load_clean_sim_object import load_clean_sim_object
+from modules.helper_functions.load_clean_sim_object import load_clean_sim_object
 import netpyne
 
 def get_individual_neuron_metrics(data_file_path, exp_mode=False):

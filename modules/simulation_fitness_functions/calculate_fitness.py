@@ -3,17 +3,17 @@ import json
 import numpy as np
 
 # Import all the fitness functions
-from simulation_fitness_functions.fit_baseline import fit_baseline
-from simulation_fitness_functions.fit_burst_frequency import fit_burst_frequency
-from simulation_fitness_functions.fit_threshold import fit_threshold
-from simulation_fitness_functions.fit_firing_rates import fit_E_firing_rate, fit_I_firing_rate
-from simulation_fitness_functions.fit_ISI import fit_E_ISI, fit_I_ISI
-from simulation_fitness_functions.fit_burst_amplitude import fit_big_burst_amplitude, fit_small_burst_amplitude, fit_bimodal_burst_amplitude
-from simulation_fitness_functions.fit_network_IBI import fit_IBI 
-from simulation_fitness_functions.fit_sustain import fit_sustain
-from simulation_fitness_functions.fit_rate_slope import fit_rate_slope
-from analysis_functions.network_activity_metrics import get_simulated_network_activity_metrics
-from analysis_functions.individual_neuron_metrics import get_individual_neuron_metrics
+from modules.simulation_fitness_functions.fit_baseline import fit_baseline
+from modules.simulation_fitness_functions.fit_burst_frequency import fit_burst_frequency
+from modules.simulation_fitness_functions.fit_threshold import fit_threshold
+from modules.simulation_fitness_functions.fit_firing_rates import fit_E_firing_rate, fit_I_firing_rate
+from modules.simulation_fitness_functions.fit_ISI import fit_E_ISI, fit_I_ISI
+from modules.simulation_fitness_functions.fit_burst_amplitude import fit_big_burst_amplitude, fit_small_burst_amplitude, fit_bimodal_burst_amplitude
+from modules.simulation_fitness_functions.fit_network_IBI import fit_IBI 
+from modules.simulation_fitness_functions.fit_sustain import fit_sustain
+from modules.simulation_fitness_functions.fit_rate_slope import fit_rate_slope
+from modules.analysis_functions.network_activity_metrics import get_simulated_network_activity_metrics
+from modules.analysis_functions.individual_neuron_metrics import get_individual_neuron_metrics
 
 def fitnessFunc(**kwargs):
     
@@ -104,9 +104,16 @@ def fitnessFunc(**kwargs):
             json.dump(fitnessResults, f, indent=4)
         print(f'Fitness results saved to {destination}')
 
-    # Main logic of the calculate_fitness function
+   
+    '''Main logic of the calculate_fitness function'''
+    #extract the necessary data from the kwargs
+    simData = kwargs['simData']
+    
+    #Network activity metrics
     print('Calculating network activity metrics...')
-    net_activity_metrics = get_simulated_network_activity_metrics(simData=simObj.simData)
+    net_activity_metrics = get_simulated_network_activity_metrics(simData=simData)
+    
+    #Individual neuron metrics
     print('Calculating individual neuron metrics...')
     neuron_metrics = get_individual_neuron_metrics(data_file_path, exp_mode=exp_mode)
 
@@ -114,3 +121,4 @@ def fitnessFunc(**kwargs):
     average_fitness, avg_scaled_fitness, fitnessVals = get_fitness()
 
     return average_fitness
+    

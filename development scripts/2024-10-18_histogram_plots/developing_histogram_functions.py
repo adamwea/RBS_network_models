@@ -368,15 +368,56 @@ def plot_histogram_with_error_handling(fitness_type, target, units, fitness_df, 
 # import matplotlib.pyplot as plt
 # import pandas as pd
 
-def extract_rms_diff_values(fitness_df, pops_df, fitness_types, target_types, num_std=2):
-    rms_diff_values = {fit_type: [] for fit_type in fitness_types}
-    generations = sorted(fitness_df['Gen'].unique())
+import pandas as pd
 
+import os
+import pandas as pd
+
+def save_filtered_means_to_csv(filtered_means, base_dir):
+    # Ensure the base directory is created
+    base_dir = os.path.dirname(base_dir)
+    csv_dir = os.path.join(base_dir, 'csv_data')
+    os.makedirs(csv_dir, exist_ok=True)
+    
+    # File paths for partial and final CSVs
+    partial_csv_path = os.path.join(csv_dir, 'partial_n_factors.csv')
+    csv_path = os.path.join(csv_dir, 'n_factors.csv')
+    
+    # Convert the filtered means list to a DataFrame
+    filtered_means_df = pd.DataFrame(filtered_means, columns=['Generation', 'Fit_Type', 'Filtered_Mean'])
+    
+    # Save the partial filtered means DataFrame to a CSV
+    filtered_means_df.to_csv(partial_csv_path, index=False)
+    
+    # Group by 'Fit_Type' and calculate the mean of 'Filtered_Mean'
+    filtered_means_summary = filtered_means_df.groupby('Fit_Type')['Filtered_Mean'].mean().reset_index()
+    
+    # Save the collapsed data to a final CSV file
+    filtered_means_summary.to_csv(csv_path, index=False)
+
+    
+def extract_rms_diff_values(fitness_df, pops_df, fitness_types, target_types, num_std=2, base_dir=None):
+    # Initialize a dictionary to hold the rms diff values for each fitness type
+    rms_diff_values = {fit_type: [] for fit_type in fitness_types}
+    
+    # This list will hold tuples of (Generation, Fit_Type, Filtered_Mean) for the CSV
+    filtered_means = []
+    
+    # Get the list of unique generations
+    generations = sorted(fitness_df['Gen'].unique())
+    
+    # Iterate over each generation
     for generation in generations:
+        # Filter data for the current generation
         gen_df = fitness_df[fitness_df['Gen'] == generation]
+        
+        # Iterate over fitness types and corresponding target types
         for fit_type, target_type in zip(fitness_types, target_types):
+            # Filter data for the current fitness type
             gen_fit_df = gen_df[gen_df['Type'] == fit_type]
+            
             if not gen_fit_df.empty:
+                # Compute RMS_Diff values for each row
                 gen_fit_df['RMS_Diff'] = gen_fit_df.apply(
                     lambda row: abs(row['Value'] - pops_df[pops_df['Simulation_Run'] == row['Simulation_Run']][target_type].values[0]['target']),
                     axis=1
@@ -386,19 +427,35 @@ def extract_rms_diff_values(fitness_df, pops_df, fitness_types, target_types, nu
                 sample_mean = gen_fit_df['RMS_Diff'].mean()
                 sample_std = gen_fit_df['RMS_Diff'].std()
 
+                if sample_std == 0:
+                    # If standard deviation is 0, skip this iteration to avoid division by zero
+                    continue
+
                 # Filter the data to be within num_std standard deviations of the mean
                 lower_bound = sample_mean - num_std * sample_std
                 upper_bound = sample_mean + num_std * sample_std
                 filtered_df = gen_fit_df[(gen_fit_df['RMS_Diff'] >= lower_bound) & (gen_fit_df['RMS_Diff'] <= upper_bound)]
 
-                # Calculate the mean RMS difference of the filtered data
-                filtered_mean_rms_diff = filtered_df['RMS_Diff'].mean()
-                
-                # Normalize the RMS difference by the mean of the fit type
-                normalized_rms_diff = filtered_mean_rms_diff / sample_mean if sample_mean != 0 else 0
-                rms_diff_values[fit_type].append((generation, normalized_rms_diff))
+                # Only proceed if there is any data left after filtering
+                if not filtered_df.empty:
+                    # Calculate the mean of the filtered data (before RMS normalization)
+                    filtered_mean = filtered_df['RMS_Diff'].mean()
+
+                    # Append the (generation, fit_type, filtered_mean) tuple to the filtered_means list
+                    filtered_means.append((generation, fit_type, filtered_mean))
+
+                    # Normalize the filtered mean RMS difference by the unfiltered sample mean
+                    normalized_rms_diff = filtered_mean / sample_mean if sample_mean != 0 else 0
+                    
+                    # Store the result in the rms_diff_values dictionary
+                    rms_diff_values[fit_type].append((generation, normalized_rms_diff))
+
+    # Call the function to save the filtered means to CSV
+    if base_dir is not None:
+        save_filtered_means_to_csv(filtered_means, base_dir)
 
     return rms_diff_values
+
 
 def plot_rms_diff_over_generations(rms_diff_values, base_dir):
     plt.figure(figsize=(12, 6))
@@ -494,7 +551,7 @@ for num_std in [2, 4]:
     for fitness_type, target, units in fitness_targets:
         plot_histogram_with_error_handling(fitness_type, target, units, fitness_df, pops_df, base_dir, num_std=num_std, mode='rms_diff')
         
-rms_diff_values = extract_rms_diff_values(fitness_df, pops_df, fitness_types, target_types, num_std=2)
+rms_diff_values = extract_rms_diff_values(fitness_df, pops_df, fitness_types, target_types, num_std=2, base_dir=base_dir)
 plot_rms_diff_over_generations(rms_diff_values, base_dir)
 
 
