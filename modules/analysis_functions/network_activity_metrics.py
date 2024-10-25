@@ -1,4 +1,6 @@
-from modules.analysis_functions.network_activity_analysis import analyze_network_activity
+#from modules.analysis_functions.network_activity_analysis import measure_network_activity
+from modules.analysis_functions.measure_network_activity import measure_network_activity
+
 import numpy as np
 
 def get_simulated_network_activity_metrics(simData=None):
@@ -39,7 +41,11 @@ def _calculate_network_activity_metrics(rasterData):
     assert conv_params is not None, 'Convolution parameters not found.'
     
     try:
-        net_metrics = analyze_network_activity(rasterData, conv_params=conv_params)
+        #spike_times = np.array(rasterData['spkt'])
+        spike_times = rasterData['spkt']
+        #write spike_times as dictionary
+        spike_times = {i: rasterData['spkt'][rasterData['spkid'] == i] for i in np.unique(rasterData['spkid'])}
+        network_activity_metrics = measure_network_activity(spike_times)#, conv_params=conv_params)
     except Exception as e:
         print(f'Error calculating network activity metrics: {e}')
         return {
@@ -52,6 +58,20 @@ def _calculate_network_activity_metrics(rasterData):
             # 'timeVector': None,
             # 'threshold': None,
             
+            'Number_Bursts': None,
+            'mean_IBI': None,
+            'cov_IBI': None,
+            'mean_Burst_Peak': None,
+            'cov_Burst_Peak': None,
+            'fano_factor': None,
+            'MeanWithinBurstISI': None,
+            'CoVWithinBurstISI': None,
+            'MeanOutsideBurstISI': None,
+            'CoVOutsideBurstISI': None,
+            'MeanNetworkISI': None,
+            'CoVNetworkISI': None,
+            'NumUnits': None,
+            #'fileName': None
         }
 
     return net_metrics
