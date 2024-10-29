@@ -1,5 +1,5 @@
 #from modules.analysis_functions.network_activity_analysis import measure_network_activity
-from modules.analysis_functions.measure_network_activity import measure_network_activity
+from modules.analysis.analyze_burst_activity import analyze_burst_activity
 
 import numpy as np
 
@@ -45,7 +45,7 @@ def _calculate_network_activity_metrics(rasterData):
         spike_times = rasterData['spkt']
         #write spike_times as dictionary
         spike_times = {i: rasterData['spkt'][rasterData['spkid'] == i] for i in np.unique(rasterData['spkid'])}
-        network_activity_metrics = measure_network_activity(spike_times)#, conv_params=conv_params)
+        network_activity_metrics = analyze_burst_activity(spike_times)#, conv_params=conv_params)
     except Exception as e:
         print(f'Error calculating network activity metrics: {e}')
         return {

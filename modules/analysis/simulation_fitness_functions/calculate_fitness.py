@@ -3,17 +3,17 @@ import json
 import numpy as np
 
 # Import all the fitness functions
-from modules.simulation_fitness_functions.fit_baseline import fit_baseline
-from modules.simulation_fitness_functions.fit_burst_frequency import fit_burst_frequency
-from modules.simulation_fitness_functions.fit_threshold import fit_threshold
-from modules.simulation_fitness_functions.fit_firing_rates import fit_E_firing_rate, fit_I_firing_rate
-from modules.simulation_fitness_functions.fit_ISI import fit_E_ISI, fit_I_ISI
-from modules.simulation_fitness_functions.fit_burst_amplitude import fit_big_burst_amplitude, fit_small_burst_amplitude, fit_bimodal_burst_amplitude
-from modules.simulation_fitness_functions.fit_network_IBI import fit_IBI 
-from modules.simulation_fitness_functions.fit_sustain import fit_sustain
-from modules.simulation_fitness_functions.fit_rate_slope import fit_rate_slope
-from modules.analysis_functions.network_activity_metrics import get_simulated_network_activity_metrics
-from modules.analysis_functions.individual_neuron_metrics import get_individual_neuron_metrics
+from modules.analysis.simulation_fitness_functions.fit_baseline import fit_baseline
+from modules.analysis.simulation_fitness_functions.fit_burst_frequency import fit_burst_frequency
+from modules.analysis.simulation_fitness_functions.fit_threshold import fit_threshold
+from modules.analysis.simulation_fitness_functions.fit_firing_rates import fit_E_firing_rate, fit_I_firing_rate
+from modules.analysis.simulation_fitness_functions.fit_ISI import fit_E_ISI, fit_I_ISI
+from modules.analysis.simulation_fitness_functions.fit_burst_amplitude import fit_big_burst_amplitude, fit_small_burst_amplitude, fit_bimodal_burst_amplitude
+from modules.analysis.simulation_fitness_functions.fit_network_IBI import fit_IBI 
+from modules.analysis.simulation_fitness_functions.fit_sustain import fit_sustain
+from modules.analysis.simulation_fitness_functions.fit_rate_slope import fit_rate_slope
+from modules.analysis.analyze_network_activity import get_simulated_network_activity_metrics
+from modules.analysis.individual_neuron_metrics import get_individual_neuron_metrics
 
 def fitnessFunc(**kwargs):
     

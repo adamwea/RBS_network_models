@@ -3,7 +3,7 @@ import sys
 import os
 project_root = os.popen('git rev-parse --show-toplevel').read().strip() # use git to get the root directory of the project
 sys.path.insert(0, project_root)
-from modules.simulation_fitness_functions.calculate_fitness import fitnessFunc
+from modules.analysis.simulation_fitness_functions.calculate_fitness import fitnessFunc
 from simulate._config_files import fitnessFuncArgs
 import submodules.netpyne.netpyne as netpyne
 from netpyne import sim
