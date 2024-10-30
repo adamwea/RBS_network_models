@@ -3,8 +3,8 @@ import sys
 import os
 project_root = os.popen('git rev-parse --show-toplevel').read().strip() # use git to get the root directory of the project
 sys.path.insert(0, project_root)
-from modules.analysis.simulation_fitness_functions.calculate_fitness import fitnessFunc
-from simulate._config_files import fitnessFuncArgs_dep
+from modules.analysis.calculate_fitness import fitnessFunc
+#from simulate._config_files import fitnessFuncArgs
 import submodules.netpyne.netpyne as netpyne
 from netpyne import sim
 from copy import deepcopy
@@ -56,7 +56,6 @@ def extract_data_of_interest_from_sim(data_path, temp_dir="_temp-sim-files", loa
     
     return extracted_data
 
-
 def find_simulation_files(target_dir):
     simulation_files = {}
     for root, dirs, files in os.walk(target_dir):
@@ -79,9 +78,15 @@ def find_simulation_files(target_dir):
     return simulation_files
 
 def process_simulation_file(file_name, file_paths, selection=None):
+    import re
     if selection and selection not in file_paths['data_path']:
         print(f'Skipping {file_name} because it does not match the selection criteria.')
         return None, None, None
+    
+    #generate output path. Replace 'Fitness' with 'fitness' in the file name. Also modify path to save in the same location as this script
+    fitness_save_name = os.path.basename(file_paths['fitness_path'])
+    fitness_save_name = re.sub(r'Fitness', 'fitness', fitness_save_name)
+    fitness_save_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), fitness_save_name)
     
     extracted_data = extract_data_of_interest_from_sim(file_paths['data_path'])
     kwargs = {
@@ -93,8 +98,10 @@ def process_simulation_file(file_name, file_paths, selection=None):
         'simLabel': extracted_data['simCfg']['simLabel'],
         'data_file_path': file_paths['data_path'],
         'cfg_file_path': file_paths['cfg_path'],
-        'fitness_file_path': file_paths['fitness_path'],
-        'fitnessFuncArgs': fitnessFuncArgs_dep,
+        'fitness_file_path': file_paths['fitness_path'], #input
+        #replace 'Fitness' with 'fitness' in the file name
+        'fitness_save_path': fitness_save_path, #output
+        #'fitnessFuncArgs': fitnessFuncArgs_dep,
     }
     
     return fitnessFunc(**kwargs)
