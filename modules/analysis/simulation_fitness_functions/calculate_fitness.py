@@ -107,11 +107,12 @@ def fitnessFunc(**kwargs):
    
     '''Main logic of the calculate_fitness function'''
     #extract the necessary data from the kwargs
-    simData = kwargs['simData']
+    #simData = kwargs['simData']
+    #popData = kwargs['popData']
     
     #Network activity metrics
     print('Calculating network activity metrics...')
-    net_activity_metrics = get_simulated_network_activity_metrics(simData=simData)
+    net_activity_metrics = get_simulated_network_activity_metrics(**kwargs)
     
     #Individual neuron metrics
     print('Calculating individual neuron metrics...')
