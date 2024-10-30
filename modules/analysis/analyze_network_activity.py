@@ -34,6 +34,16 @@ def convolve_network_activity(rasterData, binSize=None, gaussianSigma=None, thre
 
     return burstPeakTimes, burstPeakValues, spike_counts_at_time, timeVector, rmsSpikeCounts
 
+def _analyze_network_activity(spike_times):
+    #try: network_data = get_network_data(spike_times)
+    try: get_network_data(spike_times)
+    except Exception as e:
+        print(f'Error calculating network activity metrics: {e}')
+        pass
+    
+    print('Network Activity Metrics Calculated')
+    #return network_data
+
 '''Initialization Functions'''
 def init_convolution_params(binSize=None, gaussianSigma=None, thresholdBurst=None, min_peak_distance=None):
     try:
@@ -181,6 +191,7 @@ def get_spiking_summary_data(spiking_data_by_unit):
 
 '''Bursting Analysis Functions'''
 def convolve_signal_get_baseline(spike_times, binSize=None, gaussianSigma=None):  
+        
     #init convolution parameters
     conv_params = init_convolution_params(binSize, gaussianSigma)
     binSize = conv_params['binSize']
@@ -201,16 +212,38 @@ def convolve_signal_get_baseline(spike_times, binSize=None, gaussianSigma=None):
     return baseline
 
 ''' Use Functions from MEA Analysis Repository to do Bursting Analysis'''
-def analyze_convolved_spiking_signal(spike_times, min_peak_distance, binSize, gaussianSigma, thresholdBurst):
+def analyze_convolved_spiking_signal(spike_times, spike_times_by_unit, min_peak_distance, binSize, gaussianSigma, thresholdBurst):
     fig, ax = plt.subplots()
     #spike_times = {i: rasterData['spkt'][rasterData['spkid'] == i] for i in np.unique(rasterData['spkid'])} #plot_network_activity expects spike_times as dictionary
-    ax, network_data = helper.plot_network_activity(ax, spike_times, min_peak_distance=min_peak_distance, binSize=binSize, gaussianSigma=gaussianSigma, thresholdBurst=thresholdBurst)
-    network_data['bursting_data']['bursting_summary_data']['baseline'] = convolve_signal_get_baseline(spike_times)
-    return network_data
+    #spike_times_dict = {int(i): spike_times[spike_times['spkid'] == i] for i in np.unique(spike_times['spkid'])}
+    ax, convolved_signal_metrics = helper.plot_network_activity(ax, spike_times_by_unit, min_peak_distance=min_peak_distance, binSize=binSize, gaussianSigma=gaussianSigma, thresholdBurst=thresholdBurst)
+    # network_data['bursting_data']['bursting_summary_data']['mean_Burst_Peak'] = convolved_signal_metrics['mean_Burst_Peak']
+    # network_data['bursting_data']['bursting_summary_data']['cov_Burst_Peak'] = convolved_signal_metrics['cov_Burst_Peak']
+    # network_data['bursting_data']['bursting_summary_data']['fano_factor'] = convolved_signal_metrics['fano_factor']
+    # network_data['bursting_data']['bursting_summary_data']['mean_IBI'] = convolved_signal_metrics['mean_IBI']
+    # network_data['bursting_data']['bursting_summary_data']['cov_IBI'] = convolved_signal_metrics['cov_IBI']
+    # network_data['bursting_data']['bursting_summary_data']['Number_Bursts'] = convolved_signal_metrics['Number_Bursts']    
+    # network_data['bursting_data']['bursting_summary_data']['baseline'] = convolve_signal_get_baseline(spike_times)
+    convolved_data = {
+        'mean_Burst_Peak': convolved_signal_metrics['mean_Burst_Peak'],
+        'cov_Burst_Peak': convolved_signal_metrics['cov_Burst_Peak'],
+        'fano_factor': convolved_signal_metrics['fano_factor'],
+        'mean_IBI': convolved_signal_metrics['mean_IBI'],
+        'cov_IBI': convolved_signal_metrics['cov_IBI'],
+        'Number_Bursts': convolved_signal_metrics['Number_Bursts'],
+        'baseline': convolve_signal_get_baseline(spike_times, binSize=binSize, gaussianSigma=gaussianSigma),
+    }
+    return convolved_data
 
-def analyze_bursting_activity(spike_times, isi_threshold):
+def analyze_bursting_activity(spike_times, spike_times_by_unit, isi_threshold):
     '''Slightly modified version of the code from mea_analysis_pipeline.py'''
     #spike_times = {int(i): rasterData['spkt'][rasterData['spkid'] == i] for i in np.unique(rasterData['spkid'])}
+    
+    # convert spike_times to dictionary
+    #spike_times_dict = {int(i): spike_times[spike_times['spkid'] == i] for i in np.unique(spike_times['spkid'])}
+    #spike_times = spike_times_dict
+    spike_times = spike_times_by_unit
+    
     burst_statistics = helper.detect_bursts_statistics(spike_times, isi_threshold=isi_threshold)
     bursts_by_unit = [unit_stats['bursts'] for unit_stats in burst_statistics.values()]
     
@@ -241,25 +274,13 @@ def analyze_bursting_activity(spike_times, isi_threshold):
     
     bursting_data = {
         'bursting_summary_data': bursting_summary_data,
-        'bursting_data_by_unit': bursts_by_unit,
+        'bursting_data_by_unit': burst_statistics,
     }
 
     return bursting_data
 
-def get_network_data(spike_times):
-    
-    #Add Spiking Data to Network Data - #TODO - Resume development from here
-    spiking_data_by_unit = get_spiking_stats_by_unit(spike_times)
-    spiking_data_summary = get_spiking_summary_data(spiking_data_by_unit)
-    
-    #network_data
-    
-    
-    
-    
-    
-    #Add Bursting Data to Network Data
-    #convolved signal burst analysis 
+def extract_bursting_activity_data(spike_times, spike_times_by_unit):
+
     conv_params = init_convolution_params()
     binSize = conv_params['binSize']
     gaussianSigma = conv_params['gaussianSigma']
@@ -270,8 +291,8 @@ def get_network_data(spike_times):
     burst_analysis_params = init_burst_analysis_params()
     isi_threshold = burst_analysis_params['isi_threshold']
     
-    convolved_data = analyze_convolved_spiking_signal(spike_times, min_peak_distance, binSize, gaussianSigma, thresholdBurst)
-    bursting_data = analyze_bursting_activity(spike_times, isi_threshold)
+    convolved_data = analyze_convolved_spiking_signal(spike_times, spike_times_by_unit, min_peak_distance, binSize, gaussianSigma, thresholdBurst)
+    bursting_data = analyze_bursting_activity(spike_times, spike_times_by_unit, isi_threshold)
     
     #add convolved data to the bursting summary data
     bursting_summary_data = bursting_data['bursting_summary_data']
@@ -292,17 +313,6 @@ def get_network_data(spike_times):
 
     #return network_data
 
-def _analyze_network_activity(spike_times):
-    #try: network_data = get_network_data(spike_times)
-    try: get_network_data(spike_times)
-    except Exception as e:
-        print(f'Error calculating network activity metrics: {e}')
-        pass
-    
-    print('Network Activity Metrics Calculated')
-    #return network_data
-
-
 '''Main Functions to be used - Warpper Functions for Experimental and Simulated Cases'''
 def calculate_simulated_network_activity_metrics(spike_times_by_unit):
     #Calculate CoVFiringRate_E, CoVFiringRate_I, CoV_ISI_E, CoV_ISI_I, MeanISI_E, MeanISI_I by taking advantage of E_Gids, I_Gids, and spiking_data_by_unit
@@ -321,7 +331,8 @@ def calculate_simulated_network_activity_metrics(spike_times_by_unit):
         network_data['simulated_data']['spiking_data_by_unit'][unit] = {
             'FireRate': fr,
             'meanISI': meanISI,
-            'CoV_ISI': CoV_ISI
+            'CoV_ISI': CoV_ISI,
+            'spike_times': spike_times,
         }
         
         if unit in network_data['simulated_data']['E_Gids']:
@@ -350,6 +361,67 @@ def calculate_simulated_network_activity_metrics(spike_times_by_unit):
     network_data['simulated_data']['CoVFireRate_E'] = CoVFiringRate_E
     network_data['simulated_data']['CoVFireRate_I'] = CoVFiringRate_I
             
+def extract_metrics_from_simulated_data(spike_times, timeVector, spike_times_by_unit, rasterData, popData, **kwargs):
+    
+    #add immediately available data to network_data
+    network_data['source'] = 'simulated'
+    network_data['timeVector'] = timeVector
+    network_data['spiking_data']['spike_times'] = spike_times
+    network_data['simulated_data']['soma_voltage'] = rasterData['soma_voltage']
+    network_data['spiking_data']['spiking_times_by_unit'] = spike_times_by_unit
+
+    #add uniquely simulated data to network_data
+    network_data['simulated_data']['E_Gids'] = popData['E']['cellGids']
+    network_data['simulated_data']['I_Gids'] = popData['I']['cellGids']
+    network_data['simulated_data']['MeanFireRate_E'] = rasterData['popRates']['E']
+    network_data['simulated_data']['MeanFireRate_I'] = rasterData['popRates']['I']
+    
+    #get simulated network activity metrics
+    calculate_simulated_network_activity_metrics(spike_times_by_unit)
+    
+    #derive remaining spiking data from simulated data
+    num_E = len(network_data['simulated_data']['E_Gids'])
+    num_I = len(network_data['simulated_data']['I_Gids'])
+    
+    #overall mean firing rate
+    E_popRates = rasterData['popRates']['E']
+    I_popRates = rasterData['popRates']['I']
+    network_data['spiking_data']['spiking_summary_data']['MeanFireRate'] = (
+        (E_popRates * num_E + I_popRates * num_I) / (num_E + num_I)
+        )
+    
+    #overall CoV firing rate
+    E_CoV = network_data['simulated_data']['CoVFireRate_E']
+    I_CoV = network_data['simulated_data']['CoVFireRate_I']
+    network_data['spiking_data']['spiking_summary_data']['CoVFireRate'] = (
+        (E_CoV * num_E + I_CoV * num_I) / (num_E + num_I)
+        )
+    
+    #overall mean ISI
+    E_meanISI = network_data['simulated_data']['MeanISI_E']
+    I_meanISI = network_data['simulated_data']['MeanISI_I']
+    network_data['spiking_data']['spiking_summary_data']['MeanISI'] = (
+        (E_meanISI * num_E + I_meanISI * num_I) / (num_E + num_I)
+        )
+    
+    #overall CoV ISI
+    E_CoV_ISI = network_data['simulated_data']['CoV_ISI_E']
+    I_CoV_ISI = network_data['simulated_data']['CoV_ISI_I']
+    network_data['spiking_data']['spiking_summary_data']['CoV_ISI'] = (
+        (E_CoV_ISI * num_E + I_CoV_ISI * num_I) / (num_E + num_I)
+        )
+    
+    #spiking data by unit - just go through the simulated version of the data but de-identify pop
+    simulated_spiking_data_by_unit = network_data['simulated_data']['spiking_data_by_unit']
+    spiking_data_by_unit = {}
+    for unit, unit_data in simulated_spiking_data_by_unit.items():
+        spiking_data_by_unit[unit] = {
+            'FireRate': unit_data['FireRate'],
+            'meanISI': unit_data['meanISI'],
+            'CoV_ISI': unit_data['CoV_ISI'],
+            'spike_times': unit_data['spike_times'],
+        }
+    network_data['spiking_data']['spiking_data_by_unit'] = spiking_data_by_unit
 
 def get_simulated_network_activity_metrics(simData=None, popData=None, **kwargs):
     #this part should be useful for fitness during simulation
@@ -371,27 +443,35 @@ def get_simulated_network_activity_metrics(simData=None, popData=None, **kwargs)
     timeVector = np.array(rasterData['t']) / 1000
     spike_times_by_unit = {int(i): spike_times[rasterData['spkid'] == i] for i in np.unique(rasterData['spkid'])} #mea_analysis_pipeline.py expects spike_times as dictionary    
     
-    #add immediately available data to network_data
-    network_data['source'] = 'simulated'
-    network_data['timeVector'] = timeVector
-    network_data['spiking_data']['spike_times'] = spike_times
-    network_data['simulated_data']['soma_voltage'] = rasterData['soma_voltage']
-    network_data['spiking_data']['spiking_times_by_unit'] = spike_times_by_unit
+    #extract spiking metrics from simulated data
+    try: extract_metrics_from_simulated_data(spike_times, timeVector, spike_times_by_unit, rasterData, popData, **kwargs)
+    except Exception as e:
+        print(f'Error extracting metrics from simulated data: {e}')
+        pass
+    
+    #extract bursting metrics from simulated data (but this one works for both simulated and experimental data)
+    try: extract_bursting_activity_data(spike_times, spike_times_by_unit)
+    except Exception as e:
+        print(f'Error calculating bursting activity: {e}')
+        pass
+    
+    def convert_single_element_arrays(data):
+        if isinstance(data, dict):
+            for key, value in data.items():
+                data[key] = convert_single_element_arrays(value)
+        elif isinstance(data, np.ndarray) and data.size == 1:
+            return data.item()
+        return data
 
-    #add uniquely simulated data to network_data
-    network_data['simulated_data']['E_Gids'] = popData['E']['cellGids']
-    network_data['simulated_data']['I_Gids'] = popData['I']['cellGids']
-    network_data['simulated_data']['MeanFireRate_E'] = rasterData['popRates']['E']
-    network_data['simulated_data']['MeanFireRate_I'] = rasterData['popRates']['I']
-    
-    calculate_simulated_network_activity_metrics(spike_times_by_unit)
-    
-    #derive low-hanging fruit network activity metrics from simulated data
-    network_data['spiking_data']['spiking_summary_data']['MeanFireRate'] = (rasterData['popRates']['E'] + rasterData['popRates']['I'])/2
-    
-    return _analyze_network_activity(spike_times_by_unit)
+    network_data = convert_single_element_arrays(network_data)    
+    print('Network Activity Metrics Calculated and Extracted!')    
+    return network_data
 
 def get_experimental_network_activity_metrics(experimentalData):
+    # TODO: Implement experimental network activity metrics.
+    implemented = False
+    assert implemented == True, "Experimental network activity metrics not implemented yet."
+    
     net_activity_metrics = {}
     implemented = False
     assert implemented, 'Experimental network activity metrics not implemented yet.'

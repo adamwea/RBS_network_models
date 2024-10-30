@@ -4,7 +4,7 @@ import os
 project_root = os.popen('git rev-parse --show-toplevel').read().strip() # use git to get the root directory of the project
 sys.path.insert(0, project_root)
 from modules.analysis.simulation_fitness_functions.calculate_fitness import fitnessFunc
-from simulate._config_files import fitnessFuncArgs
+from simulate._config_files import fitnessFuncArgs_dep
 import submodules.netpyne.netpyne as netpyne
 from netpyne import sim
 from copy import deepcopy
@@ -94,7 +94,7 @@ def process_simulation_file(file_name, file_paths, selection=None):
         'data_file_path': file_paths['data_path'],
         'cfg_file_path': file_paths['cfg_path'],
         'fitness_file_path': file_paths['fitness_path'],
-        'fitnessFuncArgs': fitnessFuncArgs,
+        'fitnessFuncArgs': fitnessFuncArgs_dep,
     }
     
     return fitnessFunc(**kwargs)
