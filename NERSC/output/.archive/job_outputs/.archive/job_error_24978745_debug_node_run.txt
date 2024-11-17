@@ -1,0 +1,48 @@
+[nid004191:2066061] *** Process received signal ***
+[nid004191:2066061] Signal: Segmentation fault (11)
+[nid004191:2066061] Signal code: Address not mapped (1)
+[nid004191:2066061] Failing at address: 0x50
+[nid004191:2066061] [ 0] /lib64/libpthread.so.0(+0x16910)[0x7fa00d0e9910]
+[nid004191:2066061] [ 1] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_mtl_ofi_progress_no_inline+0x273)[0x7fa00fa61633]
+[nid004191:2066061] [ 2] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libopen-pal.so.80(opal_progress+0x33)[0x7fa00c6d81e3]
+[nid004191:2066061] [ 3] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(+0x6ff7c)[0x7fa00f8edf7c]
+[nid004191:2066061] [ 4] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_nextcid+0x31)[0x7fa00f8f1b11]
+[nid004191:2066061] [ 5] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_dup_with_info+0xbd)[0x7fa00f8ebd4d]
+[nid004191:2066061] [ 6] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(PMPI_Comm_dup+0x96)[0x7fa00f931486]
+[nid004191:2066061] [ 7] /global/homes/a/adammwea/neuron/lib/libnrniv.so(nrnmpi_init+0x118)[0x7fa01076e278]
+[nid004191:2066061] [ 8] nrniv[0x4007bc]
+[nid004191:2066061] [ 9] /lib64/libc.so.6(__libc_start_main+0xef)[0x7fa00cbc524d]
+[nid004191:2066061] [10] nrniv[0x40081a]
+[nid004191:2066061] *** End of error message ***
+[nid006344:1361547] *** Process received signal ***
+[nid006344:1361547] Signal: Segmentation fault (11)
+[nid006344:1361547] Signal code: Address not mapped (1)
+[nid006344:1361547] Failing at address: 0x50
+[nid006344:1361547] [ 0] /lib64/libpthread.so.0(+0x16910)[0x7f467b4e9910]
+[nid006344:1361547] [ 1] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_mtl_ofi_progress_no_inline+0x273)[0x7f467de61633]
+[nid006344:1361547] [ 2] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libopen-pal.so.80(opal_progress+0x33)[0x7f467aad81e3]
+[nid006344:1361547] [ 3] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(+0x6ff7c)[0x7f467dcedf7c]
+[nid006344:1361547] [ 4] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_nextcid+0x31)[0x7f467dcf1b11]
+[nid006344:1361547] [ 5] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_dup_with_info+0xbd)[0x7f467dcebd4d]
+[nid006344:1361547] [ 6] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(PMPI_Comm_dup+0x96)[0x7f467dd31486]
+[nid006344:1361547] [ 7] /global/homes/a/adammwea/neuron/lib/libnrniv.so(nrnmpi_init+0x118)[0x7f467eadb278]
+[nid006344:1361547] [ 8] nrniv[0x4007bc]
+[nid006344:1361547] [ 9] /lib64/libc.so.6(__libc_start_main+0xef)[0x7f467afc524d]
+[nid006344:1361547] [10] nrniv[0x40081a]
+[nid006344:1361547] *** End of error message ***
+[nid006342:1336075] *** Process received signal ***
+[nid006342:1336075] Signal: Segmentation fault (11)
+[nid006342:1336075] Signal code: Address not mapped (1)
+[nid006342:1336075] Failing at address: 0x50
+[nid006342:1336075] [ 0] /lib64/libpthread.so.0(+0x16910)[0x7fc557ce9910]
+[nid006342:1336075] [ 1] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_mtl_ofi_progress_no_inline+0x273)[0x7fc55a661633]
+[nid006342:1336075] [ 2] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libopen-pal.so.80(opal_progress+0x33)[0x7fc5572d81e3]
+[nid006342:1336075] [ 3] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(+0x6ff7c)[0x7fc55a4edf7c]
+[nid006342:1336075] [ 4] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_nextcid+0x31)[0x7fc55a4f1b11]
+[nid006342:1336075] [ 5] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(ompi_comm_dup_with_info+0xbd)[0x7fc55a4ebd4d]
+[nid006342:1336075] [ 6] /global/common/software/nersc/pe/gpu/gnu/openmpi/5.0.0/lib/libmpi.so.40(PMPI_Comm_dup+0x96)[0x7fc55a531486]
+[nid006342:1336075] [ 7] /global/homes/a/adammwea/neuron/lib/libnrniv.so(nrnmpi_init+0x118)[0x7fc55b4c5278]
+[nid006342:1336075] [ 8] nrniv[0x4007bc]
+[nid006342:1336075] [ 9] /lib64/libc.so.6(__libc_start_main+0xef)[0x7fc5577c524d]
+[nid006342:1336075] [10] nrniv[0x40081a]
+[nid006342:1336075] *** End of error message ***

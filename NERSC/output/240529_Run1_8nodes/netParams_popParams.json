@@ -1,0 +1,73 @@
+{
+    "net": {
+        "params": {
+            "_labelid": 0,
+            "cellParams": {},
+            "cellsVisualizationSpacingMultiplier": [
+                1,
+                1,
+                1
+            ],
+            "connParams": {},
+            "correctBorder": false,
+            "defaultDelay": 1,
+            "defaultThreshold": 10,
+            "defaultWeight": 1,
+            "defineCellShapes": false,
+            "mapping": {},
+            "popParams": {
+                "E": {
+                    "cellType": "E",
+                    "numCells": 100,
+                    "xRange": [
+                        173.66,
+                        3549.91
+                    ],
+                    "yRange": [
+                        6.72,
+                        2065.09
+                    ],
+                    "zRange": [
+                        1,
+                        11.61
+                    ]
+                },
+                "I": {
+                    "cellType": "I",
+                    "numCells": 43,
+                    "xRange": [
+                        173.66,
+                        3549.91
+                    ],
+                    "yRange": [
+                        6.72,
+                        2065.09
+                    ],
+                    "zRange": [
+                        1,
+                        11.61
+                    ]
+                }
+            },
+            "popTagsCopiedToCells": [
+                "cellModel",
+                "cellType"
+            ],
+            "propVelocity": 500.0,
+            "rotateCellsRandomly": false,
+            "rxdParams": {},
+            "scale": 1,
+            "scaleConnWeight": 1,
+            "scaleConnWeightModels": false,
+            "scaleConnWeightNetStims": 1,
+            "shape": "cuboid",
+            "sizeX": 4000,
+            "sizeY": 2000,
+            "sizeZ": 12,
+            "stimSourceParams": {},
+            "stimTargetParams": {},
+            "subConnParams": {},
+            "synMechParams": {}
+        }
+    }
+}

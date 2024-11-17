@@ -1,0 +1,354 @@
+{
+    "batch": {
+        "batchLabel": "240429_Run24_debug_node_run",
+        "cfgFile": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/cfg.py",
+        "evolCfg": {
+            "crossover": 0.5,
+            "defaultFitness": 1000,
+            "evolAlgorithm": "custom",
+            "fitnessFunc": "removed",
+            "fitnessFuncArgs": {
+                "maxFitness": 1000,
+                "pop_size": 100,
+                "pops": {
+                    "IBI_targets": {
+                        "max": 4000,
+                        "target": 3000,
+                        "width": 2000
+                    },
+                    "baseline_targets": {
+                        "max": 3,
+                        "target": 1.5,
+                        "width": 1
+                    },
+                    "burst_peak_frequency": {
+                        "min": 0.25,
+                        "target": 0.3333333333333333,
+                        "width": 0.16666666666666666
+                    },
+                    "burts_peak_targets": {
+                        "min": 8,
+                        "target": 15,
+                        "width": 2
+                    },
+                    "rate_slope": {
+                        "max": 0.5,
+                        "target": 0,
+                        "width": 0.5
+                    },
+                    "rate_targets": {
+                        "E": {
+                            "min": 1,
+                            "target": 7.5,
+                            "width": 2.5
+                        },
+                        "I": {
+                            "min": 2,
+                            "target": 30,
+                            "width": 10
+                        }
+                    },
+                    "sustained_osci": {
+                        "min": 75,
+                        "target": 100,
+                        "width": 5
+                    },
+                    "thresh_target": {
+                        "max": 7,
+                        "min": 3,
+                        "target": 5,
+                        "width": 1
+                    }
+                }
+            },
+            "max_generations": 3000,
+            "maximize": false,
+            "maxiter_wait": 720.0,
+            "mutation_rate": 0.7,
+            "num_elites": 10,
+            "pop_size": 100,
+            "time_sleep": 10
+        },
+        "initCfg": {
+            "Erhythmic_stimWeight": 0.00011122841800404768,
+            "Irhythmic_stimWeight": 0.01304362068954982,
+            "addSynMechs": true,
+            "allowConnsWithWeight0": true,
+            "allowSelfConns": false,
+            "analysis": {},
+            "backupCfgFile": [],
+            "cache_efficient": true,
+            "checkErrors": false,
+            "compactConnFormat": false,
+            "connRandomSecFromList": true,
+            "coreneuron": false,
+            "createNEURONObj": true,
+            "createPyStruct": true,
+            "cvode_active": false,
+            "cvode_atol": 0.001,
+            "distributeSynsUniformly": true,
+            "dt": 0.025,
+            "dump_coreneuron_model": false,
+            "duration": 1000.0,
+            "duration_seconds": 5.0,
+            "filename": "model_output",
+            "gatherOnlySimData": false,
+            "gkbar_E": 0.1619815959967647,
+            "gkbar_I": 0.8459911170809125,
+            "gnabar_E": 3.2744377536905587,
+            "gnabar_I": 1.4954324508664265,
+            "gpu": false,
+            "hParams": {
+                "celsius": 6.3,
+                "clamp_resist": 0.001,
+                "v_init": -65.0
+            },
+            "includeParamsLabel": true,
+            "invertedYCoord": true,
+            "networkType": "pre13Apr24",
+            "oneSynPerNetcon": true,
+            "printPopAvgRates": [
+                100,
+                1000.0
+            ],
+            "printRunTime": false,
+            "printSynsAfterRule": false,
+            "probEE": 0.04544272831347888,
+            "probEI": 0.5559506713317515,
+            "probIE": 0.9118518368507089,
+            "probII": 0.6639948777994583,
+            "probLengthConst": 51.98889963662876,
+            "propVelocity": 1.0,
+            "pt3dRelativeToCellLocation": true,
+            "rand123GlobalIndex": null,
+            "random123": false,
+            "recordCells": [
+                [
+                    "E",
+                    [
+                        0
+                    ]
+                ],
+                [
+                    "I",
+                    [
+                        0
+                    ]
+                ]
+            ],
+            "recordCellsSpikes": -1,
+            "recordDipole": false,
+            "recordDipolesHNN": false,
+            "recordLFP": [],
+            "recordStep": 0.1,
+            "recordStim": false,
+            "recordTime": true,
+            "recordTraces": {
+                "soma_voltage": {
+                    "loc": 0.5,
+                    "sec": "soma",
+                    "var": "v"
+                }
+            },
+            "rythmic_stiminterval": 914.6161046773188,
+            "rythmic_stimnoise": 0.005481290647707641,
+            "saveCSV": false,
+            "saveCellConns": true,
+            "saveCellSecs": true,
+            "saveDat": false,
+            "saveDataInclude": [
+                "simData",
+                "simConfig",
+                "netParams",
+                "net"
+            ],
+            "saveDipoleCells": false,
+            "saveDipolePops": false,
+            "saveDpk": false,
+            "saveFolder": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240426_Run12_26AprSAFE_1x100/gen_13",
+            "saveHDF5": false,
+            "saveJson": true,
+            "saveLFPCells": false,
+            "saveLFPPops": false,
+            "saveMat": false,
+            "savePickle": false,
+            "saveTiming": false,
+            "seeds": {
+                "cell": 1,
+                "conn": 1,
+                "loc": 1,
+                "stim": 1
+            },
+            "simLabel": "gen_13_cand_10",
+            "tau1_exc": 1.499795355838147,
+            "tau1_inh": 0.21464252944040618,
+            "tau2_exc": 3.002248011819888,
+            "tau2_inh": 12.888449055596292,
+            "timestampFilename": false,
+            "timing": true,
+            "tstop": 1000.0,
+            "use_fast_imem": false,
+            "validateNetParams": false,
+            "verbose": false,
+            "weightEE": 0.02651734518128387,
+            "weightEI": 0.0021394425141225797,
+            "weightIE": 0.0027704773465592105,
+            "weightII": 0.00338529465209515
+        },
+        "method": "evol",
+        "netParamsFile": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/netParams.py",
+        "optimCfg": {
+            "fitnessFunc": "removed"
+        },
+        "params": [
+            {
+                "label": "probLengthConst",
+                "values": [
+                    50,
+                    2000
+                ]
+            },
+            {
+                "label": "propVelocity",
+                "values": [
+                    1,
+                    1
+                ]
+            },
+            {
+                "label": "probIE",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "probEE",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "probII",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "probEI",
+                "values": [
+                    0,
+                    1
+                ]
+            },
+            {
+                "label": "weightEI",
+                "values": [
+                    0,
+                    0.1
+                ]
+            },
+            {
+                "label": "weightIE",
+                "values": [
+                    0,
+                    0.1
+                ]
+            },
+            {
+                "label": "weightEE",
+                "values": [
+                    0,
+                    0.1
+                ]
+            },
+            {
+                "label": "weightII",
+                "values": [
+                    0,
+                    0.1
+                ]
+            },
+            {
+                "label": "gnabar_E",
+                "values": [
+                    0,
+                    5
+                ]
+            },
+            {
+                "label": "gkbar_E",
+                "values": [
+                    0,
+                    2
+                ]
+            },
+            {
+                "label": "gnabar_I",
+                "values": [
+                    0,
+                    3
+                ]
+            },
+            {
+                "label": "gkbar_I",
+                "values": [
+                    0.005,
+                    5
+                ]
+            },
+            {
+                "label": "tau1_exc",
+                "values": [
+                    0.5,
+                    6
+                ]
+            },
+            {
+                "label": "tau2_exc",
+                "values": [
+                    0,
+                    10.0
+                ]
+            },
+            {
+                "label": "tau1_inh",
+                "values": [
+                    0.05,
+                    1
+                ]
+            },
+            {
+                "label": "tau2_inh",
+                "values": [
+                    5.0,
+                    15.0
+                ]
+            },
+            {
+                "label": "duration_seconds",
+                "values": [
+                    10,
+                    10
+                ]
+            }
+        ],
+        "runCfg": {
+            "allocation": "m2043",
+            "coresPerNode": 128,
+            "custom": null,
+            "email": "amwe@ucdavis.edu",
+            "mpiCommand": null,
+            "nodes": 1,
+            "reservation": null,
+            "script": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py",
+            "skip": false,
+            "type": "mpi_bulletin",
+            "walltime": "00:30:00"
+        },
+        "saveFolder": "/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240429_Run24_debug_node_run",
+        "seed": null
+    }
+}

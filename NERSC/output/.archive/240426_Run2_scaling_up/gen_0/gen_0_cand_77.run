@@ -1,0 +1,44 @@
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240426_Run2_scaling_up/gen_0/gen_0_cand_77_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240426_Run2_scaling_up/gen_0/gen_0_cand_77_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240426_Run2_scaling_up/240426_Run2_scaling_up_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240426_Run2_scaling_up/netParams_popParams.json ... 
+
+Start time:  2024-04-26 10:19:12.814316
+
+Creating network of 2 cell populations on 1 hosts...
+  Number of cells on node 0: 400 
+  Done; cell creation time = 0.07 s.
+Making connections...
+  Number of connections on node 0: 6144 
+  Done; cell connection time = 3.35 s.
+Adding stims...
+  Number of stims on node 0: 400 
+  Done; cell stims creation time = 0.08 s.
+Recording 0 traces of 0 types on node 0
+
+Running simulation using NEURON for 5000.0 ms...
+  Done; run time = 117.99 s; real-time ratio: 0.04.
+
+Gathering data...
+  Done; gather time = 0.58 s.
+
+Analyzing...
+  Cells: 400
+  Connections: 6544 (16.36 per cell)
+  Spikes: 44486 (22.24 Hz)
+  Simulated time: 5.0 s; 1 workers
+  Run time: 117.99 s
+   E : 1.206 Hz
+   I : 0.000 Hz
+Saving output as /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240426_Run2_scaling_up/gen_0/gen_0_cand_77_data.json ... 
+Finished saving!
+  Done; saving time = 1.02 s.
+  Done; plotting time = 0.00 s
+
+Total time = 123.10 s
+first instance of v_init
+first instance of tstop

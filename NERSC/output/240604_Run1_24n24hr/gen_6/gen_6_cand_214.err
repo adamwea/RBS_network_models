@@ -1,0 +1,14 @@
+srun: Job 26413848 step creation temporarily disabled, retrying (Requested nodes are busy)
+srun: Job 26413848 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 26413848 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 26413848 step creation still disabled, retrying (Requested nodes are busy)
+srun: Job 26413848 step creation still disabled, retrying (Requested nodes are busy)
+srun: Step created for StepId=26413848.3280
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+FAILED to lookup docker image adammwea/netpyneshifter:v5
+srun: error: nid006560: tasks 1,19: Exited with exit code 1
+srun: Terminating StepId=26413848.3280
+slurmstepd: error: *** STEP 26413848.3280 ON nid006560 CANCELLED AT 2024-06-05T23:57:34 ***
+srun: error: nid006560: tasks 0,2-3,5-12,14,16-18,20-26,28-42,44-47: Terminated
+srun: error: nid006560: tasks 4,13,15,27,43: Killed
+srun: Force Terminated StepId=26413848.3280

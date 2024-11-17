@@ -1,0 +1,74 @@
+
+========================   JOB MAP   ========================
+Data for JOB prterun-nid006368-235979@1 offset 0 Total slots allocated 256
+    Mapping policy: BYCORE:NOOVERSUBSCRIBE  Ranking policy: SLOT Binding policy: CORE
+    Cpu set: N/A  PPR: 1:core  Cpus-per-rank: N/A  Cpu Type: HWT
+
+
+Data for node: nid006368	Num slots: 256	Max slots: 0	Num procs: 4
+        Process jobid: prterun-nid006368-235979@1 App: 0 Process rank: 0 Bound: package[0][hwt:0,128]
+        Process jobid: prterun-nid006368-235979@1 App: 0 Process rank: 1 Bound: package[0][hwt:1,129]
+        Process jobid: prterun-nid006368-235979@1 App: 0 Process rank: 2 Bound: package[0][hwt:2,130]
+        Process jobid: prterun-nid006368-235979@1 App: 0 Process rank: 3 Bound: package[0][hwt:3,131]
+
+=============================================================
+numprocs=4
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/gen_1/gen_1_cand_26_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/gen_1/gen_1_cand_26_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/240422_Run38_MPIsxOMPs_1x4x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/netParams_popParams.json ... 
+
+Start time:  2024-04-22 23:51:17.246374
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/gen_1/gen_1_cand_26_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/gen_1/gen_1_cand_26_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/240422_Run38_MPIsxOMPs_1x4x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/netParams_popParams.json ... 
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/gen_1/gen_1_cand_26_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/gen_1/gen_1_cand_26_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/240422_Run38_MPIsxOMPs_1x4x16_netParams.py
+
+Reading command line arguments using syntax: python file.py [simConfig=filepath] [netParams=filepath]
+Importing simConfig from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/gen_1/gen_1_cand_26_cfg.json
+Loading file /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/gen_1/gen_1_cand_26_cfg.json ... 
+Loading simConfig...
+Importing netParams from /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/240422_Run38_MPIsxOMPs_1x4x16_netParams.py
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/netParams_popParams.json ... 
+Loading file netParams_popParams.json ... 
+Saving netParams to /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240422_Run38_MPIsxOMPs_1x4x16/netParams_popParams.json ... 
+
+Creating network of 2 cell populations on 4 hosts...
+  Number of cells on node 0: 100 
+  Number of cells on node 2: 100 
+  Number of cells on node 3: 100 
+  Number of cells on node 1: 100 
+  Done; cell creation time = 0.21 s.
+Making connections...
+  Number of connections on node 0: 749 
+  Number of connections on node 2: 737 
+  Number of connections on node 1: 723 
+  Number of connections on node 3: 674 
+  Done; cell connection time = 7.90 s.
+Adding stims...
+  Number of stims on node 3: 100 
+  Number of stims on node 2: 100 
+  Number of stims on node 1: 100 
+  Number of stims on node 0: 100 
+  Done; cell stims creation time = 0.47 s.
+Recording 0 traces of 0 types on node 0
+Recording 0 traces of 0 types on node 1
+Recording 0 traces of 0 types on node 3
+Recording 0 traces of 0 types on node 2
+
+Running simulation using NEURON for 30000.0 ms...
