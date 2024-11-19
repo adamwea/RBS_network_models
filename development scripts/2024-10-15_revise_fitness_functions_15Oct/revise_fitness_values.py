@@ -1,16 +1,25 @@
 # run_pipeline.py with custom params as needed.
 '''Setup Python environment '''
+from pprint import pprint
+# import os
+# import sys
+#pprint(os.environ['PYTHONPATH'])
 import setup_environment
 setup_environment.set_pythonpath()
+#pprint(sys.path)
 
-import sys
-import os
+#import sys
+#import os
 # project_root = os.popen('git rev-parse --show-toplevel').read().strip() # use git to get the root directory of the project
 # sys.path.insert(0, project_root)
 from modules.analysis.calculate_fitness import fitnessFunc
 #from simulate._config_files import fitnessFuncArgs
-import submodules.netpyne.netpyne as netpyne
-from netpyne import sim
+import netpyne
+print(netpyne.__file__)
+print(netpyne.__version__)
+#import submodules.netpyne.netpyne as netpyne
+#from submodules.netpyne.netpyne import sim
+#from netpyne import sim
 from copy import deepcopy
 import dill
 
