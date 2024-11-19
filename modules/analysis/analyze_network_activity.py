@@ -3,7 +3,7 @@ import numpy as np
 from scipy.signal import convolve, find_peaks
 from scipy.stats import norm
 import matplotlib.pyplot as plt
-import submodules.MEA_Analysis.IPNAnalysis.helper_functions as helper
+import external.MEA_Analysis.IPNAnalysis.helper_functions as helper
 
 '''deprecated fuctions'''
 def convolve_network_activity(rasterData, binSize=None, gaussianSigma=None, thresholdBurst=None, min_peak_distance=None):
