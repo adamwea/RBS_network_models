@@ -5,8 +5,6 @@ cd workspace/RBS_network_simulations_v2/
 echo "Determining the root directory of the repository..."
 root_dir=$(git rev-parse --show-toplevel)
 echo "Root directory: $root_dir"
-# mounted_dir="$root_dir/RBS_network_simulations_v2"
-# echo "Mounted directory: $mounted_dir"
 
 # Pull the Docker image
 echo "Pulling the Docker image adammwea/benshalom_netpyne:v1.0..."
@@ -27,9 +25,6 @@ docker run -d --rm \
   tail -f /dev/null
 
 echo "Docker container 'netsim_docker' is now running."
-
-
-
   
 # # Run Docker indefinitely detached with the name 'netsim_docker'
 # docker run -d --rm \
