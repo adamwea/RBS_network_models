@@ -1,18 +1,0 @@
-Warning: no DISPLAY environment variable.
---No graphics will be displayed.
-NEURON -- VERSION 8.2.6 HEAD (078a34a9d) 2024-07-24
-Duke, Yale, and the BlueBrain Project -- Copyright 1984-2022
-See http://neuron.yale.edu/neuron/credits
-
-
-
-Creating network of 2 cell populations on 1 hosts...:   0%|          |[A
-
-Creating network of 2 cell populations on 1 hosts...: 100%|##########|[A
-Creating network of 2 cell populations on 1 hosts...: 100%|##########|
-  E->I:   0%|          | Creating synaptic connections for 0/46 postsynaptic cells on node 0 (probabilistic connectivity)  E->I:  41%|####1     | Creating synaptic connections for 19/46 postsynaptic cells on node 0 (probabilistic connectivity)  E->I:  83%|########2 | Creating synaptic connections for 38/46 postsynaptic cells on node 0 (probabilistic connectivity)  E->I: 100%|##########| Creating synaptic connections for 46/46 postsynaptic cells on node 0 (probabilistic connectivity)
-  I->E:   0%|          | Creating synaptic connections for 0/100 postsynaptic cells on node 0 (probabilistic connectivity)  I->E:  28%|##8       | Creating synaptic connections for 28/100 postsynaptic cells on node 0 (probabilistic connectivity)  I->E:  56%|#####6    | Creating synaptic connections for 56/100 postsynaptic cells on node 0 (probabilistic connectivity)  I->E:  83%|########2 | Creating synaptic connections for 83/100 postsynaptic cells on node 0 (probabilistic connectivity)  I->E: 100%|##########| Creating synaptic connections for 100/100 postsynaptic cells on node 0 (probabilistic connectivity)
-  E->E:   0%|          | Creating synaptic connections for 0/100 postsynaptic cells on node 0 (probabilistic connectivity)  E->E:  18%|#8        | Creating synaptic connections for 18/100 postsynaptic cells on node 0 (probabilistic connectivity)  E->E:  39%|###9      | Creating synaptic connections for 39/100 postsynaptic cells on node 0 (probabilistic connectivity)  E->E:  61%|######1   | Creating synaptic connections for 61/100 postsynaptic cells on node 0 (probabilistic connectivity)  E->E:  83%|########2 | Creating synaptic connections for 83/100 postsynaptic cells on node 0 (probabilistic connectivity)  E->E: 100%|##########| Creating synaptic connections for 100/100 postsynaptic cells on node 0 (probabilistic connectivity)
-  I->I:   0%|          | Creating synaptic connections for 0/46 postsynaptic cells on node 0 (probabilistic connectivity)  I->I:  65%|######5   | Creating synaptic connections for 30/46 postsynaptic cells on node 0 (probabilistic connectivity)  I->I: 100%|##########| Creating synaptic connections for 46/46 postsynaptic cells on node 0 (probabilistic connectivity)
-0 /opt/venv/bin/nrniv: can't open simConfig=/app/simulation_output/241011_Run1_vscode/gen_1/gen_1_cand_4_cfg.json
-Could not open netParams=/app/simulation_output/241011_Run1_vscode/241011_Run1_vscode_netParams.py

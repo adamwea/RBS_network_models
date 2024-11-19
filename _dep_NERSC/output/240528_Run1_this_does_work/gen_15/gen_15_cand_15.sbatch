@@ -1,8 +1,0 @@
-#!/bin/bash
-
-cd .
-        
-sleep 10        
-echo $(pwd)        
-python srun_extractor.py srun -N 1 -n 32 --sockets-per-node 1 --cpu_bind=cores shifter --image=adammwea/netpyneshifter:v5 nrniv -python -mpi /pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/init.py simConfig=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240528_Run1_this_does_work/gen_15/gen_15_cand_15_cfg.json netParams=/pscratch/sd/a/adammwea/2DNetworkSimulations/NERSC/output/240528_Run1_this_does_work/240528_Run1_this_does_work_netParams.py 
-    
