@@ -171,6 +171,7 @@ try:
     filename = 'netParams.json'
 except:
     print('cfg not found')
+    raise Exception('cfg not found')
     # # Placeholder example of cfg in case it isn't available (for debug)
     # class Cfg:
     #     E_L_mean, E_L_stdev = 100, 20
@@ -197,8 +198,9 @@ except:
     #         os.makedirs(batch_run_path)
 
 # Number of neurons
-from simulate._temp_files.temp_user_args import USER_num_excite, USER_num_inhib
-numExcitatory, numInhibitory = USER_num_excite, USER_num_inhib
+#from simulate._temp_files.temp_user_args import USER_num_excite, USER_num_inhib
+#numExcitatory, numInhibitory = USER_num_excite, USER_num_inhib
+numExcitatory, numInhibitory = cfg.num_excite, cfg.num_inhib
 
 #Cell positions (optional)
 cell_positions = {

@@ -28,7 +28,7 @@ from netpyne.batch import Batch
 
 ## Get user arguments
 #sys.path.insert(0, './simulate_config_files')
-from simulate._config_files import parse_user_args
+from simulate._config_files import parse_kwargs
 from simulate._config_files import evolutionary_parameter_space
 from simulate._temp_files.temp_user_args import *
 
@@ -227,7 +227,7 @@ def init_batch_cfg():
 '''Main code'''
 def main(**kwargs):
     # Parse user arguments
-    parse_user_args.main(**kwargs)
+    parse_kwargs.main(**kwargs)
 
     # Run batch
     run_batch = True

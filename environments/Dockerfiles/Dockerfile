@@ -115,7 +115,8 @@ RUN /opt/venv/bin/pip install \
         pyyaml \
         schema \
         tornado \
-        inspyred
+        inspyred \
+        dill
 
 # Install mpi4py (after installing MPI development libraries)
 RUN /opt/venv/bin/pip install mpi4py

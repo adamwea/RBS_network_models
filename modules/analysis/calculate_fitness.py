@@ -2,7 +2,7 @@ import os
 import json
 from modules.analysis.analyze_network_activity import get_simulated_network_activity_metrics
 import numpy as np
-from simulate._config_files.fitnessFuncArgs import fitnessFuncArgs
+#from simulate._config_files.fitnessFuncArgs import fitnessFuncArgs
 
 '''Fitness functions for the network activity metrics'''
 def fit_firing_rates(**kwargs):
