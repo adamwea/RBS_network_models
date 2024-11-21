@@ -173,6 +173,17 @@ def rangify_params(params):
     assert all(isinstance(value, list) for value in params.values()), 'All values in params must be lists'
     return params
 
+def build_run_paths(output_folder_name, fitness_target_script, outside_of_repo = False):
+    workspace_path = setup_environment.get_git_root()
+    fitness_target_script = os.path.abspath(fitness_target_script)
+    #step out of workspace_path to avoid writing to the repository
+    if outside_of_repo:
+        workspace_path = os.path.dirname(workspace_path)
+    output_folder_path = os.path.join(workspace_path, output_folder_name) # Output folder path for all runs
+    output_folder_path = os.path.abspath(output_folder_path)
+    
+    return output_folder_path, fitness_target_script
+
 '''Run Batch'''
 def batchRun(batch_config=None):
     global params #make it global so it can be accessed by the cfg.py file easily
@@ -202,14 +213,16 @@ if __name__ == '__main__':
     
     '''Initialize'''
     batch_type = 'evol'
-    output_folder_name = 'xRBS_network_simulation_outputs'
-    workspace_path = setup_environment.get_git_root()
-    output_folder_path = os.path.join(workspace_path, output_folder_name) # Output folder path for all runs
-    output_folder_path = os.path.abspath(output_folder_path)
+    output_folder_name = 'zRBS_network_simulation_outputs'
     run_label = f'development_runs' # subfolder for this run will be created in output_folder_path
-    fitness_target_script = 'simulate/_fitness_targets/fitnessFuncArgs_CDKL5_WT.py'
-    fitness_target_script = os.path.join(workspace_path, fitness_target_script)
-    fitness_target_script = os.path.abspath(fitness_target_script)
+    fitness_target_script = 'scoring_functions/fitnessFuncArgs_CDKL5_WT_DIV21.py'
+    
+    # Build output folder and fitness target script paths
+    output_folder_path, fitness_target_script = build_run_paths(
+        output_folder_name, 
+        fitness_target_script, 
+        outside_of_repo = True
+        ) # Build output folder path
 
     kwargs = {
         'duration': 1,
@@ -224,6 +237,8 @@ if __name__ == '__main__':
         'label': run_label,
         'output_path': output_folder_path,
         'fitness_target_script': fitness_target_script,
+        #'mpi_type': 'mpi_bulletin', # local
+        'mpi_type': 'mpi_direct', # HPC (perlmutter)
     }
     parse_kwargs.main(**kwargs) # Parse user arguments
     from temp_user_args import * # Import user arguments from temp file created by parse_kwargs.main(**kwargs)

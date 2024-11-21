@@ -4,6 +4,8 @@ import shutil
 import argparse
 import pandas as pd
 import simulate._config_files.setup_environment as setup_environment
+import os
+import shutil
 
 # Constants
 DEFAULT_DURATION = 1
@@ -128,6 +130,8 @@ def build_run_path(run_path, label, output_path, overwrite_run, continue_run):
                 print(f'Overwriting previous run at: {prev_run_path}')
                 print(f'Deleting previous run at: {prev_run_path}')
                 shutil.rmtree(prev_run_path)
+                #assert that prev_run_path has been deleted
+                assert not os.path.exists(prev_run_path), f'Previous run at {prev_run_path} was not deleted'
                 run_path = prev_run_path
             elif continue_run and os.path.exists(prev_run_path):
                 print(f'Continuing previous run at: {prev_run_path}')
@@ -234,6 +238,7 @@ def configure_global_user_vars(**kwargs):
 
     if 'mpi_direct' in USER_vars['USER_runCfg_type']:
         USER_vars['USER_mpiCommand'] = configure_mpi_direct(SCRIPT_PATH)
+        USER_vars['USER_nrnCommand'] = ''
     else:
         USER_vars['USER_mpiCommand'] = 'mpirun'
 
@@ -246,7 +251,9 @@ def configure_global_user_vars(**kwargs):
 def configure_mpi_direct(script_path):
     shifter_command = 'shifter --image=adammwea/netpyneshifter:v5'
     mpi_command = f'srun -N 1 --sockets-per-node 1 --cpu_bind=cores {shifter_command} nrniv'
-    return f'''\nsleep 10\npython srun_extractor.py {mpi_command}'''
+    return f'''\
+sleep 10
+python ./sbatch_scripts/srun_extractor.py {mpi_command}'''
 
 # Function to initialize batch run
 def init_batch_pathing(USER_run_label=None, run_path_only=False, **kwargs):
@@ -313,8 +320,15 @@ def init_batch_pathing(USER_run_label=None, run_path_only=False, **kwargs):
     USER_init_script = os.path.abspath(USER_init_script)
     USER_output_path = os.path.abspath(USER_output_path)
     USER_run_path = os.path.abspath(USER_run_path)
-    
-# Function to save configuration to a Python file
+
+def send_user_vars_to_bash(USER_vars):
+    '''Send the USER_vars to the bash environment so they can be accessed by slurm sbatch scripts'''
+    for key, value in USER_vars.items():
+        os.environ[key] = str(value)
+        # Export the variable to the bash environment
+        print(f'export {key}="{value}"')
+        os.system(f'export {key}="{value}"')
+        
 def save_config_to_file(USER_vars):
     run_path = USER_vars['USER_run_path']
     temp_user_args_path = f'temp_user_args.py'
@@ -326,7 +340,10 @@ def save_config_to_file(USER_vars):
     with open(temp_user_args_path, "w") as f:
         for key, value in USER_vars.items():
             if isinstance(value, str):
-                f.write(f"{key} = '{value}'\n")
+                if '\n' in value:
+                    f.write(f"{key} = '''{value}'''\n")
+                else:
+                    f.write(f"{key} = '{value}'\n")
             elif isinstance(value, bool):
                 f.write(f"{key} = {value}\n")
             elif isinstance(value, int):
@@ -379,7 +396,8 @@ def save_config_to_file(USER_vars):
 # Main function
 def main(**kwargs):
     '''Main function to configure the global variables and save the configuration to a file.'''
-    USER_vars = configure_global_user_vars(**kwargs)     # Parse the arguments    
+    USER_vars = configure_global_user_vars(**kwargs)     # Parse the arguments
+    #send_user_vars_to_bash(USER_vars)     # Send the USER_vars to the bash environment so they can be accessed by slurm sbatch scripts   
     save_config_to_file(USER_vars)     # Save the config variables to temp_user_args.py
 
 
