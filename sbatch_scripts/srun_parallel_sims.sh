@@ -96,6 +96,9 @@ wait_for_commands() {
 
 ## Initialize run
 initialize_run() {
+    # args
+    batch_script=$1
+    
     # change to the directory where the simulation scripts are located
     cd /pscratch/sd/a/adammwea/RBS_network_simulations/
 
@@ -111,9 +114,9 @@ initialize_run() {
     rm -f temp_user_args.py
 
     # Run batchRun_evolutionary_algorithm.py in the background
-    echo "Running batchRun_evolutionary_algorithm.py in the background..."
+    echo "Running batch_script (${batch_script}) in the background..."
     (
-    python -u ./simulate/batchRun_evolutionary_algorithm.py \
+    python -u $batch_script\
         & export PID=$! # Run batchRun_payload.py in the background
     ) >> "temp_output.run" 2>"temp_error.err"
 
@@ -207,11 +210,12 @@ run_standard_plotting() {
 
 ## Main function to run all steps
 main() {
+    batch_script=$1
     cd /pscratch/sd/a/adammwea/RBS_network_simulations
     load_modules
     report_allocation_specs
     report_processes_allocation
-    initialize_run
+    initialize_run $batch_script
     loop_through_generations
     copy_move_and_cleanup_temp_files
     #run_standard_plotting
@@ -226,4 +230,5 @@ main() {
 # bash /pscratch/sd/a/adammwea/RBS_network_simulations/sbatch_scripts/slurm_payload.sh
 
 # Execute main function
-main
+export batch_script='./simulate/batchRun_evol.py'
+main $batch_script
