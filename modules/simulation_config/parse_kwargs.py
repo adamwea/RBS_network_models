@@ -3,7 +3,7 @@ import datetime
 import shutil
 import argparse
 import pandas as pd
-import simulate._config_files.setup_environment as setup_environment
+import optimization_scripts.setup_environment as setup_environment
 import os
 import shutil
 

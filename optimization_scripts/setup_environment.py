@@ -4,7 +4,9 @@ from pprint import pprint
 
 #use git to get root directory of repository
 def get_git_root():
+    os.chdir(os.path.dirname(os.path.abspath(__file__)))
     git_root = os.popen('git rev-parse --show-toplevel').read().strip()
+    os.chdir(git_root)
     return git_root
 
 def get_git_root_ws():

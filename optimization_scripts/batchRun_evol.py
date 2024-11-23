@@ -3,7 +3,7 @@ Evolutionary algorithm optimization of a network using NetPyNE
 '''
 '''Setup Python environment for running the script'''
 from pprint import pprint
-import _config_files.setup_environment as setup_environment
+import setup_environment as setup_environment
 setup_environment.set_pythonpath()
 
 '''
@@ -11,7 +11,7 @@ Import Local Modules
 
 Note: Specify settings in kwargs dictionary, they are handled by parse_user_args.main(**kwargs)
 '''
-from simulate._config_files import parse_kwargs
+from modules.simulation_config import parse_kwargs
 
 
 '''Import External Modules'''
@@ -215,7 +215,7 @@ if __name__ == '__main__':
     batch_type = 'evol'
     output_folder_name = 'zRBS_network_simulation_outputs'
     run_label = f'development_runs' # subfolder for this run will be created in output_folder_path
-    fitness_target_script = 'scoring_functions/fitnessFuncArgs_CDKL5_WT_DIV21.py'
+    fitness_target_script = 'tunning_scripts/CDKL5-E6D_T2_C1_DIV21/derived_fitness_args/fitness_args_20241123-000932.py'
     
     # Build output folder and fitness target script paths
     output_folder_path, fitness_target_script = build_run_paths(
@@ -239,6 +239,7 @@ if __name__ == '__main__':
         'fitness_target_script': fitness_target_script,
         #'mpi_type': 'mpi_bulletin', # local
         'mpi_type': 'mpi_direct', # HPC (perlmutter)
+        'debugging_in_login_node': True,
     }
     parse_kwargs.main(**kwargs) # Parse user arguments
     from temp_user_args import * # Import user arguments from temp file created by parse_kwargs.main(**kwargs)

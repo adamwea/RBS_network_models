@@ -141,8 +141,7 @@ network_metric_targets = {
         #'bursting_data_by_unit': None,
     }
 }
-    
-    
+      
 '''FITNESS FUNCTION ARGUMENTS'''
 # fitness function
 fitnessFuncArgs = {}

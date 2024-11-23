@@ -314,6 +314,8 @@ def extract_bursting_activity_data(spike_times, spike_times_by_unit):
     #return network_data
 
 '''Main Functions to be used - Warpper Functions for Experimental and Simulated Cases'''
+
+'''Simulated Data Functions'''
 def calculate_simulated_network_activity_metrics(spike_times_by_unit):
     #Calculate CoVFiringRate_E, CoVFiringRate_I, CoV_ISI_E, CoV_ISI_I, MeanISI_E, MeanISI_I by taking advantage of E_Gids, I_Gids, and spiking_data_by_unit
     network_data['simulated_data']['spiking_data_by_unit'] = {}
@@ -467,14 +469,365 @@ def get_simulated_network_activity_metrics(simData=None, popData=None, **kwargs)
     print('Network Activity Metrics Calculated and Extracted!')    
     return network_data
 
-def get_experimental_network_activity_metrics(experimentalData):
-    # TODO: Implement experimental network activity metrics.
-    implemented = False
-    assert implemented == True, "Experimental network activity metrics not implemented yet."
-    
-    net_activity_metrics = {}
-    implemented = False
-    assert implemented, 'Experimental network activity metrics not implemented yet.'
-    rasterData = experimentalData.copy()
+'''Experimental Data Functions'''
+def get_spike_times(recording_object, sorting_object, sampling_rate=10000):
+    spike_times = []
+    units = sorting_object.get_unit_ids()
+    total_duration = recording_object.get_total_duration() #seconds
+    for unit in units:
+        spike_train = sorting_object.get_unit_spike_train(unit) #in samples
+        spike_times.extend(spike_train)
+    spike_times.sort()
+    spike_times = np.array(spike_times) / sampling_rate #convert to seconds
+    print(f'Max Spike Time: {max(spike_times)}')
+    assert max(spike_times) <= total_duration, 'Spike times are not in seconds'
+    assert all(spike_time >= 0 for spike_time in spike_times), 'Spike times contain negative values'
+    return spike_times
 
-    return _analyze_network_activity(rasterData)
+def get_time_vector(recording_object, sampling_rate=10000):
+    duration = recording_object.get_total_duration() #seconds
+    time_vector = np.linspace(0, duration, int(duration * sampling_rate))
+    assert len(time_vector) == int(duration * sampling_rate), 'Time vector length mismatch'
+    return time_vector
+
+def get_spike_times_by_unit(sorting_object, sampling_rate=10000):
+    spike_times_by_unit = {}
+    units = sorting_object.get_unit_ids()
+    for unit in units:
+        spike_train = sorting_object.get_unit_spike_train(unit) / sampling_rate # convert to seconds
+        assert all(spike_time >= 0 for spike_time in spike_train), f'Spike times for unit {unit} contain negative values'
+        spike_times_by_unit[unit] = spike_train
+    return spike_times_by_unit
+
+def get_mean_fr(recording_object, sorting_object, sampling_rate=10000):
+    total_fr = 0
+    unit_count = 0
+    units = sorting_object.get_unit_ids()
+    for unit in units:
+        spike_train = sorting_object.get_unit_spike_train(unit) / sampling_rate # convert to seconds
+        assert all(spike_time >= 0 for spike_time in spike_train), f'Spike times for unit {unit} contain negative values'
+        if len(spike_train) > 1:
+            duration = recording_object.get_total_duration()  # seconds
+            fr = len(spike_train) / duration  # spikes per second
+            if not np.isnan(fr) and not np.isinf(fr):
+                total_fr += fr
+                unit_count += 1
+    return total_fr / unit_count if unit_count > 0 else None
+
+def get_CoV_fr(recording_object, sorting_object, sampling_rate=10000):
+    firing_rates = []
+    units = sorting_object.get_unit_ids()
+    for unit in units:
+        spike_train = sorting_object.get_unit_spike_train(unit) / sampling_rate # convert to seconds
+        assert all(spike_time >= 0 for spike_time in spike_train), f'Spike times for unit {unit} contain negative values'
+        if len(spike_train) > 1:
+            duration = recording_object.get_total_duration()  # seconds
+            fr = len(spike_train) / duration  # spikes per second
+            if not np.isnan(fr) and not np.isinf(fr):
+                firing_rates.append(fr)
+    
+    if len(firing_rates) > 1:
+        mean_fr = np.mean(firing_rates)
+        std_fr = np.std(firing_rates)
+        CoV_fr = std_fr / mean_fr
+        return CoV_fr
+    else:
+        return None
+
+def get_mean_isi(recording_object, sorting_object, sampling_rate=10000):
+    all_means = []
+    units = sorting_object.get_unit_ids()
+    for unit in units:
+        spike_train = sorting_object.get_unit_spike_train(unit) / sampling_rate # convert to seconds
+        assert all(spike_time >= 0 for spike_time in spike_train), f'Spike times for unit {unit} contain negative values'
+        if len(spike_train) > 1:
+            isi = np.diff(spike_train)
+            mean_isi = np.mean(isi)
+            if not np.isnan(mean_isi) and not np.isinf(mean_isi):
+                all_means.append(mean_isi)
+    
+    overall_mean = np.mean(all_means) if all_means else None
+    return overall_mean if overall_mean is not None else None  # already in seconds
+
+def get_CoV_isi(recording_object, sorting_object, sampling_rate=10000):
+    all_CoVs = []
+    units = sorting_object.get_unit_ids()
+    for unit in units:
+        spike_train = sorting_object.get_unit_spike_train(unit) / sampling_rate # convert to seconds
+        assert all(spike_time >= 0 for spike_time in spike_train), f'Spike times for unit {unit} contain negative values'
+        if len(spike_train) > 1:
+            isi = np.diff(spike_train)  # already in seconds
+            if len(isi) > 1:
+                CoV = np.std(isi) / np.mean(isi)
+                if not np.isnan(CoV) and not np.isinf(CoV):
+                    all_CoVs.append(CoV)
+    
+    overall_mean_CoV = np.mean(all_CoVs) if all_CoVs else None
+    return overall_mean_CoV
+
+def get_unit_fr(recording_object, sorting_object, unit, sampling_rate=10000):
+    spike_train = sorting_object.get_unit_spike_train(unit) / sampling_rate # convert to seconds
+    assert all(spike_time >= 0 for spike_time in spike_train), f'Spike times for unit {unit} contain negative values'
+    if len(spike_train) > 1:
+        duration = recording_object.get_total_duration()  # seconds
+        fr = len(spike_train) / duration  # spikes per second
+        return fr
+    else:
+        return 0
+
+def get_unit_fr_CoV(recording_object, sorting_object, unit, sampling_rate=10000):
+    spike_train = sorting_object.get_unit_spike_train(unit) / sampling_rate # convert to seconds
+    assert all(spike_time >= 0 for spike_time in spike_train), f'Spike times for unit {unit} contain negative values'
+    if len(spike_train) > 1:
+        isi = np.diff(spike_train)  # inter-spike intervals
+        if len(isi) > 1:
+            CoV = np.std(isi) / np.mean(isi)
+            return CoV
+        else:
+            return None
+    else:
+        return None
+    
+def get_unit_mean_isi(recording_object, sorting_object, unit, sampling_rate=10000):
+    spike_train = sorting_object.get_unit_spike_train(unit) / sampling_rate # convert to seconds
+    assert all(spike_time >= 0 for spike_time in spike_train), f'Spike times for unit {unit} contain negative values'
+    if len(spike_train) > 1:
+        isi = np.diff(spike_train)
+        mean_isi = np.mean(isi)
+        return mean_isi  # already in seconds
+    else:
+        return None
+    
+def get_unit_isi_CoV(recording_object, sorting_object, unit, sampling_rate=10000):
+    spike_train = sorting_object.get_unit_spike_train(unit) / sampling_rate # convert to seconds
+    assert all(spike_time >= 0 for spike_time in spike_train), f'Spike times for unit {unit} contain negative values'
+    if len(spike_train) > 2:
+        isi = np.diff(spike_train)  # already in seconds
+        if len(isi) > 1:
+            CoV = np.std(isi) / np.mean(isi)
+            return CoV
+        else:
+            return None
+    else:
+        return None
+
+def extract_metrics_from_experimental_data(spike_times, timeVector, spike_times_by_unit, **kwargs):
+    
+    #extract spiking metrics from experimental data
+    recording_object = kwargs['recording_object']
+    sorting_object = kwargs['sorting_object']
+    sampling_rate = recording_object.get_sampling_frequency()    
+    
+    #add immediately available data to network_data
+    network_data['source'] = 'experimental'
+    network_data['timeVector'] = timeVector
+    network_data['spiking_data']['spike_times'] = spike_times
+    network_data['spiking_data']['spiking_times_by_unit'] = spike_times_by_unit
+    
+    #overall mean firing rate
+    network_data['spiking_data']['spiking_summary_data']['MeanFireRate'] = get_mean_fr(
+        recording_object, sorting_object, sampling_rate=sampling_rate
+        )
+    
+    #overall CoV firing rate
+    network_data['spiking_data']['spiking_summary_data']['CoVFireRate'] = get_CoV_fr(
+        recording_object, sorting_object, sampling_rate=sampling_rate
+        )
+    
+    #overall mean ISI
+    network_data['spiking_data']['spiking_summary_data']['MeanISI'] = get_mean_isi(
+        recording_object, sorting_object, sampling_rate=sampling_rate
+    )
+    
+    #overall CoV ISI
+    network_data['spiking_data']['spiking_summary_data']['CoV_ISI'] = get_CoV_isi(
+        recording_object, sorting_object, sampling_rate=sampling_rate
+    )
+    
+    #spiking data by unit - just go through the simulated version of the data but de-identify pop
+    #simulated_spiking_data_by_unit = network_data['simulated_data']['spiking_data_by_unit']
+    spiking_data_by_unit = {}
+    units = sorting_object.get_unit_ids()
+    for unit in units:
+        spiking_data_by_unit[unit] = {
+            #'unitProperty': sorting_object.get_unit_property(unit),
+            #'SpikeTrain': sorting_object.get_unit_spike_train(unit),
+            'FireRate': get_unit_fr(recording_object, sorting_object, unit),
+            'fr_CoV': get_unit_fr_CoV(recording_object, sorting_object, unit),
+            'meanISI': get_unit_mean_isi(recording_object, sorting_object, unit),
+            'isi_CoV': get_unit_isi_CoV(recording_object, sorting_object, unit),
+            'spike_times': spike_times_by_unit[unit],
+        }
+    network_data['spiking_data']['spiking_data_by_unit'] = spiking_data_by_unit
+
+def get_min_fr(results):
+    min_fr = float('inf')
+    for recording_path, result in results.items():
+        sorting_object_list = result['sorting_objects']
+        recording_object = result['recording_objects']
+        for sorting_object in sorting_object_list:
+            units = sorting_object.get_unit_ids()
+            for unit in units:
+                spike_train = sorting_object.get_unit_spike_train(unit)
+                if len(spike_train) > 1:
+                    well_id = f'well{str(0).zfill(2)}{stream_select}'
+                    recording_segment = recording_object[well_id]['recording_segments'][0]
+                    duration = recording_segment.get_total_duration()  # seconds
+                    fr = len(spike_train) / duration  # spikes per second
+                    if not np.isnan(fr) and not np.isinf(fr) and fr < min_fr:
+                        min_fr = fr
+    return min_fr if min_fr != float('inf') else None
+
+def get_max_fr(results):
+    max_fr = float('-inf')
+    for recording_path, result in results.items():
+        sorting_object_list = result['sorting_objects']
+        recording_object = result['recording_objects']
+        for sorting_object in sorting_object_list:
+            units = sorting_object.get_unit_ids()
+            for unit in units:
+                spike_train = sorting_object.get_unit_spike_train(unit)
+                if len(spike_train) > 1:
+                    well_id = f'well{str(0).zfill(2)}{stream_select}'
+                    recording_segment = recording_object[well_id]['recording_segments'][0]
+                    duration = recording_segment.get_total_duration()  # seconds
+                    fr = len(spike_train) / duration  # spikes per second
+                    if not np.isnan(fr) and not np.isinf(fr) and fr > max_fr:
+                        max_fr = fr
+    return max_fr if max_fr != float('-inf') else None
+
+def get_min_CoV_fr(results):
+    min_CoV_fr = float('inf')
+    for recording_path, result in results.items():
+        sorting_object_list = result['sorting_objects']
+        recording_object = result['recording_objects']
+        for sorting_object in sorting_object_list:
+            units = sorting_object.get_unit_ids()
+            for unit in units:
+                spike_train = sorting_object.get_unit_spike_train(unit)
+                if len(spike_train) > 2:
+                    well_id = f'well{str(0).zfill(2)}{stream_select}'
+                    recording_segment = recording_object[well_id]['recording_segments'][0]
+                    duration = recording_segment.get_total_duration()  # seconds
+                    fr = len(spike_train) / duration  # spikes per second
+                    isi = np.diff(spike_train)
+                    #assert isi length is greater than 1
+                    if len(isi) <= 1: continue
+                    CoV = np.std(isi) / np.mean(isi)
+                    # if CoV == 0:
+                    #     print('CoV is 0')
+                    if not np.isnan(CoV) and not np.isinf(CoV) and CoV < min_CoV_fr:
+                        min_CoV_fr = CoV
+    return min_CoV_fr if min_CoV_fr != float('inf') else None
+
+def get_max_CoV_fr(results):
+    max_CoV_fr = float('-inf')
+    for recording_path, result in results.items():
+        sorting_object_list = result['sorting_objects']
+        recording_object = result['recording_objects']
+        for sorting_object in sorting_object_list:
+            units = sorting_object.get_unit_ids()
+            for unit in units:
+                spike_train = sorting_object.get_unit_spike_train(unit)
+                if len(spike_train) > 1:
+                    well_id = f'well{str(0).zfill(2)}{stream_select}'
+                    recording_segment = recording_object[well_id]['recording_segments'][0]
+                    duration = recording_segment.get_total_duration()  # seconds
+                    fr = len(spike_train) / duration  # spikes per second
+                    isi = np.diff(spike_train)
+                    CoV = np.std(isi) / np.mean(isi)
+                    if not np.isnan(CoV) and not np.isinf(CoV) and CoV > max_CoV_fr:
+                        max_CoV_fr = CoV
+    return max_CoV_fr if max_CoV_fr != float('-inf') else None
+
+def get_min_mean_isi(results):
+    min_mean_isi = float('inf')
+    for recording_path, result in results.items():
+        sorting_object_list = result['sorting_objects']
+        for sorting_object in sorting_object_list:
+            units = sorting_object.get_unit_ids()
+            for unit in units:
+                spike_train = sorting_object.get_unit_spike_train(unit)
+                if len(spike_train) > 2:
+                    isi = np.diff(spike_train)
+                    mean_isi = np.mean(isi)
+                    if not np.isnan(mean_isi) and not np.isinf(mean_isi) and mean_isi < min_mean_isi:
+                        min_mean_isi = mean_isi
+    return min_mean_isi if min_mean_isi != float('inf') else None
+
+def get_max_mean_isi(results): 
+    max_mean_isi = float('-inf')
+    for recording_path, result in results.items():
+        sorting_object_list = result['sorting_objects']
+        for sorting_object in sorting_object_list:
+            units = sorting_object.get_unit_ids()
+            for unit in units:
+                spike_train = sorting_object.get_unit_spike_train(unit)
+                if len(spike_train) > 1:
+                    isi = np.diff(spike_train)
+                    mean_isi = np.mean(isi)
+                    if not np.isnan(mean_isi) and not np.isinf(mean_isi) and mean_isi > max_mean_isi:
+                        max_mean_isi = mean_isi
+    return max_mean_isi if max_mean_isi != float('-inf') else None
+
+def get_min_CoV_isi(results):
+    min_CoV_isi = float('inf')
+    for recording_path, result in results.items():
+        sorting_object_list = result['sorting_objects']
+        for sorting_object in sorting_object_list:
+            units = sorting_object.get_unit_ids()
+            for unit in units:
+                spike_train = sorting_object.get_unit_spike_train(unit)
+                if len(spike_train) > 2:
+                    isi = np.diff(spike_train)
+                    
+                    CoV = np.std(isi) / np.mean(isi)
+                    if not np.isnan(CoV) and not np.isinf(CoV) and CoV < min_CoV_isi:
+                        min_CoV_isi = CoV
+    return min_CoV_isi if min_CoV_isi != float('inf') else None
+
+def get_max_CoV_isi(results):
+    max_CoV_isi = float('-inf')
+    for recording_path, result in results.items():
+        sorting_object_list = result['sorting_objects']
+        for sorting_object in sorting_object_list:
+            units = sorting_object.get_unit_ids()
+            for unit in units:
+                spike_train = sorting_object.get_unit_spike_train(unit)
+                if len(spike_train) > 1:
+                    isi = np.diff(spike_train)
+                    CoV = np.std(isi) / np.mean(isi)
+                    if not np.isnan(CoV) and not np.isinf(CoV) and CoV > max_CoV_isi:
+                        max_CoV_isi = CoV
+    return max_CoV_isi if max_CoV_isi != float('-inf') else None
+
+def get_experimental_network_activity_metrics(**kwargs):
+    
+    #initialize network_data
+    network_data = init_network_data_dict()
+    
+    #get data
+    sorting_object = kwargs['sorting_object']
+    recording_object = kwargs['recording_object']
+    sampling_rate = recording_object.get_sampling_frequency() 
+    
+    #convert time to seconds - get initially available data
+    spike_times = get_spike_times(recording_object, sorting_object, sampling_rate=sampling_rate) #seconds
+    timeVector = get_time_vector(recording_object, sampling_rate=sampling_rate) #seconds
+    spike_times_by_unit = get_spike_times_by_unit(sorting_object, sampling_rate=sampling_rate) 
+    
+    #extract spiking metrics from simulated data
+    try: 
+        extract_metrics_from_experimental_data(spike_times, timeVector, spike_times_by_unit, **kwargs)
+    except Exception as e:
+        print(f'Error extracting metrics from simulated data: {e}')
+        pass
+    
+    #extract bursting metrics from simulated data (but this one works for both simulated and experimental data)
+    try: 
+        extract_bursting_activity_data(spike_times, spike_times_by_unit)
+    except Exception as e:
+        print(f'Error calculating bursting activity: {e}')
+        pass
+    
+    return network_data
