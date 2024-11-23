@@ -18,9 +18,9 @@ DEFAULT_METHOD = 'evol'
 # DEFAULT_CFG_FILE = 'simulate_config_files/cfg.py'
 # DEFAULT_NETPARAMSFILE = 'simulate_config_files/netParams.py'
 # DEFAULT_INIT_SCRIPT = 'simulate_config_files/init.py'
-DEFAULT_CFG_FILE = 'simulate/_config_files/cfg.py'
-DEFAULT_NETPARAMSFILE = 'simulate/_config_files/netParams.py'
-DEFAULT_INIT_SCRIPT = 'simulate/_config_files/init.py'
+DEFAULT_CFG_FILE = 'modules/simulation_config/cfg.py'
+DEFAULT_NETPARAMSFILE = 'modules/simulation_config/netParams.py'
+DEFAULT_INIT_SCRIPT = 'modules/simulation_config/init.py'
 DEFAULT_NRNCOMMAND = 'nrniv'
 DEFAULT_NODES = 1
 DEFAULT_CORES_PER_NODE = 1
@@ -38,6 +38,7 @@ DEFAULT_NUM_INHIB = 25
 DEFAULT_WORKSPACE_PATH = setup_environment.get_git_root()
 DEFAULT_OUTPUT_DIR = os.path.join(DEFAULT_WORKSPACE_PATH, 'xRBS_network_simulation_outputs')
 DEFAULT_FITNESS_TARGET_SCRIPT = os.path.join(DEFAULT_WORKSPACE_PATH, 'simulate/_fitness_targets/fitnessFuncArgs_CDKL5_WT.py')
+DEFAULT_DEBUG_IN_LOGIN_NODE = False
 
 # Global Variables (for export)
 USER_seconds = None
@@ -73,6 +74,7 @@ USER_num_excite = None
 USER_num_inhib = None
 USER_output_dir = None
 USER_fitness_target_script = None
+USER_debug_in_login_node = None 
 
 # Function to get or set default argument values
 def get_arg_value(arg, default):
@@ -222,7 +224,8 @@ def configure_global_user_vars(**kwargs):
         'USER_output_path': args.output_path,
         'USER_continue': get_arg_value(args.continue_run, False),
         'USER_overwrite': get_arg_value(args.overwrite, False),
-        'USER_fitness_target_script': get_arg_value(args.fitness_target_script, DEFAULT_FITNESS_TARGET_SCRIPT)
+        'USER_fitness_target_script': get_arg_value(args.fitness_target_script, DEFAULT_FITNESS_TARGET_SCRIPT),
+        'USER_debug_in_login_node': get_arg_value(args.debugging_in_login_node, DEFAULT_DEBUG_IN_LOGIN_NODE)
     }
 
     # if args.rerun:
@@ -236,10 +239,15 @@ def configure_global_user_vars(**kwargs):
         print(f'Invalid MPI type. Defaulting to {DEFAULT_MPI_TYPE}')
         USER_vars['USER_runCfg_type'] = DEFAULT_MPI_TYPE
 
-    if 'mpi_direct' in USER_vars['USER_runCfg_type']:
+    if 'mpi_direct' in USER_vars['USER_runCfg_type']: #parallel
         USER_vars['USER_mpiCommand'] = configure_mpi_direct(SCRIPT_PATH)
         USER_vars['USER_nrnCommand'] = ''
+    elif USER_vars['USER_debug_in_login_node']: #serial
+        USER_vars['USER_runCfg_type'] = 'mpi_bulletin' 
+        USER_vars['USER_mpiCommand'] = '' #mpi command doesnt do anything in this case
+        USER_vars['USER_nrnCommand'] = 'shifter --image adammwea/netsims_docker:v1 nrniv -mpi'
     else:
+        #local
         USER_vars['USER_mpiCommand'] = 'mpirun'
 
     assert not (USER_vars['USER_continue'] and USER_vars['USER_overwrite']), 'overwrite_run and continue_run cannot both be True'

@@ -111,6 +111,7 @@ fitness_args = {
 fitnessFuncArgs = {}
 fitnessFuncArgs['targets'] = fitness_args
 number_of_units = 856
+number_of_units = 30
 fitnessFuncArgs['features'] = {
     'num_excite': int(number_of_units * 0.25),
     'num_inhib': int(number_of_units * 0.75),

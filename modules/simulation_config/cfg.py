@@ -8,13 +8,13 @@ def handle_params_import():
 	try:
 		from __main__ import params # Import evolutionary parameters from main i.e. batchRun script
 	except ImportError:
-		from simulate._config_files.evolutionary_parameter_space import params
-		from RBS_network_simulations.simulate.batchRun_evol import rangify_params # use rangify_params from batchRun script to treat params as if it were imported from batchRun script
+		from modules.simulation_config.evolutionary_parameter_space import params
+		from RBS_network_simulations.optimization_scripts.batchRun_evol import rangify_params # use rangify_params from batchRun script to treat params as if it were imported from batchRun script
 		params = rangify_params(params)
 	return params
 
 def get_cell_numbers_from_fitness_target_script():
-    from RBS_network_simulations.simulate.batchRun_evol import import_module_from_path
+    from RBS_network_simulations.optimization_scripts.batchRun_evol import import_module_from_path
     from temp_user_args import USER_fitness_target_script
     import_module_from_path(USER_fitness_target_script, 'fitnessFuncArgs') #dynamically import fitnessFuncArgs from USER_fitness_target_script defined as python scripts so that we can optimize different data
     from fitnessFuncArgs import fitnessFuncArgs

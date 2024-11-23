@@ -5,6 +5,9 @@ Evolutionary algorithm optimization of a network using NetPyNE
 from pprint import pprint
 import setup_environment as setup_environment
 setup_environment.set_pythonpath()
+#print sys path
+import sys
+pprint(sys.path)
 
 '''
 Import Local Modules
@@ -189,7 +192,7 @@ def batchRun(batch_config=None):
     global params #make it global so it can be accessed by the cfg.py file easily
     
     '''Main function to run the batch'''
-    from simulate._config_files import evolutionary_parameter_space
+    from modules.simulation_config import evolutionary_parameter_space
     assert batch_config is not None, 'batch_config must be specified'  # Ensure batch_config is provided    
     params = evolutionary_parameter_space.params # Get parameter space from user-defined file
     params = rangify_params(params) # Convert parameter space to ranges
@@ -225,20 +228,22 @@ if __name__ == '__main__':
         ) # Build output folder path
 
     kwargs = {
-        'duration': 1,
-        'pop_size': 10,
+        'duration': 0.5,
+        'pop_size': 4,
         'num_elites': 1,
         'max_generations': 10,
         'continue_run': False,
         'overwrite': True,
+        'maxiter_wait': 100,
+        'time_sleep': 10,
         # 'num_excite': 100,
         # 'num_inhib': 46,
         'batch_type': batch_type,
         'label': run_label,
         'output_path': output_folder_path,
         'fitness_target_script': fitness_target_script,
-        #'mpi_type': 'mpi_bulletin', # local
-        'mpi_type': 'mpi_direct', # HPC (perlmutter)
+        'mpi_type': 'mpi_bulletin', # local
+        #'mpi_type': 'mpi_direct', # HPC (perlmutter)
         'debugging_in_login_node': True,
     }
     parse_kwargs.main(**kwargs) # Parse user arguments

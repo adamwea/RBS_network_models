@@ -3,12 +3,15 @@ import json
 from modules.analysis.analyze_network_activity import get_simulated_network_activity_metrics
 import numpy as np
 #from simulate._config_files.fitnessFuncArgs import fitnessFuncArgs
+from modules.analysis.extract_simulated_data import retrieve_sim_data_from_call_stack
 
 '''Fitness functions for the network activity metrics'''
-def fit_firing_rates(**kwargs):
+def fit_firing_rates(simulated=False, **kwargs):
     print('Calculating firing rate fitness...')
-    MeanFireRate_target = kwargs['net_activity_targets']['spiking_data']['spiking_summary_data']['MeanFireRate']
-    target = MeanFireRate_target['target']
+    MeanFireRate_target = kwargs['targets']['spiking_data']['spiking_summary_data']['MeanFireRate']
+    E_I_ratio = 5  # 1:5 ratio of E to I neurons
+    E_fr_target = MeanFireRate_target['target'] * (E_I_ratio / (E_I_ratio + 1))
+    I_fr_target = MeanFireRate_target['target'] / (E_I_ratio + 1)
     min_FR = MeanFireRate_target['min']
     max_FR = MeanFireRate_target['max']
     weight = MeanFireRate_target['weight']
@@ -16,11 +19,23 @@ def fit_firing_rates(**kwargs):
     
     #MeanFireRate = kwargs['net_activity_metrics']['spiking_data']['spiking_summary_data']['MeanFireRate']
     #val_FR = MeanFireRate
-    spiking_data_by_unit = kwargs['net_activity_metrics']['spiking_data']['spiking_data_by_unit']
+    spiking_data_by_unit = kwargs['network_metrics']['spiking_data']['spiking_data_by_unit']
     fitness_FRs = []
     for unit, value in spiking_data_by_unit.items():
         val_FR = spiking_data_by_unit[unit]['FireRate']
-        fitness = the_scoring_function(val_FR, target, weight, maxFitness, min_val=min_FR, max_val=max_FR)
+        if simulated is False: 
+            target = MeanFireRate_target['target'] #experimental target
+            fitness = the_scoring_function(val_FR, target, weight, maxFitness, min_val=min_FR, max_val=max_FR)
+        else:
+            E_gids = kwargs['network_metrics']['simulated_data']['E_Gids']
+            I_gids = kwargs['network_metrics']['simulated_data']['I_Gids']
+            if unit in E_gids:
+                E_fitness = the_scoring_function(val_FR, E_fr_target, weight, maxFitness, min_val=min_FR, max_val=max_FR)
+                fitness = E_fitness
+            elif unit in I_gids:
+                I_fitness = the_scoring_function(val_FR, I_fr_target, weight, maxFitness, min_val=min_FR, max_val=max_FR)
+                fitness = I_fitness
+            #fitness = np.mean([E_fitness, I_fitness])
         fitness_FRs.append(fitness)
     fitness_FR = np.mean(fitness_FRs)
     #print(f'Firing rate fitness: {fitness_FRs}')
@@ -28,14 +43,14 @@ def fit_firing_rates(**kwargs):
 
 def fit_CoV_firing_rate(**kwargs):
     print('Calculating CoV firing rate fitness...')
-    CoVFireRate_target = kwargs['net_activity_targets']['spiking_data']['spiking_summary_data']['CoVFireRate']
+    CoVFireRate_target = kwargs['targets']['spiking_data']['spiking_summary_data']['CoVFireRate']
     target = CoVFireRate_target['target']
     min_CoV = CoVFireRate_target['min']
     max_CoV = CoVFireRate_target['max']
     weight = CoVFireRate_target['weight']
     maxFitness = kwargs['maxFitness']
     
-    CoVFireRate = kwargs['net_activity_metrics']['spiking_data']['spiking_summary_data']['CoVFireRate']
+    CoVFireRate = kwargs['targets']['spiking_data']['spiking_summary_data']['CoVFireRate']
     val_CoV = CoVFireRate
     fitness_CoV = the_scoring_function(val_CoV, target, weight, maxFitness, min_val=min_CoV, max_val=max_CoV)
     print(f'CoV firing rate fitness: {fitness_CoV}')
@@ -339,33 +354,58 @@ def the_scoring_function(val, target_val, weight, maxFitness, min_val=None, max_
     else:
         return maxFitness
 
-def fitnessFunc(**kwargs):
-
+def fitnessFunc(simData=None, **kwargs):       
+    
     def get_fitness():
         '''Main fitness calculation function'''
         fitnessVals = {}
-
-        #Priority 1: Spiking Data
-        fitnessVals['rate_fit'] = fit_firing_rates(**kwargs)
-        fitnessVals['CoV_rate_fit'] = fit_CoV_firing_rate(**kwargs)
-        fitnessVals['ISI_fit'] = fit_ISI(**kwargs)
-        fitnessVals['CoV_ISI_fit'] = fit_CoV_ISI(**kwargs)
-        
-        #Priority 2: Bursting Data
-        fitnessVals['baseline_fit'] = fit_baseline(**kwargs)
-        fitnessVals['WithinBurstISI_fit'] = fit_WithinBurstISI(**kwargs)
-        fitnessVals['CoVWithinBurstISI_fit'] = fit_CovWithinBurstISI(**kwargs)
-        fitnessVals['OutsideBurstISI_fit'] = fit_OutsideBurstISI(**kwargs)
-        fitnessVals['CoVOutsideBurstISI_fit'] = fit_CovOutsideBurstISI(**kwargs)
-        fitnessVals['NetworkISI_fit'] = fit_NetworkISI(**kwargs)
-        fitnessVals['CoVNetworkISI_fit'] = fit_CovNetworkISI(**kwargs)
-        #fitnessVals['NumUnits_fit'] = fit_NumUnits(**kwargs) #no need to fit this
-        fitnessVals['Number_Bursts_fit'] = fit_Number_Bursts(**kwargs)
-        fitnessVals['mean_IBI_fit'] = fit_mean_IBI(**kwargs)
-        fitnessVals['cov_IBI_fit'] = fit_cov_IBI(**kwargs)
-        fitnessVals['mean_Burst_Peak_fit'] = fit_mean_Burst_Peak(**kwargs)
-        fitnessVals['cov_Burst_Peak_fit'] = fit_cov_Burst_Peak(**kwargs)
-        fitnessVals['fano_factor_fit'] = fit_fano_factor(**kwargs)
+        data_source = kwargs['source']
+        if data_source == 'experimental':
+            
+            #Priority 1: Spiking Data
+            fitnessVals['rate_fit'] = fit_firing_rates(**kwargs)
+            fitnessVals['CoV_rate_fit'] = fit_CoV_firing_rate(**kwargs)
+            fitnessVals['ISI_fit'] = fit_ISI(**kwargs)
+            fitnessVals['CoV_ISI_fit'] = fit_CoV_ISI(**kwargs)
+            
+            #Priority 2: Bursting Data
+            fitnessVals['baseline_fit'] = fit_baseline(**kwargs)
+            fitnessVals['WithinBurstISI_fit'] = fit_WithinBurstISI(**kwargs)
+            fitnessVals['CoVWithinBurstISI_fit'] = fit_CovWithinBurstISI(**kwargs)
+            fitnessVals['OutsideBurstISI_fit'] = fit_OutsideBurstISI(**kwargs)
+            fitnessVals['CoVOutsideBurstISI_fit'] = fit_CovOutsideBurstISI(**kwargs)
+            fitnessVals['NetworkISI_fit'] = fit_NetworkISI(**kwargs)
+            fitnessVals['CoVNetworkISI_fit'] = fit_CovNetworkISI(**kwargs)
+            #fitnessVals['NumUnits_fit'] = fit_NumUnits(**kwargs) no need to fit this
+            fitnessVals['Number_Bursts_fit'] = fit_Number_Bursts(**kwargs)
+            fitnessVals['mean_IBI_fit'] = fit_mean_IBI(**kwargs)
+            fitnessVals['cov_IBI_fit'] = fit_cov_IBI(**kwargs)
+            fitnessVals['mean_Burst_Peak_fit'] = fit_mean_Burst_Peak(**kwargs)
+            fitnessVals['cov_Burst_Peak_fit'] = fit_cov_Burst_Peak(**kwargs)
+            fitnessVals['fano_factor_fit'] = fit_fano_factor(**kwargs)
+        elif data_source == 'simulated':
+            
+            #Priority 1: Spiking Data
+            fitnessVals['rate_fit'] = fit_firing_rates(simulated=True, **kwargs)
+            fitnessVals['CoV_rate_fit'] = fit_CoV_firing_rate(**kwargs)
+            fitnessVals['ISI_fit'] = fit_ISI(**kwargs)
+            fitnessVals['CoV_ISI_fit'] = fit_CoV_ISI(**kwargs)
+            
+            #Priority 2: Bursting Data
+            fitnessVals['baseline_fit'] = fit_baseline(**kwargs)
+            fitnessVals['WithinBurstISI_fit'] = fit_WithinBurstISI(**kwargs)
+            fitnessVals['CoVWithinBurstISI_fit'] = fit_CovWithinBurstISI(**kwargs)
+            fitnessVals['OutsideBurstISI_fit'] = fit_OutsideBurstISI(**kwargs)
+            fitnessVals['CoVOutsideBurstISI_fit'] = fit_CovOutsideBurstISI(**kwargs)
+            fitnessVals['NetworkISI_fit'] = fit_NetworkISI(**kwargs)
+            fitnessVals['CoVNetworkISI_fit'] = fit_CovNetworkISI(**kwargs)
+            #fitnessVals['NumUnits_fit'] = fit_NumUnits(**kwargs) #no need to fit this
+            fitnessVals['Number_Bursts_fit'] = fit_Number_Bursts(**kwargs)
+            fitnessVals['mean_IBI_fit'] = fit_mean_IBI(**kwargs)
+            fitnessVals['cov_IBI_fit'] = fit_cov_IBI(**kwargs)
+            fitnessVals['mean_Burst_Peak_fit'] = fit_mean_Burst_Peak(**kwargs)
+            fitnessVals['cov_Burst_Peak_fit'] = fit_cov_Burst_Peak(**kwargs)
+            fitnessVals['fano_factor_fit'] = fit_fano_factor(**kwargs)
 
         #average_fitness, avg_scaled_fitness = fitness_summary_metrics(fitnessVals) #TODO - revise how I do this when I loop in Nfactors
         average_fitness = np.mean([fitnessVals[key] for key in fitnessVals])
@@ -386,16 +426,23 @@ def fitnessFunc(**kwargs):
 
    
     '''Main logic of the calculate_fitness function'''
-    #extract the necessary data from the kwargs
-    #simData = kwargs['simData']
-    #popData = kwargs['popData']
+    # Check if the function is being called during simulation - if so, retrieve expanded simData from the call stack
+    if simData is not None:
+        #during_simulation = True
+        #kwargs['simData'] = simData
+        kwargs['source'] = 'simulated'
+        kwargs = retrieve_sim_data_from_call_stack(simData, **kwargs) 
+    else:
+        #during_simulation = False
+        kwargs['source'] = 'experimental'
     
     #Network activity metrics
     print('Calculating network activity metrics...')
-    network_activity_metrics = get_simulated_network_activity_metrics(**kwargs)
-    kwargs['net_activity_metrics'] = network_activity_metrics
-    kwargs['net_activity_targets'] = fitnessFuncArgs['targets']
-    kwargs['maxFitness'] = fitnessFuncArgs['maxFitness']
+    network_metrics = get_simulated_network_activity_metrics(**kwargs)
+    if network_metrics is None:
+        print('Network activity metrics could not be calculated.')
+        return 1000 # Return a high fitness value to indicate poor performance
+    kwargs['network_metrics'] = network_metrics
     
     # Get the fitness
     average_fitness, fitnessVals = get_fitness()
