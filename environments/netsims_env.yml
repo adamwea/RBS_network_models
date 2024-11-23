@@ -1,0 +1,40 @@
+name: netsims_env
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.8.16
+  - numpy
+  - matplotlib
+  - h5py
+  - ruamel.yaml
+  - jupyter
+  - scipy
+  - six
+  - bokeh
+  - contextlib2
+  - cycler
+  - fonttools
+  - future
+  - jinja2
+  - kiwisolver
+  - lfpykit
+  - markupsafe
+  - matplotlib-scalebar
+  - meautility
+  - packaging
+  - pandas
+  - pyparsing
+  - pytz
+  - pyyaml
+  - schema
+  - tornado
+  - inspyred
+  - dill
+  - mpi4py
+  - mpich
+  - pip
+  - pip:
+      - bluepyopt
+      - netpyne
+      - Igor
