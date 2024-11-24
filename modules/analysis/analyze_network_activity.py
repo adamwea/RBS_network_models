@@ -331,9 +331,52 @@ def extract_bursting_activity_data(spike_times, spike_times_by_unit):
 '''Main Functions to be used - Warpper Functions for Experimental and Simulated Cases'''
 
 '''Simulated Data Functions'''
+
+def get_CoV_fr_simulated(spike_times, total_duration, window_size=1.0): 
+    """
+    Calculate the Coefficient of Variation of Firing Rate (CoV FR) over time windows.
+
+    Parameters:
+    - spike_times: List or array of spike times for a single unit (in seconds).
+    - total_duration: Total duration of the simulation (in seconds).
+    - window_size: Size of the time window for calculating firing rates (default: 1.0 second).
+
+    Returns:
+    - CoV_fr: Coefficient of Variation of Firing Rate (float).
+    """
+    #TODO import window from convolution_params?
+    if len(spike_times) == 0:
+        # If no spikes, CoV FR is undefined (return NaN)
+        return np.nan
+
+    # Divide the total duration into non-overlapping time windows
+    #window_size = 0.1
+    total_duration = total_duration[-1]
+    num_windows = int(total_duration / window_size)
+    window_edges = np.linspace(0, total_duration, num_windows + 1)
+
+    # Count spikes in each window
+    spike_counts = np.histogram(spike_times, bins=window_edges)[0]
+
+    # Convert spike counts to firing rates (spikes per second)
+    firing_rates = spike_counts / window_size
+
+    # Compute CoV FR: standard deviation divided by mean
+    mean_fr = np.mean(firing_rates)
+    std_fr = np.std(firing_rates)
+
+    # Avoid division by zero if mean_fr is 0
+    if mean_fr == 0:
+        return np.nan
+
+    CoV_fr = std_fr / mean_fr
+    return CoV_fr
+
 def calculate_simulated_network_activity_metrics(spike_times_by_unit):
-    #Calculate CoVFiringRate_E, CoVFiringRate_I, CoV_ISI_E, CoV_ISI_I, MeanISI_E, MeanISI_I by taking advantage of E_Gids, I_Gids, and spiking_data_by_unit
+    # Initialize spiking data dictionary
     network_data['simulated_data']['spiking_data_by_unit'] = {}
+    
+    # Iterate over each unit to calculate individual metrics
     for unit, spike_times in spike_times_by_unit.items():
         if len(spike_times) < 2:
             meanISI = np.nan
@@ -341,44 +384,51 @@ def calculate_simulated_network_activity_metrics(spike_times_by_unit):
         else:
             isi = np.diff(spike_times)
             meanISI = np.mean(isi)
-            CoV_ISI = np.cov(isi)
+            CoV_ISI = np.std(isi) / meanISI  # Correct CoV calculation for ISI
         
-        fr = len(spike_times) / network_data['timeVector'][-1]
+        fr = len(spike_times) / network_data['timeVector'][-1]  # Firing rate (spikes per second)
         
+        # Calculate CoV FR using the get_CoV_fr function with a 1-second time window
+        CoV_fr = get_CoV_fr_simulated(spike_times, network_data['timeVector'])
+
+        # Store calculated metrics for each unit
         network_data['simulated_data']['spiking_data_by_unit'][unit] = {
             'FireRate': fr,
+            'CoV_fr': CoV_fr,
             'meanISI': meanISI,
             'CoV_ISI': CoV_ISI,
             'spike_times': spike_times,
         }
         
+        # Determine population type
         if unit in network_data['simulated_data']['E_Gids']:
             network_data['simulated_data']['spiking_data_by_unit'][unit]['pop'] = 'E'
         elif unit in network_data['simulated_data']['I_Gids']:
             network_data['simulated_data']['spiking_data_by_unit'][unit]['pop'] = 'I'
         else:
             raise ValueError(f'Unit {unit} not found in E_Gids or I_Gids')
-    
-    #Calculate CoVFireRate_E, CoVFireRate_I
+
+    # Extract E and I gids
     E_Gids = network_data['simulated_data']['E_Gids']
     I_Gids = network_data['simulated_data']['I_Gids']
-    
-    E_CoV = np.nanmean([network_data['simulated_data']['spiking_data_by_unit'][unit]['CoV_ISI'] 
-                        for unit in E_Gids if unit in network_data['simulated_data']['spiking_data_by_unit']])
-    I_CoV = np.nanmean([network_data['simulated_data']['spiking_data_by_unit'][unit]['CoV_ISI'] 
-                        for unit in I_Gids if unit in network_data['simulated_data']['spiking_data_by_unit']])
+
+    # Calculate mean and CoV metrics for excitatory and inhibitory populations
+    E_CoV_ISI = np.nanmean([network_data['simulated_data']['spiking_data_by_unit'][unit]['CoV_ISI'] 
+                            for unit in E_Gids if unit in network_data['simulated_data']['spiking_data_by_unit']])
+    I_CoV_ISI = np.nanmean([network_data['simulated_data']['spiking_data_by_unit'][unit]['CoV_ISI'] 
+                            for unit in I_Gids if unit in network_data['simulated_data']['spiking_data_by_unit']])
     MeanISI_E = np.nanmean([network_data['simulated_data']['spiking_data_by_unit'][unit]['meanISI'] 
                             for unit in E_Gids if unit in network_data['simulated_data']['spiking_data_by_unit']])
     MeanISI_I = np.nanmean([network_data['simulated_data']['spiking_data_by_unit'][unit]['meanISI'] 
                             for unit in I_Gids if unit in network_data['simulated_data']['spiking_data_by_unit']])
-    CoVFiringRate_E = np.cov([network_data['simulated_data']['spiking_data_by_unit'][unit]['FireRate'] 
-                              for unit in E_Gids if unit in network_data['simulated_data']['spiking_data_by_unit']])
-    CoVFiringRate_I = np.cov([network_data['simulated_data']['spiking_data_by_unit'][unit]['FireRate'] 
-                              for unit in I_Gids if unit in network_data['simulated_data']['spiking_data_by_unit']])
+    CoVFiringRate_E = np.nanmean([network_data['simulated_data']['spiking_data_by_unit'][unit]['CoV_fr'] 
+                                  for unit in E_Gids if unit in network_data['simulated_data']['spiking_data_by_unit']])
+    CoVFiringRate_I = np.nanmean([network_data['simulated_data']['spiking_data_by_unit'][unit]['CoV_fr'] 
+                                  for unit in I_Gids if unit in network_data['simulated_data']['spiking_data_by_unit']])
     
-    #add to network_data
-    network_data['simulated_data']['CoV_ISI_E'] = E_CoV
-    network_data['simulated_data']['CoV_ISI_I'] = I_CoV
+    # Add population-level metrics to the network data
+    network_data['simulated_data']['CoV_ISI_E'] = E_CoV_ISI
+    network_data['simulated_data']['CoV_ISI_I'] = I_CoV_ISI
     network_data['simulated_data']['MeanISI_E'] = MeanISI_E
     network_data['simulated_data']['MeanISI_I'] = MeanISI_I
     network_data['simulated_data']['CoVFireRate_E'] = CoVFiringRate_E
@@ -440,7 +490,7 @@ def extract_metrics_from_simulated_data(spike_times, timeVector, spike_times_by_
     for unit, unit_data in simulated_spiking_data_by_unit.items():
         spiking_data_by_unit[unit] = {
             'FireRate': unit_data['FireRate'],
-            #'CoV_fr': unit_data['CoV_fr'],
+            'CoV_fr': unit_data['CoV_fr'],
             'meanISI': unit_data['meanISI'],
             'CoV_ISI': unit_data['CoV_ISI'],
             'spike_times': unit_data['spike_times'],
@@ -486,7 +536,7 @@ def get_simulated_network_activity_metrics(simData=None, popData=None, **kwargs)
         print(f'Error calculating bursting activity: {e}')
         pass
     
-    return network_data
+    #return network_data
     
     def convert_single_element_arrays(data):
         if isinstance(data, dict):
@@ -545,25 +595,57 @@ def get_mean_fr(recording_object, sorting_object, sampling_rate=10000):
                 unit_count += 1
     return total_fr / unit_count if unit_count > 0 else None
 
-def get_CoV_fr(recording_object, sorting_object, sampling_rate=10000):
+def get_CoV_fr_experimental(recording_object, sorting_object, sampling_rate=10000, window_size=1.0):
+    """
+    Calculate the Coefficient of Variation of Firing Rate (CoV FR) for experimental data over time windows.
+
+    Parameters:
+    - recording_object: A recording extractor object containing the experiment's total duration.
+    - sorting_object: A sorting extractor object with spike times for each unit.
+    - sampling_rate: Sampling rate of the recording (in Hz, default: 10000).
+    - window_size: Size of the time window for calculating firing rates (default: 1.0 second).
+
+    Returns:
+    - CoV_fr: Coefficient of Variation of Firing Rate (float).
+    """
+    # Get total duration of the recording (in seconds)
+    total_duration = recording_object.get_total_duration()
+
+    # Initialize list to hold firing rates across all windows for all units
     firing_rates = []
+
+    # Get unit IDs from the sorting object
     units = sorting_object.get_unit_ids()
+
+    # Process each unit's spike train
     for unit in units:
-        spike_train = sorting_object.get_unit_spike_train(unit) / sampling_rate # convert to seconds
-        assert all(spike_time >= 0 for spike_time in spike_train), f'Spike times for unit {unit} contain negative values'
+        spike_train = sorting_object.get_unit_spike_train(unit) / sampling_rate  # Convert spike times to seconds
+        assert all(spike_time >= 0 for spike_time in spike_train), f"Spike times for unit {unit} contain negative values"
+
         if len(spike_train) > 1:
-            duration = recording_object.get_total_duration()  # seconds
-            fr = len(spike_train) / duration  # spikes per second
-            if not np.isnan(fr) and not np.isinf(fr):
-                firing_rates.append(fr)
-    
+            # Divide the total duration into non-overlapping time windows
+            num_windows = int(np.ceil(total_duration / window_size))
+            window_edges = np.linspace(0, total_duration, num_windows + 1)
+
+            # Count spikes in each window for the current unit
+            spike_counts = np.histogram(spike_train, bins=window_edges)[0]
+
+            # Convert spike counts to firing rates (spikes per second) for this unit
+            unit_firing_rates = spike_counts / window_size
+
+            # Append non-NaN and non-inf firing rates to the global list
+            firing_rates.extend([fr for fr in unit_firing_rates if not np.isnan(fr) and not np.isinf(fr)])
+
+    # Calculate CoV FR if there are valid firing rates
     if len(firing_rates) > 1:
         mean_fr = np.mean(firing_rates)
         std_fr = np.std(firing_rates)
         CoV_fr = std_fr / mean_fr
         return CoV_fr
     else:
+        # Return None if there are no valid firing rates
         return None
+
 
 def get_mean_isi(recording_object, sorting_object, sampling_rate=10000):
     all_means = []
@@ -661,7 +743,7 @@ def extract_metrics_from_experimental_data(spike_times, timeVector, spike_times_
         )
     
     #overall CoV firing rate
-    network_data['spiking_data']['spiking_summary_data']['CoVFireRate'] = get_CoV_fr(
+    network_data['spiking_data']['spiking_summary_data']['CoVFireRate'] = get_CoV_fr_experimental(
         recording_object, sorting_object, sampling_rate=sampling_rate
         )
     

@@ -39,6 +39,8 @@ DEFAULT_WORKSPACE_PATH = setup_environment.get_git_root()
 DEFAULT_OUTPUT_DIR = os.path.join(DEFAULT_WORKSPACE_PATH, 'xRBS_network_simulation_outputs')
 DEFAULT_FITNESS_TARGET_SCRIPT = os.path.join(DEFAULT_WORKSPACE_PATH, 'simulate/_fitness_targets/fitnessFuncArgs_CDKL5_WT.py')
 DEFAULT_DEBUG_IN_LOGIN_NODE = False
+DEFAULT_DEBUG_IN_COMPUTE_NODE = False
+DEFAULT_OPTIMIZE_IN_COMPUTE_NODE = False
 
 # Global Variables (for export)
 USER_seconds = None
@@ -75,6 +77,8 @@ USER_num_inhib = None
 USER_output_dir = None
 USER_fitness_target_script = None
 USER_debug_in_login_node = None 
+USER_debug_in_compute_node = None
+USER_optimize_in_compute_node = None
 
 # Function to get or set default argument values
 def get_arg_value(arg, default):
@@ -225,7 +229,9 @@ def configure_global_user_vars(**kwargs):
         'USER_continue': get_arg_value(args.continue_run, False),
         'USER_overwrite': get_arg_value(args.overwrite, False),
         'USER_fitness_target_script': get_arg_value(args.fitness_target_script, DEFAULT_FITNESS_TARGET_SCRIPT),
-        'USER_debug_in_login_node': get_arg_value(args.debugging_in_login_node, DEFAULT_DEBUG_IN_LOGIN_NODE)
+        'USER_debug_in_login_node': get_arg_value(args.debugging_in_login_node, DEFAULT_DEBUG_IN_LOGIN_NODE),
+        'USER_debug_in_compute_node': get_arg_value(args.debugging_in_compute_node, DEFAULT_DEBUG_IN_COMPUTE_NODE),
+        'USER_optimize_in_compute_node': get_arg_value(args.optimizing_in_compute_node, DEFAULT_OPTIMIZE_IN_COMPUTE_NODE)
     }
 
     # if args.rerun:
@@ -239,13 +245,32 @@ def configure_global_user_vars(**kwargs):
         print(f'Invalid MPI type. Defaulting to {DEFAULT_MPI_TYPE}')
         USER_vars['USER_runCfg_type'] = DEFAULT_MPI_TYPE
 
-    if 'mpi_direct' in USER_vars['USER_runCfg_type']: #parallel
-        USER_vars['USER_mpiCommand'] = configure_mpi_direct(SCRIPT_PATH)
-        USER_vars['USER_nrnCommand'] = ''
-    elif USER_vars['USER_debug_in_login_node']: #serial
+    #handle the mpi command configuration
+    ## old way
+    # if 'mpi_direct' in USER_vars['USER_runCfg_type']: #parallel
+    #     USER_vars['USER_mpiCommand'] = configure_mpi_direct(SCRIPT_PATH)
+    #     USER_vars['USER_nrnCommand'] = ''
+    
+    ## debug in login node - this works perfectly
+    if USER_vars['USER_debug_in_login_node']: #serial
         USER_vars['USER_runCfg_type'] = 'mpi_bulletin' 
         USER_vars['USER_mpiCommand'] = '' #mpi command doesnt do anything in this case
         USER_vars['USER_nrnCommand'] = 'shifter --image adammwea/netsims_docker:v1 nrniv -mpi'
+    
+    ## debug in compute node - not implemented yet    
+    elif USER_vars['USER_debug_in_compute_node']: #parallel but can still be run in vs code debug mode
+        implemented = False
+        assert implemented, 'Debugging in compute node not implemented yet'
+        # USER_vars['USER_runCfg_type'] = 'mpi_direct'
+        # USER_vars['USER_mpiCommand'] = configure_mpi_direct(SCRIPT_PATH)
+        # USER_vars['USER_nrnCommand'] = ''
+    
+    ## optimized for running in compute node - seems to work well    
+    elif USER_vars['USER_optimize_in_compute_node']: #parallel, optimized for running in compute node
+        USER_vars['USER_runCfg_type'] = 'mpi_direct'
+        USER_vars['USER_mpiCommand'] = configure_mpi_direct(SCRIPT_PATH)
+        USER_vars['USER_nrnCommand'] = ''
+        
     else:
         #local
         USER_vars['USER_mpiCommand'] = 'mpirun'

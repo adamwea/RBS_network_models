@@ -106,20 +106,26 @@ network_metric_targets = {
                 'weight': 1,
             },
             'MeanNetworkISI': {
-                'target': network_metrics['bursting_data']['bursting_summary_data'].get('MeanNetworkISI', 0),
+                'target': network_metrics['bursting_data']['bursting_summary_data'].get('MeanNetworkISI'),
                 'min': get_min(network_metrics['bursting_data']['bursting_data_by_unit'], 'mean_isi_all'),
                 'max': get_max(network_metrics['bursting_data']['bursting_data_by_unit'], 'mean_isi_all'),
                 'weight': 1,
             },
             'CoVNetworkISI': {
-                'target': network_metrics['bursting_data']['bursting_summary_data'].get('CoVNetworkISI', 0),
+                'target': network_metrics['bursting_data']['bursting_summary_data'].get('CoVNetworkISI'),
                 'min': get_min(network_metrics['bursting_data']['bursting_data_by_unit'], 'cov_isi_all'),
                 'max': get_max(network_metrics['bursting_data']['bursting_data_by_unit'], 'cov_isi_all'),
                 'weight': 1,
             },
+            'NumUnits': {
+                'target': network_metrics['bursting_data']['bursting_summary_data'].get('NumUnits'),
+                # 'min': 1,
+                # 'max': None,
+                # 'weight': 1,
+            },
              'Number_Bursts': {
                 'target': network_metrics['bursting_data']['bursting_summary_data'].get('Number_Bursts'),
-                'min': 0,
+                'min': 1,
                 'max': None,
                 'weight': 1, #TODO: update these with Nfactors
             },
@@ -152,6 +158,12 @@ network_metric_targets = {
                 'min': None,
                 'max': None,
                 'weight': 1, #TODO: update these with Nfactors
+            },
+            'baseline': {
+                'target': network_metrics['bursting_data']['bursting_summary_data'].get('baseline'),
+                'min': None,
+                'max': None,
+                'weight': 1,
             },
         },
         #'bursting_data_by_unit': None,

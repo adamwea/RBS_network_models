@@ -217,8 +217,11 @@ if __name__ == '__main__':
     '''Initialize'''
     batch_type = 'evol'
     output_folder_name = 'zRBS_network_simulation_outputs'
-    run_label = f'development_runs' # subfolder for this run will be created in output_folder_path
-    fitness_target_script = 'tunning_scripts/CDKL5-E6D_T2_C1_DIV21/derived_fitness_args/fitness_args_20241123-000932.py'
+    #run_label = f'development_runs' # subfolder for this run will be created in output_folder_path
+    run_label = f'first_pass_evol'  # subfolder for this run will be created in output_folder_path
+    #fitness_target_script = 'tunning_scripts/CDKL5-E6D_T2_C1_DIV21/derived_fitness_args/fitness_args_20241123-000932.py'
+    fitness_target_script = '/pscratch/sd/a/adammwea/RBS_network_simulations/tunning_scripts/CDKL5-E6D_T2_C1_DIV21/derived_fitness_args/fitness_args_20241123-155335.py'
+    
     
     # Build output folder and fitness target script paths
     output_folder_path, fitness_target_script = build_run_paths(
@@ -226,26 +229,42 @@ if __name__ == '__main__':
         fitness_target_script, 
         outside_of_repo = True
         ) # Build output folder path
+    
+    # do simple math to control max wait time
+    max_wait_time_minutes = 30 #minutes - maximum time to wait for a generation or stalled simulation to finish new candidates
+    time_sleep = 10 #seconds - time to sleep between checking for new candidates
 
     kwargs = {
-        'duration': 0.5,
-        'pop_size': 4,
-        'num_elites': 1,
-        'max_generations': 10,
+        
+        # User arguments
+        'duration': 60,
+        'pop_size': 256,
+        'num_elites': 100,
+        'max_generations': 1000,
         'continue_run': False,
         'overwrite': True,
-        'maxiter_wait': 100,
-        'time_sleep': 10,
-        # 'num_excite': 100,
-        # 'num_inhib': 46,
+        'time_sleep': time_sleep, #seconds per iteration
+        'maxiter_wait': max_wait_time_minutes*60/time_sleep, #max wait time in iterations
         'batch_type': batch_type,
         'label': run_label,
         'output_path': output_folder_path,
         'fitness_target_script': fitness_target_script,
-        'mpi_type': 'mpi_bulletin', # local
+
+        
+        # different run configurations - handles mpi_type for local and HPC runs
+        #'mpi_type': 'mpi_bulletin', # local
         #'mpi_type': 'mpi_direct', # HPC (perlmutter)
-        'debugging_in_login_node': True,
+        'debugging_in_login_node': False, #serial, works in vscode python debugger
+        'debugging_in_compute_node': False, #TODO implement. Ideally, parallel debugging in compute node, also works in vscode python debugger
+        'optimizing_in_compute_node': True, #parallel, works in compute node - normal, debugging, and interactive
     }
+    
+    #assert that none of the debugging flags are set to True at the same time
+    assert not (kwargs['debugging_in_login_node'] and kwargs['debugging_in_compute_node']), 'Both debugging flags cannot be set to True at the same time'
+    assert not (kwargs['debugging_in_login_node'] and kwargs['optimizing_in_compute_node']), 'Both debugging and optimizing flags cannot be set to True at the same time'
+    assert not (kwargs['debugging_in_compute_node'] and kwargs['optimizing_in_compute_node']), 'Both debugging and optimizing flags cannot be set to True at the same time'
+    
+    # Parse user arguments    
     parse_kwargs.main(**kwargs) # Parse user arguments
     from temp_user_args import * # Import user arguments from temp file created by parse_kwargs.main(**kwargs)
 
