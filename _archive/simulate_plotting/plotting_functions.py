@@ -1,4 +1,4 @@
-from temp_user_args import *
+from workspace.RBS_network_simulations._archive.temp_user_args import *
 import numpy as np
 from matplotlib import pyplot as plt
 import netpyne

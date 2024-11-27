@@ -22,7 +22,7 @@ logger = logging.getLogger(__name__)
 sys.path.insert(0, 'simulate_config_files')
 from simulate_config_files import parse_user_args
 parse_user_args.main()
-from temp_user_args import *
+from workspace.RBS_network_simulations._archive.temp_user_args import *
 
 ## Import Local Modules
 sys.path.insert(0, 'submodules/netpyne')

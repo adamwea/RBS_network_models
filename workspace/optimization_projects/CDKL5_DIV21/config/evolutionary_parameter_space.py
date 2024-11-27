@@ -1,5 +1,5 @@
 from netpyne import specs
-from temp_user_args import USER_seconds #import user seconds which should have been declared in the batchRun script
+from workspace.RBS_network_simulations._archive.temp_user_args import USER_seconds #import user seconds which should have been declared in the batchRun script
 
 ## Evol Params
 params = specs.ODict()

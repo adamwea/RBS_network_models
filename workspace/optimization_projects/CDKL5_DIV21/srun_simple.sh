@@ -5,7 +5,7 @@
 #SBATCH -N 8
 #SBATCH --mail-user=amwe@ucdavis.edu
 #SBATCH --mail-type=ALL
-#SBATCH -q regular
+#SBATCH -q debug
 #SBATCH -C cpu
 #SBATCH --exclusive
 #SBATCH --output=./NERSC/output/latest_job_init_error.txt

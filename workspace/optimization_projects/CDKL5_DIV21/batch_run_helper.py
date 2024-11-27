@@ -4,7 +4,7 @@
 
 def setup_environment_wrapper(verbose = False):
     from pprint import pprint
-    import setup_environment
+    import workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.setup_environment as setup_environment
     setup_environment.set_pythonpath()
     import sys
     
@@ -15,7 +15,7 @@ def setup_environment_wrapper(verbose = False):
     return sys.path
 
 def add_output_path_to_kwargs(output_folder_name, fitness_target_script, outside_of_repo = False, **kwargs):
-    import setup_environment
+    import workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.setup_environment as setup_environment
     
     workspace_path = setup_environment.get_git_root()
     fitness_target_script = os.path.abspath(fitness_target_script)
@@ -181,7 +181,7 @@ def init_batch_cfg(USER_vars, **kwargs):
 
     import_module_from_path(USER_fitness_target_script, 'fitnessFuncArgs') # dynamically import fitnessFuncArgs from USER_fitness_target_script defined as python scripts so that we can optimize different data
     from fitnessFuncArgs import fitnessFuncArgs
-    from modules.analysis.calculate_fitness import fitnessFunc
+    from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.calculate_fitness import fitnessFunc
     
     # Load HOF seeds if USER_seed_evol is True
     HOF_seeds = get_HOF_seeds() if USER_seed_evol else None
@@ -366,7 +366,7 @@ def pre_run_checks(USER_vars, **kwargs):
 '''not re-implemented'''
 '''Setup Python environment for running the script'''
 from pprint import pprint
-import setup_environment as setup_environment
+import workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.setup_environment as setup_environment
 setup_environment.set_pythonpath()
 #print sys path
 import sys

@@ -13,7 +13,7 @@ from scipy.signal import convolve, find_peaks, butter, filtfilt
 from scipy.stats import linregress, norm, stats
 
 # Local application imports
-from temp_user_args import *
+from workspace.RBS_network_simulations._archive.temp_user_args import *
 from helper_functions import load_clean_sim_object, find_batch_object_and_sim_label
 from plotting_functions import plot_network_activity_fitness, plot_raster, plot_trace_example, plot_connections
 from analysis_functions import get_network_activity_metrics, get_individual_neuron_metrics

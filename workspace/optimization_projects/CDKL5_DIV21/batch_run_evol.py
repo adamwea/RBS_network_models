@@ -15,8 +15,8 @@ def init_user_kwargs():
     output_folder_name = 'zRBS_network_simulation_outputs'
     run_label = f'improved_netparams'  # subfolder for this run will be created in output_folder_path
     batch_type = 'evol'
-    max_wait_time_minutes = 30000000 #minutes - maximum time to wait for a generation or stalled simulation to finish new candidates
-    time_sleep = 10 #seconds - time to sleep between checking for new candidates
+    max_wait_time_minutes = 15 #minutes - maximum time to wait for a generation or stalled simulation to finish new candidates
+    time_sleep = 1 #seconds - time to sleep between checking for new candidates
     
     # Fitness target scripts
     fitness_target_script = '/pscratch/sd/a/adammwea/RBS_network_simulations/tunning_scripts/CDKL5-E6D_T2_C1_DIV21/derived_fitness_args/fitness_args_20241123-155335.py'
@@ -255,10 +255,10 @@ def configure_command(preset_configs, **kwargs):
     return mock_command, kwargs
 
 '''Main Code'''
-from batchRun_helper import setup_environment_wrapper, add_output_path_to_kwargs, add_run_path_to_kwargs, init_output_paths_as_needed
-from batchRun_helper import init_batch_cfg, batchRun
-from parse_kwargs import configure_global_user_vars, save_config_to_file
-from batchRun_helper import pre_run_checks
+from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.batch_run_helper import setup_environment_wrapper, add_output_path_to_kwargs, add_run_path_to_kwargs, init_output_paths_as_needed
+from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.batch_run_helper import init_batch_cfg, batchRun
+from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.parse_kwargs import configure_global_user_vars, save_config_to_file
+from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.batch_run_helper import pre_run_checks
 import sys
 if __name__ == '__main__':    
     
@@ -290,7 +290,7 @@ if __name__ == '__main__':
     #init all args
     USER_vars = configure_global_user_vars(**kwargs) #parse kwargs and import global user variables
     save_config_to_file(USER_vars, **kwargs) #must precede import of temp_user_args
-    from temp_user_args import * # Import user arguments from temp file created by parse_kwargs.main(**kwargs)
+    from workspace.RBS_network_simulations._archive.temp_user_args import * # Import user arguments from temp file created by parse_kwargs.main(**kwargs)
     #TODO: probably need to move this ^ to the very top of the script so that bash flags supercede the kwargs
     
     # Initialize batch config

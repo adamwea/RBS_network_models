@@ -15,7 +15,7 @@ def handle_params_import():
 
 def get_cell_numbers_from_fitness_target_script():
     from RBS_network_simulations.optimization_scripts.batchRun_evol import import_module_from_path
-    from temp_user_args import USER_fitness_target_script
+    from workspace.RBS_network_simulations._archive.temp_user_args import USER_fitness_target_script
     import_module_from_path(USER_fitness_target_script, 'fitnessFuncArgs') #dynamically import fitnessFuncArgs from USER_fitness_target_script defined as python scripts so that we can optimize different data
     from fitnessFuncArgs import fitnessFuncArgs
     

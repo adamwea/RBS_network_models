@@ -3,15 +3,18 @@ Evolutionary algorithm optimization of a network using NetPyNE
 '''
 '''Setup Python environment for running the script'''
 from pprint import pprint
-import setup_environment
+import workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.setup_environment as setup_environment
 setup_environment.set_pythonpath()
+#print sys path
+import sys
+pprint(sys.path)
 
 '''
 Import Local Modules
 
 Note: Specify settings in kwargs dictionary, they are handled by parse_user_args.main(**kwargs)
 '''
-from simulate._config_files import parse_kwargs
+from RBS_network_simulations.optimization_scripts import parse_kwargs
 
 
 '''Import External Modules'''
@@ -26,6 +29,8 @@ import os
 import pandas as pd
 from datetime import datetime
 import logging
+import importlib.util
+import sys
 
 '''Helper Functions'''
 ## Function to serialize the batch_config dictionary
@@ -75,10 +80,19 @@ def get_HOF_seeds():
     assert len(seeds) > 0, 'No seeds loaded from Hall of Fame'
     return seeds
 
+# Define the function to import the module from a file path
+def import_module_from_path(file_path, module_name):
+    spec = importlib.util.spec_from_file_location(module_name, file_path)
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[module_name] = module
+    spec.loader.exec_module(module)
+    return module
+
 ## Function to get batch config
 def get_batch_config(batch_config_options=None):
-    from modules.analysis.calculate_fitness import fitnessFunc
-    from simulate._config_files.fitnessFuncArgs import fitnessFuncArgs
+    from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.calculate_fitness import fitnessFunc
+    import_module_from_path(USER_fitness_target_script, 'fitnessFuncArgs') #dynamically import fitnessFuncArgs from USER_fitness_target_script defined as python scripts so that we can optimize different data
+    from fitnessFuncArgs import fitnessFuncArgs
     
     # Load HOF seeds if USER_seed_evol is True
     HOF_seeds = get_HOF_seeds() if USER_seed_evol else None
@@ -162,12 +176,23 @@ def rangify_params(params):
     assert all(isinstance(value, list) for value in params.values()), 'All values in params must be lists'
     return params
 
+def build_run_paths(output_folder_name, fitness_target_script, outside_of_repo = False):
+    workspace_path = setup_environment.get_git_root()
+    fitness_target_script = os.path.abspath(fitness_target_script)
+    #step out of workspace_path to avoid writing to the repository
+    if outside_of_repo:
+        workspace_path = os.path.dirname(workspace_path)
+    output_folder_path = os.path.join(workspace_path, output_folder_name) # Output folder path for all runs
+    output_folder_path = os.path.abspath(output_folder_path)
+    
+    return output_folder_path, fitness_target_script
+
 '''Run Batch'''
 def batchRun(batch_config=None):
     global params #make it global so it can be accessed by the cfg.py file easily
     
     '''Main function to run the batch'''
-    from simulate._config_files import evolutionary_parameter_space
+    from modules.simulation_config import evolutionary_parameter_space
     assert batch_config is not None, 'batch_config must be specified'  # Ensure batch_config is provided    
     params = evolutionary_parameter_space.params # Get parameter space from user-defined file
     params = rangify_params(params) # Convert parameter space to ranges
@@ -191,26 +216,76 @@ if __name__ == '__main__':
     
     '''Initialize'''
     batch_type = 'evol'
-    output_folder_name = 'xRBS_network_simulation_outputs'
-    workspace_path = setup_environment.get_git_root()
-    output_folder_path = os.path.join(workspace_path, output_folder_name) # Output folder path for all runs
-    run_label = f'development_runs' # subfolder for this run will be created in output_folder_path
+    output_folder_name = 'zRBS_network_simulation_outputs'
+    #run_label = f'development_runs' # subfolder for this run will be created in output_folder_path
+    run_label = f'improved_netparams'  # subfolder for this run will be created in output_folder_path
+    #fitness_target_script = 'tunning_scripts/CDKL5-E6D_T2_C1_DIV21/derived_fitness_args/fitness_args_20241123-000932.py'
+    fitness_target_script = '/pscratch/sd/a/adammwea/RBS_network_simulations/tunning_scripts/CDKL5-E6D_T2_C1_DIV21/derived_fitness_args/fitness_args_20241123-155335.py'
+    
+    
+    # Build output folder and fitness target script paths
+    output_folder_path, fitness_target_script = build_run_paths(
+        output_folder_name, 
+        fitness_target_script, 
+        outside_of_repo = True
+        ) # Build output folder path
+    
+    # do simple math to control max wait time
+    max_wait_time_minutes = 30000000 #minutes - maximum time to wait for a generation or stalled simulation to finish new candidates
+    time_sleep = 10 #seconds - time to sleep between checking for new candidates
 
+    
+     # Translate to Python
+    print("Allocating 1 simulation per socket for optimal memory usage (i.e. 2 per node)...")
+    # njobs = kwargs['nodes'] * 2  # Generally 2 jobs per node, 1 per socket
+    cores_per_socket = int(os.popen("lscpu | grep '^Core(s) per socket:' | awk '{print $4}'").read().strip())
+    ntasks = int(cores_per_socket * 0.75)
+    print(f"Allocating {ntasks} parallel cell populations per simulation in each socket...")
+    #print(f"Initializing {kwargs['pop_size']} simulation(s) cfgs per generation, {kwargs['duration']} seconds each...")
+    
     kwargs = {
-        'duration': 30,
-        'pop_size': 10,
-        'num_elites': 1,
-        'max_generations': 10,
+        
+        # User arguments
+        'duration': 5, # Duration of the simulation, in seconds
+        'pop_size': 50,
+        'num_elites': 25,
+        'max_generations': 100,
         'continue_run': False,
-        'overwrite': True,
-        'num_excite': 100,
-        'num_inhib': 46,
+        'overwrite': False,
+        'time_sleep': time_sleep, #seconds per iteration
+        'maxiter_wait': max_wait_time_minutes*60/time_sleep, #max wait time in iterations
         'batch_type': batch_type,
         'label': run_label,
         'output_path': output_folder_path,
+        'fitness_target_script': fitness_target_script,
+
+
+
+        
+        # different run configurations - handles mpi_type for local and HPC runs
+        #'mpi_type': 'mpi_bulletin', # local
+        #'mpi_type': 'mpi_direct', # HPC (perlmutter)
+        #'nodes': 4, # parallel nodes in neuron not mpi
+        'nodes_per_simulation': 4, #up to whatever is available on allocation
+        #'nodes_per_simulation': ntasks, # maybe this isnt actually nodes per simulation, but tasks per simulation
+        'sockets_per_simulation': 1, #up to 2 per node - not implemented when running in series
+        #'nodes': 1, # number of threads to tell neuron to use
+        'nodes': ntasks, # number of threads to tell neuron to use
+        'debugging_in_login_node': False, #serial, works in vscode python debugger
+        'debugging_in_compute_node': False, #TODO implement. Ideally, parallel debugging in compute node, also works in vscode python debugger
+        'optimizing_in_compute_node': True, #parallel, works in compute node - normal, debugging, and interactive
     }
+    
+
+    
+    #assert that none of the debugging flags are set to True at the same time
+    assert not (kwargs['debugging_in_login_node'] and kwargs['debugging_in_compute_node']), 'Both debugging flags cannot be set to True at the same time'
+    assert not (kwargs['debugging_in_login_node'] and kwargs['optimizing_in_compute_node']), 'Both debugging and optimizing flags cannot be set to True at the same time'
+    assert not (kwargs['debugging_in_compute_node'] and kwargs['optimizing_in_compute_node']), 'Both debugging and optimizing flags cannot be set to True at the same time'
+    
+    # Parse user arguments    
     parse_kwargs.main(**kwargs) # Parse user arguments
-    from temp_user_args import * # Import user arguments from temp file created by parse_kwargs.main(**kwargs)
+    from workspace.RBS_network_simulations._archive.temp_user_args import * # Import user arguments from temp file created by parse_kwargs.main(**kwargs)
 
     # Run batch
     print('Initializing batch config...')    

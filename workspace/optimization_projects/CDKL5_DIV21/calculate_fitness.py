@@ -3,9 +3,39 @@ import json
 from modules.analysis.analyze_network_activity import get_simulated_network_activity_metrics
 import numpy as np
 #from simulate._config_files.fitnessFuncArgs import fitnessFuncArgs
-from modules.analysis.extract_simulated_data import retrieve_sim_data_from_call_stack
+from workspace.RBS_network_simulations.modules.analysis.extract_simulated_data import retrieve_sim_data_from_call_stack
 
-'''Fitness functions for the network activity metrics'''
+'''The Scoring Functions'''        
+def the_scoring_function(val, target_val, weight, maxFitness, min_val=None, max_val=None):
+	"""
+	The function `the_scoring_function` calculates a fitness score for a given metric based on its proximity to a target value.
+	The goal is to minimize this score, with lower values indicating better fitness. 
+	
+	The function employs an exponential penalty for deviations from the target value, where the sensitivity of this penalty 
+	is controlled by the `weight` parameter. As the weight increases, the penalty for being far from the target decreases, approaching 
+	a constant reward of 1 when the difference is small. 
+	
+	The function also checks if the input value falls within specified bounds (`min_val` and `max_val`); 
+	if not specified, it defaults to allowing all values. If the input value is outside the specified bounds, it returns a 
+	maximum fitness score (`maxFitness`), indicating poor fitness. 
+	
+	Overall, the function rewards values close to the target 
+	more heavily while penalizing those further away, with the penalty capped at `maxFitness`.
+	"""
+	
+	# Set default min and max values if not provided
+	if min_val is None:
+		min_val = float('-inf')  # Allow all values below positive infinity
+	if max_val is None:
+		max_val = float('inf')   # Allow all values above negative infinity
+
+	# Calculate fitness score
+	if min_val <= val <= max_val:
+		return min(np.exp(abs(target_val - val) / weight), maxFitness)
+	else:
+		return maxFitness
+
+'''fitness functions for the network activity metrics'''
 def fit_firing_rates(simulated=False, **kwargs):
 	print('Calculating firing rate fitness...')
 	MeanFireRate_target = kwargs['targets']['spiking_data']['spiking_summary_data']['MeanFireRate']
@@ -37,6 +67,12 @@ def fit_firing_rates(simulated=False, **kwargs):
 				fitness = I_fitness
 		fitness_FRs.append(fitness)
 	fitness_FR = np.mean(fitness_FRs)
+ 
+	# Set to None if not defined
+	E_fitness = E_fitness if 'E_fitness' in locals() else None
+	I_fitness = I_fitness if 'I_fitness' in locals() else None
+	
+	# Create dictionary to store fitness values
 	fitness_FR_dict = {
 		'fit': fitness_FR,
 		'value(s)': val_FRs,
@@ -981,249 +1017,152 @@ def fit_fano_factor(**kwargs):
 	#print(f'fano_factor fitness: {fitness_fano_factor_dict}')
 	return fitness_fano_factor_dict
 
-'''Main Scoring Function'''        
-def the_scoring_function(val, target_val, weight, maxFitness, min_val=None, max_val=None):
-	"""
-	The function `the_scoring_function` calculates a fitness score for a given metric based on its proximity to a target value.
-	The goal is to minimize this score, with lower values indicating better fitness. 
-	
-	The function employs an exponential penalty for deviations from the target value, where the sensitivity of this penalty 
-	is controlled by the `weight` parameter. As the weight increases, the penalty for being far from the target decreases, approaching 
-	a constant reward of 1 when the difference is small. 
-	
-	The function also checks if the input value falls within specified bounds (`min_val` and `max_val`); 
-	if not specified, it defaults to allowing all values. If the input value is outside the specified bounds, it returns a 
-	maximum fitness score (`maxFitness`), indicating poor fitness. 
-	
-	Overall, the function rewards values close to the target 
-	more heavily while penalizing those further away, with the penalty capped at `maxFitness`.
-	"""
-	
-	# Set default min and max values if not provided
-	if min_val is None:
-		min_val = float('-inf')  # Allow all values below positive infinity
-	if max_val is None:
-		max_val = float('inf')   # Allow all values above negative infinity
+'''helper functions'''
+def save_fitness_results(output_path, fitnessResults):
+    with open(output_path, 'w') as f:
+        json.dump(fitnessResults, f, indent=4)
+    print(f'fitness results saved to {output_path}')
 
-	# Calculate fitness score
-	if min_val <= val <= max_val:
-		return min(np.exp(abs(target_val - val) / weight), maxFitness)
-	else:
-		return maxFitness
+def get_fitness(data_source, **kwargs):
+    '''Main fitness calculation function'''
+    fitnessVals = {}
+    if data_source == 'experimental':
+        # Priority 1: Spiking Data
+        fitnessVals['rate_fit'] = fit_firing_rates(**kwargs)
+        fitnessVals['CoV_rate_fit'] = fit_CoV_firing_rate(**kwargs)
+        fitnessVals['ISI_fit'] = fit_ISI(**kwargs)
+        fitnessVals['CoV_ISI_fit'] = fit_CoV_ISI(**kwargs)
+        # Priority 2: Bursting Data
+        fitnessVals['baseline_fit'] = fit_baseline(**kwargs)
+        fitnessVals['WithinBurstISI_fit'] = fit_WithinBurstISI(**kwargs)
+        fitnessVals['CoVWithinBurstISI_fit'] = fit_CovWithinBurstISI(**kwargs)
+        fitnessVals['OutsideBurstISI_fit'] = fit_OutsideBurstISI(**kwargs)
+        fitnessVals['CoVOutsideBurstISI_fit'] = fit_CovOutsideBurstISI(**kwargs)
+        fitnessVals['NetworkISI_fit'] = fit_NetworkISI(**kwargs)
+        fitnessVals['CoVNetworkISI_fit'] = fit_CovNetworkISI(**kwargs)
+        fitnessVals['Number_Bursts_fit'] = fit_Number_Bursts(**kwargs)
+        fitnessVals['mean_IBI_fit'] = fit_mean_IBI(**kwargs)
+        fitnessVals['cov_IBI_fit'] = fit_cov_IBI(**kwargs)
+        fitnessVals['mean_Burst_Peak_fit'] = fit_mean_Burst_Peak(**kwargs)
+        fitnessVals['cov_Burst_Peak_fit'] = fit_cov_Burst_Peak(**kwargs)
+        fitnessVals['fano_factor_fit'] = fit_fano_factor(**kwargs)
+    elif data_source == 'simulated':
+        # Priority 1: Spiking Data
+        fitnessVals['rate_fit'] = fit_firing_rates(simulated=True, **kwargs)
+        fitnessVals['CoV_rate_fit'] = fit_CoV_firing_rate(simulated=True, **kwargs)
+        fitnessVals['ISI_fit'] = fit_ISI(simulated=True, **kwargs)
+        fitnessVals['CoV_ISI_fit'] = fit_CoV_ISI(simulated=True, **kwargs)
+        # Priority 2: Bursting Data
+        fitnessVals['baseline_fit'] = fit_baseline(**kwargs)
+        fitnessVals['WithinBurstISI_fit'] = fit_WithinBurstISI(simulated=True, **kwargs)
+        fitnessVals['CoVWithinBurstISI_fit'] = fit_CovWithinBurstISI(simulated=True, **kwargs)
+        fitnessVals['OutsideBurstISI_fit'] = fit_OutsideBurstISI(simulated=True, **kwargs)
+        fitnessVals['CoVOutsideBurstISI_fit'] = fit_CovOutsideBurstISI(simulated=True, **kwargs)
+        fitnessVals['NetworkISI_fit'] = fit_NetworkISI(simulated=True, **kwargs)
+        fitnessVals['CoVNetworkISI_fit'] = fit_CovNetworkISI(simulated=True, **kwargs)
+        fitnessVals['Number_Bursts_fit'] = fit_Number_Bursts(**kwargs)
+        fitnessVals['mean_IBI_fit'] = fit_mean_IBI(**kwargs)
+        fitnessVals['cov_IBI_fit'] = fit_cov_IBI(**kwargs)
+        fitnessVals['mean_Burst_Peak_fit'] = fit_mean_Burst_Peak(**kwargs)
+        fitnessVals['cov_Burst_Peak_fit'] = fit_cov_Burst_Peak(**kwargs)
+        fitnessVals['fano_factor_fit'] = fit_fano_factor(**kwargs)
 
-def fitnessFunc(simData=None, **kwargs):       
-	
-	def get_fitness():
-		'''Main fitness calculation function'''
-		fitnessVals = {}
-		data_source = kwargs['source']
-		if data_source == 'experimental':
-			
-			#Priority 1: Spiking Data
-			fitnessVals['rate_fit'] = fit_firing_rates(**kwargs)
-			fitnessVals['CoV_rate_fit'] = fit_CoV_firing_rate(**kwargs)
-			fitnessVals['ISI_fit'] = fit_ISI(**kwargs)
-			fitnessVals['CoV_ISI_fit'] = fit_CoV_ISI(**kwargs)
-			
-			#Priority 2: Bursting Data
-			fitnessVals['baseline_fit'] = fit_baseline(**kwargs)
-			fitnessVals['WithinBurstISI_fit'] = fit_WithinBurstISI(**kwargs)
-			fitnessVals['CoVWithinBurstISI_fit'] = fit_CovWithinBurstISI(**kwargs)
-			fitnessVals['OutsideBurstISI_fit'] = fit_OutsideBurstISI(**kwargs)
-			fitnessVals['CoVOutsideBurstISI_fit'] = fit_CovOutsideBurstISI(**kwargs)
-			fitnessVals['NetworkISI_fit'] = fit_NetworkISI(**kwargs)
-			fitnessVals['CoVNetworkISI_fit'] = fit_CovNetworkISI(**kwargs)
-			#fitnessVals['NumUnits_fit'] = fit_NumUnits(**kwargs) no need to fit this
-			fitnessVals['Number_Bursts_fit'] = fit_Number_Bursts(**kwargs)
-			fitnessVals['mean_IBI_fit'] = fit_mean_IBI(**kwargs)
-			fitnessVals['cov_IBI_fit'] = fit_cov_IBI(**kwargs)
-			fitnessVals['mean_Burst_Peak_fit'] = fit_mean_Burst_Peak(**kwargs)
-			fitnessVals['cov_Burst_Peak_fit'] = fit_cov_Burst_Peak(**kwargs)
-			fitnessVals['fano_factor_fit'] = fit_fano_factor(**kwargs)
-		elif data_source == 'simulated':
-			
-			#Priority 1: Spiking Data
-			fitnessVals['rate_fit'] = fit_firing_rates(simulated=True, **kwargs) #sometimes I need to pass the simulated flag to the function
-			fitnessVals['CoV_rate_fit'] = fit_CoV_firing_rate(simulated=True, **kwargs)
-			fitnessVals['ISI_fit'] = fit_ISI(simulated=True, **kwargs)
-			fitnessVals['CoV_ISI_fit'] = fit_CoV_ISI(simulated=True, **kwargs)
-			
-			#Priority 2: Bursting Data
-			fitnessVals['baseline_fit'] = fit_baseline(**kwargs)
-			fitnessVals['WithinBurstISI_fit'] = fit_WithinBurstISI(simulated=True, **kwargs)
-			fitnessVals['CoVWithinBurstISI_fit'] = fit_CovWithinBurstISI(simulated=True, **kwargs)
-			fitnessVals['OutsideBurstISI_fit'] = fit_OutsideBurstISI(simulated=True, **kwargs)
-			fitnessVals['CoVOutsideBurstISI_fit'] = fit_CovOutsideBurstISI(simulated=True, **kwargs)
-			fitnessVals['NetworkISI_fit'] = fit_NetworkISI(simulated=True, **kwargs)
-			fitnessVals['CoVNetworkISI_fit'] = fit_CovNetworkISI(simulated=True, **kwargs)
-			#fitnessVals['NumUnits_fit'] = fit_NumUnits(**kwargs) #no need to fit this
-			fitnessVals['Number_Bursts_fit'] = fit_Number_Bursts(**kwargs)
-			fitnessVals['mean_IBI_fit'] = fit_mean_IBI(**kwargs)
-			fitnessVals['cov_IBI_fit'] = fit_cov_IBI(**kwargs)
-			fitnessVals['mean_Burst_Peak_fit'] = fit_mean_Burst_Peak(**kwargs)
-			fitnessVals['cov_Burst_Peak_fit'] = fit_cov_Burst_Peak(**kwargs)
-			fitnessVals['fano_factor_fit'] = fit_fano_factor(**kwargs)
+    average_fitness = np.mean([fitnessVals[key]['fit'] for key in fitnessVals])
+    return average_fitness, fitnessVals
 
-		#average_fitness, avg_scaled_fitness = fitness_summary_metrics(fitnessVals) #TODO - revise how I do this when I loop in Nfactors
-		average_fitness = np.mean([fitnessVals[key]['fit'] for key in fitnessVals])
+def handle_existing_fitness(fitness_save_path):
+    if os.path.exists(fitness_save_path):
+        with open(fitness_save_path, 'r') as f:
+            fitnessResults = json.load(f)
+        average_fitness = fitnessResults['average_fitness']
+        print(f'Fitness results already exist: {average_fitness}')
+        return average_fitness
+    return None
 
-		# Save fitness results in .json file
-		#save_fitness_results(fitnessVals, average_fitness, avg_scaled_fitness)
-		#fitnessResults = {key: value for key, value in fitnessVals.items()}
-		return average_fitness, fitnessVals
+'''main functions'''
+def calculate_network_metrics(kwargs):
+    print('Calculating network activity metrics...')
+    from modules.analysis.analyze_network_activity import get_simulated_network_activity_metrics
+    network_metrics = get_simulated_network_activity_metrics(**kwargs)
+    
+    # Save the network metrics to a file
+    # if networks_metrics is None, save an error message
+    if network_metrics is None:
+        print('Network activity metrics could not be calculated.')
+        fitnessResults = {
+            'average_fitness': kwargs['maxFitness'],
+            'maxFitness': kwargs['maxFitness'],
+            'error': 'Network activity metrics could not be calculated. Fitness set to maxFitness.'
+        }
+        print(f'Fitness set to maxFitness: {kwargs["maxFitness"]}')
+        save_fitness_results(kwargs['fitness_save_path'], fitnessResults)
+        return 1000, None
+    #else, return the network_metrics
+    else:
+        kwargs['network_metrics'] = network_metrics
+        return None, kwargs
 
-	'''Main logic of the calculate_fitness function'''
-	# Check if the function is being called during simulation - if so, retrieve expanded simData from the call stack
-	if simData is not None:
-		#during_simulation = True
-		#kwargs['simData'] = simData
-		kwargs['source'] = 'simulated'
-		# Get the candidate and job paths from the call stack
-		import temp_user_args
-		recalculate_fitness = temp_user_args.USER_recalculate_fitness
-		if recalculate_fitness is False:
-			# Get the candidate and job paths from the call stack
-			# then, check if fitness results already exist
-			# if they do, return the average fitness
-			from modules.analysis.extract_simulated_data import get_candidate_and_job_path_from_call_stack
-			import os
-			import json
-			candidate_path, job_path = get_candidate_and_job_path_from_call_stack()
-			fitness_save_path = f'{candidate_path}_fitness.json'
+def fitnessFunc(simData=None, **kwargs):
+    
+    '''Main logic of the calculate_fitness function'''
+    try: #ensure that the function does not crash - always return a fitness value
+        
+        # Check if the function is being called during simulation - if so, retrieve expanded simData from the call stack
+        if simData is not None:
+            kwargs['source'] = 'simulated'
+            import workspace.RBS_network_simulations._archive.temp_user_args as temp_user_args
+            
+            # handle existing fitness results
+            recalculate_fitness = temp_user_args.USER_recalculate_fitness
+            if not recalculate_fitness:
+                from workspace.RBS_network_simulations.modules.analysis.extract_simulated_data import get_candidate_and_job_path_from_call_stack
+                candidate_path, job_path = get_candidate_and_job_path_from_call_stack()
+                fitness_save_path = f'{candidate_path}_fitness.json'
+                existing_fitness = handle_existing_fitness(fitness_save_path)
+                if existing_fitness is not None:
+                    return existing_fitness
+
+   			# Get the candidate and job paths from the call stack
+            kwargs = retrieve_sim_data_from_call_stack(simData, **kwargs)
+        else:
+            kwargs['source'] = 'experimental'
+            #TODO: make sure this is fully implemented before use.
+            implemented = False
+            assert implemented, 'Experimental data source not yet implemented.'
    
-			#for testing, create fake fitness results at fitness_save_path
-			# average_fitness = 1000
-			# fitnessResults = {}
-			# fitnessResults['average_fitness'] = average_fitness
-			# fitnessResults['maxFitness'] = kwargs['maxFitness']
-			# fitnessResults['error'] = 'Network activity metrics could not be calculated. Fitness set to maxFitness.'
-			# with open(fitness_save_path, 'w') as f:
-			# 	json.dump(fitnessResults, f, indent=4)
-			# print(f'fitness results saved to {fitness_save_path}')
    
-			if os.path.exists(fitness_save_path):
-				with open(fitness_save_path, 'r') as f:
-					fitnessResults = json.load(f)
-				average_fitness = fitnessResults['average_fitness']
-				print(f'Fitness results already exist: {average_fitness}')
-				return average_fitness		
-		kwargs = retrieve_sim_data_from_call_stack(simData, **kwargs) 
-	else:
-		#during_simulation = False
-		kwargs['source'] = 'experimental'
-	
-	#Network activity metrics
-	print('Calculating network activity metrics...')
-	network_metrics = get_simulated_network_activity_metrics(**kwargs)
-	
-	# Save the network metrics to a file
-	output_path = kwargs['fitness_save_path']
+        # Calculate network metrics - handle potential errors
+        error, kwargs = calculate_network_metrics(kwargs)
+        if error is not None:
+            return error
 
-	# Check if network_metrics is None
-	if network_metrics is None:
-		print('Network activity metrics could not be calculated.')
-		#generate fitness_json that reporting error message and reflect that maxFitness applied
-		fitnessResults = {}
-		fitnessResults['average_fitness'] = kwargs['maxFitness']
-		fitnessResults['maxFitness'] = kwargs['maxFitness']
-		fitnessResults['error'] = 'Network activity metrics could not be calculated. Fitness set to maxFitness.'
-		print(f'Fitness set to maxFitness: {kwargs["maxFitness"]}')
-		
-		#return results
-		with open(output_path, 'w') as f:
-			json.dump(fitnessResults, f, indent=4)
-		print(f'fitness results saved to {output_path}')        
-		return 1000
-	else:#maxFitness
-		kwargs['network_metrics'] = network_metrics
-		
-		# Get the fitness - handle known errors
-		try:
-			average_fitness, fitnessResults = get_fitness()
-			# Save the fitness results to a file
-			fitnessResults['average_fitness'] = average_fitness
-			fitnessResults['maxFitness'] = kwargs['maxFitness']
-			
-			# Return results
-			with open(output_path, 'w') as f:
-				json.dump(fitnessResults, f, indent=4)
-			print(f'fitness results saved to {output_path}')
-			return average_fitness
-		except Exception as e:
-			acceptable_errors = []
-			error_trace = str(e)
-			if any(error in error_trace for error in acceptable_errors):
-				print(f'Error calculating fitness: {e}')
-				print('This is a known error')
-				fitnessResults = {
-					'average_fitness': kwargs['maxFitness'],
-					'maxFitness': kwargs['maxFitness'],
-					'error': 'acceptable',
-					'error_trace': error_trace
-				}
-			else:   			
-				# New Errors
-				print(e)
-				print(f'Error calculating fitness: {e}')
-				fitnessResults = {
-					'average_fitness': kwargs['maxFitness'],
-					'maxFitness': kwargs['maxFitness'],
-					'error': 'new',
-					'error_trace': error_trace
-				}
-			with open(output_path, 'w') as f:
-				json.dump(fitnessResults, f, indent=4)
-			print(f'fitness results saved to {output_path}')
-			return 1000
-	
-'''Deprecated functions'''
-# def fitness_summary_metrics(fitnessVals):
-#     '''Calculate and summarize the fitness metrics.'''
-#     fitness_values = {key: fitnessVals[key]['Fit'] for key in fitnessVals if 'Fit' in fitnessVals[key]}
-#     fitness_values = [v for v in fitness_values.values() if v is not None]
-#     average_fitness = np.mean(fitness_values)
-
-#     min_value, max_value = min(fitness_values), max(fitness_values)
-#     if max_value > min_value:
-#         normalized_fitness_values = [(v - min_value) / (max_value - min_value) for v in fitness_values]
-#     else:
-#         normalized_fitness_values = [1 for _ in fitness_values]
-
-#     avg_scaled_fitness = np.mean(normalized_fitness_values)
-#     print(f'Average Fitness: {average_fitness}, Average Scaled Fitness: {avg_scaled_fitness}')
-#     return average_fitness, avg_scaled_fitness
-
-# def prioritize_fitness(fitnessVals, **kwargs):
-#     '''Assign priorities and handle fitness values with maxFitness.'''
-#     print('Prioritizing fitness values...')
-#     maxFitness = kwargs['maxFitness']
-#     priorities = [
-#         ['E_rate_fit', 'I_rate_fit', 'E_ISI_fit', 'I_ISI_fit'],  # Priority 1
-#         ['baseline_fit'],  # Priority 2
-#         ['IBI_fitness', 'burst_frequency_fitness', 'big_burst_fit', 'small_burst_fit', 'thresh_fit', 'bimodal_burst_fit', 'slope_fit']  # Priority 3
-#     ]
-#     for priority in priorities:
-#         if any(fitnessVals[fit]['Fit'] == maxFitness for fit in priority):
-#             for lower_priority in priorities[priorities.index(priority) + 1:]:
-#                 for fit in lower_priority:
-#                     fitnessVals[fit]['Fit'] = maxFitness
-#                     fitnessVals[fit]['deprioritized'] = True
-#             break
-
-# def save_fitness_results(fitnessVals, average_fitness, avg_scaled_fitness):
-#     '''Save fitness results to a file.'''
-#     fitnessResults = {key: value for key, value in fitnessVals.items()}
-#     fitnessResults['average_fitness'] = average_fitness
-#     fitnessResults['average_scaled_fitness'] = avg_scaled_fitness
-#     fitnessResults['maxFitness'] = kwargs['maxFitness']
-
-#     output_path = batch_saveFolder or fitness_save_path
-#     if exp_mode:
-#         destination = os.path.join(output_path, f'{simLabel}_Fitness.json')
-#     else:
-#         gen_folder = simLabel.split('_cand')[0]
-#         destination = os.path.join(output_path, gen_folder, f'{simLabel}_Fitness.json')
-
-#     with open(destination, 'w') as f:
-#         json.dump(fitnessResults, f, indent=4)
-#     print(f'Fitness results saved to {destination}')
+        # Get the fitness - handle known errors
+        try:
+            average_fitness, fitnessResults = get_fitness(kwargs['source'], **kwargs)
+            fitnessResults['average_fitness'] = average_fitness
+            fitnessResults['maxFitness'] = kwargs['maxFitness']
+            save_fitness_results(kwargs['fitness_save_path'], fitnessResults)
+            return average_fitness
+        except Exception as e:
+            error_trace = str(e)
+            fitnessResults = {
+                'average_fitness': kwargs['maxFitness'],
+                'maxFitness': kwargs['maxFitness'],
+                'error': 'acceptable' if any(error in error_trace for error in []) else 'new',
+                'error_trace': error_trace
+            }
+            print(f'Error calculating fitness: {e}')
+            save_fitness_results(kwargs['fitness_save_path'], fitnessResults)
+            return 1000
+        
+    # General error handling if all else fails
+    except Exception as e:
+        print(f'Error calculating fitness: {e}')
+        fitnessResults = {
+            'average_fitness': kwargs['maxFitness'],
+            'maxFitness': kwargs['maxFitness'],
+            'error': 'general',
+            'error_trace': str(e)
+        }
+        save_fitness_results(kwargs['fitness_save_path'], fitnessResults)
+        return 1000

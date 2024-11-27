@@ -3,7 +3,7 @@
 import os
 import datetime
 import shutil
-from temp_user_args import *
+from workspace.RBS_network_simulations._archive.temp_user_args import *
 
 def init_batch_run(USER_run_label=None, run_path_only = False):
     '''
