@@ -41,6 +41,8 @@ DEFAULT_FITNESS_TARGET_SCRIPT = os.path.join(DEFAULT_WORKSPACE_PATH, 'simulate/_
 DEFAULT_DEBUG_IN_LOGIN_NODE = False
 DEFAULT_DEBUG_IN_COMPUTE_NODE = False
 DEFAULT_OPTIMIZE_IN_COMPUTE_NODE = False
+DEFAULT_NODES_PER_SIMULATION = 1
+DEFAULT_SOCKKETS_PER_NODE = 1
 
 # Global Variables (for export)
 USER_seconds = None
@@ -231,7 +233,9 @@ def configure_global_user_vars(**kwargs):
         'USER_fitness_target_script': get_arg_value(args.fitness_target_script, DEFAULT_FITNESS_TARGET_SCRIPT),
         'USER_debug_in_login_node': get_arg_value(args.debugging_in_login_node, DEFAULT_DEBUG_IN_LOGIN_NODE),
         'USER_debug_in_compute_node': get_arg_value(args.debugging_in_compute_node, DEFAULT_DEBUG_IN_COMPUTE_NODE),
-        'USER_optimize_in_compute_node': get_arg_value(args.optimizing_in_compute_node, DEFAULT_OPTIMIZE_IN_COMPUTE_NODE)
+        'USER_optimize_in_compute_node': get_arg_value(args.optimizing_in_compute_node, DEFAULT_OPTIMIZE_IN_COMPUTE_NODE),
+        'USER_nodes_per_simulation': get_arg_value(args.nodes_per_simulation, DEFAULT_NODES_PER_SIMULATION),
+        'USER_sockets_per_node': get_arg_value(args.sockets_per_simulation, DEFAULT_SOCKKETS_PER_NODE)
     }
 
     # if args.rerun:
@@ -268,7 +272,7 @@ def configure_global_user_vars(**kwargs):
     ## optimized for running in compute node - seems to work well    
     elif USER_vars['USER_optimize_in_compute_node']: #parallel, optimized for running in compute node
         USER_vars['USER_runCfg_type'] = 'mpi_direct'
-        USER_vars['USER_mpiCommand'] = configure_mpi_direct(SCRIPT_PATH)
+        USER_vars['USER_mpiCommand'] = configure_mpi_direct(SCRIPT_PATH, USER_vars)
         USER_vars['USER_nrnCommand'] = ''
         
     else:
@@ -281,9 +285,17 @@ def configure_global_user_vars(**kwargs):
 
 
 # Separate configuration for MPI commands
-def configure_mpi_direct(script_path):
-    shifter_command = 'shifter --image=adammwea/netpyneshifter:v5'
-    mpi_command = f'srun -N 1 --sockets-per-node 1 --cpu_bind=cores {shifter_command} nrniv'
+def configure_mpi_direct(script_path, USER_vars):
+    '''Configure the MPI command for direct mode'''
+    nodes_nrniv = USER_vars['USER_nodes']
+    nodes_per_simulation = USER_vars['USER_nodes_per_simulation']
+    socket_per_node = USER_vars['USER_sockets_per_node']
+    #shifter_command = 'shifter --image=adammwea/netpyneshifter:v5'
+    shifter_command = 'shifter --image=adammwea/netsims_docker:v1'
+    #mpi_command = f'srun -N {nodes_per_simulation} --sockets-per-node {socket_per_node} --cpu_bind=cores {shifter_command} nrniv'
+    #mpi_command = f'srun -N {nodes_per_simulation} {shifter_command} nrniv' #serial
+    #mpi_command = f'srun {shifter_command} nrniv'
+    mpi_command = f'srun'
     return f'''\
 sleep 10
 python ./sbatch_scripts/srun_extractor.py {mpi_command}'''

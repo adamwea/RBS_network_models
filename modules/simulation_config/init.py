@@ -1,6 +1,7 @@
 '''Setup Python environment for running the script'''
 from pprint import pprint
-import optimization_scripts.setup_environment as setup_environment
+#import optimization_scripts.setup_environment as setup_environment
+import modules.simulation_config.setup_environment as setup_environment
 setup_environment.set_pythonpath()
 
 import matplotlib; matplotlib.use('Agg')

@@ -498,6 +498,12 @@ def extract_metrics_from_simulated_data(spike_times, timeVector, spike_times_by_
     network_data['spiking_data']['spiking_data_by_unit'] = spiking_data_by_unit
 
 def get_simulated_network_activity_metrics(simData=None, popData=None, **kwargs):
+    import time
+    
+    #candidate_label = kwargs.get('candidate_label', None)
+    print('') #for formatting
+    print('Calculating Network Activity Metrics for Simulated Data...')
+    start_time = time.time()
     #this part should be useful for fitness during simulation
     if simData is None:
         try: 
@@ -547,7 +553,9 @@ def get_simulated_network_activity_metrics(simData=None, popData=None, **kwargs)
         return data
 
     network_data = convert_single_element_arrays(network_data)    
-    print('Network Activity Metrics Calculated and Extracted!')    
+    print('Network Activity Metrics Calculated and Extracted!')
+    print(f'Elapsed time: {time.time() - start_time} seconds')
+    print('') #for formatting    
     return network_data
 
 '''Experimental Data Functions'''

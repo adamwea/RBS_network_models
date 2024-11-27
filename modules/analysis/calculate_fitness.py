@@ -91,7 +91,7 @@ def fit_CoV_firing_rate(simulated=False, **kwargs):
 		'max': max_CoV,
 		'weight': weight,
 	}
-	print(f'CoV firing rate fitness: {fitness_CoV}')
+	#print(f'CoV firing rate fitness: {fitness_CoV}')
 	return fitness_CoV_dict
 	
 def fit_ISI(simulated=False, **kwargs):
@@ -193,7 +193,7 @@ def fit_CoV_ISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'CoV ISI fitness: {fitness_CoV_ISI}')
+	#print(f'CoV ISI fitness: {fitness_CoV_ISI}')
 	return fitness_CoV_ISI
 
 def fit_baseline(**kwargs):
@@ -218,7 +218,7 @@ def fit_baseline(**kwargs):
 		'weight': weight,
 	}
 	
-	print(f'Baseline fitness: {fitness_baseline_dict}')
+	#print(f'Baseline fitness: {fitness_baseline_dict}')
 	return fitness_baseline_dict
 
 def fit_WithinBurstISI(simulated=False, **kwargs):
@@ -265,7 +265,7 @@ def fit_WithinBurstISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'WithinBurstISI fitness: {fitness_WithinBurstISI}')
+	#print(f'WithinBurstISI fitness: {fitness_WithinBurstISI}')
 	return fitness_WithinBurstISI
 
 def fit_CovWithinBurstISI(simulated=False, **kwargs):
@@ -312,7 +312,7 @@ def fit_CovWithinBurstISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'CovWithinBurstISI fitness: {fitness_CovWithinBurstISI}')
+	#print(f'CovWithinBurstISI fitness: {fitness_CovWithinBurstISI}')
 	return fitness_CovWithinBurstISI
 
 def fit_OutsideBurstISI(simulated=False, **kwargs):
@@ -359,7 +359,7 @@ def fit_OutsideBurstISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'OutsideBurstISI fitness: {fitness_OutsideBurstISI}')
+	##print(f'OutsideBurstISI fitness: {fitness_OutsideBurstISI}')
 	return fitness_OutsideBurstISI
 
 def fit_CovOutsideBurstISI(simulated=False, **kwargs):
@@ -406,7 +406,7 @@ def fit_CovOutsideBurstISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'CoVOutsideBurstISI fitness: {fitness_CovOutsideBurstISI}')
+	#print(f'CoVOutsideBurstISI fitness: {fitness_CovOutsideBurstISI}')
 	return fitness_CovOutsideBurstISI
 
 def fit_NetworkISI(simulated=False, **kwargs):
@@ -453,7 +453,7 @@ def fit_NetworkISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'NetworkISI fitness: {fitness_NetworkISI}')
+	#print(f'NetworkISI fitness: {fitness_NetworkISI}')
 	return fitness_NetworkISI
 
 def fit_CovNetworkISI(simulated=False, **kwargs):
@@ -521,7 +521,7 @@ def fit_CoV_ISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'CoV ISI fitness: {fitness_CoV_ISI}')
+	#print(f'CoV ISI fitness: {fitness_CoV_ISI}')
 	return fitness_CoV_ISI
 
 def fit_baseline(**kwargs):
@@ -546,7 +546,7 @@ def fit_baseline(**kwargs):
 		'weight': weight,
 	}
 	
-	print(f'Baseline fitness: {fitness_baseline_dict}')
+	#print(f'Baseline fitness: {fitness_baseline_dict}')
 	return fitness_baseline_dict
 
 def fit_WithinBurstISI(simulated=False, **kwargs):
@@ -593,7 +593,7 @@ def fit_WithinBurstISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'WithinBurstISI fitness: {fitness_WithinBurstISI}')
+	#print(f'WithinBurstISI fitness: {fitness_WithinBurstISI}')
 	return fitness_WithinBurstISI
 
 def fit_CovWithinBurstISI(simulated=False, **kwargs):
@@ -640,7 +640,7 @@ def fit_CovWithinBurstISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'CovWithinBurstISI fitness: {fitness_CovWithinBurstISI}')
+	#print(f'CovWithinBurstISI fitness: {fitness_CovWithinBurstISI}')
 	return fitness_CovWithinBurstISI
 
 def fit_OutsideBurstISI(simulated=False, **kwargs):
@@ -687,7 +687,7 @@ def fit_OutsideBurstISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'OutsideBurstISI fitness: {fitness_OutsideBurstISI}')
+	#print(f'OutsideBurstISI fitness: {fitness_OutsideBurstISI}')
 	return fitness_OutsideBurstISI
 
 def fit_CovOutsideBurstISI(simulated=False, **kwargs):
@@ -734,7 +734,7 @@ def fit_CovOutsideBurstISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'CoVOutsideBurstISI fitness: {fitness_CovOutsideBurstISI}')
+	#print(f'CoVOutsideBurstISI fitness: {fitness_CovOutsideBurstISI}')
 	return fitness_CovOutsideBurstISI
 
 def fit_NetworkISI(simulated=False, **kwargs):
@@ -781,7 +781,7 @@ def fit_NetworkISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'NetworkISI fitness: {fitness_NetworkISI}')
+	#print(f'NetworkISI fitness: {fitness_NetworkISI}')
 	return fitness_NetworkISI
 
 def fit_CovNetworkISI(simulated=False, **kwargs):
@@ -828,7 +828,7 @@ def fit_CovNetworkISI(simulated=False, **kwargs):
 		'weight': weight,
 	}
 	
-	print(f'CovNetworkISI fitness: {fitness_CovNetworkISI}')
+	#print(f'CovNetworkISI fitness: {fitness_CovNetworkISI}')
 	return fitness_CovNetworkISI
 
 def fit_Number_Bursts(**kwargs):
@@ -853,7 +853,7 @@ def fit_Number_Bursts(**kwargs):
 		'weight': weight,
 	}
 	
-	print(f'NumBursts fitness: {fitness_NumBurst_dict}')
+	#print(f'NumBursts fitness: {fitness_NumBurst_dict}')
 	return fitness_NumBurst_dict
 
 def fit_mean_IBI(**kwargs):
@@ -878,7 +878,7 @@ def fit_mean_IBI(**kwargs):
 		'weight': weight,
 	}
 	
-	print(f'mean_IBI fitness: {fitness_mean_IBI_dict}')
+	#print(f'mean_IBI fitness: {fitness_mean_IBI_dict}')
 	return fitness_mean_IBI_dict
 
 def fit_cov_IBI(**kwargs):
@@ -928,7 +928,7 @@ def fit_mean_Burst_Peak(**kwargs):
 		'weight': weight,
 	}
 	
-	print(f'mean_Burst_Peak fitness: {fitness_mean_Burst_Peak_dict}')
+	#print(f'mean_Burst_Peak fitness: {fitness_mean_Burst_Peak_dict}')
 	return fitness_mean_Burst_Peak_dict
 
 def fit_cov_Burst_Peak(**kwargs):
@@ -953,7 +953,7 @@ def fit_cov_Burst_Peak(**kwargs):
 		'weight': weight,
 	}
 	
-	print(f'cov_Burst_Peak fitness: {fitness_cov_Burst_Peak_dict}')
+	#print(f'cov_Burst_Peak fitness: {fitness_cov_Burst_Peak_dict}')
 	return fitness_cov_Burst_Peak_dict
 
 def fit_fano_factor(**kwargs):
@@ -978,7 +978,7 @@ def fit_fano_factor(**kwargs):
 		'weight': weight,
 	}
 	
-	print(f'fano_factor fitness: {fitness_fano_factor_dict}')
+	#print(f'fano_factor fitness: {fitness_fano_factor_dict}')
 	return fitness_fano_factor_dict
 
 '''Main Scoring Function'''        
@@ -1072,14 +1072,41 @@ def fitnessFunc(simData=None, **kwargs):
 		#fitnessResults = {key: value for key, value in fitnessVals.items()}
 		return average_fitness, fitnessVals
 
-
-   
 	'''Main logic of the calculate_fitness function'''
 	# Check if the function is being called during simulation - if so, retrieve expanded simData from the call stack
 	if simData is not None:
 		#during_simulation = True
 		#kwargs['simData'] = simData
 		kwargs['source'] = 'simulated'
+		# Get the candidate and job paths from the call stack
+		import temp_user_args
+		recalculate_fitness = temp_user_args.USER_recalculate_fitness
+		if recalculate_fitness is False:
+			# Get the candidate and job paths from the call stack
+			# then, check if fitness results already exist
+			# if they do, return the average fitness
+			from modules.analysis.extract_simulated_data import get_candidate_and_job_path_from_call_stack
+			import os
+			import json
+			candidate_path, job_path = get_candidate_and_job_path_from_call_stack()
+			fitness_save_path = f'{candidate_path}_fitness.json'
+   
+			#for testing, create fake fitness results at fitness_save_path
+			# average_fitness = 1000
+			# fitnessResults = {}
+			# fitnessResults['average_fitness'] = average_fitness
+			# fitnessResults['maxFitness'] = kwargs['maxFitness']
+			# fitnessResults['error'] = 'Network activity metrics could not be calculated. Fitness set to maxFitness.'
+			# with open(fitness_save_path, 'w') as f:
+			# 	json.dump(fitnessResults, f, indent=4)
+			# print(f'fitness results saved to {fitness_save_path}')
+   
+			if os.path.exists(fitness_save_path):
+				with open(fitness_save_path, 'r') as f:
+					fitnessResults = json.load(f)
+				average_fitness = fitnessResults['average_fitness']
+				print(f'Fitness results already exist: {average_fitness}')
+				return average_fitness		
 		kwargs = retrieve_sim_data_from_call_stack(simData, **kwargs) 
 	else:
 		#during_simulation = False

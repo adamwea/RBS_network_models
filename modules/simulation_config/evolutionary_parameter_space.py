@@ -27,24 +27,24 @@ params['I_Ra_stdev'] = [0, 110/2] # updated 240528
 #ProbLengthConst
 params['probLengthConst'] = [50, 3000] # length constant for conn probability (um)    
 
-#Cell Params
+# Connectivity Params
 params['probIE'] = [0, 0.75] # updated 240528, made a bit tighter
-params['probIE_std'] = [0, 1/2] #updated 240528
+#params['probIE_std'] = [0, 1/2] #updated 240528
 params['probEE'] = [0, 0.75] # updated 240528, made a bit tighter
-params['probEE_std'] = [0, 1/2] # min: 0.1, max: 0.3
+#params['probEE_std'] = [0, 1/2] # min: 0.1, max: 0.3
 params['probII'] = [0, 0.75] # updated 240528, made a bit tighter
-params['probII_std'] = [0, 1/2] # updated 240528
+#params['probII_std'] = [0, 1/2] # updated 240528
 params['probEI'] = [0.25, 1] #updated 240528, made a bit tighter
-params['probEI_std'] = [0, 1/2] #updated 240528
+#params['probEI_std'] = [0, 1/2] #updated 240528
 
 params['weightEI'] = [0, 2] # updated 240528
-params['weightEI_std'] = [0, 1/3] # min: 0.001, max: 0.01
+#params['weightEI_std'] = [0, 1/3] # min: 0.001, max: 0.01
 params['weightIE'] = [0, 1]
-params['weightIE_std'] = [0, 1/3]
+#params['weightIE_std'] = [0, 1/3]
 params['weightEE'] = [0, 2] # updated 240528
-params['weightEE_std'] = [0, 1/2] # updated 240528
+#params['weightEE_std'] = [0, 1/2] # updated 240528
 params['weightII'] = [0, 2] #updated 240528
-params['weightII_std'] = [0, 0.5/2] #updated 240528
+#params['weightII_std'] = [0, 0.5/2] #updated 240528
 
 params['gnabar_E'] = [0.5, 7] #updated 240528
 params['gnabar_E_std'] = [0, 5/3]

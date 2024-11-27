@@ -120,9 +120,9 @@ fitness_args = {
 fitnessFuncArgs = {}
 fitnessFuncArgs['targets'] = fitness_args
 number_of_units = fitness_args['bursting_data']['bursting_summary_data']['NumUnits']['target']
-number_of_units = 30
+#number_of_units = 250
 fitnessFuncArgs['features'] = {
-    'num_excite': int(number_of_units * 0.25),
-    'num_inhib': int(number_of_units * 0.75),
+    'num_excite': int(number_of_units * 0.80),
+    'num_inhib': int(number_of_units * 0.20),
 }
 fitnessFuncArgs['maxFitness'] = 1000

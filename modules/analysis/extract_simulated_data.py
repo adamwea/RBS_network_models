@@ -11,7 +11,7 @@ import os
 
 def extract_data_of_interest_from_sim(data_path, simData=None, load_extract=True):
     #output_dir - replace 'data.json' with 'extracted_data.pkl'
-    pkl_save_path = data_path.replace('data.json', 'extracted_data.pkl')
+    #pkl_save_path = data_path.replace('data.json', 'extracted_data.pkl')
     
     #init and decide to load or not
     # sim.loadSimCfg(data_path)
@@ -19,25 +19,32 @@ def extract_data_of_interest_from_sim(data_path, simData=None, load_extract=True
     # temp_sim_dir = os.path.join(temp_dir, simLabel)
     # pkl_file = os.path.join(temp_sim_dir, f'{simLabel}_extracted_data.pkl')
     
-    #load extracted data if it exists
-    if os.path.exists(pkl_save_path) and load_extract:
-        try:
-            with open(pkl_save_path, 'rb') as f:
-                extracted_data = dill.load(f)
-            return extracted_data
-        except Exception as e:
-            print(f'Error loading extracted data: {e}')
-            pass
+    # #load extracted data if it exists
+    # if os.path.exists(pkl_save_path) and load_extract:
+    #     try:
+    #         with open(pkl_save_path, 'rb') as f:
+    #             extracted_data = dill.load(f)
+    #         return extracted_data
+    #     except Exception as e:
+    #         print(f'Error loading extracted data: {e}')
+    #         pass
     
     #if it doesn't exist, load the sim data and extract the data of interest
     sim.loadNet(data_path)
     sim.loadNetParams(data_path)
-    sim.loadSimData(data_path)
     
-    if simData is not None: #confirm that the simData is the same as the one loaded
-        assert simData == sim.allSimData, 'The simData loaded is not the same as the one provided.'
+    #dont load simData if it is provided - save time
+    if simData is None: 
+        sim.loadSimData(data_path)
+        allsimData = sim.allSimData
+        simData_copy = allsimData.copy()
+    else:
+        simData_copy = simData.copy()
+    
+    # if simData is not None: #confirm that the simData is the same as the one loaded
+    #     assert simData == sim.allSimData, 'The simData loaded is not the same as the one provided.'
         
-    simData = sim.allSimData.copy()
+    simData = simData_copy
     cellData = sim.net.allCells.copy()
     popData = sim.net.allPops.copy()
     simCfg = sim.cfg.__dict__.copy()
@@ -56,8 +63,9 @@ def extract_data_of_interest_from_sim(data_path, simData=None, load_extract=True
     # if not os.path.exists(temp_sim_dir):
     #     os.makedirs(temp_sim_dir)
     # save extracted data
-    with open(pkl_save_path, 'wb') as f:
-        dill.dump(extracted_data, f)
+    # print(f'Saving extracted data to {pkl_save_path}')
+    # with open(pkl_save_path, 'wb') as f:
+    #     dill.dump(extracted_data, f)
     
     return extracted_data
 
@@ -110,6 +118,16 @@ def find_simulation_files(target_dir):
 #     }
     
 #     return kwargs
+
+def get_candidate_and_job_path_from_call_stack(**kwargs):
+    import inspect
+    stack = inspect.stack()
+    two_levels_up = stack[2].frame
+    two_levels_up_locals = two_levels_up.f_locals
+    jobPath = two_levels_up_locals['jobPath']
+    candidate_index = two_levels_up_locals['candidate_index']
+    candidate_label = two_levels_up_locals['_']
+    return jobPath, candidate_label
     
 def retrieve_sim_data_from_call_stack(simData, **kwargs):
     ## retreive data from 2 call stack levels up

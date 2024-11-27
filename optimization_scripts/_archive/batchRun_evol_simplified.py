@@ -211,73 +211,10 @@ def batchRun(batch_config=None):
     # Run the batch
     batch.run()
 
-def configure_command():
-    from datetime import datetime
-    
-    ''' Build mpi command'''
-    
-    # User arguments
-    output_folder_name = 'zRBS_network_simulation_outputs'
-    run_label = f'improved_netparams'  # subfolder for this run will be created in output_folder_path
-    datetime_str = datetime.now().strftime('%Y%m%d')
-    cores_per_node = int(os.popen("lscpu | grep '^CPU(s):' | awk '{print $2}'").read().strip())
-    number_of_nodes = int(os.popen("scontrol show hostname $SLURM_NODELIST | wc -l").read().strip()) #only works in a slurm environment
-    if number_of_nodes == 0: number_of_nodes = 1 #if not in a slurm environment, assume 1 node
-    command_kwargs = {
-        'type': 'mpi_direct',
-        'script': 'modules/simulation_config/init.py',
-        'mpiCommand': 'srun',
-        'nrnCommand': 'nrniv',
-        'coresPerNode': cores_per_node,
-        'reservation': None,
-        #'skip': USER_skip,
-    }
-    
-    # Extract command kwargs
-    mpiCommand = command_kwargs['mpiCommand']
-    numproc = number_of_nodes * cores_per_node
-    nrnCommand = command_kwargs['nrnCommand']
-    script = command_kwargs['script']
-    
-    # Build output folder and fitness target script paths
-    repo_root = setup_environment.get_git_root()
-    datetime_str = datetime.now().strftime('%y%m%d')
-    mock_gen_dir = 'gen_i'
-    mock_cfgsavepath = os.path.join(repo_root, output_folder_name, f'{datetime_str}_Runi_{run_label}', mock_gen_dir, f'{mock_gen_dir}_cand_j_cfg.json')
-    mock_netparamssavepath = os.path.join(repo_root, output_folder_name, f'{datetime_str}_Runi_{run_label}', mock_gen_dir, f'{mock_gen_dir}_cand_j_netParams.json')
-    cfgSavePath = mock_cfgsavepath
-    netParamsSavePath = mock_netparamssavepath
-    
-    
-    #this directly mimics the code in netpyne/batch/utils.py
-    # ----------------------------------------------------------------------
-    # MPI job command
-    # ----------------------------------------------------------------------
-
-    if mpiCommand == '':
-        command = '%s %s simConfig=%s netParams=%s ' % (nrnCommand, script, cfgSavePath, netParamsSavePath)
-    else:
-        command = '%s -n %d %s -python -mpi %s simConfig=%s netParams=%s ' % (
-            mpiCommand,
-            numproc,
-            nrnCommand,
-            script,
-            cfgSavePath,
-            netParamsSavePath,
-        )
-        
-    # print/return command
-    mock_command = command
-    print(f'Command:\n{mock_command}')
-    
-    return mock_command, command_kwargs
-
-
 '''Main Code'''
 if __name__ == '__main__':    
     
     '''Initialize'''
-    example_command, kwargs = configure_command()
     batch_type = 'evol'
     output_folder_name = 'zRBS_network_simulation_outputs'
     #run_label = f'development_runs' # subfolder for this run will be created in output_folder_path
@@ -292,9 +229,6 @@ if __name__ == '__main__':
         fitness_target_script, 
         outside_of_repo = True
         ) # Build output folder path
-    #---------------------------------------------------------------------------------------------------------------------
-
-    
     
     # do simple math to control max wait time
     max_wait_time_minutes = 30000000 #minutes - maximum time to wait for a generation or stalled simulation to finish new candidates
@@ -324,14 +258,30 @@ if __name__ == '__main__':
         'label': run_label,
         'output_path': output_folder_path,
         'fitness_target_script': fitness_target_script,
+
+
+
+        
+        # different run configurations - handles mpi_type for local and HPC runs
+        #'mpi_type': 'mpi_bulletin', # local
+        #'mpi_type': 'mpi_direct', # HPC (perlmutter)
+        #'nodes': 4, # parallel nodes in neuron not mpi
+        'nodes_per_simulation': 4, #up to whatever is available on allocation
+        #'nodes_per_simulation': ntasks, # maybe this isnt actually nodes per simulation, but tasks per simulation
+        'sockets_per_simulation': 1, #up to 2 per node - not implemented when running in series
+        #'nodes': 1, # number of threads to tell neuron to use
+        'nodes': ntasks, # number of threads to tell neuron to use
+        'debugging_in_login_node': False, #serial, works in vscode python debugger
+        'debugging_in_compute_node': False, #TODO implement. Ideally, parallel debugging in compute node, also works in vscode python debugger
+        'optimizing_in_compute_node': True, #parallel, works in compute node - normal, debugging, and interactive
     }
     
 
     
-    # #assert that none of the debugging flags are set to True at the same time
-    # assert not (kwargs['debugging_in_login_node'] and kwargs['debugging_in_compute_node']), 'Both debugging flags cannot be set to True at the same time'
-    # assert not (kwargs['debugging_in_login_node'] and kwargs['optimizing_in_compute_node']), 'Both debugging and optimizing flags cannot be set to True at the same time'
-    # assert not (kwargs['debugging_in_compute_node'] and kwargs['optimizing_in_compute_node']), 'Both debugging and optimizing flags cannot be set to True at the same time'
+    #assert that none of the debugging flags are set to True at the same time
+    assert not (kwargs['debugging_in_login_node'] and kwargs['debugging_in_compute_node']), 'Both debugging flags cannot be set to True at the same time'
+    assert not (kwargs['debugging_in_login_node'] and kwargs['optimizing_in_compute_node']), 'Both debugging and optimizing flags cannot be set to True at the same time'
+    assert not (kwargs['debugging_in_compute_node'] and kwargs['optimizing_in_compute_node']), 'Both debugging and optimizing flags cannot be set to True at the same time'
     
     # Parse user arguments    
     parse_kwargs.main(**kwargs) # Parse user arguments
