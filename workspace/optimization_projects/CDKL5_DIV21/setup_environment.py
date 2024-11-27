@@ -30,6 +30,9 @@ def set_pythonpath():
     sys.path.insert(0, workspace_folder)
     add_external_paths()
     #pprint(sys.path)
+    
+def set_up_environment():
+    set_pythonpath()
 
 if __name__ == "__main__":
     set_pythonpath()

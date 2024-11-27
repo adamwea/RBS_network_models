@@ -3,7 +3,7 @@ import json
 from modules.analysis.analyze_network_activity import get_simulated_network_activity_metrics
 import numpy as np
 #from simulate._config_files.fitnessFuncArgs import fitnessFuncArgs
-from workspace.RBS_network_simulations.modules.analysis.extract_simulated_data import retrieve_sim_data_from_call_stack
+from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.extract_simulated_data import retrieve_sim_data_from_call_stack
 
 '''The Scoring Functions'''        
 def the_scoring_function(val, target_val, weight, maxFitness, min_val=None, max_val=None):
@@ -1115,7 +1115,7 @@ def fitnessFunc(simData=None, **kwargs):
             # handle existing fitness results
             recalculate_fitness = temp_user_args.USER_recalculate_fitness
             if not recalculate_fitness:
-                from workspace.RBS_network_simulations.modules.analysis.extract_simulated_data import get_candidate_and_job_path_from_call_stack
+                from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.extract_simulated_data import get_candidate_and_job_path_from_call_stack
                 candidate_path, job_path = get_candidate_and_job_path_from_call_stack()
                 fitness_save_path = f'{candidate_path}_fitness.json'
                 existing_fitness = handle_existing_fitness(fitness_save_path)

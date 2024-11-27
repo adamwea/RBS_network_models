@@ -233,6 +233,8 @@ def analyze_convolved_spiking_signal(spike_times, spike_times_by_unit, min_peak_
             'cov_IBI': convolved_signal_metrics['cov_IBI'],
             'Number_Bursts': convolved_signal_metrics['Number_Bursts'],
             'baseline': convolve_signal_get_baseline(spike_times, binSize=binSize, gaussianSigma=gaussianSigma),
+            'fig': fig,
+            'ax': ax,
         }
         return convolved_data
     except Exception as e:
@@ -498,6 +500,68 @@ def extract_metrics_from_simulated_data(spike_times, timeVector, spike_times_by_
     network_data['spiking_data']['spiking_data_by_unit'] = spiking_data_by_unit
 
 def get_simulated_network_activity_metrics(simData=None, popData=None, **kwargs):
+    import time
+    
+    #candidate_label = kwargs.get('candidate_label', None)
+    print('') #for formatting
+    print('Calculating Network Activity Metrics for Simulated Data...')
+    start_time = time.time()
+    #this part should be useful for fitness during simulation
+    if simData is None:
+        try: 
+            simData = sim.simData
+            print('Using simData from netpyne.sim.simData')
+        except:
+            print('No simData provided or found in netpyne.sim.simData')
+            return None
+
+    #initialize network_data
+    #network_data = init_network_data_dict()
+    network_data = init_network_data_dict()
+    rasterData = simData.copy()
+    
+    #check if rasterData['spkt'] is empty
+    if len(rasterData['spkt']) == 0:
+        print('No spike times found in rasterData')
+        return None
+    
+    #convert time to seconds - get initially available data
+    spike_times = np.array(rasterData['spkt']) / 1000
+    timeVector = np.array(rasterData['t']) / 1000
+    spike_times_by_unit = {int(i): spike_times[rasterData['spkid'] == i] for i in np.unique(rasterData['spkid'])} #mea_analysis_pipeline.py expects spike_times as dictionary    
+    
+    #extract spiking metrics from simulated data
+    try: 
+        extract_metrics_from_simulated_data(spike_times, timeVector, spike_times_by_unit, rasterData, popData, **kwargs)
+    except Exception as e:
+        print(f'Error extracting metrics from simulated data: {e}')
+        pass
+    
+    #extract bursting metrics from simulated data (but this one works for both simulated and experimental data)
+    try: 
+        extract_bursting_activity_data(spike_times, spike_times_by_unit)
+    except Exception as e:
+        print(f'Error calculating bursting activity: {e}')
+        pass
+    
+    #return network_data
+    
+    def convert_single_element_arrays(data):
+        if isinstance(data, dict):
+            for key, value in data.items():
+                data[key] = convert_single_element_arrays(value)
+        elif isinstance(data, np.ndarray) and data.size == 1:
+            return data.item()
+        return data
+
+    network_data = convert_single_element_arrays(network_data)    
+    print('Network Activity Metrics Calculated and Extracted!')
+    print(f'Elapsed time: {time.time() - start_time} seconds')
+    print('') #for formatting    
+    return network_data
+
+#nvm i dont actually need a seperate function for this
+def plot_simulated_network_activity(simData=None, popData=None, **kwargs):
     import time
     
     #candidate_label = kwargs.get('candidate_label', None)
