@@ -140,38 +140,88 @@ def plot_raster_plot(spiking_data_by_unit, E_gids, I_gids):
     return fig, ax
 
 def analyze_simulation_data(data_path):
+    import os
     import re
+    import json
+    from matplotlib.backends.backend_pdf import PdfPages
     from modules.analysis.analyze_network_activity import get_simulated_network_activity_metrics
-    #get extracted data
-    extracted_data = get_detailed_simulation_data(data_path)
+    import matplotlib.pyplot as plt
+    import pickle
+    
+    '''helper functions'''
+    def generate_raster_plot():   
+        simulated_data = network_data['simulated_data']
+        spiking_data_by_unit = simulated_data['spiking_data_by_unit']
+        E_gids = simulated_data['E_Gids']
+        I_gids = simulated_data['I_Gids']
+        fig_raster, ax_raster = plot_raster_plot(spiking_data_by_unit, E_gids, I_gids)
+        fig_raster.savefig(raster_plot_path)
+        print(f"Raster plot saved to {raster_plot_path}")
+        
+        # Save raster fig and ax data as pickle
+        with open(raster_fig_path, 'wb') as f:
+            pickle.dump((fig_raster, ax_raster), f)
+        print(f"Raster plot data saved to {raster_fig_path}")
+    
+    def generate_network_bursting_plot():
+        fig_burst = network_data['bursting_data']['bursting_summary_data']['fig']
+        ax_burst = network_data['bursting_data']['bursting_summary_data']['ax']
+        fig_burst.savefig(bursting_plot_path)
+        print(f"Bursting plot saved to {bursting_plot_path}")
+        
+        # Save bursting fig and ax data as pickle
+        with open(bursting_fig_path, 'wb') as f:
+            pickle.dump((fig_burst, ax_burst), f)
+        print(f"Bursting plot data saved to {bursting_fig_path}") 
+    
+    def generate_network_activity_summary_plot():
+        #re-plot raster plot and network bursting plot as subplots in one figure.
+        #network bursting plot on the bottom
+        #raster plot on top
+        #ensure x-axis is shared
+        #expect to put the whole figure on a 16:9 slide
+        fig, axs = plt.subplots(2, 1, figsize=(16, 9))
+        
+        
+        
+    '''main script'''
+    # Define paths for the plots and data
     raster_plot_path = re.sub(r'_data.json', '_raster_plot.pdf', data_path)
     bursting_plot_path = re.sub(r'_data.json', '_bursting_plot.pdf', data_path)
-    if os.path.exists(raster_plot_path) and os.path.exists(bursting_plot_path):
-        print(f"Raster plot and bursting plot already exist for {data_path}. Skipping analysis.")
-        return
-
-    #get network activity metrics
-    kwargs=extracted_data
-    network_data = get_simulated_network_activity_metrics(**kwargs)
+    raster_fig_path = re.sub(r'_data.json', '_raster_fig.pkl', data_path)
+    bursting_fig_path = re.sub(r'_data.json', '_bursting_fig.pkl', data_path)
     
-    #use spiking data to generate raster plot
-    simulated_data = network_data['simulated_data']
-    spiking_data_by_unit = simulated_data['spiking_data_by_unit']
-    E_gids = simulated_data['E_Gids']
-    I_gids = simulated_data['I_Gids']
-    if not os.path.exists(raster_plot_path):
-        fig, ax = plot_raster_plot(spiking_data_by_unit, E_gids, I_gids)
-        fig.savefig(raster_plot_path)
-        print(f"Raster plot saved to {raster_plot_path}")
+    # Check if the pickle files exist and are valid
+    if os.path.exists(raster_fig_path) and os.path.exists(bursting_fig_path):
+        try:
+            with open(raster_fig_path, 'rb') as f:
+                raster_fig = pickle.load(f)
+            with open(bursting_fig_path, 'rb') as f:
+                burst_fig = pickle.load(f)
+            print(f"Raster plot and bursting plot data already exist for {data_path}. Skipping analysis.")
+            #return raster_fig, burst_fig
+        except (pickle.UnpicklingError, KeyError):
+            print(f"Invalid pickle data found for {data_path}. Re-analyzing.")
     
-    #use bursting data to generate bursting plot    
-    #get ax and fig for network bursting plot out of network_data
-    if not os.path.exists(bursting_plot_path):
-        fig = network_data['bursting_data']['bursting_summary_data']['fig']
-        ax = network_data['bursting_data']['bursting_summary_data']['ax']
-        # replace _data.json with _bursting_plot.pdf
-        fig.savefig(bursting_plot_path)
-        print(f"Bursting plot saved to {bursting_plot_path}")   
+    extracted_data = get_detailed_simulation_data(data_path)     # Get extracted data
+    network_data = get_simulated_network_activity_metrics(**extracted_data) # Get network activity metrics
+    
+    '''Generate plots'''
+    generate_raster_plot()  # Use spiking data to generate raster plot      
+    generate_network_bursting_plot()  # Use bursting data to generate bursting plot
+    generate_network_activity_summary_plot()  # Use network data to generate network activity summary plot
+    
+    # # Return fig and ax for raster and bursting plots
+    # fig_raster=[
+    #     fig_raster, 
+    #     ax_raster,   
+    # ]    
+    
+    # fig_burst=[
+    #     fig_burst, 
+    #     ax_burst,   
+    # ]
+    # return fig_raster, fig_burst
 
 ''' 
 reintegrating code below into analysis functions above 
