@@ -233,7 +233,7 @@ def analyze_convolved_spiking_signal(spike_times, spike_times_by_unit, min_peak_
             'cov_IBI': convolved_signal_metrics['cov_IBI'],
             'Number_Bursts': convolved_signal_metrics['Number_Bursts'],
             'baseline': convolve_signal_get_baseline(spike_times, binSize=binSize, gaussianSigma=gaussianSigma),
-            'fig': fig,
+            #'fig': fig,
             'ax': ax,
         }
         return convolved_data

@@ -220,6 +220,12 @@ def load_recordings(h5_file_path, stream_select=None, logger=None):
     recordings = {}
     rec_counts = []
 
+    # #assert HDF5 plugin is available
+    # if not h5py.is_hdf5(h5_full_path):
+    #     logger.error("Error: File is not an HDF5 file.")
+    #     raise Exception("Error: File is not an HDF5 file.")
+    #     #return 0, [], 0, []
+    
     try:
         recording = se.read_maxwell(h5_full_path, rec_name='rec0000', stream_id='well000')
         MaxID = 2
