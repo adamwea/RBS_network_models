@@ -3,7 +3,7 @@ import datetime
 import shutil
 import argparse
 import pandas as pd
-import optimization_scripts.setup_environment as setup_environment
+import setup_environment as setup_environment
 import os
 import shutil
 
@@ -19,9 +19,12 @@ DEFAULT_METHOD = 'evol'
 # DEFAULT_CFG_FILE = 'simulate_config_files/cfg.py'
 # DEFAULT_NETPARAMSFILE = 'simulate_config_files/netParams.py'
 # DEFAULT_INIT_SCRIPT = 'simulate_config_files/init.py'
-DEFAULT_CFG_FILE = 'modules/simulation_config/cfg.py'
-DEFAULT_NETPARAMSFILE = 'modules/simulation_config/netParams.py'
-DEFAULT_INIT_SCRIPT = 'modules/simulation_config/init.py'
+#DEFAULT_CFG_FILE = 'modules/simulation_config/cfg.py'
+#DEFAULT_NETPARAMSFILE = 'modules/simulation_config/netParams.py'
+#DEFAULT_INIT_SCRIPT = 'modules/simulation_config/init.py'
+DEFAULT_CFG_FILE = '/pscratch/sd/a/adammwea/workspace/RBS_network_simulations/workspace/optimization_projects/CDKL5_DIV21/_2_batchrun_optimization/cfg.py'
+DEFAULT_NETPARAMSFILE = '/pscratch/sd/a/adammwea/workspace/RBS_network_simulations/workspace/optimization_projects/CDKL5_DIV21/_2_batchrun_optimization/netParams.py'
+DEFAULT_INIT_SCRIPT = '/pscratch/sd/a/adammwea/workspace/RBS_network_simulations/workspace/optimization_projects/CDKL5_DIV21/_2_batchrun_optimization/init.py'
 DEFAULT_NRNCOMMAND = 'nrniv'
 DEFAULT_NODES = 1
 DEFAULT_CORES_PER_NODE = 1
@@ -349,6 +352,7 @@ def save_config_to_file(USER_vars, **kwargs):
                 f.write(f"{key} = {value}\n")
     
     # Copy the temp_user_args.py file to the run_path
+    os.makedirs(run_path, exist_ok=True)
     shutil.copy(temp_user_args_path, user_args_path)
             
         # f.write(f"USER_seconds = {USER_seconds}\n")

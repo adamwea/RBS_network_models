@@ -1,10 +1,18 @@
+import os
+import sys
+import importlib.util
+import shutil
+import datetime
+import json
+import pandas as pd
+
 '''batchRun helper functions'''
 
 '''reimplemented'''
 
 def setup_environment_wrapper(verbose = False):
     from pprint import pprint
-    import workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.setup_environment as setup_environment
+    import setup_environment as setup_environment
     setup_environment.set_pythonpath()
     import sys
     
@@ -15,7 +23,7 @@ def setup_environment_wrapper(verbose = False):
     return sys.path
 
 def add_output_path_to_kwargs(output_folder_name, fitness_target_script, outside_of_repo = False, **kwargs):
-    import workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.setup_environment as setup_environment
+    import setup_environment as setup_environment
     
     workspace_path = setup_environment.get_git_root()
     fitness_target_script = os.path.abspath(fitness_target_script)
@@ -181,10 +189,13 @@ def init_batch_cfg(USER_vars, **kwargs):
 
     import_module_from_path(USER_fitness_target_script, 'fitnessFuncArgs') # dynamically import fitnessFuncArgs from USER_fitness_target_script defined as python scripts so that we can optimize different data
     from fitnessFuncArgs import fitnessFuncArgs
-    from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.calculate_fitness import fitnessFunc
+    #from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.calculate_fitness import fitnessFunc
+    from calculate_fitness_v3 import fitnessFunc
     
     # Load HOF seeds if USER_seed_evol is True
-    HOF_seeds = get_HOF_seeds() if USER_seed_evol else None
+    seed_paths = kwargs.get('seed_paths', None)
+    #HOF_seeds = get_HOF_seeds(**kwargs) if USER_seed_evol else None
+    seed_cfgs = get_seed_cfgs(**kwargs) if USER_seed_evol else None
 
     batch_config_options = {
         "run_path": USER_run_path,
@@ -220,7 +231,7 @@ def init_batch_cfg(USER_vars, **kwargs):
             'time_sleep': USER_time_sleep,
             'maxiter_wait': USER_maxiter_wait,
             'defaultFitness': 1000,
-            'seeds': HOF_seeds,
+            'seeds': seed_cfgs,
         }
     }
 
@@ -238,14 +249,15 @@ def init_batch_cfg(USER_vars, **kwargs):
     return batch_config
 
 ## Function to run the batch
-def batchRun(batch_config=None):
+def batchRun(batch_config=None, **kwargs):
     global params #make it global so it can be accessed by the cfg.py file easily
     
     '''Main function to run the batch'''
-    from modules.simulation_config import evolutionary_parameter_space
     assert batch_config is not None, 'batch_config must be specified'  # Ensure batch_config is provided    
-    params = evolutionary_parameter_space.params # Get parameter space from user-defined file
+    #params = evolutionary_parameter_space.params # Get parameter space from user-defined file
+    params = kwargs.get('param_space', None)
     params = rangify_params(params) # Convert parameter space to ranges
+    from netpyne.batch import Batch
     batch = Batch(params=params) # Create Batch object with parameters to modify
 
     # Set attributes from batch_config to batch object
@@ -361,90 +373,85 @@ def pre_run_checks(USER_vars, **kwargs):
     print("\n" + "="*50)
     print("END OF PRE-RUN CHECKS")
     print("="*50 + "\n")
-# ______________________________________________________________________________________________________________________
-
-'''not re-implemented'''
-'''Setup Python environment for running the script'''
-from pprint import pprint
-import workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.setup_environment as setup_environment
-setup_environment.set_pythonpath()
-#print sys path
-import sys
-#pprint(sys.path)
-
-'''
-Import Local Modules
-
-Note: Specify settings in kwargs dictionary, they are handled by parse_user_args.main(**kwargs)
-'''
-from RBS_network_simulations.optimization_scripts import parse_kwargs
-
-
-'''Import External Modules'''
-from netpyne.batch import Batch
-
-'''
-Initialize
-'''
-##General Imports
-import json
-import os
-import pandas as pd
-from datetime import datetime
-import logging
-import importlib.util
-import sys
-
-'''Helper Functions'''
-
-
+    
 ## Function to get HOF seeds
-def get_HOF_seeds():
-
-    print(f'Loading Hall of Fame from {USER_HOF}')
-    assert os.path.exists(USER_HOF), f'USER_HOF file not found: {USER_HOF}'
-    seeded_HOF_cands = pd.read_csv(USER_HOF).values.flatten()
-    seeded_HOF_cands = [cfg.replace('_data', '_cfg') for cfg in seeded_HOF_cands]
-    seeded_HOF_cands = [os.path.abspath(f'./{cfg}') for cfg in seeded_HOF_cands]
-    for cfg in seeded_HOF_cands:
-        if 'NERSC/NERSC' in cfg: 
-            seeded_HOF_cands[seeded_HOF_cands.index(cfg)] = cfg.replace('NERSC/NERSC', 'NERSC')
-        else: continue
-
+def get_seed_cfgs(**kwargs):
+    seed_paths = kwargs.get('seed_paths', None)
+    assert seed_paths is not None, 'seed_paths must be specified'
+    
+    '''Load seeds from Hall of Fame'''
+    
+    #extract current pop_size
+    pop_size = kwargs.get('pop_size', None)
+    assert pop_size is not None, 'pop_size must be specified'
+    
+    seed_data_paths = [seed_path['path'] for seed_path in seed_paths if seed_path['seed'] is True]
+    #seed_cfg_paths = [seed_path['path'].replace('_data.json', '_cfg.json') for seed_path in seed_paths if seed_path['seed'] is True]
+    
     seeds = []
-    for cfg in seeded_HOF_cands:
-        if not os.path.exists(cfg): cfg = None #check if file exists, else set to None       
-        if cfg is not None:    
-            
-            # open cfg file and extract simConfig
-            with open(cfg, 'r') as f:
-                seed = json.load(f)
-            seed = seed['simConfig']
-            
-            #only keep overlap with USER_evelo_param_space.py
-            seed = {
-                key: evolutionary_parameter_space[key][0] if evolutionary_parameter_space[key][0] == evolutionary_parameter_space[key][1] 
-                else seed[key] for key in evolutionary_parameter_space if key in seed
-            }
-
-            seed = list(seed.values()) #get rid of keys, just make list of values
-            seed = [float(val) for val in seed] #make sure all values are floats
-            seeds.append(seed)
-            print(f'Successfully loaded seed from {cfg}')
-            if len(seeds) >= USER_pop_size: break
-        else: continue
-
-    print(f'Loaded {len(seeds)} seeds from Hall of Fame')
-    assert len(seeds) > 0, 'No seeds loaded from Hall of Fame'
+    for seed_path in seed_data_paths:
+        cfg_path = seed_path.replace('_data.json', '_cfg.json')
+        with open(cfg_path, 'r') as f:
+            seed = json.load(f)
+        seed_cfg = seed['simConfig']
+        
+        #only keep overlap with USER_evelo_param_space.py
+        from workspace.optimization_projects.CDKL5_DIV21.parameter_spaces._241202_adjusted_evol_params import params
+        parameter_space = params
+        seed_cfg = {
+            key: parameter_space[key][0] if isinstance(parameter_space[key], list) and parameter_space[key][0] == parameter_space[key][1] 
+            else seed_cfg[key] for key in parameter_space if key in seed_cfg
+        }
+        
+        seed_cfg = list(seed_cfg.values()) #get rid of keys, just make list of values
+        seed_cfg = [float(val) for val in seed_cfg] #make sure all values are floats
+        seeds.append(seed_cfg)
+        print(f'Successfully loaded seed from {cfg_path}')
+        if len(seeds) >= pop_size: break
+        
+    print(f'Loaded {len(seeds)} seeds')
+    assert len(seeds) > 0, 'No seeds loaded'
     return seeds
+        
+        
+        
+        
+    
+    # print(f'Loading Hall of Fame from {USER_HOF}')
+    # assert os.path.exists(USER_HOF), f'USER_HOF file not found: {USER_HOF}'
+    # seeded_HOF_cands = pd.read_csv(USER_HOF).values.flatten()
+    # seeded_HOF_cands = [cfg.replace('_data', '_cfg') for cfg in seeded_HOF_cands]
+    # seeded_HOF_cands = [os.path.abspath(f'./{cfg}') for cfg in seeded_HOF_cands]
+    # for cfg in seeded_HOF_cands:
+    #     if 'NERSC/NERSC' in cfg: 
+    #         seeded_HOF_cands[seeded_HOF_cands.index(cfg)] = cfg.replace('NERSC/NERSC', 'NERSC')
+    #     else: continue
 
+    # seeds = []
+    # for cfg in seeded_HOF_cands:
+    #     if not os.path.exists(cfg): cfg = None #check if file exists, else set to None       
+    #     if cfg is not None:    
+            
+    #         # open cfg file and extract simConfig
+    #         with open(cfg, 'r') as f:
+    #             seed = json.load(f)
+    #         seed = seed['simConfig']
+            
+    #         #only keep overlap with USER_evelo_param_space.py
+    #         seed = {
+    #             key: evolutionary_parameter_space[key][0] if evolutionary_parameter_space[key][0] == evolutionary_parameter_space[key][1] 
+    #             else seed[key] for key in evolutionary_parameter_space if key in seed
+    #         }
 
+    #         seed = list(seed.values()) #get rid of keys, just make list of values
+    #         seed = [float(val) for val in seed] #make sure all values are floats
+    #         seeds.append(seed)
+    #         print(f'Successfully loaded seed from {cfg}')
+    #         if len(seeds) >= USER_pop_size: break
+    #     else: continue
 
-
-
-
-
-
-
-'''Run Batch'''
+    # print(f'Loaded {len(seeds)} seeds from Hall of Fame')
+    # assert len(seeds) > 0, 'No seeds loaded from Hall of Fame'
+    # return seeds
+# ______________________________________________________________________________________________________________________
 

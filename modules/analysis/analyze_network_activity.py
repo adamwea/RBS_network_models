@@ -296,9 +296,13 @@ def analyze_bursting_activity(spike_times, spike_times_by_unit, isi_threshold):
 
     return bursting_data
 
-def extract_bursting_activity_data(spike_times, spike_times_by_unit):
+def extract_bursting_activity_data(spike_times, spike_times_by_unit, **kwargs):
 
-    conv_params = init_convolution_params()
+    #conv_params = init_convolution_params()
+    conv_params = kwargs.get('conv_params', None)
+    assert conv_params is not None, 'No convolution parameters provided'
+    
+    #extract convolution parameters
     binSize = conv_params['binSize']
     gaussianSigma = conv_params['gaussianSigma']
     thresholdBurst = conv_params['thresholdBurst']
@@ -506,14 +510,15 @@ def get_simulated_network_activity_metrics(simData=None, popData=None, **kwargs)
     print('') #for formatting
     print('Calculating Network Activity Metrics for Simulated Data...')
     start_time = time.time()
+    assert simData is not None, 'No simData provided'
     #this part should be useful for fitness during simulation
-    if simData is None:
-        try: 
-            simData = sim.simData
-            print('Using simData from netpyne.sim.simData')
-        except:
-            print('No simData provided or found in netpyne.sim.simData')
-            return None
+    # if simData is None:
+    #     try: 
+    #         simData = sim.simData
+    #         print('Using simData from netpyne.sim.simData')
+    #     except:
+    #         print('No simData provided or found in netpyne.sim.simData')
+    #         return None
 
     #initialize network_data
     #network_data = init_network_data_dict()
@@ -1010,7 +1015,7 @@ def get_experimental_network_activity_metrics(**kwargs):
     
     #extract bursting metrics from simulated data (but this one works for both simulated and experimental data)
     try: 
-        extract_bursting_activity_data(spike_times, spike_times_by_unit)
+        extract_bursting_activity_data(spike_times, spike_times_by_unit, **kwargs)
     except Exception as e:
         print(f'Error calculating bursting activity: {e}')
         pass

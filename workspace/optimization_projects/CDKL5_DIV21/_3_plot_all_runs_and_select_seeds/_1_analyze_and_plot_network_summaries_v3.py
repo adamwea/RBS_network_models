@@ -395,7 +395,7 @@ def match_ylims(ax1, ax2):
     ax1.set_ylim(min_ylim - padding, max_ylim + padding)
     ax2.set_ylim(min_ylim - padding, max_ylim + padding)
 
-def collect_fitness_data(simulation_run_paths):
+def collect_fitness_data(simulation_run_paths, get_extra_data=False):
     """
     Collect fitness data from JSON files in specified simulation paths.
 
@@ -405,24 +405,43 @@ def collect_fitness_data(simulation_run_paths):
     Returns:
         list: Sorted list of tuples containing (average_fitness, file_path).
     """
-    fitness_data = []
-
-    for path in simulation_run_paths:
-        for root, _, files in os.walk(path):
-            for file in files:
-                if file.endswith('_fitness.json'):
-                    fitness_path = os.path.join(root, file)
-                    try:
-                        with open(fitness_path, 'r') as f:
-                            fitness_content = json.load(f)
-                            average_fitness = fitness_content.get('average_fitness', float('inf'))
-                            fitness_data.append((average_fitness, fitness_path))
-                    except (json.JSONDecodeError, OSError) as e:
-                        print(f"Error reading file {fitness_path}: {e}")
-
-    # Sort by average fitness
-    fitness_data.sort(key=lambda x: x[0])
-    return fitness_data
+    if not get_extra_data:
+        fitness_data = []
+        for path in simulation_run_paths:
+            for root, _, files in os.walk(path):
+                for file in files:
+                    if file.endswith('_fitness.json'):
+                        fitness_path = os.path.join(root, file)
+                        try:
+                            with open(fitness_path, 'r') as f:
+                                fitness_content = json.load(f)
+                                average_fitness = fitness_content.get('average_fitness', float('inf'))
+                                fitness_data.append((average_fitness, fitness_path))
+                        except (json.JSONDecodeError, OSError) as e:
+                            print(f"Error reading file {fitness_path}: {e}")
+        
+        # Sort by average fitness
+        fitness_data.sort(key=lambda x: x[0])
+        return fitness_data
+    else:
+        fitness_data_dict = {}
+        for path in simulation_run_paths:
+            for root, _, files in os.walk(path):
+                for file in files:
+                    if file.endswith('_fitness.json'):
+                        fitness_path = os.path.join(root, file)
+                        try:
+                            with open(fitness_path, 'r') as f:
+                                fitness_content = json.load(f)
+                                #average_fitness = fitness_content.get('average_fitness', float('inf'))
+                                #extra_data = fitness_content.get('extra_data', {})
+                                #fitness_data.append((average_fitness, fitness_path, extra_data))
+                                fitness_data_dict[fitness_path] = fitness_content
+                        except (json.JSONDecodeError, OSError) as e:
+                            print(f"Error reading file {fitness_path}: {e}")
+        
+        # Sort by average fitness
+        return fitness_data_dict
 
 def process_pdf_to_images(fitness_dict, fitness_path, pdf_path):
     """
@@ -555,11 +574,15 @@ def generate_image_and_pdf(input_image_path, title, average_fitness, image_path,
     ax.imshow(img)
     
     # Add title and fitness score as text
+    #replace _summary_plot.ext with _data.json in input_image_path to get data_path
+    import re
+    data_path = re.sub(r"_summary_plot\..*", "_data.json", input_image_path)
+    #data_path = input_image_path.replace("_summary_plot.png", "_data.json")
     plt.text(
         0.15,  # x position for 1-inch margin (10% of the figure width)
         0.15, # y position for 1-inch margin (10% of the figure height)
-        f"Candidate: {title}\nAvg Fitness: {average_fitness:.2f}",
-        fontsize=10,
+        f"Candidate: {title}\nAvg Fitness: {average_fitness:.2f}\ndata_path: {data_path}",
+        fontsize=7.5,
         ha="left",
         transform=fig.transFigure,
         #image_path = input_image_path,
@@ -1110,14 +1133,14 @@ SIMULATION_RUN_PATHS = []
 SIMULATION_RUN_PATHS.append("/pscratch/sd/a/adammwea/workspace/yThroughput/zRBS_network_simulation_outputs/CDKL5_DIV21/241126_Run2_improved_netparams")
 REFERENCE_DATA_NPY = ("/pscratch/sd/a/adammwea/workspace/RBS_network_simulations/workspace/optimization_projects/CDKL5_DIV21/_1_derive_features_from_experimental_data/network_metrics/network_metrics_well000.npy")
 #SLIDES_OUTPUT_PATH = "/pscratch/sd/a/adammwea/workspace/RBS_network_simulations/workspace/optimization_projects/CDKL5_DIV21/_3_analyze_plot_review/network_summary_slides"
-SLIDES_OUTPUT_PATH = "/pscratch/sd/a/adammwea/workspace/yThroughput/zRBS_network_simulation_outputs/CDKL5_DIV21/241126_Run2_improved_netparams/_network_summary_slides"   
+PROGRESS_SLIDES_PATH = "/pscratch/sd/a/adammwea/workspace/yThroughput/zRBS_network_simulation_outputs/CDKL5_DIV21/241126_Run2_improved_netparams/_network_summary_slides"   
 
 # Entry point check
 if __name__ == "__main__":
     main(
         #comment out the options you don't want to run, as needed
         #analyze_in_sequence=False,
-        analyze_in_parallel=True,
+        #analyze_in_parallel=True,
         #analyze_in_sequence=True,
         #analyze_in_parallel=False,
         generate_presentation_in_parallel=True,

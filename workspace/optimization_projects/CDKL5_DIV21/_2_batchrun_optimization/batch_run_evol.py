@@ -12,21 +12,47 @@ def init_user_kwargs():
     '''
     
     # User arguments
-    output_folder_name = 'zRBS_network_simulation_outputs'
-    run_label = f'improved_netparams'  # subfolder for this run will be created in output_folder_path
+    output_folder_name = 'yThroughput/zRBS_network_simulation_outputs'
+    #run_label = f'improved_netparams'  # subfolder for this run will be created in output_folder_path
+    run_label = f'CDKL5_seeded_evol'  # subfolder for this run will be created in output_folder_path
     batch_type = 'evol'
-    max_wait_time_minutes = 15 #minutes - maximum time to wait for a generation or stalled simulation to finish new candidates
+    max_wait_time_minutes = 60 #minutes - maximum time to wait for a generation or stalled simulation to finish new candidates
     time_sleep = 1 #seconds - time to sleep between checking for new candidates
     
     # Fitness target scripts
-    fitness_target_script = '/pscratch/sd/a/adammwea/RBS_network_simulations/tunning_scripts/CDKL5-E6D_T2_C1_DIV21/derived_fitness_args/fitness_args_20241123-155335.py'
+    #fitness_target_script = '/pscratch/sd/a/adammwea/RBS_network_simulations/tunning_scripts/CDKL5-E6D_T2_C1_DIV21/derived_fitness_args/fitness_args_20241123-155335.py'
+    fitness_target_script = '/pscratch/sd/a/adammwea/workspace/RBS_network_simulations/workspace/optimization_projects/CDKL5_DIV21/_1_derive_features_from_experimental_data/derived_fitness_args/fitness_args_20241202_145331.py'
+    
+    # seed scripts
+    seed_script = '/pscratch/sd/a/adammwea/workspace/RBS_network_simulations/workspace/optimization_projects/CDKL5_DIV21/_3_plot_all_runs_and_select_seeds/_2_seed_review_241126_Run2_improved_netparams.py'
+    
+    # read seed_script to get seed paths
+    seed_paths = None
+    import importlib.util
+    spec = importlib.util.spec_from_file_location("seed_module", seed_script)
+    seed_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(seed_module)    
+    # load dict, seed_paths from seed_script
+    seed_paths = seed_module.seed_paths
+    
+    # param_space_script
+    param_space_script = '/pscratch/sd/a/adammwea/workspace/RBS_network_simulations/workspace/optimization_projects/CDKL5_DIV21/parameter_spaces/_241202_adjusted_evol_params.py'
+    
+    # read param_space_script to get param_space
+    param_space = None
+    spec = importlib.util.spec_from_file_location("param_space_module", param_space_script)
+    param_space_module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(param_space_module)
+    # load dict, param_space from param_space_script
+    param_space = param_space_module.params
     
     # user kwargs
     kwargs = {        
         # netpyne kwargs
-        'duration': 15, # Duration of the simulation, in seconds
-        'pop_size': 100,
-        'num_elites': 45,
+        'duration': 25, # Duration of the simulation, in seconds
+        #'pop_size': 128,
+        'pop_size': 64,
+        'num_elites': 30,
         'max_generations': 100,
         'time_sleep': time_sleep, #seconds per iteration
         'maxiter_wait': max_wait_time_minutes*60/time_sleep, #max wait time in iterations
@@ -42,6 +68,9 @@ def init_user_kwargs():
         'fitness_target_script': fitness_target_script,
         'outside_of_repo': True, #if True, the output folder will be created outside of the git repo
         'recalculate_fitness': False, #if True, when continuing a run, the fitness will be recalculated for all candidates
+        'seed_evol': True, #if True, the initial population will be seeded with the best candidates curated from previous generations
+        'seed_paths': seed_paths,
+        'param_space': param_space,
         # ... other custom kwargs can be added here but then they must be added to the parse_kwargs.main() function in the parse_kwargs.py script
     }
     
@@ -132,6 +161,11 @@ def configure_command(preset_configs, **kwargs):
         total_tasks = number_of_nodes * ntasks_per_node
         #ntasks_per_node = 256
         tasks_per_node = int(ntasks_per_node/2) #use half the tasks per node to get a single simulation on a single socket
+        
+        #something I'm trying - not sure if it will work
+        pop_size = kwargs.get('pop_size', 100)
+        cores_per_srun = cores_per_node//pop_size
+        tasks_per_srun = cores_per_srun #run the whole generation in parallel
         if tasks_per_node < 1: tasks_per_node = 1
         
         command_kwargs = {
@@ -142,7 +176,7 @@ def configure_command(preset_configs, **kwargs):
             'mpiCommand': f'srun -N 1', 
             'nrnCommand': f'--cpus-per-task=1 --hint=nomultithread --cpu-bind=cores {shifter_command} nrniv', #get single simulation on a single socket
             #'coresPerNode': cores_per_node,
-            'coresPerNode': tasks_per_node,
+            'coresPerNode': tasks_per_srun,
             'reservation': None,
             'skip': True, #skip set to true avoids repeating the same simulations ... need to verify if it skips whole generations or just individual simulations
             #'nodes': number_of_nodes,
@@ -255,10 +289,10 @@ def configure_command(preset_configs, **kwargs):
     return mock_command, kwargs
 
 '''Main Code'''
-from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.batch_run_helper import setup_environment_wrapper, add_output_path_to_kwargs, add_run_path_to_kwargs, init_output_paths_as_needed
-from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.batch_run_helper import init_batch_cfg, batchRun
-from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.parse_kwargs import configure_global_user_vars, save_config_to_file
-from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.batch_run_helper import pre_run_checks
+from batch_run_helper import setup_environment_wrapper, add_output_path_to_kwargs, add_run_path_to_kwargs, init_output_paths_as_needed
+from batch_run_helper import init_batch_cfg, batchRun
+from parse_kwargs import configure_global_user_vars, save_config_to_file
+from batch_run_helper import pre_run_checks
 import sys
 if __name__ == '__main__':    
     
@@ -290,7 +324,7 @@ if __name__ == '__main__':
     #init all args
     USER_vars = configure_global_user_vars(**kwargs) #parse kwargs and import global user variables
     save_config_to_file(USER_vars, **kwargs) #must precede import of temp_user_args
-    from workspace.RBS_network_simulations._archive.temp_user_args import * # Import user arguments from temp file created by parse_kwargs.main(**kwargs)
+    from temp_user_args import * # Import user arguments from temp file created by parse_kwargs.main(**kwargs)
     #TODO: probably need to move this ^ to the very top of the script so that bash flags supercede the kwargs
     
     # Initialize batch config
@@ -319,5 +353,5 @@ if __name__ == '__main__':
     # Commit to running the command, begin creating output paths
     init_output_paths_as_needed(**kwargs)
     cfg =batch_cfg
-    batchRun(batch_config = cfg)    
+    batchRun(batch_config = cfg, **kwargs)    
     print(f'Batch run completed')

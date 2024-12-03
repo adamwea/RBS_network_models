@@ -31,7 +31,6 @@ module list
 
 #srun shifter --image=adammwea/netpyneshifter:v5 nproc
 
-
 # srun -N 4 -n 128 shifter --image=adammwea/netpyneshifter:v5 \
 #   nrniv -python -mpi /pscratch/sd/a/adammwea/RBS_network_simulations/modules/simulation_config/init.py \
 #   simConfig=/pscratch/sd/a/adammwea/zRBS_network_simulation_outputs/241126_Run20_improved_netparams/gen_0/gen_0_cand_3_cfg.json \
@@ -45,4 +44,5 @@ module list
 # export SLURM_CPUS_PER_TASK=128
 
 #srun -N 1 -n 1 --cpus-per-task=128 --hint=nomultithread --cpu-bind=cores \
-python /pscratch/sd/a/adammwea/RBS_network_simulations/optimization_scripts/batchRun_evol_srun_direct.py
+# python /pscratch/sd/a/adammwea/RBS_network_simulations/optimization_scripts/batchRun_evol_srun_direct.py
+python /pscratch/sd/a/adammwea/workspace/RBS_network_simulations/workspace/optimization_projects/CDKL5_DIV21/_2_batchrun_optimization/batch_run_evol.py
