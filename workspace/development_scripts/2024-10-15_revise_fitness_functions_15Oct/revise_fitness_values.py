@@ -4,7 +4,7 @@ import setup_environment
 setup_environment.set_pythonpath()
 
 '''Import necessary modules'''
-from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.calculate_fitness import fitnessFunc
+from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21_dep.calculate_fitness import fitnessFunc
 from netpyne import sim
 import dill
 import os

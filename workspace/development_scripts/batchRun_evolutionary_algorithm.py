@@ -77,7 +77,7 @@ def get_HOF_seeds():
 
 ## Function to get batch config
 def get_batch_config(batch_config_options=None):
-    from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.calculate_fitness import fitnessFunc
+    from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21_dep.calculate_fitness import fitnessFunc
     from simulate._config_files.fitnessFuncArgs import fitnessFuncArgs
     
     # Load HOF seeds if USER_seed_evol is True

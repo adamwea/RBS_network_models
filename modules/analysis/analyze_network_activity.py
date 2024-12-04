@@ -225,6 +225,13 @@ def analyze_convolved_spiking_signal(spike_times, spike_times_by_unit, min_peak_
         # network_data['bursting_data']['bursting_summary_data']['cov_IBI'] = convolved_signal_metrics['cov_IBI']
         # network_data['bursting_data']['bursting_summary_data']['Number_Bursts'] = convolved_signal_metrics['Number_Bursts']    
         # network_data['bursting_data']['bursting_summary_data']['baseline'] = convolve_signal_get_baseline(spike_times)
+        
+        #pull y data out of ax
+        y_data = ax.lines[0].get_ydata()
+        signal = y_data
+        baseline = np.mean(signal)
+        
+        
         convolved_data = {
             'mean_Burst_Peak': convolved_signal_metrics['mean_Burst_Peak'],
             'cov_Burst_Peak': convolved_signal_metrics['cov_Burst_Peak'],
@@ -232,7 +239,8 @@ def analyze_convolved_spiking_signal(spike_times, spike_times_by_unit, min_peak_
             'mean_IBI': convolved_signal_metrics['mean_IBI'],
             'cov_IBI': convolved_signal_metrics['cov_IBI'],
             'Number_Bursts': convolved_signal_metrics['Number_Bursts'],
-            'baseline': convolve_signal_get_baseline(spike_times, binSize=binSize, gaussianSigma=gaussianSigma),
+            #'baseline': convolve_signal_get_baseline(spike_times, binSize=binSize, gaussianSigma=gaussianSigma),
+            'baseline': baseline,
             #'fig': fig,
             'ax': ax,
         }
@@ -544,7 +552,7 @@ def get_simulated_network_activity_metrics(simData=None, popData=None, **kwargs)
     
     #extract bursting metrics from simulated data (but this one works for both simulated and experimental data)
     try: 
-        extract_bursting_activity_data(spike_times, spike_times_by_unit)
+        extract_bursting_activity_data(spike_times, spike_times_by_unit, **kwargs)
     except Exception as e:
         print(f'Error calculating bursting activity: {e}')
         pass

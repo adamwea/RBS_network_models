@@ -3,7 +3,7 @@ Evolutionary algorithm optimization of a network using NetPyNE
 '''
 '''Setup Python environment for running the script'''
 from pprint import pprint
-import workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.setup_environment as setup_environment
+import workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21_dep.setup_environment as setup_environment
 setup_environment.set_pythonpath()
 #print sys path
 import sys
@@ -90,7 +90,7 @@ def import_module_from_path(file_path, module_name):
 
 ## Function to get batch config
 def get_batch_config(batch_config_options=None):
-    from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21.calculate_fitness import fitnessFunc
+    from workspace.RBS_network_simulations.workspace.optimization_projects.CDKL5_DIV21_dep.calculate_fitness import fitnessFunc
     import_module_from_path(USER_fitness_target_script, 'fitnessFuncArgs') #dynamically import fitnessFuncArgs from USER_fitness_target_script defined as python scripts so that we can optimize different data
     from fitnessFuncArgs import fitnessFuncArgs
     
