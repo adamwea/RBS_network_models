@@ -1,0 +1,1 @@
+pip install -e /pscratch/sd/a/adammwea/workspace/RBS_network_models

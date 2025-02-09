@@ -1,0 +1,48 @@
+# Build from ./RBS_network_models
+# To update local package installations, update the tar.gz files in the docker folder first.
+# Run docker/compress_local_packages.sh to update the tar.gz files.
+
+# Use a base image with Conda pre-installed
+FROM continuumio/miniconda3:latest
+
+# Set environment variables
+ENV PATH /opt/conda/bin:$PATH
+ENV CONDA_ENV_NAME netpyne_mpi
+
+# Set the working directory inside the container
+WORKDIR /app
+
+# Copy the Conda environment file into the container
+COPY conda/netpyne_mpi.yml /app/netpyne_mpi.yml
+
+# SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+# this allows the installation of scikit-learn 
+# despite the deprecation warning
+ENV SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+
+# Create the Conda environment inside the container
+RUN conda env create -f /app/netpyne_mpi.yml && conda clean -afy
+
+# Extract and install MEA_Analysis
+COPY docker/MEA_Analysis.tar.gz /app/
+RUN tar -xzf /app/MEA_Analysis.tar.gz -C /app/ && \
+    conda run -n netpyne_mpi pip install /app/MEA_Analysis && \
+    rm -f /app/MEA_Analysis.tar.gz
+
+# Extract and install netpyne
+COPY docker/netpyne.tar.gz /app/
+RUN tar -xzf /app/netpyne.tar.gz -C /app/ && \
+    conda run -n netpyne_mpi pip install /app/netpyne && \
+    rm -f /app/netpyne.tar.gz
+
+# Extract and install RBS_network_models
+COPY docker/RBS_network_models.tar.gz /app/
+RUN tar -xzf /app/RBS_network_models.tar.gz -C /app/ && \
+    conda run -n netpyne_mpi pip install /app/RBS_network_models && \
+    rm -f /app/RBS_network_models.tar.gz
+
+# Activate the environment by default
+SHELL ["conda", "run", "-n", "netpyne_mpi", "/bin/bash", "-c"]
+
+# Set the default command
+CMD ["bash"]

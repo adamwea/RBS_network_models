@@ -1,0 +1,181 @@
+# Base image
+FROM docker.io/ubuntu:jammy
+
+ENV DEBIAN_FRONTEND noninteractive
+
+WORKDIR /opt
+
+# System dependencies
+RUN apt-get update && \
+    apt-get upgrade --yes && \
+    apt-get install --yes \
+        build-essential \
+        gfortran \
+        libcurl4 \
+        wget \
+        vim && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install Miniconda
+ENV installer=Miniconda3-py38_4.12.0-Linux-x86_64.sh
+RUN wget https://repo.anaconda.com/miniconda/$installer && \
+    /bin/bash $installer -b -p /opt/miniconda3 && \
+    rm -rf $installer
+ENV PATH=/opt/miniconda3/bin:$PATH
+
+# Install MPICH
+ARG mpich=4.0.2
+ARG mpich_prefix=mpich-$mpich
+RUN wget https://www.mpich.org/static/downloads/$mpich/$mpich_prefix.tar.gz && \
+    tar xvzf $mpich_prefix.tar.gz && \
+    cd $mpich_prefix && \
+    FFLAGS=-fallow-argument-mismatch FCFLAGS=-fallow-argument-mismatch ./configure && \
+    make -j$(nproc) && \
+    make install && \
+    cd .. && \
+    rm -rf $mpich_prefix && \
+    rm -rf $mpich_prefix.tar.gz
+RUN /sbin/ldconfig
+
+# Python and Pip
+RUN conda update -n base -c defaults conda && \
+    conda install pip
+ENV SKLEARN_ALLOW_DEPRECATED_SKLEARN_PACKAGE_INSTALL=True
+
+# pip install mpi4py
+RUN pip install mpi4py --no-cache-dir
+
+# Install Mamba for faster package management
+RUN conda install -y mamba -n base -c conda-forge && \
+    conda clean -afy
+
+# # Install core Python packages (general utilities)
+# RUN mamba install -y -n base \
+#     absl-py=2.1.0 \
+#     #argparse \
+#     asciitree \
+#     #backports-zoneinfo \
+#     cachetools=5.5.0 \
+#     certifi=2024.12.14 \
+#     charset-normalizer=3.4.1 \
+#     cycler=0.12.1 \
+#     dill \
+#     distro=1.9.0 \
+#     flatbuffers \
+#     fonttools=4.55.3 \
+#     future=1.0.0 \
+#     google-auth=2.37.0 \
+#     google-pasta=0.2.0 \
+#     importlib-metadata=8.5.0 \
+#     jinja2=3.1.5 \
+#     joblib=1.4.2 && \
+#     conda clean -afy
+
+# Install data science and machine learning libraries
+RUN mamba install -y -n base \
+    matplotlib \
+    numpy=1.24.3 \
+    pandas=2.0.3 \
+    scikit-learn=1.3.2 \
+    scipy=1.10.1 \
+    seaborn \
+    statsmodels \
+    tqdm && \
+    conda clean -afy
+
+# Install specialized Python libraries for neuro/ML work
+# RUN mamba install -y -n base \
+#     h5py=3.11.0 \
+#     lfpykit=0.5.1 \
+#     meautility=1.5.1 \
+#     neuron=8.2.6 \
+#     quantities=0.15.0 \
+#     spikeinterface=0.100.4 \
+#     tensorflow=2.13.1 \
+#     keras=2.13.1 && \
+#     #mpi4py=3.1.4 && \
+#     conda clean -afy
+
+# Install specialized Python libraries for neuro/ML work
+RUN pip install --no-cache-dir \
+    h5py==3.4.0 \
+    lfpykit==0.5.1 \
+    meautility==1.5.1 \
+    neuron==8.2.6 \
+    quantities==0.15.0 \
+    spikeinterface==0.100.4 \
+    tensorflow==2.13.1 \
+    keras==2.13.1
+
+# # Install visualization and plotting tools
+# RUN mamba install -y -n base \
+#     bokeh=3.1.1 \
+#     plotly \
+#     pyvista \
+#     vtk=9.3.1 \
+#     jupyterlab \
+#     notebook && \
+#     conda clean -afy
+
+# Install visualization and plotting tools
+RUN pip install --no-cache-dir \
+    bokeh==3.1.1 \
+    plotly \
+    pyvista \
+    vtk==9.3.1 \
+    jupyterlab \
+    notebook
+
+# # Install additional utilities and tools
+# RUN mamba install -y -n base \
+#     requests=2.32.3 \
+#     boto3=1.35.95 \
+#     zarr=2.16.1 \
+#     xlsxwriter \
+#     pytz \
+#     typing-extensions \
+#     python-dateuti && \
+#     conda clean -afy
+
+# Install additional utilities and tools
+RUN pip install --no-cache-dir \
+    requests==2.32.3 \
+    boto3==1.35.95 \
+    zarr==2.16.1 \
+    xlsxwriter \
+    pytz \
+    typing-extensions \
+    python-dateutil
+
+# Install MEA_Analysis
+COPY docker/MEA_Analysis.tar.gz /app/MEA_Analysis.tar.gz
+RUN mkdir -p /app/MEA_Analysis && \
+    tar -xzf /app/MEA_Analysis.tar.gz -C /app/MEA_Analysis && \
+    pip install --no-cache-dir /app/MEA_Analysis && \
+    rm -f /app/MEA_Analysis.tar.gz
+
+# Install NetPyNE
+COPY docker/netpyne.tar.gz /app/netpyne.tar.gz
+RUN mkdir -p /app/netpyne && \
+    tar -xzf /app/netpyne.tar.gz -C /app/netpyne && \
+    pip install --no-cache-dir /app/netpyne && \
+    rm -f /app/netpyne.tar.gz
+
+# Install Axon Reconstructor
+COPY docker/axon_reconstructor.tar.gz /app/axon_reconstructor.tar.gz
+RUN mkdir -p /app/axon_reconstructor && \
+    tar -xzf /app/axon_reconstructor.tar.gz -C /app/axon_reconstructor && \
+    pip install --no-cache-dir /app/axon_reconstructor && \
+    rm -f /app/axon_reconstructor.tar.gz
+
+# Install RBS Network Models
+COPY docker/RBS_network_models.tar.gz /app/RBS_network_models.tar.gz
+RUN mkdir -p /app/RBS_network_models && \
+    tar -xzf /app/RBS_network_models.tar.gz -C /app/RBS_network_models && \
+    pip install --no-cache-dir /app/RBS_network_models && \
+    rm -f /app/RBS_network_models.tar.gz
+
+# Default work directory
+WORKDIR /app
+CMD ["/bin/bash"]
