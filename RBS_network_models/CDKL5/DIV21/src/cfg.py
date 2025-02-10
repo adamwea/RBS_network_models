@@ -2,17 +2,17 @@ from netpyne import specs
 from RBS_network_models.utils.cfg_helper import import_module_from_path
 import os
 
+# NOTES ===============================================================
+
 # version control
 #version = 0.0 # prior to 28Dec2024
 #version = 1.0 # major updates on 28Dec2024
 version = 2.0 # # aw 2025-02-04 13:15:09
 
+# Versions ============================================================
+
 if version == 2.0:
     import random
-    #import DIV21.src.fitness_targets as fitness_targets
-    # import RBS_network_models.CDKL5.DIV21.src.fitness_targets as fitness_targets
-    # num_excite = fitness_targets.fitnessFuncArgs['features']['num_excite']
-    # num_inhib = fitness_targets.fitnessFuncArgs['features']['num_inhib']
     
     # iterate through feature data files (.py) in the features directory - get the latest one
     # import using import_module_from_path
@@ -46,11 +46,6 @@ if version == 2.0:
             warnings.simplefilter('always')
             
             print('Could not import params from __main__. Attempting to import from path...')
-            # warning, importing params in this way will import the evolutionary parameter space,
-            # importantly, it won't be importing the params selected by evol config.
-            # this is normal if you are running a single simulation, or otherwise testing the cfg script
-            # but if you are running a batch simulation, you should be importing the params from __main__
-            
             warning_message = ('\n'
                                 'Importing params from src. '
                                 'This is normal if you are running a single simulation, '
@@ -59,12 +54,6 @@ if version == 2.0:
                                 'importing the params from __main__')
             warnings.warn(warning_message)
             
-            # assert path is not None, 'Path to evolutionary parameter space not provided.'
-            # assert cfg is not None, 'cfg object not provided.'
-            
-            # params = import_module_from_path(path)
-            #params = params.params
-            #from DIV21.src.evol_params import params
             from RBS_network_models.CDKL5.DIV21.src.evol_params import params
             
             # cycle through params, if any are ranges of values, randomly select one between the range
@@ -83,11 +72,11 @@ if version == 2.0:
             print('Evolutionary parameters imported successfully.')
     import_evol_params()
     
+    # set simulation duration
     #cfg.duration_seconds = 1  # Duration of the simulation, in seconds
     cfg.duration_seconds = 15  # Duration of the simulation, in seconds
-    #cfg.duration_seconds = 10  # Duration of the simulation, in seconds
-    #cfg.duration_seconds = 35 # Duration of the simulation, in seconds
     
+    # set simulation configuration
     cfg.duration = cfg.duration_seconds * 1e3  # Duration of the simulation, in ms
     cfg.cache_efficient = True  # Use CVode cache_efficient option to optimize load on many cores
     cfg.dt = 0.025  # Internal integration timestep to use

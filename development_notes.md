@@ -26,3 +26,6 @@ your_package/
 └── .gitignore                # Git ignore file
 
 # aw 2025-02-09 15:17:36 - testing repo shift thing.
+- ok, git push origin dev_branch works 
+    - even though remote -v prints wrong links.
+

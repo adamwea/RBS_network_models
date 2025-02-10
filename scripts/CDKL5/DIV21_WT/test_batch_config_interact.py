@@ -14,6 +14,7 @@ kwargs = {
     'nrnCommand': 
         'shifter --image=adammwea/netsims_docker:v1 '
         'nrniv',
+    'seed_dir': "/pscratch/sd/a/adammwea/workspace/RBS_network_models/data/CDKL5/DIV21/seeds"
     }
 
 batchEvol(**kwargs)
@@ -22,10 +23,10 @@ batchEvol(**kwargs)
 # run everything in interactive node - run each script, one at a time
 
 # step 1:
-bash /pscratch/sd/a/adammwea/workspace/RBS_network_models/scripts/CDKL5/DIV21_WT/test_batch_opt_DIV21_WT_setup_interact_node.sh
+bash /pscratch/sd/a/adammwea/workspace/RBS_network_models/scripts/CDKL5/DIV21_WT/test_batch_config_interact_allocate.sh
 
 # step 2:
-bash /pscratch/sd/a/adammwea/workspace/RBS_network_models/scripts/CDKL5/DIV21_WT/test_batch_opt_DIV21_WT_optimize_in_interact_node.sh
+bash /pscratch/sd/a/adammwea/workspace/RBS_network_models/scripts/CDKL5/DIV21_WT/test_batch_config_interact_run.sh
 '''
 
 # Use this script to run the batch optimization in interactive node and test if parallelized simulations work properly.
