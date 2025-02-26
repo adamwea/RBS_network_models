@@ -2,8 +2,8 @@
 evolutionary parameter space for CDKL5_DIV21 project
 '''
 from netpyne import specs
-version = 1.0
-#version = 2.0
+#version = 1.0
+version = 2.0
 
 # aw 2025-02-07 16:47:42 - maximizing plausible ranges for each param
 if version == 2.0:

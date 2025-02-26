@@ -3,7 +3,8 @@
 conv_params = {
     'binSize': 0.01,
     'gaussianSigma': 0.01,
-    'thresholdBurst': 1.0,
+    #'thresholdBurst': 1.0,
+    'thresholdBurst': None, # no threshold - given the prominence method used in the burst detection, this should be fine...I hope
     'min_peak_distance': None, # no minimum peak distance - given the prominence method used in the burst detection, this should be fine...I hope
     'prominence': 2,
 }
@@ -14,7 +15,8 @@ mega_params = {
     #'gaussianSigma': conv_params['gaussianSigma']*15,
     ## aw 2025-02-04 17:33:19 - I want to be a little more sensitive to the peaks in the mega data
     'gaussianSigma': conv_params['gaussianSigma']*15,
-    'thresholdBurst': 1.0,
+    #'thresholdBurst': 1.0,
+    'thresholdBurst': None,
     'min_peak_distance': None, 
     'prominence': 4,
 }

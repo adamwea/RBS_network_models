@@ -36,6 +36,13 @@ def run_sorter(
     
     #modify params as needed
     kilosort2_params['keep_good_only'] = True # false by default
+    kilosort2_params['n_jobs'] = 32
+    # change chunk size from '1s' to half a second to help with memory issues
+    kilosort2_params['chunk_duration'] = '500ms'
+    #kilosort2_params['NT'] = 100 # number of timepoints in waveforms
+    #kilosort2_params['wave_length'] = 81 # increase from default of 61 to 100 to help capture more information for long refractory periods typical of excitatory neurons
+    #kilosort2_params['n_jobs'] = 64
+    
     
     for wellid, recording in recordings.items():
         # print
@@ -124,10 +131,25 @@ def run_sorter(
                 # seg_sort = si.remove_excess_spikes(seg_sort, rec_centered)
                 # seg_sort.register_recording(rec_centered)
                 waveform_output = os.path.join(waveform_output_dir, projectName, date, chipID, scanType, runID, wellid)
-                mea.extract_waveforms(segment, sorted_data, waveform_output, n_jobs=16)
+                mea.extract_waveforms(segment, sorted_data, waveform_output, n_jobs=16, ms_before=1, ms_after=5) # aw 2025-02-14 13:26:25 increates ms_before and after to try and better capture excitatory neurons
             except Exception as e:
                 print(f'Waveform extraction failed for {wellid} with error: {e}')
                 continue
+            
+            # export to phy
+            import spikeinterface as si # core module only
+            from spikeinterface.postprocessing import compute_spike_amplitudes, compute_principal_components
+            from spikeinterface.exporters import export_to_phy
+            sorting_analyzer = si.create_sorting_analyzer(sorting=sorted_data, recording=segment)
+
+            # some computations are done before to control all options
+            sorting_analyzer.compute(['random_spikes', 'waveforms', 'templates', 'noise_levels'])
+            _ = sorting_analyzer.compute('spike_amplitudes')
+            _ = sorting_analyzer.compute('principal_components', n_components = 5, mode="by_channel_local")
+
+            # the export process is fast because everything is pre-computed
+            phy_folder = os.path.join(output_folder, 'phy')
+            export_to_phy(sorting_analyzer=sorting_analyzer, output_folder=phy_folder)
                 
         # print big separator so its easy to see where each well starts and ends
         print('====================================================================================================')

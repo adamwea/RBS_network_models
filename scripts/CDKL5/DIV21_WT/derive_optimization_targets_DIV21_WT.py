@@ -2,7 +2,7 @@
 #from workspace.RBS_neuronal_network_models.optimizing.CDKL5_DIV21.scripts_dep.sim_helper import *
 #from RBS_network_models.network_analysis import build_network_metric_targets_dict, save_network_metric_dict_with_timestamp
 from RBS_network_models.network_analysis import save_network_metric_dict_with_timestamp
-from RBS_network_models.feature_struct import build_network_metric_targets_dict
+from RBS_network_models.feature_struct import build_network_metric_targets_dict_v2
 import numpy as np
 #load network metric npy
 npy_path = (
@@ -23,7 +23,7 @@ output_dir = (
 # derive initial optimization targets, save as .py script mean to be edited and annotated as needed.
 # feature scripts are saved in data/CDKL5/DIV21/features and annotated with the date they were created.
 network_metrics = np.load(npy_path, allow_pickle=True).item()
-network_metrics_targets = build_network_metric_targets_dict(network_metrics)
+network_metrics_targets = build_network_metric_targets_dict_v2(network_metrics)
 save_network_metric_dict_with_timestamp(network_metrics, network_metrics_targets, output_dir)
 
 # calibrate against fitness function

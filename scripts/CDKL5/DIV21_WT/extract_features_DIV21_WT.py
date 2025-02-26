@@ -14,7 +14,8 @@ raw_data_paths = [
     # NOTE: this is a list of paths to raw data files that you want to extract features from
     #      this is useful for batch processing.
     #      Also, NOTE: if parent dirs are provided, each path will be searched recursively for .h5 files
-    '/pscratch/sd/a/adammwea/workspace/_raw_data/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/data.raw.h5',
+    #'/pscratch/sd/a/adammwea/workspace/_raw_data/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/data.raw.h5',
+    '/pscratch/sd/a/adammwea/workspace/_raw_data/CDKL5-E6D_T2_C1_05212024/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/data.raw.h5'
 ]
 sorted_data_dir = (
     # this should be the parent directory of all sorted data files, ideally following proper data structure, naming conventions
@@ -24,12 +25,19 @@ sorted_data_dir = (
 )
 sorted_data_dir = glob.glob(sorted_data_dir, recursive=True)[0]
 # =============================================================================
+'''check available cores'''
+print("Number of cores available: ", os.cpu_count())
+# aw 2025-02-24 04:07:33 - I got an odd error trying to use 256 cores... just going to use 128 for now.
+max_workers = 128
+# import sys
+# sys.exit()
+# =============================================================================
 '''main'''
 #conv_params = CDKL5.DIV21.src.conv_params
 network_metrics_output_dir = os.path.join(os.path.dirname(sorted_data_dir), 'network_metrics')
 network_metrics_output_dir = os.path.abspath(network_metrics_output_dir)
 sorted_data_dir = os.path.abspath(sorted_data_dir)
-feature_data = ef.extract_network_features(
+feature_data = ef.extract_network_features_v2(
     raw_data_paths,
     sorted_data_dir=sorted_data_dir,
     output_dir = network_metrics_output_dir,
@@ -38,6 +46,19 @@ feature_data = ef.extract_network_features(
     mega_params=mega_params,
     limit_seconds = None, # Specify some limit in seconds to only plot a portion of the data
     plot_wfs = False, # plot waveforms while classifying neurons
+    #plot_wfs = True, # plot waveforms while classifying neurons
+    
+    max_workers = 50, # number of parallel processes to use
+    #max_workers = os.cpu_count(), # use all available cores
+    #max_workers = max_workers, # use all available cores
     # plot=True,
+    debug_mode=True, #default is False, set to True to reduce units and bursts processed for quicker debugging
     )
 print("Network metrics saved.")
+
+'''
+salloc -A m2043 -q interactive -C cpu -t 04:00:00 --nodes=1 --image=adammwea/axonkilo_docker:v7
+module load conda
+conda activate netsims_env
+python /pscratch/sd/a/adammwea/workspace/RBS_network_models/scripts/CDKL5/DIV21_WT/extract_features_DIV21_WT.py
+'''

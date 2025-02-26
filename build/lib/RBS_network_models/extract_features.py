@@ -6,6 +6,253 @@ import glob
 import MEA_Analysis.MEAProcessingLibrary.mea_processing_library as mea
 import numpy as np
 import matplotlib.pyplot as plt
+import spikeinterface.full as si
+
+''' Newer/Updated Functions'''
+
+# aw 2025-02-11
+    # get recording details from each h5 file, check for match where all details match in sorted_output_folders
+    # this way, we pair up recordings with their corresponding sorting output
+    # get paired data objects - network analysis requires both recording and sorting objects
+def get_data_obj_groups(h5_paths, raw_data_path, sorted_output_folders):
+    well_data_list = []
+    path_pairs = []
+    for h5_path in h5_paths:
+        
+        # get recording details
+        recording_details = mea.extract_recording_details(raw_data_path)[0] # NOTE: this works for a list of dirs or a single dir - but treats single dir as a list of a single dir
+        
+        #remove h5_file_path from recording_details - this wont match, this is the old path
+        h5_path = recording_details.pop('h5_file_path')
+        
+        for sorted_output_folder in sorted_output_folders:         
+            
+            # shortform
+            found = all([f'/{recording_details[key]}/' in sorted_output_folder for key in recording_details.keys()])
+            
+            if found:
+                path_pairs.append((h5_path, sorted_output_folder))
+                
+                def load_three_objects():
+                    # this function expects to load one sorting_obj, one recording_obj, and waveform data for the related well.
+                    # there may be any number of rec_segments in the recording_obj, but only one sorting_obj
+                    
+                    # get stream_select from sorted_output_folder path
+                    # look for the word 'well' in the string. It will beb followed by three digits.
+                    # get the int value of those digits. Should be 0-5
+                    stream_select = int(sorted_output_folder.split('well')[1][:3])
+                    wellid = f'well{str(0).zfill(2)}{stream_select}'
+                    
+                    # try to load sorting object
+                    try: sort_obj = mea.load_kilosort2_results(sorted_output_folder)
+                    except Exception as e:
+                        print(f"Error: Could not load sorting object for {sorted_output_folder}")
+                        print(e)
+                        sort_obj = e # put error in sort_obj for debugging
+                    
+                    #try to load recording object
+                    try: 
+                        _, well_recs, _, _ = mea.load_recordings(h5_path, stream_select=stream_select)
+                        rec_segments = well_recs[wellid]
+                    except Exception as e:
+                        print(f"Error: Could not load recording object for {h5_path}")
+                        print(e)
+                        #well_recs = e
+                        rec_segments = e
+                        
+                    #try to load waveform data
+                    try:
+                        #waveform_output_dir = os.path.join(sorted_output_folder, 'waveform_output')
+                        waveform_output_dir = sorted_output_folder.replace('sorter_output', '')
+                        #waveform_output_dir = os.path.join(waveform_output_dir)
+                        waveform_output_dir = waveform_output_dir.replace('sorted', 'waveforms')
+                        # register recordings to the sorting object before loading waveforms
+                        # this is necessary for the waveform data to be loaded correctly
+                        sort_obj.register_recording(rec_segments[0])
+                        waveform_extractor = mea.load_waveforms(waveform_output_dir, sorting = sort_obj)
+                    except Exception as e:
+                        print(f"Error: Could not load waveform data for {h5_path}")
+                        print(e)
+                        waveform_extractor= e
+                    
+                    # return paired objects
+                    return (rec_segments, sort_obj, waveform_extractor), recording_details                        
+                well_data, recording_details = load_three_objects()
+                well_data_list.append(well_data)
+                
+    return well_data_list, recording_details, path_pairs
+
+def extract_network_features_v2(
+    raw_data_paths, 
+    sorted_data_dir = None, 
+    output_dir = None, 
+    stream_select=None, 
+    plot=True, 
+    conv_params=None,
+    mega_params=None,
+    limit_seconds=None,
+    plot_wfs=False,
+    ):
+    
+    #init
+    assert output_dir is not None, f"Error: output_dir is None"
+    output_dir = os.path.abspath(output_dir)
+    #assert os.path.exists(output_dir), f"Error: output_dir does not exist. {output_dir}"
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+                                                                                   
+    #assert sorted_data_dir is not None, f"Error: sorted_data_dir is None"  
+    raw_data_paths = [os.path.abspath(raw_data_path) for raw_data_path in raw_data_paths]
+    sorted_data_dir = os.path.abspath(sorted_data_dir)
+    
+    #assert conv_params is defined, this is required for network analysis
+    assert conv_params is not None, f"Error: conv_params is None - must be provided for network analysis"
+    assert mega_params is not None, f"Error: mega_params is None - must be provided for network analysis"
+    
+    #iterate through raw data paths and get all h5 files
+    h5_paths = []
+    for raw_data_path in raw_data_paths:
+        if os.path.isdir(raw_data_path):
+            h5_paths.extend(glob.glob(os.path.join(raw_data_path, '**/*.h5'), recursive=True))
+        else:
+            h5_paths.append(raw_data_path)
+                
+    # iterate through sorter_output_dir and get all well output directories
+    sorted_output_folders = []
+    for root, dirs, files in os.walk(sorted_data_dir):
+        if root.endswith('sorter_output'):
+            if not os.path.exists(root):
+                print(f"Error: sorted_output_folder does not exist. {root}")
+                continue
+            sorted_output_folders.append(os.path.join(root))
+     
+    well_data_list, recording_details, path_pairs = get_data_obj_groups(h5_paths, raw_data_paths, sorted_output_folders)
+    
+    # iterate through data_obj_list and get network metrics for each pair
+    for well_data in well_data_list:
+        try:
+            # get recording, sorting, and waveform extractors
+            recording_segments, sort_obj, wf_extractor = well_data      # NOTE: I think in general, for this whole process, we shouldnt need more than one
+                        
+            #if sort_obj is an error, skip
+            if isinstance(sort_obj, Exception):
+                #print(f"Error: Could not load sorting object for {sort_obj}")
+                print(f"Error: Could not load sorting object.")
+                print(f'Error details: {sort_obj}')
+                print(f"Skipping well...")
+                continue
+            stream_id = recording_segments[0].stream_id
+            stream_num = int(stream_id.split('well')[1][:3])
+            kwargs = recording_details.copy()
+            kwargs['plot_wfs'] = plot_wfs
+            #wf_extractor = well_data[2]
+            extract_network_metrics(
+                recording_segments[0], # TODO: testing, only sending one seg.
+                sort_obj,
+                wf_extractor, 
+                stream_num,
+                conv_params,
+                mega_params,                
+                # mega_params,
+                # conv_params, 
+                output_dir,             
+                plot=plot, 
+                details=recording_details, 
+                limit_seconds = limit_seconds,
+                **kwargs)    
+        except Exception as e:
+            print(f"Error: Could not get network metrics for:")
+            from pprint import pprint
+            #pprint('recording_segments:', recording_segments)
+            #pprint(recording_segments)
+            pprint(recording_details)
+            #pprint(sort_obj)
+            print(e)
+            continue         
+    print('done')
+
+def extract_network_metrics(
+        recording_object, 
+        sorting_object,
+        wf_extractor, 
+        stream_num, 
+        conv_params,
+        mega_params,
+        #convolution_params_path, 
+        output_path,
+        save_path=None,
+        bursting_plot_path=None, bursting_fig_path=None, 
+        plot=False, 
+        limit_seconds = None,
+        **kwargs):
+    
+    # 
+    assert sorting_object is not None, f"Error: sorting_object is None"
+    
+    # import network analysis module
+    #from RBS_network_models.network_analysis import get_experimental_network_activity_metrics
+    from RBS_network_models.network_analysis import get_experimental_network_activity_metrics_v2 as get_experimental_network_activity_metrics
+        
+    # get network metrics
+    well_id = f'well{str(0).zfill(2)}{stream_num}'
+    well_recording_segment = recording_object 
+    try: 
+        network_metrics = get_experimental_network_activity_metrics(sorting_object, well_recording_segment, wf_extractor, conv_params, mega_params, **kwargs)
+    except Exception as e:
+        print(e)
+        print(f"Error: Could not get network metrics for {well_id}")
+    
+    # get recording details
+    print("Saving network metrics as numpy...")
+    recording_details = kwargs['details']
+    projectName = recording_details['projectName']
+    date = recording_details['date']
+    chipID = recording_details['chipID']
+    scanType = recording_details['scanType']
+    runID = recording_details['runID']
+    
+    # save network metrics
+    if save_path is None: 
+        save_path = os.path.join(output_path, f"{projectName}_{date}_{chipID}_{scanType}_{runID}_network_metrics_well00{stream_num}.npy")
+    print(f"Saving network metrics to {save_path}")
+    # save_path = os.path.join(output_path, f"network_metrics_well00{stream_num}.npy")
+    os.makedirs(os.path.dirname(save_path), exist_ok=True)
+    np.save(save_path, network_metrics)
+    
+    #plot network activity
+    if plot:
+        try: 
+            print("Generating network summary plot...")
+            # aw 2025-01-20 17:25:21 - I guess I'll just plot both for now. I like how mine looks, but additional context is nice for Roy.
+            save_path_3p = save_path.replace('.npy', '_3p.pdf') 
+            plot_network_metrics(
+                network_metrics, 
+                bursting_plot_path, 
+                bursting_fig_path,
+                save_path=save_path_3p,
+                #mode = '2p',
+                mode = '3p',
+                limit_seconds = limit_seconds,
+                )
+            
+            save_path_2p = save_path.replace('.npy', '_2p.pdf')
+            plot_network_metrics(
+                network_metrics, 
+                bursting_plot_path, 
+                bursting_fig_path,
+                save_path=save_path_2p,
+                mode = '2p',
+                limit_seconds = limit_seconds,
+                )  
+        except Exception as e:
+            print(e)
+            print(f"Error: Could not plot network activity for {well_id}")  
+
+    # return network metrics and save path
+    print(f"Saved network metrics to {save_path}")
+    return network_metrics, save_path
+
+''' Functions below this point predate 2025-02-11 21:11:58'''
 # =============================================================================
 def extract_network_features(
     raw_data_paths, 
@@ -164,101 +411,7 @@ def extract_network_features(
             print(e)
             continue         
     print('done')
-        
-def extract_network_metrics(
-        recording_object, 
-        sorting_object, 
-        stream_num, 
-        conv_params,
-        mega_params,
-        #convolution_params_path, 
-        output_path,
-        save_path=None,
-        bursting_plot_path=None, bursting_fig_path=None, 
-        plot=False, 
-        limit_seconds = None,
-        **kwargs):
-    
-    # 
-    assert sorting_object is not None, f"Error: sorting_object is None"
-    
-    # import network analysis module
-    #from RBS_network_models.network_analysis import get_experimental_network_activity_metrics
-    from .network_analysis import get_experimental_network_activity_metrics
-    
-    # get network metrics
-    well_id = f'well{str(0).zfill(2)}{stream_num}'
-    well_recording_segment = recording_object 
-    try: 
-        network_metrics = get_experimental_network_activity_metrics(sorting_object, well_recording_segment, conv_params, mega_params)
-    except Exception as e:
-        print(e)
-        print(f"Error: Could not get network metrics for {well_id}")
-    
-    # get mega network metrics
-    #mega_burst_conv_params = conv_params
-    #mega_burst_conv_params.conv_params['binSize'] *= 5 # HACK: this is a hack to make the mega burst conv params bin size 10x larger
-    #mega_burst_conv_params.conv_params['gaussianSigma'] *= 15 # HACK: this is a hack to make the mega burst conv params sigma 10x larger
-    # mega_burst_conv_params = mega_params
-    # mega_metrics = get_experimental_network_activity_metrics(sorting_object, well_recording_segment, mega_burst_conv_params)
-    
-    # add mega metrics to network metrics
-    #network_metrics['mega_bursting_data'] = mega_metrics['bursting_data']
-    
-    # get recording details
-    print("Saving network metrics as numpy...")
-    recording_details = kwargs['details']
-    projectName = recording_details['projectName']
-    date = recording_details['date']
-    chipID = recording_details['chipID']
-    scanType = recording_details['scanType']
-    runID = recording_details['runID']
-    
-    # save network metrics
-    if save_path is None: 
-        save_path = os.path.join(output_path, f"{projectName}_{date}_{chipID}_{scanType}_{runID}_network_metrics_well00{stream_num}.npy")
-    # save_path = os.path.join(output_path, f"network_metrics_well00{stream_num}.npy")
-    os.makedirs(os.path.dirname(save_path), exist_ok=True)
-    np.save(save_path, network_metrics)
-    
-    # #save mega network metrics
-    # mega_save_path = save_path.replace('.npy', '_mega.npy')
-    # np.save(mega_save_path, mega_metrics)
-    
-    #plot network activity
-    #print("Plotting network activity...")
-    if plot:
-        try: 
-            print("Generating network summary plot...")
-            # aw 2025-01-20 17:25:21 - I guess I'll just plot both for now. I like how mine looks, but additional context is nice for Roy.
-            save_path_3p = save_path.replace('.npy', '_3p.pdf') 
-            plot_network_metrics(
-                network_metrics, 
-                bursting_plot_path, 
-                bursting_fig_path,
-                save_path=save_path_3p,
-                #mode = '2p',
-                mode = '3p',
-                limit_seconds = limit_seconds,
-                )
-            
-            save_path_2p = save_path.replace('.npy', '_2p.pdf')
-            plot_network_metrics(
-                network_metrics, 
-                bursting_plot_path, 
-                bursting_fig_path,
-                save_path=save_path_2p,
-                mode = '2p',
-                limit_seconds = limit_seconds,
-                )  
-        except Exception as e:
-            print(e)
-            print(f"Error: Could not plot network activity for {well_id}")  
-
-    # return network metrics and save path
-    print(f"Saved network metrics to {save_path}")
-    return network_metrics, save_path
-    
+           
 def plot_network_metrics(
     network_metrics,
     bursting_plot_path,
@@ -269,11 +422,22 @@ def plot_network_metrics(
     ):
     
     # TODO: blend with plot comparison plot? I think.
+    # aw 2025-02-21 00:57:16 - pretty sure this is done.
+    
     from RBS_network_models.network_analysis import plot_network_summary
+    
+    # plot network activity
     plot_network_summary(network_metrics, bursting_plot_path, bursting_fig_path, 
                          save_path=save_path, mode=mode,
                          limit_seconds=limit_seconds
                          )   
+    
+    # plot shorter plots for better view of bursting identification
+    save_path_35s = save_path.replace('.pdf', '_35s.pdf')
+    plot_network_summary(network_metrics, bursting_plot_path, bursting_fig_path, 
+                        save_path=save_path_35s, mode=mode,
+                        limit_seconds=35
+                        )   
     
 # =============================================================================
 # reference

@@ -1,18 +1,78 @@
 import os
 import sys
-#import importlib.util
 import shutil
 import datetime
 import json
 import pandas as pd
-# from optimization_projects.CDKL5_DIV21.scripts.batch_scripts.parse_kwargs import configure_global_user_vars, save_config_to_file
-# from workspace.RBS_neuronal_network_models.optimizing.CDKL5_DIV21.scripts_dep.sim_helper import import_module_from_path
-# import dill
-# from workspace.RBS_neuronal_network_models.optimizing.CDKL5_DIV21.scripts_dep.sim_helper import 
 from netpyne import sim
 import dill
+import numpy as np
+from multiprocessing import Pool
+from tqdm import tqdm
+# ===============================================================
 
 '''batchRun helper functions (newer)'''
+def process_seed(seed, params, verbose):
+    candidate = []
+    try:
+        assert os.path.exists(seed), f'Seed file {seed} does not exist'
+        if '_cfg' in seed:
+            if verbose:
+                print('Loading file', seed)
+            with open(seed, 'rb') as f:
+                if verbose:
+                    print('Loading seed file...')
+                cfg = dill.load(f)
+        else:
+            cfg = sim.loadSimCfg(seed, setLoaded=False)
+        
+        for key, value in params.items():
+            if hasattr(cfg, key):
+                candidate.append(getattr(cfg, key))
+            else:
+                random_val = np.random.uniform(value[0], value[1])
+                candidate.append(random_val)
+        
+    except Exception as e:
+        if verbose:
+            print(f"Error processing {seed}: {e}")
+        return None
+    
+    return candidate
+
+def get_seed_cfgs(seed_dir, params, num_workers=4, verbose=True):
+    # check number of available cpus
+    import os
+    num_cpus = os.cpu_count()
+    
+    try:
+        seed_list = [os.path.join(seed_dir, f) for f in os.listdir(seed_dir)]
+        # if len(seed_list) == 0:
+        #     raise ValueError(f'No seed files found in {seed_dir}')
+        # if len(seed_list) < num_workers:
+        #     num_workers = len(seed_list)
+        # if num_workers > num_cpus:
+        #     num_workers = num_cpus
+        # if num_workers is -1 or num_workers is None:
+        #     num_workers = num_cpus
+        # if num_workers is 0:
+        #     num_workers = 1
+        assert num_workers < len(seed_list), f'num_workers ({num_workers}) must be less than the number of seed files ({len(seed_list)})'
+        assert num_workers < num_cpus, f'num_workers ({num_workers}) must be less than the number of available cpus ({num_cpus})'
+        
+        
+        with Pool(processes=num_workers) as pool:
+            if verbose:
+                candidates = pool.starmap(process_seed, [(seed, params, verbose) for seed in seed_list])
+            else:
+                candidates = list(tqdm(pool.starmap(process_seed, [(seed, params, verbose) for seed in seed_list]), total=len(seed_list), desc="Processing Seeds"))
+        
+        return [c for c in candidates if c is not None]  # Filter out None values if any error occurred
+    except Exception as e:
+        if verbose:
+            print(f"Error in get_seed_cfgs: {e}")
+        return None
+
 def rangify_params(params):
     for key, value in params.items():
         if isinstance(value, list):
@@ -26,7 +86,7 @@ def rangify_params(params):
     assert all(isinstance(value, list) for value in params.values()), 'All values in params must be lists'
     return params
 
-def get_seed_cfgs(seed_dir, params):
+def get_seed_cfgs_old(seed_dir, params):
     try:
         seed_list = [os.path.join(seed_dir, f) for f in os.listdir(seed_dir)]
         candidates = []
@@ -42,6 +102,9 @@ def get_seed_cfgs(seed_dir, params):
                 for key, value in params.items():
                     if hasattr(cfg, key):
                         candidate.append(getattr(cfg, key))
+                    elif not hasattr(cfg, key):
+                        random_val = np.random.uniform(value[0], value[1]) ## if the key is not in the cfg, generate a random value - since this format is position sensitive
+                        candidate.append(random_val)
                 candidates.append(candidate)
             else:
                 candidate = []
@@ -50,6 +113,9 @@ def get_seed_cfgs(seed_dir, params):
                 for key, value in params.items():
                     if hasattr(cfg, key):
                         candidate.append(getattr(cfg, key))
+                    elif not hasattr(cfg, key):
+                        random_val = np.random.uniform(value[0], value[1])
+                        candidate.append(random_val)
                 candidates.append(candidate)
     except:
         candidates = None

@@ -37,7 +37,7 @@ def process_simulation(
     # re-plot simulation of interest - re-generate summary plot and all associated plots
     print("Replotting simulation of interest...")
     start = time()
-    plot_simulation(
+    comparison_summary_slide_paths = plot_simulation(
         sim_data_path,
         average_fitness,
         conv_params=conv_params,
@@ -51,6 +51,8 @@ def process_simulation(
     # privileged_print(f"Time taken: {time()-start} seconds")
     print("Replotting complete.")
     print(f"Time taken: {time()-start} seconds")
+    
+    return comparison_summary_slide_paths
 
 def fit_simulation(
     sim_data_path,
@@ -924,11 +926,20 @@ def plot_simulation(sim_data_path,
         #privileged_print(f"Comparison summary slide saved to {comparison_summary_slide_path}")
         print(f"Comparison summary slide saved to {comparison_summary_slide_path}")
         plt.close()
-    build_comparision_summary_slide(sim_data_path, trim_start = trim_start)
+        
+        # return comparison_summary_slide_paths
+        comparison_summary_slide_paths = [
+            comparison_summary_slide_path.replace('.pdf', '.png'),
+            comparison_summary_slide_path.replace('.png', '.pdf'),
+        ]
+        return comparison_summary_slide_paths
+    comparison_summary_slide_paths = build_comparision_summary_slide(sim_data_path, trim_start = trim_start)
     # privileged_print("\tComparison summary slide saved.")
     # privileged_print(f'\tTime taken: {time()-start_summary_slide} seconds')
     print("\tComparison summary slide saved.")
     print(f'\tTime taken: {time()-start_summary_slide} seconds')
+    
+    return comparison_summary_slide_paths
 
 ''' idk '''
 def calculate_simulation_fit(

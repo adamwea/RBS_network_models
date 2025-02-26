@@ -2,6 +2,8 @@ pyproject.toml
 setup.py
 ./RBS_network_models/__init__.py
 ./RBS_network_models/check_fitness_scores.py
+./RBS_network_models/classify_neurons.py
+./RBS_network_models/dtw.py
 ./RBS_network_models/experimental.py
 ./RBS_network_models/extract_features.py
 ./RBS_network_models/feature_struct.py
@@ -51,11 +53,14 @@ setup.py
 ./tests/_99_test_get_all_pdfs_parallel.py
 ./tests/_9_test_fitnessFunc.py
 ./tests/__init__.py
+./tests/test_dtw.py
 ./tests/test_extract_features.py
 ./tests/test_sensitivity_analysis.py
 ./tests/test_spikesort.py
 RBS_network_models/__init__.py
 RBS_network_models/check_fitness_scores.py
+RBS_network_models/classify_neurons.py
+RBS_network_models/dtw.py
 RBS_network_models/experimental.py
 RBS_network_models/extract_features.py
 RBS_network_models/feature_struct.py
@@ -109,6 +114,7 @@ tests/_99_test_get_all_pdfs.py
 tests/_99_test_get_all_pdfs_parallel.py
 tests/_9_test_fitnessFunc.py
 tests/__init__.py
+tests/test_dtw.py
 tests/test_extract_features.py
 tests/test_sensitivity_analysis.py
 tests/test_spikesort.py
