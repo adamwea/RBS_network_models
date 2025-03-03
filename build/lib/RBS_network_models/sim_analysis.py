@@ -4,9 +4,9 @@ from time import time
 from RBS_network_models.fitnessFunc import fitnessFunc
 from netpyne import sim
 import numpy as np
-from RBS_network_models.network_analysis import get_simulated_network_activity_metrics
+from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import get_simulated_network_activity_metrics
 import matplotlib.pyplot as plt
-from RBS_network_models.network_analysis import plot_raster
+from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_raster
 import os
 
 def process_simulation(
@@ -299,7 +299,7 @@ def plot_simulation(sim_data_path,
         # mega_conv_params['gaussianSigma'] *= 15
         #mega_ax, _ = plot_network_activity_aw(new_ax, SpikeTimes, **mega_conv_params) #TODO need to make sure this function agrees with mandar. would be best if we shared a function here.
         
-        from RBS_network_models.network_analysis import plot_network_bursting_experimental
+        from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_network_bursting_experimental
         #new_ax = plot_network_bursting_experimental(new_ax, bursting_ax, mega_ax=mega_ax)
         new_ax[0] = plot_network_bursting_experimental(new_ax[0], bursting_ax) #TODO: rename this func. It works for both experimental and simulated bursting
         new_ax[1] = plot_network_bursting_experimental(new_ax[1], mega_ax, mode='mega')
@@ -559,7 +559,7 @@ def plot_simulation(sim_data_path,
             mega_ax = network_metrics['mega_bursting_data']['bursting_summary_data']['ax']
             
             #plot
-            from RBS_network_models.network_analysis import plot_network_bursting_experimental
+            from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_network_bursting_experimental
             new_ax[0] = plot_network_bursting_experimental(new_ax[0], bursting_ax) #TODO: rename this func. It works for both experimental and simulated bursting
             new_ax[1] = plot_network_bursting_experimental(new_ax[1], mega_ax, mode='mega')
             

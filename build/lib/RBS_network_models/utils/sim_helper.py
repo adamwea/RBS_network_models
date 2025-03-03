@@ -424,7 +424,7 @@ def reprocess_simulation(
             SpikeTimes = kwargs['network_metrics']['spiking_data']['spiking_times_by_unit']
             #from DIV21.utils.fitness_helper import plot_network_activity_aw
             #from RBS_network_models.developing.utils.analysis_helper import plot_network_activity_aw
-            from RBS_network_models.network_analysis import plot_network_activity_aw
+            from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_network_activity_aw
             #bursting_ax, _ = plot_network_activity_aw(new_ax, SpikeTimes, **conv_params) #TODO need to make sure this function agrees with mandar. would be best if we shared a function here.
             bursting_ax = kwargs['network_metrics']['bursting_data']['bursting_summary_data']['ax']
             mega_ax = kwargs['network_metrics']['mega_bursting_data']['bursting_summary_data']['ax']
@@ -435,7 +435,7 @@ def reprocess_simulation(
             # mega_conv_params['gaussianSigma'] *= 15
             #mega_ax, _ = plot_network_activity_aw(new_ax, SpikeTimes, **mega_conv_params) #TODO need to make sure this function agrees with mandar. would be best if we shared a function here.
             
-            from RBS_network_models.network_analysis import plot_network_bursting_experimental
+            from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_network_bursting_experimental
             new_ax = plot_network_bursting_experimental(new_ax, bursting_ax, mega_ax=mega_ax)            
             
             # if trim_start, trim first x seconds from the start of the simulation
@@ -642,7 +642,7 @@ def reprocess_simulation(
                 
                 #from DIV21.utils.fitness_helper import plot_network_activity_aw
                 #from RBS_network_models.developing.utils.analysis_helper import plot_network_activity_aw
-                from RBS_network_models.network_analysis import plot_network_activity_aw
+                from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_network_activity_aw
                 new_ax, _ = plot_network_activity_aw(new_ax, SpikeTimes, **conv_params) #TODO need to make sure this function agrees with mandar. would be best if we shared a function here.
                 
                 new_ax.set_title('Bursting summary')

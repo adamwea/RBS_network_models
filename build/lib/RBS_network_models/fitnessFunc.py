@@ -1947,7 +1947,7 @@ def calculate_and_save_fitness(kwargs):
 '''main functions'''
 def calculate_network_metrics(kwargs):
     print('Calculating network activity metrics...')
-    from RBS_network_models.network_analysis import get_simulated_network_activity_metrics
+    from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import get_simulated_network_activity_metrics
     network_metrics = get_simulated_network_activity_metrics(**kwargs)
         
     # Save the network metrics to a file

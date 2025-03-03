@@ -1110,7 +1110,7 @@ def calculate_and_save_fitness(kwargs):
 '''main functions'''
 def calculate_network_metrics(kwargs):
     print('Calculating network activity metrics...')
-    from RBS_network_models.network_analysis import get_simulated_network_activity_metrics
+    from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import get_simulated_network_activity_metrics
     #from RBS_network_models.utils.analysis_helper import get_simulated_network_activity_metrics
     #from RBS_network_models.developing.utils.analysis_helper import get_simulated_network_activity_metrics
     #from modules.analysis.analyze_network_activity import get_simulated_network_activity_metrics

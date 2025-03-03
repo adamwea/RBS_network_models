@@ -1,7 +1,7 @@
 # New Fitness Targets
 #from workspace.RBS_neuronal_network_models.optimizing.CDKL5_DIV21.scripts_dep.sim_helper import *
 #from RBS_network_models.network_analysis import build_network_metric_targets_dict, save_network_metric_dict_with_timestamp
-from RBS_network_models.network_analysis import save_network_metric_dict_with_timestamp
+from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import save_network_metric_dict_with_timestamp
 from RBS_network_models.feature_struct import build_network_metric_targets_dict_v2
 import numpy as np
 #load network metric npy

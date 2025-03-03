@@ -1,4 +1,4 @@
-from RBS_network_models.network_analysis import get_min, get_max
+from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import get_min, get_max
 import numpy as np
 from copy import deepcopy
 #import numpy as np

@@ -1,5 +1,5 @@
 import os
-from RBS_network_models.run_sorter import run_sorter
+from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.run_sorter import run_sorter
 import glob
 
 # =============================================================================

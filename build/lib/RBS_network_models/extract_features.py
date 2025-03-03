@@ -191,7 +191,7 @@ def extract_network_metrics(
     
     # import network analysis module
     #from RBS_network_models.network_analysis import get_experimental_network_activity_metrics
-    from RBS_network_models.network_analysis import get_experimental_network_activity_metrics_v2 as get_experimental_network_activity_metrics
+    from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import get_experimental_network_activity_metrics_v2 as get_experimental_network_activity_metrics
         
     # get network metrics
     well_id = f'well{str(0).zfill(2)}{stream_num}'
@@ -424,7 +424,7 @@ def plot_network_metrics(
     # TODO: blend with plot comparison plot? I think.
     # aw 2025-02-21 00:57:16 - pretty sure this is done.
     
-    from RBS_network_models.network_analysis import plot_network_summary
+    from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_network_summary
     
     # plot network activity
     plot_network_summary(network_metrics, bursting_plot_path, bursting_fig_path, 

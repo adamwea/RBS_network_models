@@ -216,8 +216,9 @@ def fitnessFunc(simData=None, mode='optimizing', **kwargs):
             #return error
             raise ValueError(f'Error in network metrics: {error}')
 
-        # Calculate fitness and return the result
-        return calculate_and_save_fitness(**kwargs)
+        # Calculate fitness and return the result # TODO: this is broke rn, but will fix later
+        average_fitness = calculate_and_save_fitness(**kwargs)
+        return average_fitness
     except Exception as e:
         print(f'Error calculating fitness: {e}')
         fitnessResults = {
@@ -1947,8 +1948,10 @@ def calculate_and_save_fitness(kwargs):
 '''main functions'''
 def calculate_network_metrics(kwargs):
     print('Calculating network activity metrics...')
-    from RBS_network_models.network_analysis import get_simulated_network_activity_metrics
-    network_metrics = get_simulated_network_activity_metrics(**kwargs)
+    #from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import get_simulated_network_activity_metrics
+    from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import compute_network_metrics
+    #network_metrics = get_simulated_network_activity_metrics(**kwargs)
+    network_metrics = compute_network_metrics(**kwargs)
         
     # Save the network metrics to a file
     # if networks_metrics is None, save an error message
