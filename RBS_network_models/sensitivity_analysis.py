@@ -15,7 +15,6 @@ Notes predating # aw 2025-02-27 14:36:09
         
         # NOTE: nvm I figured it out. I can just modify the string directly.
 '''
-
 # imports ===================================================================================================
 import os
 import glob
@@ -38,7 +37,6 @@ from copy import deepcopy
 from PyPDF2 import PdfReader, PdfWriter
 import fitz  # PyMuPDF
 import re
-
 # functions ===================================================================================================
 '''newer functions'''
 def metrics_loader_v2(network_metrics_file):
@@ -692,34 +690,52 @@ def map_cfg_to_netparams_v2(simConfig, netParams):
         matching_paths = []  # To store all matching paths
 
         while stack:
-            current_obj, current_path = stack.pop()
             
-            # if 'connParams' in current_path:  # Debugging: specific context output
-            #     print('found connParams')
-            #     if 'I->E' in current_path:
-            #         print('found I->E')
+            try:
+                current_obj, current_path = stack.pop()
+                
+                # if 'connParams' in current_path:  # Debugging: specific context output
+                #     print('found connParams')
+                #     if 'I->E' in current_path:
+                #         print('found I->E')
 
-            if isinstance(current_obj, dict):
-                for key, val in current_obj.items():
-                    new_path = f"{current_path}.{key}" if current_path else key
-                    if val == value:
-                        matching_paths.append(new_path)
-                    elif isinstance(val, str):  # Handle HOC string matches
-                        if str(value) in val:
-                            matching_paths.append(new_path)
-                    elif isinstance(val, (dict, list)):
-                        stack.append((val, new_path))  # Push deeper layer onto stack
-
-            elif isinstance(current_obj, list):
-                for i, item in enumerate(current_obj):
-                    new_path = f"{current_path}[{i}]"
-                    if item == value:
-                        matching_paths.append(new_path)
-                    elif isinstance(item, str):  # Handle HOC string matches
-                        if str(value) in item:
-                            matching_paths.append(new_path)
-                    elif isinstance(item, (dict, list)):
-                        stack.append((item, new_path))  # Push list item onto stack
+                if isinstance(current_obj, dict):
+                    for key, val in current_obj.items():
+                        new_path = f"{current_path}.{key}" if current_path else key
+                        if isinstance(val, (int, float)):
+                            if val == value:
+                                matching_paths.append(new_path)
+                        elif isinstance(val, str):  # Handle HOC string matches
+                            if str(value) in val:
+                                matching_paths.append(new_path)
+                        elif isinstance(val, (dict, list)):
+                            stack.append((val, new_path))  # Push deeper layer onto stack
+                        else:
+                            print('Unhandled type:', type(val))
+                            raise ValueError(f"Unhandled type: {type(val)}")
+                            
+                elif isinstance(current_obj, list):
+                    for i, item in enumerate(current_obj):
+                        new_path = f"{current_path}[{i}]"
+                        if isinstance(item, (int, float)):
+                            if item == value:
+                                matching_paths.append(new_path)
+                        elif isinstance(item, str):  # Handle HOC string matches
+                            if str(value) in item:
+                                matching_paths.append(new_path)
+                        elif isinstance(item, (dict, list)):
+                            stack.append((item, new_path))  # Push list item onto stack
+                        else:
+                            print('Unhandled type:', type(item))
+                            raise ValueError(f"Unhandled type: {type(item)}")
+                            
+                else:
+                    print('Unhandled type:', type(current_obj))
+                    raise ValueError(f"Unhandled type: {type(current_obj)}")    
+            except Exception as e:
+                traceback.print_exc()
+                print(f"Error in find_value_in_netparams: {e}")
+                continue
 
         return matching_paths  # Return all matching paths
     
@@ -810,6 +826,45 @@ def map_cfg_to_netparams_v2(simConfig, netParams):
 
     return mapping, strategy
 
+def try_load_sim(cfg):
+    saveFolder = cfg['saveFolder']
+    simLabel = cfg['simLabel']
+    expected_save_path = os.path.join(saveFolder, f'{simLabel}_data.pkl')
+    exists = os.path.exists(expected_save_path)
+    if exists: 
+        print(f'Simulation data for {simLabel} already exists at {expected_save_path}. Attempting to load...')
+        try:
+            sim.load(expected_save_path)
+            assert hasattr(sim, 'net'), "Simulation data loaded but 'net' attribute is missing."
+            assert hasattr(sim, 'cfg'), "Simulation data loaded but 'simConfig' attribute is missing."
+            #assert cfg == sim.cfg, "Loaded simulation data does not match the expected configuration."
+            if not cfg == sim.cfg:
+                error_count = 0
+                # iterate through each element of cfg and check if it's in sim.cfg
+                for key, val in cfg.items():
+                    # aw 2025-03-04 14:06:40 - I think we can ignore filename as long as simLabel and simFolder are correct.
+                    if key in ['filename']: continue
+                    try:
+                        assert sim.cfg[key] == val
+                    except:
+                        #print(f'Expected {key} = {val} but got {sim.cfg[key]}')
+                        print(f'Loaded value: {key} = {sim.cfg[key]}')
+                        print(f'Expected value: {key} = {val}')
+                        error_count += 1
+                if error_count > 0: raise AssertionError("Loaded simulation data does not match the expected configuration.")
+                else: pass
+            # # aw 2025-03-01 16:33:00 - checking cfg in this way doesnt work here since we're loading before prep config
+            assert hasattr(sim, 'simData'), "Simulation data loaded but 'simData' attribute is missing."
+            assert hasattr(sim, 'allSimData'), "Simulation data loaded but 'allSimData' attribute is missing."
+            print(f'Simulation data for {simLabel} loaded successfully.')
+            return True, expected_save_path
+        except Exception as e:
+            print(f'Error loading simulation data for {simLabel}: {e}')
+            print(f'Will attempt to run the simulation instead.')
+            try: sim.clearAll()
+            except: pass
+    return False, None
+
 def prepare_permuted_sim_v2(pkwargs):
     
     # subfuncs ===================================================================================================
@@ -827,38 +882,18 @@ def prepare_permuted_sim_v2(pkwargs):
     
     # main ===================================================================================================
     # unpack pkwargs
-    sim_data_path = pkwargs.get('sim_data_path', None)
+    sim_data_path = pkwargs.get('sim_data_path', None) # og_simulation_data_path
     cfg = pkwargs.get('cfg', None)
     cfg_param = pkwargs.get('cfg_param', None)
     cfg_val = pkwargs.get('cfg_val', None)
-    try_loading = pkwargs.get('try_loading', False)
+    # try_loading = pkwargs.get('try_loading', False)
     
-    #try loading sim data if possible
-    if try_loading:
-        try:
-            expected_save_path = os.path.join(cfg['saveFolder'], f'{cfg["simLabel"]}_data.pkl')
-            exists = os.path.exists(expected_save_path)
-            if exists:
-                print(f'Simulation data for {cfg["simLabel"]} already exists at {expected_save_path}. Attempting to load...')
-                sim.load(expected_save_path)
-                assert hasattr(sim, 'net'), "Simulation data loaded but 'net' attribute is missing."
-                #assert hasattr(sim, 'netParams'), "Simulation data loaded but 'netParams' attribute is missing."
-                assert hasattr(sim, 'cfg'), "Simulation data loaded but 'simConfig' attribute is missing."
-                #assert cfg == sim.cfg, "Loaded simulation data does not match the expected configuration."
-                assert cfg[cfg_param]==sim.cfg[cfg_param], "Loaded simulation data does not match the expected configuration."
-                assert hasattr(sim, 'simData'), "Simulation data loaded but 'simData' attribute is missing."
-                assert hasattr(sim, 'allSimData'), "Simulation data loaded but 'allSimData' attribute is missing."
-                #assert hasattr(sim, 'allCellData'), "Simulation data loaded but 'allCellData' attribute is missing."
-                print(f'Simulation data for {cfg["simLabel"]} loaded successfully.')
-                return
-        except Exception as e:
-            print(f'Error loading simulation data for {cfg["simLabel"]}: {e}')
-            print(f'Will attempt to run the simulation instead.')
-            try: sim.clearAll()
-            except: pass   # continue to run the simulation if loading fails
+    # #try loading sim data if possible
+    # if try_loading:
+    #     success, sim_data_path = try_load_sim(cfg)
     
     # load netparams and permute
-    sim.load(sim_data_path, simConfig=cfg)
+    sim.load(sim_data_path, simConfig=cfg) # load og sim_data w/ permuted cfg
     simConfig = specs.SimConfig(simConfigDict=cfg)
     netParams = sim.loadNetParams(sim_data_path, setLoaded=False)
     
@@ -923,105 +958,87 @@ def prepare_permuted_sim_v2(pkwargs):
     sim.net.addStims()                  # add stimulation (usually there are none)
     sim.setupRecording()                # setup variables to record for each cell (spikes, V traces, etc)
 
-def run_permutation_v2(cfg, cfg_param, cfg_val, tkwargs):
+def run_permutation_v2(simLabel, simFolder, cfg, cfg_param, cfg_val, tkwargs):
     
     # subfuncs ===================================================================================================
-    def try_load_sim(cfg):
-        saveFolder = cfg['saveFolder']
-        simLabel = cfg['simLabel']
-        expected_save_path = os.path.join(saveFolder, f'{simLabel}_data.pkl')
-        exists = os.path.exists(expected_save_path)
-        if exists: 
-            print(f'Simulation data for {simLabel} already exists at {expected_save_path}. Attempting to load...')
-            try:
-                sim.load(expected_save_path)
-                assert hasattr(sim, 'net'), "Simulation data loaded but 'net' attribute is missing."
-                assert hasattr(sim, 'cfg'), "Simulation data loaded but 'simConfig' attribute is missing."
-                #assert cfg == sim.cfg, "Loaded simulation data does not match the expected configuration."
-                # # aw 2025-03-01 16:33:00 - checking cfg in this way doesnt work here since we're loading before prep config
-                assert hasattr(sim, 'simData'), "Simulation data loaded but 'simData' attribute is missing."
-                assert hasattr(sim, 'allSimData'), "Simulation data loaded but 'allSimData' attribute is missing."
-                print(f'Simulation data for {simLabel} loaded successfully.')
-                return True, expected_save_path
-            except Exception as e:
-                print(f'Error loading simulation data for {simLabel}: {e}')
-                print(f'Will attempt to run the simulation instead.')
-                try: sim.clearAll()
-                except: pass
-        return False, None
                 
     # main ===================================================================================================
     # init
-    simLabel = cfg['simLabel']
+    #simLabel = cfg['simLabel']
     print(f'Running permutation {simLabel}...')
     indent_increase()
     
-    # unpack tkwargs
-    #reference_data_path = tkwargs.get('reference_data_path', None)
-    sim_data_path = tkwargs.get('sim_data_path', None)
-    #try_loading = tkwargs.get('try_loading', False) # # aw 2025-02-27 19:10:03 not sure I need this
-    try_loading = tkwargs.get('try_load_sim_data', True)
-    #plot = tkwargs.get('plot_permutations', False)
-    conv_params = tkwargs.get('conv_params', None)
-    mega_params = tkwargs.get('mega_params', None)
-    #fitnessFuncArgs = tkwargs.get('fitnessFuncArgs', None)
+    try:
     
-    #assert reference_data_path is not None, "Reference data path must be provided for plotting."
-    assert conv_params is not None, "Conversion parameters must be provided for plotting."
-    assert mega_params is not None, "Mega parameters must be provided for plotting."
-    #assert fitnessFuncArgs is not None, "Fitness function arguments must be provided for plotting."
+        # unpack tkwargs
+        try_loading = tkwargs.get('try_load_sim_data', True)
+        conv_params = tkwargs.get('conv_params', None)
+        mega_params = tkwargs.get('mega_params', None)
         
-    # prep pkwargs for prepare_permuted_sim
-    pkwargs = {
-        'sim_data_path': sim_data_path,
-        'cfg': cfg,
-        'cfg_param': cfg_param,
-        'cfg_val': cfg_val,
-        #'try_loading': try_loading,
-        }
+        #assert reference_data_path is not None, "Reference data path must be provided for plotting."
+        assert conv_params is not None, "Conversion parameters must be provided for plotting."
+        assert mega_params is not None, "Mega parameters must be provided for plotting."
+
+        # prep pkwargs for prepare_permuted_sim
+        pkwargs = {
+            'sim_data_path': tkwargs['sim_data_path'], #og_simulation_data_path,
+            'simLabel': simLabel,
+            'simFolder': simFolder, # simLabel + simFolder = new sim path
+            'cfg_param': cfg_param,
+            'cfg_val': cfg_val,
+            'cfg': cfg,
+            }
+        
+        ## load or run simulation
+        
+        #logic
+        run_og_sim = cfg_param is None and cfg_val is None #bool, if True, run the original simConfig
+        run_perm = cfg_param is not None and cfg_val is not None
+        sim_loaded = False # init success flag
+        if try_loading: sim_loaded, expected_save_path = try_load_sim(cfg) # try loading sim data
+        
+        # run permutation
+        if run_perm and not sim_loaded: #if none, then it's the original simConfig            
+            
+            # prepare and run simulation permutation
+            #if not sim_loaded:  # if loading fails or is not attempted, prepare and run simulation   
+            prepare_permuted_sim_v2(pkwargs)          
+            sim.runSim()                        # run parallel Neuron simulation
+            sim.gatherData()                    # gather spiking data and cell info from each node
+            
+            # save data        
+            permuted_data_paths = sim.saveData()                      # save params, cell info and sim output to file (pickle,mat,txt,etc)
+            assert len(permuted_data_paths) == 1, "Expected only one data path, the .pkl file. Got more."
+            perm_sim_data_path = permuted_data_paths[0]
+        elif run_og_sim and not sim_loaded: #if both none, rerun the original simConfig (with new duration plausibly)
+            
+            # load and run original simulation
+            og_sim_data_path = tkwargs['sim_data_path']
+            sim.load(og_sim_data_path, simConfig=cfg)
+            sim.runSim()                        # run parallel Neuron simulation
+            sim.gatherData()                    # gather spiking data and cell info from each node
+            
+            # save data        
+            permuted_data_paths = sim.saveData()                      # save params, cell info and sim output to file (pickle,mat,txt,etc)
+            assert len(permuted_data_paths) == 1, "Expected only one data path, the .pkl file. Got more."
+            perm_sim_data_path = permuted_data_paths[0]
+        elif sim_loaded: 
+            perm_sim_data_path = expected_save_path  # if sim loaded, use the expected save path
+        else: 
+            print('Not sure how you got here... Something went wrong.')
+            raise ValueError('Invalid cfg_param and cfg_val combination.')
+        
+        # end func    
+        indent_decrease()    
+        print(f'Permutation {simLabel} successfully ran!')
+        assert perm_sim_data_path is not None, "Permutation data path is None."
+        return perm_sim_data_path
     
-    ## load or run simulation
-    
-    #logic
-    run_og_sim = cfg_param is None and cfg_val is None #bool, if True, run the original simConfig
-    run_perm = cfg_param is not None and cfg_val is not None
-    sim_loaded = False # init success flag
-    if try_loading: sim_loaded, expected_save_path = try_load_sim(cfg) # try loading sim data
-    
-    # run permutation
-    if run_perm and not sim_loaded: #if none, then it's the original simConfig            
-        
-        # prepare and run simulation permutation
-        #if not sim_loaded:  # if loading fails or is not attempted, prepare and run simulation   
-        prepare_permuted_sim_v2(pkwargs)          
-        sim.runSim()                        # run parallel Neuron simulation
-        sim.gatherData()                    # gather spiking data and cell info from each node
-        
-        # save data        
-        permuted_data_paths = sim.saveData()                      # save params, cell info and sim output to file (pickle,mat,txt,etc)
-        assert len(permuted_data_paths) == 1, "Expected only one data path, the .pkl file. Got more."
-        perm_sim_data_path = permuted_data_paths[0]
-    elif run_og_sim and not sim_loaded: #if both none, rerun the original simConfig (with new duration plausibly)
-        
-        # load and run original simulation
-        sim.load(sim_data_path, simConfig=cfg)
-        sim.runSim()                        # run parallel Neuron simulation
-        sim.gatherData()                    # gather spiking data and cell info from each node
-        
-        # save data        
-        permuted_data_paths = sim.saveData()                      # save params, cell info and sim output to file (pickle,mat,txt,etc)
-        assert len(permuted_data_paths) == 1, "Expected only one data path, the .pkl file. Got more."
-        perm_sim_data_path = permuted_data_paths[0]
-    elif sim_loaded: perm_sim_data_path = expected_save_path  # if sim loaded, use the expected save path
-    else: 
-        print('Not sure how you got here... Something went wrong.')
-        raise ValueError('Invalid cfg_param and cfg_val combination.')
-    
-    # end func    
-    indent_decrease()    
-    print(f'Permutation {simLabel} successfully ran!')
-    assert perm_sim_data_path is not None, "Permutation data path is None."
-    return perm_sim_data_path  
+    except Exception as e:
+        print(f'Error running permutation {simLabel}: {e}')
+        traceback.print_exc()
+        indent_decrease()
+        return e  
 
 def run_permutations_v2(kwargs):
     """
@@ -1039,9 +1056,12 @@ def run_permutations_v2(kwargs):
         # Prepare tasks
         tasks = []
         for cfg_tuple in cfg_permutations:
-            if isinstance(cfg_tuple, tuple) and len(cfg_tuple) == 3:
-                cfg, cfg_param, cfg_val = cfg_tuple
-                tasks.append((cfg, cfg_param, cfg_val, tkwargs))
+            if isinstance(cfg_tuple, tuple) and len(cfg_tuple) == 5: # aw 2025-03-04 12:55:40 added simLable and simFolder
+            #if isinstance(cfg_tuple, tuple) and len(cfg_tuple) == 3:
+                #cfg, cfg_param, cfg_val = cfg_tuple
+                simLable, simFolder, cfg, cfg_param, cfg_val = cfg_tuple
+                #tasks.append((cfg, cfg_param, cfg_val, tkwargs))
+                tasks.append((simLable, simFolder, cfg, cfg_param, cfg_val, tkwargs))
             else: raise ValueError(f"Unexpected structure in cfg_permutations: {cfg_tuple}")
             
         # if debug mode, only run the first five tasks
@@ -1067,6 +1087,7 @@ def run_permutations_v2(kwargs):
         # Print number of workers
         print(f'Using {num_workers} workers out of {available_cpus} available CPUs.')
         permuted_paths = [] # collect pkl data paths from each permutation
+        #num_workers = 1 # DEBUG - force to 1
         with ProcessPoolExecutor(max_workers=num_workers) as executor:
             futures = {executor.submit(run_permutation_v2, *task): task for task in tasks}
             for future in as_completed(futures):
@@ -1148,6 +1169,8 @@ def run_permutations_v2(kwargs):
                         'debug_mode': False,
                         'max_workers': tkwargs.get('max_workers', None),
                         'sim_data_path': path,
+                        'burst_sequencing': tkwargs.get('burst_sequencing', False),
+                        'dtw_matrix': tkwargs.get('dtw_matrix', False),
                     }
                     network_data = compute_network_metrics(conv_params, mega_params, source, **nkwargs)
                     #perm_dir = os.path.dirname(path)
@@ -1206,6 +1229,8 @@ def run_permutations_v2(kwargs):
         'try_load_network_summary': kwargs.get('try_load_network_summary', False),
         'num_workers': num_workers,
         'max_workers': kwargs.get('max_workers', None),
+        'burst_sequencing': kwargs.get('burst_sequencing', False),
+        'dtw_matrix': kwargs.get('dtw_matrix', False),
         }
 
     # main processing steps
@@ -1281,7 +1306,11 @@ def generate_permutations_v2(kwargs):
             cfg_permutation, permuted_vals = permute_param(cfg_permutation, cfg_param, cfg_val, upper_bound, lower_bound, i, levels)
             cfg_permutation['simLabel'] = f'{cfg_param}_{i}'
             cfg_permutation['saveFolder'] = os.path.abspath(os.path.join(output_dir, cfg_permutation['simLabel']))
+            cfg_simLabel = cfg_permutation['simLabel']
+            cfg_saveFolder = cfg_permutation['saveFolder']
             cfg_permutations.append((
+                cfg_simLabel,
+                cfg_saveFolder,
                 cfg_permutation,
                 cfg_param,
                 cfg_val,
@@ -1290,6 +1319,8 @@ def generate_permutations_v2(kwargs):
             # save as json
             # sim.saveJson(cfg_permutation, cfg_permutation['saveFolder'])
             cfg_path = os.path.join(cfg_permutation['saveFolder'], cfg_permutation['simLabel'] + '_cfg.json')
+            cfg_dir = os.path.dirname(cfg_path)
+            if not os.path.exists(cfg_dir): os.makedirs(cfg_dir)
             sim.saveJSON(cfg_path, cfg_permutation)
             
             # quality
@@ -1361,9 +1392,12 @@ def generate_permutations_v2(kwargs):
     #apparently need to modify simcfg before loading
     simConfig = sim.loadSimCfg(sim_data_path, setLoaded=False)
     simLabel = simConfig.simLabel
+    simLabel = '_'+simLabel # add underscore to simLabel so that original sim is easy to find in file system - 
+                            # NOTE: this is only applied to the original simConfig - only because it isnt overwritten later when generating permutations.
     saveFolder = os.path.join(saveFolder, simLabel)
     
     #modify shared runtime options
+    simConfig.simLabel = simLabel
     simConfig.saveFolder=saveFolder
     simConfig.duration = 1e3 * duration_seconds  # likewise, I think it's necessary to modify netParams, not net.params or net
     simConfig.verbose = kwargs.get('verbose', False) # NOTE: during connection formation, this will be VERY verbose
@@ -1373,11 +1407,6 @@ def generate_permutations_v2(kwargs):
     simConfig.savePickle = kwargs.get('savePickle', True)
     simConfig.cvode_active = kwargs.get('cvode_active', False) # make sure variable time step is off...not sure why it was ever on.
     
-    # add underscore to simLabel so that original sim is easy to find in file system
-    simConfig.simLabel = '_'+simConfig.simLabel 
-    # NOTE this is only applied to the original simConfig 
-    # - only because it isnt overwritten later when generating permutations.
-    
     # turn recordings off - if any are present
     remove_recordCells = kwargs.get('remove_recordCells', True) # this just save time.
     if remove_recordCells: # remove recordCells from simConfig
@@ -1386,13 +1415,17 @@ def generate_permutations_v2(kwargs):
     
     # append original simConfig to permutations so that it is also run, plot, and saved with the others.
     # structure is maintained as a tuple to match the structure of the other permutations
-    cfg_permutations.append((simConfig.__dict__.copy(), #cfg
+    cfg_permutations.append((
+                            simConfig.simLabel,
+                            simConfig.saveFolder,
+                            simConfig.__dict__.copy(), #cfg
                             None, #permuted param
                             None, #original value
                             ))
     
     # generate permutations
-    cfg_permutations = generate(simConfig, kwargs)
+    perm_cfgs = generate(simConfig, kwargs)
+    cfg_permutations.extend(perm_cfgs)
     
     # end func
     print(f'Generated {len(cfg_permutations)} cfg permutations.')

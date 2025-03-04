@@ -30,7 +30,9 @@ kwargs = {
     # runtime options  
     #'max_workers': 1,
     #'max_workers': 32,
-    'max_workers': 128,    
+    #'max_workers': 2,
+    #'max_workers': 128,    
+    'max_workers': 256,
     'run_parallel': True,
     #'try_loading': False,
     'try_load_sim_data': True, # try loading simulation data from sim_data_path instead of running new simulations
@@ -39,6 +41,10 @@ kwargs = {
     'try_load_network_summary': True, # check if network summary plot is present, skip plotting if it is
     #'try_load_network_summary': False, # check if network summary plot is present, skip plotting if it is
     'debug_mode': False,
+    
+    # Network analysis params
+    'dtw_matrix': False, # cross compare all bursts with all bursts - takes a long time - includes parallelization
+    'burst_sequencing': False, # sequence order of units participating in each burst - takes a long time - includes parallelization
     
     # simulation parameters
     'duration_seconds': 35,
@@ -60,17 +66,27 @@ kwargs = {
 
 def prep_output_dirs():
     # NOTES and Path Selection ===================================================================================================   
+    '''
     # prior to aw 2025-03-02 15:21:01 - used mostly to develop
     # 'sim_data_path': os.path.join(data_dir, project_dir, batch_dir, 'gen_20/gen_20_cand_240_data.pkl'),
     # 'output_dir': os.path.join(data_dir, project_dir, 'sensitivity_analyses/'),
     
     # aw 2025-03-02 15:21:21 - running a different batch out of curiousity and also to finish developing output save locs
-    # define parent dirs
+    # # define parent dirs
+    # data_dir = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/data/'
+    # project_dir = 'CDKL5/DIV21/' # NOTE: Apparently os.path doesnt like leading '/' in the path parts
+    # batch_dir = 'batch_runs/batch_2025-02-09/'
+    # ref_path = 'network_metrics/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/well005/network_metrics.npy'
+    # cand_path = 'gen_26/gen_26_cand_71_data.pkl'
+    '''
+    
+    # aw 2025-03-03 12:52:32 - /pscratch/sd/a/adammwea/workspace/RBS_network_models/data/CDKL5/DIV21/sensitivity_analyses/2025-03-02_gen_26_cand_71_data_35s/propVelocity_3/propVelocity_3_data.pkl
+    # this simulation showed faster hyper burst rate and tigher bursts like initially desired, great place to start for next sensitivity analysis.
     data_dir = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/data/'
     project_dir = 'CDKL5/DIV21/' # NOTE: Apparently os.path doesnt like leading '/' in the path parts
-    batch_dir = 'batch_runs/batch_2025-02-09/'
     ref_path = 'network_metrics/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/well005/network_metrics.npy'
-    cand_path = 'gen_26/gen_26_cand_71_data.pkl'
+    batch_dir = 'sensitivity_analyses/2025-03-02_gen_26_cand_71_data_35s/'
+    cand_path = 'propVelocity_3/propVelocity_3_data.pkl'
     
     # main ===================================================================================================
         
@@ -93,8 +109,8 @@ def prep_output_dirs():
     
     # datetime YYYY-MM-DD HH:MM:SS
     date = datetime.datetime.now().strftime("%Y-%m-%d")
-    yesterdate = datetime.datetime.now() - datetime.timedelta(days=1)
-    date = yesterdate.strftime("%Y-%m-%d")
+    # yesterdate = datetime.datetime.now() - datetime.timedelta(days=1)
+    # date = yesterdate.strftime("%Y-%m-%d")
     
     duration = kwargs.get('duration_seconds', 35)
     kwargs['run_label'] = f'{date}_{base}_{duration}s'
@@ -116,8 +132,8 @@ if __name__ == '__main__':
     run_analysis = kwargs.get('run_analysis', False)
     plot_analysis = kwargs.get('plot_analysis', False)
     
-    # # force run_analysis to false if plot_analysis is false
-    run_analysis = False
+    # # # force run_analysis to false if plot_analysis is false
+    # run_analysis = False
     
     # main analysis steps
     if run_analysis: run_sensitivity_analysis_v2(kwargs)  # run_analysis
@@ -126,9 +142,18 @@ if __name__ == '__main__':
 # perlmutter ===================================================================================================
 # python command to run this script and save the output to output and error log files
 '''
-cd */RBS_network_models
-python \ 
-    /RBS_network_models/RBS_network_models/tests/_4_test_sensitivity_analysis.py \
-    > /RBS_network_models/tests/outputs/test_sensitivity_analysis_levels/_test_sensitivity_analysis_levels_out.log \
-    2> /RBS_network_models/tests/outputs/test_sensitivity_analysis_levels/_test_sensitivity_analysis_levels_err.log
+salloc -A m2043 -q interactive -C cpu -t 04:00:00 --nodes=1 --image=adammwea/axonkilo_docker:v7
+module load conda
+conda activate netsims_env
+python /pscratch/sd/a/adammwea/workspace/RBS_network_models/scripts/CDKL5/DIV21_WT/run_sensitivity_analysis.py \
+    > /pscratch/sd/a/adammwea/workspace/RBS_network_models/data/CDKL5/DIV21/sensitivity_analyses/2025-03-02_gen_26_cand_71_data_35s/_run_sensitivity_analysis_out.log \
+    2> /pscratch/sd/a/adammwea/workspace/RBS_network_models/data/CDKL5/DIV21/sensitivity_analyses/2025-03-02_gen_26_cand_71_data_35s/_run_sensitivity_analysis_err.log
 '''
+
+# '''
+# cd */RBS_network_models
+# python \ 
+#     /RBS_network_models/RBS_network_models/tests/_4_test_sensitivity_analysis.py \
+#     > /RBS_network_models/tests/outputs/test_sensitivity_analysis_levels/_test_sensitivity_analysis_levels_out.log \
+#     2> /RBS_network_models/tests/outputs/test_sensitivity_analysis_levels/_test_sensitivity_analysis_levels_err.log
+# '''
