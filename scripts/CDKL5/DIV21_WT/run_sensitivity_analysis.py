@@ -36,8 +36,8 @@ kwargs = {
     'run_parallel': True,
     #'try_loading': False,
     'try_load_sim_data': True, # try loading simulation data from sim_data_path instead of running new simulations
-    #'try_load_network_data': True, # check if network data plot is present, skip plotting if it is
-    'try_load_network_data': False, # check if network data plot is present, skip plotting if it is
+    'try_load_network_data': True, # check if network data plot is present, skip plotting if it is
+    #'try_load_network_data': False, # check if network data plot is present, skip plotting if it is
     'try_load_network_summary': True, # check if network summary plot is present, skip plotting if it is
     #'try_load_network_summary': False, # check if network summary plot is present, skip plotting if it is
     'debug_mode': False,
@@ -133,7 +133,7 @@ if __name__ == '__main__':
     plot_analysis = kwargs.get('plot_analysis', False)
     
     # # # force run_analysis to false if plot_analysis is false
-    # run_analysis = False
+    run_analysis = False
     
     # main analysis steps
     if run_analysis: run_sensitivity_analysis_v2(kwargs)  # run_analysis

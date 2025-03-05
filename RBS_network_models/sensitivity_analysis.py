@@ -108,11 +108,18 @@ def plot_sensitivity_grid_plots_v2(
         
         # find the original summary plot - # HACK: this is a pretty shitty way to handle this - should probably just make a list or something to load
         # when running the perms func
-        sim_label = '_'.join(os.path.basename(input_dir).split('_')[1:-1]).replace('_data', '')
+        sim_label_parts = os.path.basename(input_dir).split('_')[1:-1]
+        sim_label_parts.insert(0, '')
+        #try to remove the word data if it is present
+        if 'data' in sim_label_parts:
+            sim_label_parts.remove('data')
+        sim_label = '_'.join(sim_label_parts)
         print('sim_label:', sim_label)
         found=[]
         for root, _, files in os.walk(input_dir):
             #files = []
+            #ignore archived files
+            if '__archive' in root: continue
             for file in files:
                 # simLabel = os.path.basename(input_dir)
                 # simLable = sim
@@ -328,7 +335,11 @@ def plot_sensitivity_grid_plots_v2(
                 metric_value = data.copy()
                 for path_part in metric_path:
                     if 'network_metrics' in path_part: continue
-                    metric_value = metric_value[path_part]
+                    try: metric_value = metric_value[path_part]
+                    except:
+                        #print(f"Error loading metric value for {path_part}")
+                        metric_value = np.nan
+                        continue
                 metric_list.append(float(metric_value))
                 min_metric = min(min_metric, metric_value)
                 max_metric = max(max_metric, metric_value)
@@ -366,24 +377,48 @@ def plot_sensitivity_grid_plots_v2(
                     base = os.path.basename(sim_data_path)
                     simLabel = os.path.basename(os.path.dirname(sim_data_path))
                     if param in base:
-                    #if param in key:
+                        # skip og sim if it's based on param from previous SA
+                        if base.startswith('_'): continue
                         clean_grid[param]['data'].update({simLabel: data})
-            
+            assert len(clean_grid[param]['data']) == levels, f'Expected {levels} levels, found {len(clean_grid[param]["data"])}'
+                
             # Generate heatmap
             n_rows = len(clean_grid)
             n_cols = levels + 1
             fig, axs = plt.subplots(n_rows, n_cols, figsize=(2 * n_cols, 1 * n_rows))
             
             for row_idx, (param, summary_paths) in enumerate(clean_grid.items()):
+                
+                # # aw 2025-03-04 16:32:38 - since we know the number of levels we have, we can adjust what the middle index is
                 row_data = clean_grid[param]['data']
-                sorted_row_data = dict(sorted(row_data.items()))
-                middle_idx = len(sorted_row_data) // 2
+                middle_idx = levels // 2 # for 6 levels, idx is 3 (0, 1, 2, 3, 4, 5, 6) - 3 is the middle (perm, perm, perm, og, perm, perm, perm)
                 new_row_data = {}
-                for idx, (key, value) in enumerate(sorted_row_data.items()):
-                    if idx == middle_idx:
-                        new_row_data['original_data'] = data_list[original_key]
-                    new_row_data[key] = value
+                for idx, (key, data) in enumerate(clean_grid[param]['data'].items()):
+                    # get correct idx for perm based on key. Each key should have a number value in it.
+                    # find number in key (which should be a string including a number at the end)
+                    # get the number from the key
+                    #if idx != middle_idx: # perm case
+                    level_pos = int(re.search(r'\d+$', key).group())
+                    if level_pos >= middle_idx: level_pos += 1
+                    #new_row_data[key] = data
+                    new_row_data[level_pos] = data                    
+                    # elif idx == middle_idx: # og case
+                    #     #new_row_data['original_data'] = data_list[original_key]
+                    #     new_row_data[idx] = data_list[original_key]
+                    #new_row_data[key] = data
+                new_row_data[middle_idx] = data_list[original_key]
                 clean_grid[param]['data'] = new_row_data
+                
+                # aw 2025-03-04 16:31:39 updating this block of code above to handle incomplete lists of data - incase some sims or analyses fail.
+                # row_data = clean_grid[param]['data']
+                # sorted_row_data = dict(sorted(row_data.items()))
+                # middle_idx = len(sorted_row_data) // 2
+                # new_row_data = {}
+                # for idx, (key, value) in enumerate(sorted_row_data.items()):
+                #     if idx == middle_idx:
+                #         new_row_data['original_data'] = data_list[original_key]
+                #     new_row_data[key] = value
+                # clean_grid[param]['data'] = new_row_data
                 
                 # Plot each cell in the row
                 for col_idx, (key, data) in enumerate(clean_grid[param]['data'].items()):
@@ -391,11 +426,20 @@ def plot_sensitivity_grid_plots_v2(
                         metric_value = data
                         for path_part in metric_path:
                             if 'network_metrics' in path_part: continue
-                            metric_value = metric_value[path_part]
+                            try: metric_value = metric_value[path_part]
+                            except: 
+                                metric_value = np.nan
+                                continue
                         color = cmap(norm(metric_value))
-                        axs[row_idx, col_idx].add_patch(plt.Rectangle((0, 0), 1, 1, color=color))
-                        axs[row_idx, col_idx].text(0.5, 0.5, f'{metric_value:.2f}', ha='center', va='center', fontsize=12)
-                        axs[row_idx, col_idx].axis('off')
+                        
+                        # key is the real column index... #HACK
+                        axs[row_idx, key].add_patch(plt.Rectangle((0, 0), 1, 1, color=color))
+                        axs[row_idx, key].text(0.5, 0.5, f'{metric_value:.2f}', ha='center', va='center', fontsize=12)
+                        axs[row_idx, key].axis('off')
+                        
+                        # axs[row_idx, col_idx].add_patch(plt.Rectangle((0, 0), 1, 1, color=color))
+                        # axs[row_idx, col_idx].text(0.5, 0.5, f'{metric_value:.2f}', ha='center', va='center', fontsize=12)
+                        # axs[row_idx, col_idx].axis('off')
                         permuted_param = param
                         #permuted_value = data['data']['simConfig'][param]
                         #permuted_value = data[param]
@@ -410,11 +454,15 @@ def plot_sensitivity_grid_plots_v2(
                             permuted_value = round(permuted_value, 3)
                         except:
                             pass
-                        axs[row_idx, col_idx].set_title(f'@{permuted_value}', fontsize=14)
+                        axs[row_idx, key].set_title(f'@{permuted_value}', fontsize=14)
                     except Exception as e:
                         print(f"Error loading plot for key {key}: {e}")
                 #print(f"Plotted {param} in row {row_idx}")
-            
+
+                # remove axes for all subplots, even if nothing plotted
+                for col_idx in range(levels + 1):
+                    axs[row_idx, col_idx].axis('off')
+                    
             plt.tight_layout()
             plt.subplots_adjust(left=0.15, right=0.90, top=0.925)
             for row_idx, (param, summary_paths) in enumerate(clean_grid.items()):
@@ -503,20 +551,20 @@ def plot_sensitivity_grid_plots_v2(
             or a list of floats/ints, while treating dicts with only numeric keys as lists.
             """
             keys_to_ignore = [
-                # "std", 
-                # "cov",
-                # "median",
-                # "burst_ids",
-                # "burst_part",
-                # "burst_parts",
-                # ".data",
-                # "num_bursts", # burst rate is more informative with variable durations
-                # "unit_metrics",
-                # "gids",
-                # "spiking_metrics_by_unit",
-                # "spiking_times_by_unit",
-                # ".unit_metrics",
-                # "unit_types",
+                "std", 
+                "cov",
+                "median",
+                "burst_ids",
+                "burst_part",
+                "burst_parts",
+                ".data",
+                "num_bursts", # burst rate is more informative with variable durations
+                "unit_metrics",
+                "gids",
+                "spiking_metrics_by_unit",
+                "spiking_times_by_unit",
+                ".unit_metrics",
+                "unit_types",
                 
                 ]
             metric_paths = set()
@@ -1107,6 +1155,8 @@ def run_permutations_v2(kwargs):
     
     def compute_netmets(permuted_data_paths, tkwargs):
         perm_network_data = []
+        completed = 0
+        failed = 0
         for path in permuted_data_paths:
             try:
                 #loading
@@ -1127,7 +1177,15 @@ def run_permutations_v2(kwargs):
                 for suffix in ['2p', '3p']:
                     for ext in ['png', 'pdf']:
                         expected_plot_path = expected_plots_path.replace('*', suffix) + f'.{ext}'
+                        simLabel = os.path.basename(os.path.dirname(path))
+                        expected_plot_path = expected_plot_path.replace(f'/{simLabel}/{simLabel}', f'/{simLabel}') # HACK: just shitty code
                         plot_exists = os.path.exists(expected_plot_path)
+                        
+                        #print expected plot path and if it exists
+                        print(f'Checking for {expected_plot_path}...')
+                        print(f'Exists: {plot_exists}')
+                        
+                        
                         if plot_exists: exist_plots_bool.append(True)
                         else: exist_plots_bool.append(False)
                 if all(exist_plots_bool): summary_plots_exist = True
@@ -1148,8 +1206,12 @@ def run_permutations_v2(kwargs):
                         pass
                     
                 # continue?
+                print(f'Checking for existing network metrics and summary plots...')
+                print(summary_plots_exist)
+                print(try_load_plots)
                 if network_data_loaded and summary_plots_exist and try_load_plots: 
                     print(f'Network metrics and summary plots already exist for {path}. Skipping...')
+                    completed += 1
                     continue
                               
                 # do computations?
@@ -1195,10 +1257,18 @@ def run_permutations_v2(kwargs):
                 
                 #
                 perm_network_data.append(network_data)
+                completed += 1
             except Exception as e:
                 print(f'Error computing network metrics for {path}: {e}')
                 traceback.print_exc()
                 perm_network_data.append(e)
+                failed += 1
+                
+            #print()
+            print(f'Completed: {completed}')
+            print(f'Failed: {failed}')
+            print(f'Remain: {len(permuted_data_paths) - completed - failed}')
+            print()
                 
         return perm_network_data    
     
