@@ -14,6 +14,7 @@ import spikeinterface.postprocessing as spost
 from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import get_experimental_network_metrics_v3
 import traceback
 from .utils.helper import indent_mode_on, indent_mode_off
+from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import compute_network_metrics
 
 # Functions ======================================
 ''' Newer/Updated Functions'''
@@ -38,8 +39,54 @@ def run_analysis(
         # get network metrics
         well_id = f'well{str(0).zfill(2)}{stream_num}'
         well_recording_segment = recording_object 
-        try: 
-            network_metrics = get_experimental_network_metrics_v3(sorting_object, well_recording_segment, wf_extractor, conv_params, mega_params, debug_mode=debug_mode, **kwargs)
+        
+        # define paths based on wf_extractor
+        wf_folder = wf_extractor.folder._str
+        #print(f"wf_folder: {wf_folder}")
+        
+        # replace 'waveforms' with 'dtw'
+        dtw_folder = wf_folder.replace('waveforms', 'dtw')
+        #dtw_output = os.path.join(dtw_folder, 'dtw_output')
+        dtw_temp = os.path.join(dtw_folder, 'dtw_temp')
+        #mega_dtw_output = os.path.join(dtw_folder, 'mega_dtw_output')
+        # print(f"dtw_output: {dtw_output}")
+        # print(f"dtw_temp: {dtw_temp}")
+        # print(f"mega_dtw: {mega_dtw_output}")
+        
+        try:
+            source = 'experimental'
+            kwargs = {
+                'debug_mode': debug_mode,
+                'well_id': well_id,
+                'stream_num': stream_num,
+                'recording_object': recording_object,
+                'sorting_object': sorting_object,
+                'wf_extractor': wf_extractor,
+                'run_parallel': True,
+                #'max_workers': 32,
+                #'max_workers': 16,
+                'max_workers' : 256,
+                #'plot_wfs': True,
+                
+                'plot_wfs': False,
+                'burst_sequencing': True,
+                
+                # debug - move to run script later #HACK
+                # fitness_save_path = kwargs['fitness_save_path']
+                # basename = os.path.basename(fitness_save_path)
+                # sa_dir = os.path.dirname(fitness_save_path)
+                # # remove .json from basename
+                # basename = basename.replace('.json', '')
+                # dtw_dir = os.path.join(sa_dir, basename, 'dtw_temp')    
+                # kwargs['dtw_temp'] = dtw_dir
+                
+                'dtw_temp': dtw_temp,
+                # 'dtw_output': dtw_output,
+                # 'mega_dtw': mega_dtw_output,
+                
+            }
+            network_metrics = compute_network_metrics(conv_params, mega_params, source, **kwargs)
+            #network_metrics = get_experimental_network_metrics_v3(sorting_object, well_recording_segment, wf_extractor, conv_params, mega_params, debug_mode=debug_mode, **kwargs)
             return network_metrics
         except Exception as e:
             print(f'Error: Could not get network metrics for {well_id}')

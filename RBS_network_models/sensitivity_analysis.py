@@ -612,12 +612,16 @@ def plot_sensitivity_grid_plots_v2(
                 # if any('bursting' in part for part in metric_path_parts):
                 #     metric_name = f'{metric_path_parts[-3]}_{metric_path_parts[-1]}'
                 # else:
-                metric_name = f'{metric_path_parts[-4]}_{metric_path_parts[-2]}_{metric_path_parts[-1]}'
+                #metric_name = f'{metric_path_parts[-4]}_{metric_path_parts[-2]}_{metric_path_parts[-1]}'
+                # just string all path parts together
+                metric_name = '_'.join(metric_path_parts)
                 plot_metric_heatmap(output_dir, metric_path_parts, metric_name, network_metrics_data, clean_grid, levels) #TODO: add reference data...
             except Exception as e:
                 traceback.print_exc()
                 print(f"Error plotting heatmap for {metric_path}: {e}")
                 continue
+            
+        print('done.')
 
     # main ===================================================================================================
     

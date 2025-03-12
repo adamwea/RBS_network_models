@@ -20,7 +20,7 @@ kwargs = {
     
     # analysis parameters
     'levels': 6,
-    'upper_bound': 10,
+    'upper_bound': 7.5,
     'lower_bound': 0.1,
     'conv_params': conv_params,
     'mega_params': mega_params,
@@ -47,7 +47,7 @@ kwargs = {
     'burst_sequencing': False, # sequence order of units participating in each burst - takes a long time - includes parallelization
     
     # simulation parameters
-    'duration_seconds': 35,
+    'duration_seconds': 65,
     'verbose': False,
     'use_coreneuron': False,
     'validateNetParams': True,
@@ -79,7 +79,7 @@ def prep_output_dirs():
     # ref_path = 'network_metrics/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/well005/network_metrics.npy'
     # cand_path = 'gen_26/gen_26_cand_71_data.pkl'
     '''
-    
+    '''
     # aw 2025-03-03 12:52:32 - /pscratch/sd/a/adammwea/workspace/RBS_network_models/data/CDKL5/DIV21/sensitivity_analyses/2025-03-02_gen_26_cand_71_data_35s/propVelocity_3/propVelocity_3_data.pkl
     # this simulation showed faster hyper burst rate and tigher bursts like initially desired, great place to start for next sensitivity analysis.
     data_dir = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/data/'
@@ -87,7 +87,27 @@ def prep_output_dirs():
     ref_path = 'network_metrics/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/well005/network_metrics.npy'
     batch_dir = 'sensitivity_analyses/2025-03-02_gen_26_cand_71_data_35s/'
     cand_path = 'propVelocity_3/propVelocity_3_data.pkl'
-    
+    '''
+    '''
+    # aw 2025-03-05 14:37:17 - I'm going to try and generate a CDKL5 Model where the hyperburst rate is about 2-4 per 60 seconds...this is specifically for a meeting Roy has tomorrow. 
+    # /pscratch/sd/a/adammwea/workspace/RBS_network_models/data/CDKL5/DIV21/sensitivity_analyses/2025-03-04_propVelocity_3_data_35s/propVelocity_0/propVelocity_0_data.pkl
+    # I'm going to extend the duration to 60 seconds and modulate the limits of levels
+    # the starting point is the propVelocity_0 perm which has one big burst in 35 seconds
+    # propVelocity_1 from the same SA is a little too fast.
+    # I think If I constrict the levels a little bit, propVelocity_3 in the new SA will be about right.
+    data_dir = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/data/'
+    project_dir = 'CDKL5/DIV21/'
+    ref_path = 'network_metrics/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/well005/network_metrics.npy'
+    batch_dir = 'sensitivity_analyses/2025-03-04_propVelocity_3_data_35s/'
+    cand_path = 'propVelocity_0/propVelocity_0_data.pkl'
+    '''
+    # aw 2025-03-05 16:03:07 - yup that worked. Now doing full SA for the propVelocity_3 data from the last run.
+    # /pscratch/sd/a/adammwea/workspace/RBS_network_models/data/CDKL5/DIV21/sensitivity_analyses/2025-03-05_propVelocity_0_data_65s/propVelocity_3/propVelocity_3_data.pkl
+    data_dir = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/data/'
+    project_dir = 'CDKL5/DIV21/'
+    ref_path = 'network_metrics/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/well005/network_metrics.npy'
+    batch_dir = 'sensitivity_analyses/2025-03-05_propVelocity_0_data_65s/'
+    cand_path = 'propVelocity_3/propVelocity_3_data.pkl'
     # main ===================================================================================================
         
     # build paths

@@ -50,6 +50,7 @@ setup.py
 ./tests/__init__.py
 ./tests/test_dtw.py
 ./tests/test_extract_features.py
+./tests/test_fitnessFunc.py
 ./tests/test_sensitivity_analysis.py
 ./tests/test_spikesort.py
 RBS_network_models/__init__.py
@@ -106,5 +107,6 @@ tests/_9_test_fitnessFunc.py
 tests/__init__.py
 tests/test_dtw.py
 tests/test_extract_features.py
+tests/test_fitnessFunc.py
 tests/test_sensitivity_analysis.py
 tests/test_spikesort.py

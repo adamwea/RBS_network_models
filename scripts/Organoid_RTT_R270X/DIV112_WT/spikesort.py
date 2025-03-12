@@ -9,7 +9,11 @@ raw_data_path = (
     os.path.abspath( 
     #this should be an .h5 file
     #'/pscratch/sd/a/adammwea/workspace/_raw_data/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/data.raw.h5',
-    '/pscratch/sd/a/adammwea/workspace/_raw_data/Organoid_RTT_R270X_pA_pD_B1_d91/250107/M07297/Network/000028/data.raw.h5',
+    #'/pscratch/sd/a/adammwea/workspace/_raw_data/Organoid_RTT_R270X_pA_pD_B1_d91/250107/M07297/Network/000028/data.raw.h5',
+    
+    # aw 2025-03-06 14:26:03 - Roy asked me to generate bursting plots for these data across DIVs - going to do these remaining DIVs one at a time.
+    
+    
     ))
 
 #sorted_output_dir = '**/data/CDKL5/DIV21/sorted'   #syntax for glob.glob
