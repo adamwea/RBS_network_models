@@ -4,6 +4,7 @@ setup.py
 ./RBS_network_models/check_fitness_scores.py
 ./RBS_network_models/extract_features.py
 ./RBS_network_models/feature_struct.py
+./RBS_network_models/fitnessCalcs.py
 ./RBS_network_models/fitnessFunc.py
 ./RBS_network_models/sensitivity_analysis.py
 ./RBS_network_models/sim_analysis.py
@@ -51,12 +52,15 @@ setup.py
 ./tests/test_dtw.py
 ./tests/test_extract_features.py
 ./tests/test_fitnessFunc.py
+./tests/test_network_analysis.py
+./tests/test_scoreing_function.py
 ./tests/test_sensitivity_analysis.py
 ./tests/test_spikesort.py
 RBS_network_models/__init__.py
 RBS_network_models/check_fitness_scores.py
 RBS_network_models/extract_features.py
 RBS_network_models/feature_struct.py
+RBS_network_models/fitnessCalcs.py
 RBS_network_models/fitnessFunc.py
 RBS_network_models/sensitivity_analysis.py
 RBS_network_models/sim_analysis.py
@@ -108,5 +112,7 @@ tests/__init__.py
 tests/test_dtw.py
 tests/test_extract_features.py
 tests/test_fitnessFunc.py
+tests/test_network_analysis.py
+tests/test_scoreing_function.py
 tests/test_sensitivity_analysis.py
 tests/test_spikesort.py

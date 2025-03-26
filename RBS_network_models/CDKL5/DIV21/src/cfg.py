@@ -1,17 +1,139 @@
 from netpyne import specs
 from RBS_network_models.utils.cfg_helper import import_module_from_path
 import os
+import numpy as np
+import random
 
 # NOTES ===============================================================
 
 # version control
 #version = 0.0 # prior to 28Dec2024
 #version = 1.0 # major updates on 28Dec2024
-version = 2.0 # # aw 2025-02-04 13:15:09
+#version = 2.0 # # aw 2025-02-04 13:15:09
+version = 3.0 # aw 2025-03-12 10:04:04 - updated to use latest feature data file instead of middle prepared funcArgs
 
 # Versions ============================================================
+if version == 3.0:
+    # globals *******************************************************
+    global experimental_features
 
-if version == 2.0:
+    # subroutines ***************************************************
+    def import_evol_params():
+        try:
+            from __main__ import params
+        except:
+            import warnings
+            warnings.simplefilter('always')
+            
+            print('Could not import params from __main__. Attempting to import from path...')
+            warning_message = ('\n'
+                                'Importing params from src. '
+                                'This is normal if you are running a single simulation, '
+                                'or otherwise testing the cfg script. If you are running '
+                                'a batch simulation, you should be '
+                                'importing the params from __main__')
+            warnings.warn(warning_message)
+            
+            from RBS_network_models.CDKL5.DIV21.src.evol_params import params
+            
+            # cycle through params, if any are ranges of values, randomly select one between the range
+            print('Randomizing parameters within specified ranges...')
+            for key, value in params.items():
+                #check if list with 2 values
+                if isinstance(value, list) and len(value) == 2:
+                    #check if range
+                    if value[0] < value[1]:
+                        params[key] = random.uniform(value[0], value[1])
+                    
+            print('Adding params to cfg object...')
+            for param in params:
+                setattr(cfg, param, params[param]) 
+            
+            print('Evolutionary parameters imported successfully.')    
+    
+    # reference data ************************************************
+    features_path = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/data/CDKL5/DIV21/network_metrics/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/well001/network_metrics.npy'
+    
+    # main cfg script ***********************************************
+    # iterate through feature data files (.py) in the features directory - get the latest one
+    # import using import_module_from_path
+    feature_data_path = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/data/CDKL5/DIV21/features'
+    feature_data_path = os.path.abspath(feature_data_path)
+    feature_data_files = [f for f in os.listdir(feature_data_path) if f.endswith('.py')]
+    feature_data_files = sorted(feature_data_files, key=lambda x: os.path.getmtime(os.path.join(feature_data_path, x)))
+    feature_data_file = feature_data_files[-1]
+    feature_data_file = os.path.join(feature_data_path, feature_data_file)
+    feature_data_file = os.path.abspath(feature_data_file)
+    fitness_targets = import_module_from_path(feature_data_file)
+    
+    # Initialize simulation configuration
+    cfg = specs.SimConfig()
+    #cfg.verbose = True # Show detailed messages
+    
+    #add data from fitness_targets to cfg -> useful in preparing netParams
+    cfg.locations_known = True
+    cfg.features_path = features_path
+    if 'experimental_features' not in globals():
+        experimental_features = np.load(cfg.features_path, allow_pickle=True).item()
+    cfg.experimental_features = experimental_features
+    cfg.unit_locations = experimental_features['unit_locations']
+    cfg.unit_types = experimental_features['unit_types']
+    cfg.inhib_units = [gid for gid, x in cfg.unit_types.items() if x == 'I']
+    cfg.excit_units = [gid for gid, x in cfg.unit_types.items() if x == 'E']
+    cfg.num_excite = len(cfg.excit_units)
+    cfg.num_inhib = len(cfg.inhib_units) 
+
+    # Import evolutionary parameters
+    import_evol_params()
+    
+    # set simulation duration
+    #cfg.duration_seconds = 1  # Duration of the simulation, in seconds
+    cfg.duration_seconds = 15  # Duration of the simulation, in seconds
+    
+    # set simulation configuration
+    cfg.duration = cfg.duration_seconds * 1e3  # Duration of the simulation, in ms
+    cfg.cache_efficient = True  # Use CVode cache_efficient option to optimize load on many cores
+    cfg.dt = 0.025  # Internal integration timestep to use
+    cfg.recordStep = 0.1  # Step size in ms to save data (e.g., V traces, LFP, etc)
+    cfg.saveDataInclude = [
+        'simData', 
+        'simConfig', 
+        'netParams', 
+        'netCells', 
+        'netPops'
+        ]  # Data to save
+    cfg.saveJson = False  # Save data in JSON format
+    cfg.printPopAvgRates = [100, cfg.duration]  # Print population average rates
+    cfg.savePickle = True  # Save params, network and sim output to pickle file
+
+    # Record traces
+    cfg.recordTraces['soma_voltage'] = {"sec": "soma", "loc": 0.5, "var": "v"}
+
+    # Select cells for recording - just select random cell from cfg.excit_units and cfg.inhib_units - lists of gids
+    E_cells = random.sample(cfg.excit_units, min(2, cfg.num_excite))
+    I_cells = random.sample(cfg.inhib_units, min(2, cfg.num_inhib))
+    assert all([x in cfg.excit_units for x in E_cells]), 'E_cells contains gids not in excitatory population'
+    assert all([x in cfg.inhib_units for x in I_cells]), 'I_cells contains gids not in inhibitory population'
+    cfg.recordCells = [('E', E_cells), ('I', I_cells)]
+
+    #testing new params
+    #cfg.coreneuron = True
+    #cfg.dump_coreneuron_model = True
+    cfg.cache_efficient = True
+    cfg.cvode_active = True
+    cfg.use_fast_imem = True
+    cfg.allowSelfConns = True
+    cfg.oneSynPerNetcon = False
+
+    #new new params
+    cfg.validateNetParams = True
+    #cfg.validateDataSaveOptions = True
+    cfg.verbose = False
+    #cfg.verbose = True
+
+    # success message
+    print('cfg.py script completed successfully.')   
+elif version == 2.0:
     import random
     
     # iterate through feature data files (.py) in the features directory - get the latest one

@@ -8,9 +8,8 @@ from mpi4py import MPI
 mpi_rank = MPI.COMM_WORLD.Get_rank()
 mpi_size = MPI.COMM_WORLD.Get_size()
 rank = mpi_rank
-print("Initiating Rank:", rank)
-#get current script path and set as working directory
-script_dir = os.path.dirname(os.path.realpath(__file__))
+print("Initiating Rank:", rank) 
+script_dir = os.path.dirname(os.path.realpath(__file__)) #get current script path and set as working directory
 os.chdir(script_dir)
 print('CWD:', os.getcwd())
 #===================================================================================================

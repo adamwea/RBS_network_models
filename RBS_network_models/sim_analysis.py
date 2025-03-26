@@ -5,15 +5,97 @@
 #from RBS_network_models.developing.CDKL5.DIV21.src.fitnessFunc import fitnessFunc
 from time import time
 #from RBS_network_models.CDKL5.DIV21.src.fitnessFunc import fitnessFunc
-from RBS_network_models.fitnessFunc import fitnessFunc
+from RBS_network_models.fitnessFunc import fitnessFunc_v2
 from netpyne import sim
 import numpy as np
 from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import get_simulated_network_activity_metrics
+from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import compute_network_metrics
 import matplotlib.pyplot as plt
 from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_raster
 import os
 # funcs ===================================================================================================
 ''' newer functions '''
+def process_simulation_v3(kwargs): # aw 2025-03-12 09:51:10 - updated to use new fitnessFunc
+
+    #assertions
+    assert 'simData' in kwargs, "simData must be provided in kwargs."
+    assert 'popData' in kwargs, "popData must be provided in kwargs."
+    assert 'cellData' in kwargs, "cellData must be provided in kwargs."
+    
+    # unpack kwargs
+    sim_data_path = kwargs.get('sim_data_path', None)
+    conv_params = kwargs.get('conv_params', None)
+    mega_params = kwargs.get('mega_params', None)
+    #fitnessFuncArgs = kwargs.get('fitnessFuncArgs', None)
+    reference_data_npy = kwargs.get('reference_data_path', None)
+    debug_mode = kwargs.get('debug_mode', False)
+    
+    # add to kwargs
+    kwargs['debug_mode'] = debug_mode
+    kwargs['max_workers'] = 16
+    kwargs['plot_wfs'] = False
+    kwargs['burst_sequencing'] = False
+    kwargs['run_parallel'] = True
+    kwargs['dtw_temp'] = None
+    # kwargs['simData'] = sim.allSimData
+    # kwargs['cellData'] = sim.net.allCells
+    # kwargs['popData'] = sim.net.allPops
+    
+    # get network_metrics
+    # TODO: left off here with updating this func. 
+    simulated_network_metrics = compute_network_metrics(
+        #conv_params=conv_params,
+        #mega_params=mega_params,
+        source='simulated',
+        **kwargs
+    )
+    
+    perm_network_data = []
+    perm_network_data.append(simulated_network_metrics)
+    from RBS_network_models.sensitivity_analysis import plot_permutations
+    #remove 'sim_data_path' from kwargs
+    kwargs.pop('sim_data_path')
+    plot_permutations(perm_network_data, kwargs)
+    
+    # # re-fit simulation of interest
+    # refit = False # TODO: need to refractor this. Shouldnt be calculating network metrics twice.
+    # if refit:
+    #     start = time()
+    #     print("Calculating average fitness...")
+    #     average_fitness = fit_simulation(
+    #         sim_data_path,
+    #         conv_params=conv_params,
+    #         mega_params=mega_params,
+    #         #fitnessFuncArgs=fitnessFuncArgs,
+    #         ) 
+        
+    #     # TODO: There seems to be some inconsistency in FR calculated by network metrics vs NETPYNE - need to investigate this.
+    #     print(f"Average fitness: {average_fitness}")
+    #     print("Refit complete.")
+    #     print(f"Time taken: {time()-start} seconds")
+    # else:
+    #     average_fitness = None
+
+    # # re-plot simulation of interest - re-generate summary plot and all associated plots
+    # print("Replotting simulation of interest...")
+    # start = time()
+    # pkwargs = {
+    #     'sim_data_path': sim_data_path,
+    #     'average_fitness': average_fitness,
+    #     'conv_params': conv_params,
+    #     'mega_params': mega_params,
+    #     #'fitnessFuncArgs': fitnessFuncArgs,
+    #     'reference_data_npy': reference_data_npy,
+    #     'trim_start': 5,
+    #     'DEBUG_MODE': debug_mode,
+    #     }
+    
+    # comparison_summary_slide_paths = plot_simulation_v2(pkwargs)
+    # print("Replotting complete.")
+    # print(f"Time taken: {time()-start} seconds")
+    
+    #return comparison_summary_slide_paths
+
 def plot_simulation_v2(pwkargs):
     
     

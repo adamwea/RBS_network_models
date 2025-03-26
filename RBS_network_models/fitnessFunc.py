@@ -1,13 +1,15 @@
-#from workspace.RBS_neuronal_network_models.optimizing.CDKL5_DIV21.scripts_dep.fitness_helper import *
-#from DIV21.utils.fitness_helper import *
-#from .utils.fitness_helper import *
-#from RBS_network_models.network_analysis import calculate_network_metrics
+
+# Imports =========================================================================================
 import os
 import json
 import numpy as np
 import traceback
 from .fitnessCalcs import * # import all comparison helper functions
 import time
+import os
+import subprocess
+
+# Functions =========================================================================================
 
 def the_scoring_function_quadratic_smooth_sigmoid(val, target_val, maxFitness, weight, min_val=None, max_val=None):
     """
@@ -634,10 +636,10 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
         print(f'Error calculating fitness: {e}')
         avg_fitness = 1000
         return avg_fitness
-'''
-Everything below this point predates # aw 2025-03-05 09:37:53
-'''
-''' Main Func '''
+
+
+''' Everything below this point is deprecated or not used in the current version of the code.'''
+
 def fitnessFunc(simData=None, mode='optimizing', **kwargs):
     """
     Main logic of the calculate_fitness function.
@@ -860,9 +862,8 @@ def fitnessFunc(simData=None, mode='optimizing', **kwargs):
         }
         save_fitness_results(kwargs.get('fitness_save_path', kwargs.get('fitness_save_path', 'unknown_path.json')), fitnessResults)
         #save_fitness_results(kwargs.get('fitness_save_path', 'unknown_path.json'), fitnessResults)
-        return 1000
-    
-'''The Scoring Functions'''        
+        return 1000        
+
 def the_scoring_function(val, target_val, weight, maxFitness, min_val=None, max_val=None):
     """
     The function `the_scoring_function` calculates a fitness score for a given metric based on its proximity to a target value.
@@ -895,62 +896,60 @@ def the_scoring_function(val, target_val, weight, maxFitness, min_val=None, max_
     else:
         return maxFitness
 
-'''fitness functions for the network activity metrics'''
-import os
-import subprocess
-
 def submit_plotting_job(candidate_path, kwargs):
-    """
-    Submits the process_simulation step in handle_optimizing_mode as an MPI job.
-    """
+    raise NotImplementedError("submit_plotting_job is not implemented yet.")
 
-    # Paths and parameters
-    sim_data_path = kwargs.get('data_file_path', None)
-    reference_data_path = kwargs.get('reference_data_path', None)
-    conv_params = kwargs.get('conv_params', None)
-    mega_params = kwargs.get('mega_params', None)
-    fitnessFuncArgs = kwargs.copy()
+    # """
+    # Submits the process_simulation step in handle_optimizing_mode as an MPI job.
+    # """
 
-    # Define job folder and script path
-    job_folder = os.path.dirname(candidate_path)
-    job_name = os.path.basename(candidate_path) + "_fitness"
-    job_script = os.path.join(job_folder, job_name + ".sh")
+    # # Paths and parameters
+    # sim_data_path = kwargs.get('data_file_path', None)
+    # reference_data_path = kwargs.get('reference_data_path', None)
+    # conv_params = kwargs.get('conv_params', None)
+    # mega_params = kwargs.get('mega_params', None)
+    # fitnessFuncArgs = kwargs.copy()
 
-    # Define the command to run process_simulation
-    command = f"""
-    python -c "
-from RBS_network_models.sim_analysis import process_simulation
-process_simulation(
-    sim_data_path='{sim_data_path}', 
-    reference_data_path='{reference_data_path}',
-    DEBUG_MODE=False,
-    conv_params={conv_params},
-    mega_params={mega_params},
-    fitnessFuncArgs={fitnessFuncArgs}
-)
-    "
-    """
+    # # Define job folder and script path
+    # job_folder = os.path.dirname(candidate_path)
+    # job_name = os.path.basename(candidate_path) + "_fitness"
+    # job_script = os.path.join(job_folder, job_name + ".sh")
 
-    # Create the job script for MPI submission
-    job_string = f"""#!/bin/bash
-cd {job_folder}
-{command}
-    """
+    # # Define the command to run process_simulation
+    # command = f"""
+    # python -c "
+    # from RBS_network_models.sim_analysis import process_simulation
+    # process_simulation(
+    #     sim_data_path='{sim_data_path}', 
+    #     reference_data_path='{reference_data_path}',
+    #     DEBUG_MODE=False,
+    #     conv_params={conv_params},
+    #     mega_params={mega_params},
+    #     fitnessFuncArgs={fitnessFuncArgs}
+    # )
+    #     "
+    #     """
 
-    # Write the script to file
-    with open(job_script, "w") as f:
-        f.write(job_string)
+    # # Create the job script for MPI submission
+    # job_string = f"""#!/bin/bash
+    # cd {job_folder}
+    # {command}
+    #     """
 
-    # Ensure the script is executable
-    os.chmod(job_script, 0o755)
+    # # Write the script to file
+    # with open(job_script, "w") as f:
+    #     f.write(job_string)
 
-    # Submit the job using MPI direct
-    try:
-        with open(f"{job_name}.run", "w") as outf, open(f"{job_name}.err", "w") as errf:
-            subprocess.Popen(["/bin/bash", job_script], stdout=outf, stderr=errf, start_new_session=True)
-        print(f"Submitted plotting job: {job_name}")
-    except Exception as e:
-        print(f"Failed to submit job {job_name}: {e}")
+    # # Ensure the script is executable
+    # os.chmod(job_script, 0o755)
+
+    # # Submit the job using MPI direct
+    # try:
+    #     with open(f"{job_name}.run", "w") as outf, open(f"{job_name}.err", "w") as errf:
+    #         subprocess.Popen(["/bin/bash", job_script], stdout=outf, stderr=errf, start_new_session=True)
+    #     print(f"Submitted plotting job: {job_name}")
+    # except Exception as e:
+    #   print(f"Failed to submit job {job_name}: {e}")
 
 def fit_firing_rates(data_source, mega_mode=False, **kwargs):
     
@@ -1316,7 +1315,6 @@ def fit_ISI(data_source, **kwargs):
         print(f"Error in fit_ISI: {e}")
         return 1000
 
-#def fit_CoV_ISI(simulated=False, **kwargs):
 def fit_CoV_ISI(data_source, **kwargs):
     
     #source
@@ -2361,7 +2359,6 @@ def fit_fano_factor(mega_mode=False, **kwargs):
         print(f"Error in fit_fano_factor: {e}")
         return 1000
 
-'''dealbreakers'''
 def I_frs_must_be_greater_than_E_frs(fitnessVals, network_metrics):
     '''I firing rates must be greater than E firing rates'''
     dealbroken = False
@@ -2432,7 +2429,6 @@ def check_dealbreakers(fitnessVals, **kwargs):
         return False  
     #return dealbroken
 
-'''helper functions'''
 def save_fitness_results(output_path, fitnessResults):
     with open(output_path, 'w') as f:
         json.dump(fitnessResults, f, indent=4)
@@ -2576,7 +2572,6 @@ def calculate_and_save_fitness(kwargs):
         save_fitness_results(kwargs['fitness_save_path'], fitnessResults)
         return 1000
     
-'''main functions'''
 def calculate_network_metrics(kwargs):
     print('Calculating network activity metrics...')
     #from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import get_simulated_network_activity_metrics
@@ -2604,8 +2599,6 @@ def calculate_network_metrics(kwargs):
         #kwargs['mega_network_metrics'] = mega_metrics
         return None, kwargs
     
-'''parallelized fitness calculation'''
-import subprocess
 def submit_fitness_job(simData=None, mode='optimizing', **kwargs):
     ''' Copy the initial logic of calulate_fitness() and modify it to submit a job to the cluster '''
     

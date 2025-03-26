@@ -66,10 +66,11 @@ def run_analysis(
                 #'max_workers': 32,
                 #'max_workers': 16,
                 'max_workers' : 256,
-                #'plot_wfs': True,
+                'plot_wfs': True,
                 
-                'plot_wfs': False,
+                #'plot_wfs': False,
                 'burst_sequencing': True,
+                #'burst_sequencing': False,
                 
                 # debug - move to run script later #HACK
                 # fitness_save_path = kwargs['fitness_save_path']
@@ -147,6 +148,15 @@ def run_analysis(
             #network_plot_path = os.path.join(network_plot_parent_dir, f"network_summary_plot.pdf")
             network_plot_path_3p = os.path.join(network_plot_parent_dir, f"network_summary_3pannels.pdf")
             network_plot_path_2p = os.path.join(network_plot_parent_dir, f"network_summary_2pannels.pdf")
+            network_plot_path_3p_classed = os.path.join(network_plot_parent_dir, f"network_summary_3pannels_classed.pdf")
+            network_plot_path_2p_classed = os.path.join(network_plot_parent_dir, f"network_summary_2pannels_classed.pdf")
+            
+            #
+            # unit_types = network_metrics['unit_types']
+            # print(f"unit_types: {unit_types}")
+            # import sys
+            # sys.exit()
+            #
             
             plot_network_metrics(
                 network_metrics, 
@@ -156,6 +166,7 @@ def run_analysis(
                 #mode = '2p',
                 mode = '3p',
                 limit_seconds = limit_seconds,
+                plot_class = False,
                 )
             
             plot_network_metrics(
@@ -165,10 +176,43 @@ def run_analysis(
                 save_path=network_plot_path_2p,
                 mode = '2p',
                 limit_seconds = limit_seconds,
+                plot_class = False,
+                )  
+            
+            plot_network_metrics(
+                network_metrics, 
+                bursting_plot_path, 
+                bursting_fig_path,
+                save_path=network_plot_path_3p_classed,
+                #mode = '2p',
+                mode = '3p',
+                limit_seconds = limit_seconds,
+                plot_class = True,
+                )
+            
+            # #debug
+            # # print keys in network_metrics
+            # print(f"Keys in network_metrics:")
+            # for key in network_metrics.keys():
+            #     print(f"{key}")
+            
+            # import sys
+            # sys.exit() 
+            
+            plot_network_metrics(
+                network_metrics, 
+                bursting_plot_path, 
+                bursting_fig_path,
+                save_path=network_plot_path_2p_classed,
+                mode = '2p',
+                limit_seconds = limit_seconds,
+                plot_class = True,
                 )  
         except Exception as e:
             print(e)
-            print(f"Error: Could not plot network activity for {well_id}")  
+            #print(f"Error: Could not plot network activity for {well_id}") 
+            traceback.print_exc()
+            print(f"Error: Could not plot network activity")
 
     # return network metrics and save path
     print(f"Saved network metrics to {save_path}")
@@ -405,10 +449,10 @@ def plot_neuron_locations_and_class(sorting_object, we, network_metrics, save_pa
         
         
         plt.figure(figsize=(10, 6))
-        plt.scatter(excit_neuron_locs[:, 0], excit_neuron_locs[:, 1], c='orange', label='Excitatory Neurons', s=10)
+        plt.scatter(excit_neuron_locs[:, 0], excit_neuron_locs[:, 1], c='blue', label='Excitatory Neurons', s=75)
         #plt.scatter(inhib_neuron_locs[:, 0], inhib_neuron_locs[:, 1], c='blue', label='Inhibitory Neurons', s=10)
         #plot inhib with open circles in case of overlap
-        plt.scatter(inhib_neuron_locs[:, 0], inhib_neuron_locs[:, 1], facecolors='none', edgecolors='blue', label='Inhibitory Neurons', s=10)
+        plt.scatter(inhib_neuron_locs[:, 0], inhib_neuron_locs[:, 1], facecolors='none', edgecolors='red', label='Inhibitory Neurons', s=75)
         
         
         # make the dots smaller
@@ -423,8 +467,14 @@ def plot_neuron_locations_and_class(sorting_object, we, network_metrics, save_pa
         
         # plt.savefig(os.path.join(os.path.dirname(wfs_output_path), 'Neuron_Locations_on_MEA.png'))
         # print(f"Saved neuron locations plot to {os.path.join(os.path.dirname(wfs_output_path), 'Neuron_Locations_on_MEA.png')}")
-        plt.savefig(save_path)
-        print(f"Saved neuron locations plot to {save_path}")
+        png_path = save_path
+        pdf_path = save_path.replace('.png', '.pdf')
+        plt.savefig(png_path)
+        plt.savefig(pdf_path)
+        print(f"Saved neuron locations plot to {png_path}")
+        print(f"Saved neuron locations plot to {pdf_path}")
+        # import sys
+        # sys.exit()
 
 def get_data_obj_groups(h5_paths, raw_data_path, sorted_output_folders):
     # aw 2025-02-11
@@ -702,7 +752,8 @@ def plot_network_metrics(
     bursting_fig_path,
     save_path=None,
     mode='2p',
-    limit_seconds = None
+    limit_seconds = None,
+    plot_class = False,
     ):
     
     # TODO: blend with plot comparison plot? I think.
@@ -713,15 +764,22 @@ def plot_network_metrics(
     # plot network activity
     plot_network_summary(network_metrics, bursting_plot_path, bursting_fig_path, 
                          save_path=save_path, mode=mode,
-                         limit_seconds=limit_seconds
+                         limit_seconds=limit_seconds, plot_class=plot_class,
                          )   
     
     # plot shorter plots for better view of bursting identification
     save_path_35s = save_path.replace('.pdf', '_35s.pdf')
     plot_network_summary(network_metrics, bursting_plot_path, bursting_fig_path, 
                         save_path=save_path_35s, mode=mode,
-                        limit_seconds=35
+                        limit_seconds=35, plot_class=plot_class,
                         ) 
+    
+    # plot shorter plots for better view of bursting identification
+    save_path_60s = save_path.replace('.pdf', '_60s.pdf')
+    plot_network_summary(network_metrics, bursting_plot_path, bursting_fig_path, 
+                        save_path=save_path_60s, mode=mode,
+                        limit_seconds=60, plot_class=plot_class,
+                        )
 
 ''' Functions below this point predate 2025-02-11 21:11:58'''
 # =============================================================================

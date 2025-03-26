@@ -37,8 +37,957 @@ from copy import deepcopy
 from PyPDF2 import PdfReader, PdfWriter
 import fitz  # PyMuPDF
 import re
+import os
+import glob
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
+import json
 # functions ===================================================================================================
 '''newer functions'''
+
+def metrics_loader_v3(network_metrics_file, use_memmap=True):
+    """
+    Helper function to process network metrics files and extract relevant data.
+    
+    Args:
+        network_metrics_file (str): Path to the network metrics .npy file.
+        use_memmap (bool): If True, loads the numpy file using memory mapping to optimize large file loading.
+    
+    Returns:
+        dict: Dictionary containing loaded data and configuration file.
+    """
+    try:
+        start = time.time()
+        
+        # Load network data with optional memory mapping
+        network_data = np.load(network_metrics_file, mmap_mode='r' if use_memmap else None, allow_pickle=True).item()
+        
+        # Locate configuration file
+        perm_dir_parent = os.path.dirname(network_metrics_file)
+        perm_dir_gp = os.path.dirname(perm_dir_parent)
+        
+        # Attempt to find JSON config file
+        cfg_file = glob.glob(f'{perm_dir_gp}/*_cfg.json')
+        try:
+            if not cfg_file:
+                raise FileNotFoundError(f'No cfg file found for {network_metrics_file}')
+            with open(cfg_file[0], 'r') as f:
+                cfg_file = json.load(f)
+        except:
+            # Fall back to finding and loading a pickle file
+            sim_file = glob.glob(f'{perm_dir_gp}/*_data.pkl')
+            if not sim_file:
+                raise FileNotFoundError(f'No alternative config found for {network_metrics_file}')
+            from netpyne import sim  # Ensure netpyne is imported properly
+            sim.loadSimCfg(sim_file[0])
+            cfg_file = sim.cfg
+        
+        return {
+            'data': network_data,
+            'cfg': cfg_file
+        }
+    except Exception as e:
+        print(f'Error loading {network_metrics_file}: {e}')
+        return {'error': str(e)}
+
+def load_network_metrics_v3(input_dir, num_workers=None, use_threads=False, use_memmap=False):
+    """
+    Loads network metrics from .npy files in the given directory using either threading or multiprocessing.
+    Stores the loaded numpy arrays in a dictionary with filenames as keys.
+    Optionally uses memory mapping to optimize large file loading.
+    
+    Args:
+        input_dir (str): Directory to search for network metrics files.
+        num_workers (int, optional): Number of workers (threads or processes) to use. Defaults to available CPUs.
+        use_threads (bool, optional): If True, uses ThreadPoolExecutor; otherwise, uses ProcessPoolExecutor.
+        use_memmap (bool, optional): If True, loads files using memory mapping (`mmap_mode='r'`) for efficiency.
+    
+    Returns:
+        dict: Dictionary with filenames as keys and loaded numpy arrays as values.
+    """
+    
+    # Locate network metrics files
+    #network_metrics_files = glob.glob(os.path.join(input_dir, '**', '**', 'network_data.npy'), recursive=True)
+    network_metrics_files = glob.glob(input_dir + '/**/**/network_data.npy')
+    if not network_metrics_files:
+        raise ValueError(f"No network metrics files found in {input_dir}")
+    
+    # Set number of workers
+    available_cpus = os.cpu_count()
+    num_workers = min(num_workers or available_cpus, len(network_metrics_files), available_cpus)
+    
+    # Adjust thread count per worker if using multiprocessing
+    if not use_threads:
+        threads_per_worker = max(1, available_cpus // num_workers)
+        os.environ["OMP_NUM_THREADS"] = str(threads_per_worker)
+    
+    # Select executor type
+    Executor = ThreadPoolExecutor if use_threads else ProcessPoolExecutor
+    
+    total_files = len(network_metrics_files)
+    completed_files = 0
+    network_metrics_data = {}
+    
+    
+    #override
+    #shorten network_metrics_files for testing
+    network_metrics_files = sorted(network_metrics_files)
+    #network_metrics_files = network_metrics_files[:40]
+    num_workers = total_files if total_files < available_cpus else available_cpus
+    #override
+    results = []
+    print(f"Using {num_workers} {'threads' if use_threads else 'processes'} to load {len(network_metrics_files)} network metrics files.")
+    with Executor(max_workers=num_workers) as executor:
+        futures = {executor.submit(metrics_loader_v3, file, use_memmap): file for file in network_metrics_files}
+        for future in as_completed(futures):
+            result = future.result()
+            #if 'error' not in result:
+                #network_metrics_data[os.path.basename(futures[future])] = result
+            results.append(result)
+            completed_files += 1
+            print(f"Completed {completed_files} out of {total_files}")
+    
+    return results
+
+def load_network_metrics_v2(input_dir, num_workers=None, use_threads=False):
+    """
+    Loads network metrics from .npy files in the given directory using either threading or multiprocessing.
+    
+    Args:
+        input_dir (str): Directory to search for network metrics files.
+        num_workers (int, optional): Number of workers (threads or processes) to use. Defaults to available CPUs.
+        use_threads (bool, optional): If True, uses ThreadPoolExecutor; otherwise, uses ProcessPoolExecutor.
+    
+    Returns:
+        list: List of results from processing the network metrics files.
+    """
+    
+    # Locate network metrics files
+    network_metrics_files = glob.glob(input_dir + '/**/**/network_data.npy')
+    if not network_metrics_files:
+        raise ValueError(f"No network metrics files found in {input_dir}")
+    
+    # Set number of workers
+    available_cpus = os.cpu_count()
+    num_workers = min(num_workers or available_cpus, len(network_metrics_files), available_cpus)
+    print(f"Using {num_workers} {'threads' if use_threads else 'processes'} to load {len(network_metrics_files)} network metrics files.")
+    
+    # Adjust thread count per worker if using multiprocessing
+    if not use_threads:
+        threads_per_worker = max(1, available_cpus // num_workers)
+        os.environ["OMP_NUM_THREADS"] = str(threads_per_worker)
+    
+    # Select executor type
+    Executor = ThreadPoolExecutor if use_threads else ProcessPoolExecutor
+    
+    total_files = len(network_metrics_files)
+    completed_files = 0
+    
+    results = []
+    with Executor(max_workers=num_workers) as executor:
+        futures = {executor.submit(metrics_loader_v2, file): file for file in network_metrics_files}
+        for future in as_completed(futures):
+            result = future.result()
+            results.append(result)
+            completed_files += 1
+            print(f"Completed {completed_files} out of {total_files}")
+    
+    return results
+
+def plot_heat_maps(output_dir, input_dir, num_workers=None, levels=6, **hkwargs):
+    
+    # subfunctions ===================================================================================================
+
+    def get_clean_grid(input_dir, query=None):
+        """
+        Constructs a grid of summary plot paths for a given query.
+        
+        This function identifies the original simulation directory, extracts parameter-specific 
+        summary plots, and organizes them into a structured grid with the original summary 
+        plot inserted in the middle of each parameter's variations.
+        
+        Args:
+            input_dir (str): The directory to search for simulation results.
+            query (str): The specific summary plot to retrieve.
+        
+        Returns:
+            dict: A dictionary where keys are parameter names and values are dictionaries 
+                mapping index positions to summary plot paths.
+        
+        Raises:
+            ValueError: If `query` is not specified.
+            AssertionError: If the number of detected original simulation directories is not exactly one.
+        """
+        if query is None:
+            raise ValueError("query must be specified")
+        
+        # Identify the original simulation directory (must contain '.sa_origin' as a subdirectory)
+        found = [root for root, _, _ in os.walk(input_dir) if '.sa_origin' in root]
+        
+        # Ensure there is exactly one original summary directory
+        assert len(found) == 1, f"Expected 1 original summary plot directory, found {len(found)}"
+        origin_marker_path = found[0]
+        origin_summary_path = os.path.dirname(origin_marker_path)
+        for root, _, files in os.walk(origin_summary_path): # find network_data.npy in origin_summary_path - may need to recurse
+            for file in files:
+                if query in file:
+                    original_summary_path = os.path.join(root, file)
+                    break
+        origin_network_metrics_path = os.path.join(origin_summary_path, query)
+        
+        # Initialize the grid for storing summary plot paths
+        grid = {}
+        
+        params_to_exclude = [
+            'E_diam_mean', 'I_diam_mean', 'E_L_mean', 'I_L_mean', 'E_Ra_mean', 'I_Ra_mean',
+        ]
+        
+        for param_name, param_value in params.items():
+            # Skip parameters that are not lists or tuples of length 2
+            if not isinstance(param_value, (list, tuple)):
+                continue
+            
+            # Skip parameters that are not within the specified range
+            if param_name in params_to_exclude:
+                continue
+            
+            # Retrieve permutations for the current parameter
+            num_permutations, summary_paths = get_perms_per_param(param_name)
+            
+            if num_permutations == 0:
+                continue  # Skip parameters with no variations
+            
+            # Insert the original summary plot at the middle index of the variations
+            middle_idx = num_permutations // 2
+            summary_paths.insert(middle_idx, origin_network_metrics_path)
+            
+            # Store summary paths in the grid
+            grid[param_name] = {idx: path for idx, path in enumerate(summary_paths)}
+            
+            # Quality check: Ensure the number of permutations does not exceed expected levels
+            try:
+                assert num_permutations <= levels, f"Expected at most {levels} permutations, found {num_permutations}"
+            except AssertionError as e:
+                print("Error:", e)
+        
+        # Remove empty entries from the grid
+        clean_grid = {param: paths for param, paths in grid.items() if paths}
+        
+        return clean_grid
+
+    def get_perms_per_param(param):
+        ''' get number of permutations for a given param '''
+        # init file list
+        #files = []
+        found = []
+        
+        #iterate through files in input_dir, get number of permutations from filename context
+        num_permutations = 0
+        param_elements = param.split('_')
+        
+        for root, _, files in os.walk(input_dir):
+            for file in files:
+                file_path = os.path.join(root, file)
+                parent_dir = os.path.basename(os.path.dirname(file_path))
+                perm_label = parent_dir
+                if param in perm_label:
+                    #if all([element in perm_label for element in param_elements]):
+                    if '.npy' in file:
+                        num_permutations += 1
+                        #files.append(file_path)
+                        found.append(file_path)
+                        print('Found permutation for', param, 'in', file_path)
+        
+        # return number of permutations found
+        return num_permutations, found
+            
+    def extract_original_metric(data_list, metric_path):
+        """Extracts the original metric value from network metrics data."""
+        for i, data in enumerate(data_list):
+            #base = os.path.basename(data['sim_data_path'])
+            sim_data_path = data['sim_data_path']
+            sim_data_dir = os.path.dirname(sim_data_path)
+            # if folder .sa_origin is found, then it's the original sim
+            list_of_dirs_in_dir = os.listdir(sim_data_dir)
+            if '.sa_origin' in list_of_dirs_in_dir:
+                #if base.startswith('_'):
+                original_metric = data.copy()
+                for path_part in metric_path:
+                    if 'network_metrics' in path_part:
+                        continue
+                    original_metric = original_metric.get(path_part, np.nan)
+                return i, original_metric
+            
+            
+            
+            # if base.startswith('_'):
+            #     original_metric = data.copy()
+            #     for path_part in metric_path:
+            #         if 'network_metrics' in path_part:
+            #             continue
+            #         original_metric = original_metric.get(path_part, np.nan)
+            #     return i, original_metric
+        return None, None
+
+    def compute_metric_bounds(metric_values, original_metric):
+        """Computes min and max metric values within 2 standard deviations."""
+        if original_metric is None or np.isnan(original_metric):
+            return np.nan, np.nan
+        
+        std_dev = np.std(metric_values)
+        min_val, max_val = original_metric - 2 * std_dev, original_metric + 2 * std_dev
+        return max(min(metric_values), min_val), min(max(metric_values), max_val)
+
+    def prepare_clean_grid(clean_grid, data_list, param, levels):
+        """Prepares clean_grid by populating it with data and arranging levels."""
+        clean_grid[param]['data'] = {}
+        for data in data_list:
+            sim_data_path = data['sim_data_path']
+            base = os.path.basename(sim_data_path)
+            simLabel = os.path.basename(os.path.dirname(sim_data_path))
+            if param in base and not base.startswith('_'):
+                clean_grid[param]['data'][simLabel] = data
+        
+        #assert len(clean_grid[param]['data']) == levels, f'Expected {levels} levels, found {len(clean_grid[param]["data"])}'
+        
+        row_data = clean_grid[param]['data']
+        middle_idx = levels // 2
+        new_row_data = {}
+        for key, data in row_data.items():
+            level_pos = int(re.search(r'\d+$', key).group())
+            if level_pos >= middle_idx:
+                level_pos += 1
+            new_row_data[level_pos] = data
+        return new_row_data
+
+    def extract_metric_value(data, metric_path):
+        """Recursively extracts a numerical metric value from a nested dictionary."""
+        for path_part in metric_path:
+            if 'network_metrics' in path_part:
+                continue
+            if isinstance(data, dict):
+                data = data.get(path_part, np.nan)
+            else:
+                break
+        return float(data) if isinstance(data, (int, float, np.number)) else np.nan
+    
+    def plot_metric_heatmap_v3(output_dir, metric_path, metric_name, network_metrics_data, clean_grid, levels):
+        """
+        Plots heatmaps for a specified network metric.
+        """
+        print(f"Plotting summary grid for {metric_name} with color gradient")
+        data_list = [data['data'] for data in network_metrics_data]
+        original_key, original_metric = extract_original_metric(data_list, metric_path)
+        
+        #metric_values = [float(data.get(path_part, np.nan)) for data in data_list for path_part in metric_path if 'network_metrics' not in path_part]
+        metric_values = [extract_metric_value(data, metric_path) for data in data_list]
+        min_metric, max_metric = compute_metric_bounds(metric_values, original_metric)
+        
+        #cmap = mcolors.LinearSegmentedColormap.from_list('custom_cmap', [(0, 0, 1), (1, 1, 1), (1, 0, 0)], N=100)
+        # use a softer/more offwhite color for the middle
+        cmap = mcolors.LinearSegmentedColormap.from_list('custom_cmap', [(0, 0, 1), (0.875, 0.875, 0.875), (1, 0, 0)], N=100)
+        norm = (mcolors.CenteredNorm(vcenter=original_metric, halfrange=max(abs(min_metric - original_metric), abs(max_metric - original_metric)))
+                if not np.isnan(original_metric) else mcolors.Normalize(vmin=min_metric, vmax=max_metric))
+        
+        for param in clean_grid:
+            clean_grid[param]['data'] = prepare_clean_grid(clean_grid, data_list, param, levels)
+        
+        #fig, axs = plt.subplots(len(clean_grid), levels + 1, figsize=(2 * (levels + 1), len(clean_grid)))
+        fig, axs = plt.subplots(len(clean_grid), levels + 1, figsize=(2* len(clean_grid), 2 * len(clean_grid)))
+
+        for row_idx, (param, summary_paths) in enumerate(clean_grid.items()):
+            for key, data in clean_grid[param]['data'].items():
+                try:
+                    metric_value = data.copy()
+                    for path_part in metric_path:
+                        if 'network_metrics' in path_part:
+                            continue
+                        metric_value = metric_value.get(path_part, np.nan)
+                    
+                    color = cmap(norm(metric_value))
+                    axs[row_idx, key].add_patch(plt.Rectangle((0, 0), 1, 1, color=color))
+                    #axs[row_idx, key].text(0.5, 0.5, f'{metric_value:.2f}', ha='center', va='center', fontsize=12)
+                    axs[row_idx, key].axis('off')
+                    
+                    sim_data_path = data['sim_data_path']
+                    permuted_value = next((netmet['cfg'].get(param, None) for netmet in network_metrics_data if netmet['data']['sim_data_path'] == sim_data_path), None)
+                    
+                    if row_idx == 0: # only on first ?
+                        if permuted_value is not None:
+                            #axs[row_idx, key].set_title(f'@{round(permuted_value, 3)}', fontsize=14)
+                            # get the column position relative to origin (in the middle) and show that instead of perm_value
+                            #level_pos = int(re.search(r'\d+$', key).group())
+                            level_diff = key - 3
+                            #if level_pos >= levels // 2: level_pos += 1
+                            #level_diff = level_pos - levels // 2
+                            if level_diff != 0: 
+                                if level_diff<0: axs[row_idx, key].set_title(f'{level_diff}', fontsize=55, fontweight='bold')
+                                elif level_diff>0: axs[row_idx, key].set_title(f'+{level_diff}', fontsize=55, fontweight='bold')
+                            else: pass # dont print the origin value
+                        
+                    print(f"Plotted {param} in row {row_idx}, column {key}")    
+                except Exception as e:
+                    print(f"Error loading plot for key {key}: {e}")
+                    
+            #if any expected keys are missing from the row, fill them with black rectangles
+            expected_keys = [0, 1, 2, 3, 4, 5, 6]
+            for key in expected_keys:
+                if key == 3:
+                    # offwhite rect
+                    axs[row_idx, key].add_patch(plt.Rectangle((0, 0), 1, 1, color=(0.875, 0.875, 0.875)))
+                    axs[row_idx, key].axis('off')
+                    continue
+                if key not in clean_grid[param]['data']:
+                    axs[row_idx, key].add_patch(plt.Rectangle((0, 0), 1, 1, color='black'))
+                    axs[row_idx, key].axis('off')
+            
+            for col_idx in range(levels + 1):
+                axs[row_idx, col_idx].axis('off')
+                
+            print(f"Plotted {param} in row {row_idx}")
+        
+        plt.tight_layout()
+        plt.subplots_adjust(left=0.15, right=0.90, top=0.925)
+        
+        # Configure Matplotlib to use LaTeX and include the bm package
+        # import matplotlib
+        # matplotlib.rc('text', usetex=True)
+        # matplotlib.rcParams['text.latex.preamble'] = r'\usepackage{bm}'
+        
+        for row_idx, param in enumerate(clean_grid):
+            pos = axs[row_idx, 0].get_position()
+            #fig.text(pos.x0 - 0.025, pos.y0 + pos.height / 2, param, va='center', ha='right', fontsize=14, rotation=0)
+            # bigger font and printed at a 45 degree angle from the top to save space
+            
+            param_text = param
+            
+            # if 'propVelocity' in param:
+            #     # replace with 'v' with bar symbol over it
+            #     param_text = param_text.replace('propVelocity', r'$v_{\mathrm{prop}}$')
+            # #replace prob w P()            
+            # if 'prob' in param and 'probLengthConst' not in param:
+            #     param_text = param_text.replace('prob', 'P(')
+            #     param_text = param_text + ')'
+            # # replace LengthConst with lambda (λ)
+            # if 'probLengthConst' in param:
+            #     param_text = param_text.replace('LengthConst', 'λ')
+            # if 'weight' in param:
+            #     param_text = param_text.replace('weight', 'w(')
+            #     param_text = param_text + ')'
+            # if 'gnabar' in param:
+            #     # replace with 'Na' with bar symbol over it
+            #     param_text = param_text.replace('gnabar_', r'$g_{\mathrm{Na}}$')
+            # if 'gkbar' in param:
+            #     # replace with 'K' with bar symbol over it
+            #     param_text = param_text.replace('gkbar_', r'$g_{\mathrm{K}}$')
+            # if 'tau1_exc' in param:
+            #     # replace with 'τ' with bar symbol over it
+            #     param_text = param_text.replace('tau1_exc', r'$\tau1_{\mathrm{exc}}$')
+            # if 'tau2_exc' in param:
+            #     # replace with 'τ' with bar symbol over it
+            #     param_text = param_text.replace('tau2_exc', r'$\tau2_{\mathrm{exc}}$')
+            # if 'tau1_inh' in param:
+            #     # replace with 'τ' with bar symbol over it
+            #     param_text = param_text.replace('tau1_inh', r'$\tau1_{\mathrm{inh}}$')
+            # if 'tau2_inh' in param:
+            #     # replace with 'τ' with bar symbol over it
+            #     param_text = param_text.replace('tau2_inh', r'$\tau2_{\mathrm{inh}}$')
+            
+            
+            # Formatting replacements with bold symbols
+            if 'propVelocity' in param:
+                param_text = param_text.replace('propVelocity', r'$\mathbf{v_{\mathrm{prop}}}$')
+            if 'prob' in param and 'probLengthConst' not in param:
+                param_text = param_text.replace('prob', r'$\mathbf{P(}$')
+                param_text += ')'
+            if 'probLengthConst' in param:
+                param_text = param_text.replace('probLengthConst', r'$\mathbf{\lambda}$')
+            if 'weight' in param:
+                param_text = param_text.replace('weight', r'$\mathbf{w(}$')
+                param_text += ')'
+            if 'gnabar' in param:
+                param_text = param_text.replace('gnabar_', r'$\mathbf{g_{\mathrm{Na}}}$')
+            if 'gkbar' in param:
+                param_text = param_text.replace('gkbar_', r'$\mathbf{g_{\mathrm{K}}}$')
+            if 'tau1_exc' in param:
+                param_text = param_text.replace('tau1_exc', r'$\mathbf{\tau_{1,\mathrm{exc}}}$')
+            if 'tau2_exc' in param:
+                param_text = param_text.replace('tau2_exc', r'$\mathbf{\tau_{2,\mathrm{exc}}}$')
+            if 'tau1_inh' in param:
+                param_text = param_text.replace('tau1_inh', r'$\mathbf{\tau_{1,\mathrm{inh}}}$')
+            if 'tau2_inh' in param:
+                param_text = param_text.replace('tau2_inh', r'$\mathbf{\tau_{2,\mathrm{inh}}}$')
+
+                
+            #make param_text bold
+            #param_text = param_text.replace(param_text, r'$\mathbf{' + param_text + '}$') 
+            #param_text = f'$\\mathbf{{{param_text}}}$'
+            #param_text = f'$\\textbf{{{param_text}}}$'
+            #param_text = f'$\\mathbb{{{param_text}}}$'  # Use \mathbb{} as an alternative for bold text
+            #param_text = f'$\\boldsymbol{{{param_text}}}$'
+    
+            fig.text(
+                pos.x0 - 0.025, pos.y0 + pos.height / 2,
+                param_text, va='center', ha='right',
+                fontsize=55, 
+                #rotation=45, 
+                fontweight='bold'
+            )
+            
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+        cbar_ax = fig.add_axes([0.91, 0.15, 0.03, 0.7])
+        fig.colorbar(sm, cax=cbar_ax)
+        
+        #increase color bar tick mark text
+        cbar_ax.tick_params(labelsize=40)
+        
+        #fig.suptitle(f'Heatmap: {metric_name}', fontsize=50)
+        #only use last part of path, define title as everything after 'metrics' in metric_name
+        title = metric_name.split('metrics')[-1]
+        # remove leading _ if present
+        if title.startswith('_'): title = title[1:]
+        fig.suptitle(title, fontsize=75, fontweight='bold')
+            
+        #plt.tight_layout()
+        
+        output_path = os.path.join(output_dir, f'_heatmap_{metric_name}.png')
+        plt.savefig(output_path, dpi=100)
+        pdf_path = os.path.join(output_dir, f'_heatmap_{metric_name}.pdf')
+        plt.savefig(pdf_path)
+        print(f'Saved heatmap to {output_path}')
+        print(f'Saved heatmap to {pdf_path}')
+        return output_path
+    
+    def plot_metric_heatmap_v2(output_dir, metric_path, metric_name, network_metrics_data, clean_grid, levels):
+        """
+        Plots heatmaps for a specified network metric.
+        """
+        print(f"Plotting summary grid for {metric_name} with color gradient")
+        data_list = [data['data'] for data in network_metrics_data]
+        original_key, original_metric = extract_original_metric(data_list, metric_path)
+        
+        #metric_values = [float(data.get(path_part, np.nan)) for data in data_list for path_part in metric_path if 'network_metrics' not in path_part]
+        metric_values = [extract_metric_value(data, metric_path) for data in data_list]
+        min_metric, max_metric = compute_metric_bounds(metric_values, original_metric)
+        
+        cmap = mcolors.LinearSegmentedColormap.from_list('custom_cmap', [(0, 0, 1), (1, 1, 1), (1, 0, 0)], N=100)
+        norm = (mcolors.CenteredNorm(vcenter=original_metric, halfrange=max(abs(min_metric - original_metric), abs(max_metric - original_metric)))
+                if not np.isnan(original_metric) else mcolors.Normalize(vmin=min_metric, vmax=max_metric))
+        
+        for param in clean_grid:
+            clean_grid[param]['data'] = prepare_clean_grid(clean_grid, data_list, param, levels)
+        
+        fig, axs = plt.subplots(len(clean_grid), levels + 1, figsize=(2 * (levels + 1), len(clean_grid)))
+        
+        for row_idx, (param, summary_paths) in enumerate(clean_grid.items()):
+            for key, data in clean_grid[param]['data'].items():
+                try:
+                    metric_value = data.copy()
+                    for path_part in metric_path:
+                        if 'network_metrics' in path_part:
+                            continue
+                        metric_value = metric_value.get(path_part, np.nan)
+                    
+                    color = cmap(norm(metric_value))
+                    axs[row_idx, key].add_patch(plt.Rectangle((0, 0), 1, 1, color=color))
+                    axs[row_idx, key].text(0.5, 0.5, f'{metric_value:.2f}', ha='center', va='center', fontsize=12)
+                    axs[row_idx, key].axis('off')
+                    
+                    sim_data_path = data['sim_data_path']
+                    permuted_value = next((netmet['cfg'].get(param, None) for netmet in network_metrics_data if netmet['data']['sim_data_path'] == sim_data_path), None)
+                    
+                    if permuted_value is not None:
+                        axs[row_idx, key].set_title(f'@{round(permuted_value, 3)}', fontsize=14)
+                        
+                    print(f"Plotted {param} in row {row_idx}, column {key}")    
+                except Exception as e:
+                    print(f"Error loading plot for key {key}: {e}")
+            
+            for col_idx in range(levels + 1):
+                axs[row_idx, col_idx].axis('off')
+                
+            print(f"Plotted {param} in row {row_idx}")
+        
+        plt.tight_layout()
+        plt.subplots_adjust(left=0.15, right=0.90, top=0.925)
+        
+        for row_idx, param in enumerate(clean_grid):
+            pos = axs[row_idx, 0].get_position()
+            fig.text(pos.x0 - 0.025, pos.y0 + pos.height / 2, param, va='center', ha='right', fontsize=14, rotation=0)
+        
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+        cbar_ax = fig.add_axes([0.91, 0.15, 0.03, 0.7])
+        fig.colorbar(sm, cax=cbar_ax)
+        
+        fig.suptitle(f'Heatmap: {metric_name}', fontsize=16)
+        output_path = os.path.join(output_dir, f'_heatmap_{metric_name}.png')
+        plt.savefig(output_path, dpi=100)
+        pdf_path = os.path.join(output_dir, f'_heatmap_{metric_name}.pdf')
+        plt.savefig(pdf_path)
+        print(f'Saved heatmap to {output_path}')
+        print(f'Saved heatmap to {pdf_path}')
+        return output_path
+    
+    def plot_metric_heatmap(output_dir, metric_path, metric_name, network_metrics_data, clean_grid, levels):
+        """
+        Generalized function to plot heatmaps for a specified network metric.
+        
+        Args:
+            output_dir (str): Directory to save the heatmap.
+            metric_path (list): List of keys to navigate the metric in the network_metrics_data dictionary.
+            metric_name (str): Name of the metric to display in the title and filename.
+            network_metrics_data (dict): Dictionary containing network metrics data.
+            clean_grid (dict): Dictionary of parameters and their data paths.
+            levels (int): Number of levels for each parameter.
+        """
+        print(f"Plotting summary grid for {metric_name} with color gradient")
+        
+        # Find the original metric value - dict
+        # for key in network_metrics_data.keys():
+        #     if key.startswith('_'):
+        #         original_key = key
+        #         original_metric = network_metrics_data[key]['data']
+        #         for path_part in metric_path:
+        #             original_metric = original_metric[path_part]
+        #         break
+        
+        #network_metrics_data_copy = deepcopy(network_metrics_data)
+        
+        #make list
+        data_list = []
+        for data in network_metrics_data:
+            data_list.append(data['data'])
+            
+        # replace list, lazy
+        #network_metrics_data = data_list                
+        
+        # patch for list
+        for i, data in enumerate(data_list):
+            sim_data_path = data['sim_data_path']
+            base = os.path.basename(sim_data_path)
+            if base.startswith('_'):
+                #if data.startswith('_'):
+                #original_key = data
+                #original_metric = network_metrics_data[data]['data']
+                #original_metric = data[key]
+                original_key = i
+                original_metric = data.copy()
+                for path_part in metric_path:
+                    if 'network_metrics' in path_part: continue
+                    original_metric = original_metric[path_part]
+                break
+        
+        # # Determine min and max metric values
+        # metric_list = []  # Initialize list to store metric values
+        # min_metric = float('inf')
+        # max_metric = float('-inf')
+        # for key in network_metrics_data.keys():
+        #     data = network_metrics_data[key]['data']
+        #     metric_value = data
+        #     for path_part in metric_path:
+        #         metric_value = metric_value[path_part]
+        #         #print(metric_value)
+        #     metric_list.append(float(metric_value))
+        #     min_metric = min(min_metric, metric_value)
+        #     max_metric = max(max_metric, metric_value)
+        
+        # patch for list
+        metric_list = []  # Initialize list to store metric values
+        min_metric = float('inf')
+        max_metric = float('-inf')
+        for data in data_list:
+            #data = network_metrics_data[key]['data']
+            metric_value = data.copy()
+            for path_part in metric_path:
+                if 'network_metrics' in path_part: continue
+                try: metric_value = metric_value[path_part]
+                except:
+                    #print(f"Error loading metric value for {path_part}")
+                    metric_value = np.nan
+                    continue
+            metric_list.append(float(metric_value))
+            min_metric = min(min_metric, metric_value)
+            max_metric = max(max_metric, metric_value)
+        
+        # get min and max metric values within 2 std deviations to avoid outliers
+        std_dev = np.std(metric_list)
+        max_val = original_metric + 2 * std_dev
+        min_val = original_metric - 2 * std_dev
+        
+        # now if min and max arre within 2 std deviations, use them, else use the std values
+        min_metric = max(min_metric, min_val)
+        max_metric = min(max_metric, max_val)
+        
+        # Define colormap and normalization
+        colors = [(0, 0, 1), (1, 1, 1), (1, 0, 0)]  # Blue -> White -> Red
+        cmap = mcolors.LinearSegmentedColormap.from_list('custom_cmap', colors, N=100)
+        
+        # Handle the case where original_metric is NaN
+        if not np.isnan(original_metric):
+            #typical case
+            norm = mcolors.CenteredNorm(vcenter=original_metric, halfrange=max(abs(min_metric - original_metric), abs(max_metric - original_metric)))
+        else:
+            # handle case where original_metric is NaN
+            norm = mcolors.Normalize(vmin=min_metric, vmax=max_metric) # normalized without centering around original simulation
+            
+        # Prepare data dicts for clean_grid
+        for param, summary_paths in clean_grid.items():
+            clean_grid[param]['data'] = {}
+            
+        # Update clean_grid with network_metrics_data
+        for param, summary_paths in clean_grid.items():
+            #for key, data in network_metrics_data.items():
+            for data in data_list: # patch for list
+                sim_data_path = data['sim_data_path']
+                base = os.path.basename(sim_data_path)
+                simLabel = os.path.basename(os.path.dirname(sim_data_path))
+                if param in base:
+                    # skip og sim if it's based on param from previous SA
+                    if base.startswith('_'): continue
+                    clean_grid[param]['data'].update({simLabel: data})
+        assert len(clean_grid[param]['data']) == levels, f'Expected {levels} levels, found {len(clean_grid[param]["data"])}'
+            
+        # Generate heatmap
+        n_rows = len(clean_grid)
+        n_cols = levels + 1
+        fig, axs = plt.subplots(n_rows, n_cols, figsize=(2 * n_cols, 1 * n_rows))
+        
+        for row_idx, (param, summary_paths) in enumerate(clean_grid.items()):
+            
+            # # aw 2025-03-04 16:32:38 - since we know the number of levels we have, we can adjust what the middle index is
+            row_data = clean_grid[param]['data']
+            middle_idx = levels // 2 # for 6 levels, idx is 3 (0, 1, 2, 3, 4, 5, 6) - 3 is the middle (perm, perm, perm, og, perm, perm, perm)
+            new_row_data = {}
+            for idx, (key, data) in enumerate(clean_grid[param]['data'].items()):
+                # get correct idx for perm based on key. Each key should have a number value in it.
+                # find number in key (which should be a string including a number at the end)
+                # get the number from the key
+                #if idx != middle_idx: # perm case
+                level_pos = int(re.search(r'\d+$', key).group())
+                if level_pos >= middle_idx: level_pos += 1
+                #new_row_data[key] = data
+                new_row_data[level_pos] = data                    
+                # elif idx == middle_idx: # og case
+                #     #new_row_data['original_data'] = data_list[original_key]
+                #     new_row_data[idx] = data_list[original_key]
+                #new_row_data[key] = data
+            new_row_data[middle_idx] = data_list[original_key]
+            clean_grid[param]['data'] = new_row_data
+            
+            # aw 2025-03-04 16:31:39 updating this block of code above to handle incomplete lists of data - incase some sims or analyses fail.
+            # row_data = clean_grid[param]['data']
+            # sorted_row_data = dict(sorted(row_data.items()))
+            # middle_idx = len(sorted_row_data) // 2
+            # new_row_data = {}
+            # for idx, (key, value) in enumerate(sorted_row_data.items()):
+            #     if idx == middle_idx:
+            #         new_row_data['original_data'] = data_list[original_key]
+            #     new_row_data[key] = value
+            # clean_grid[param]['data'] = new_row_data
+            
+            # Plot each cell in the row
+            for col_idx, (key, data) in enumerate(clean_grid[param]['data'].items()):
+                try:
+                    metric_value = data
+                    for path_part in metric_path:
+                        if 'network_metrics' in path_part: continue
+                        try: metric_value = metric_value[path_part]
+                        except: 
+                            metric_value = np.nan
+                            continue
+                    color = cmap(norm(metric_value))
+                    
+                    # key is the real column index... #HACK
+                    axs[row_idx, key].add_patch(plt.Rectangle((0, 0), 1, 1, color=color))
+                    axs[row_idx, key].text(0.5, 0.5, f'{metric_value:.2f}', ha='center', va='center', fontsize=12)
+                    axs[row_idx, key].axis('off')
+                    
+                    # axs[row_idx, col_idx].add_patch(plt.Rectangle((0, 0), 1, 1, color=color))
+                    # axs[row_idx, col_idx].text(0.5, 0.5, f'{metric_value:.2f}', ha='center', va='center', fontsize=12)
+                    # axs[row_idx, col_idx].axis('off')
+                    permuted_param = param
+                    #permuted_value = data['data']['simConfig'][param]
+                    #permuted_value = data[param]
+                    sim_data_path = data['sim_data_path']
+                    for netmet in network_metrics_data:
+                        sim_check = netmet['data']['sim_data_path']
+                        if sim_data_path == sim_check:
+                            permuted_value = netmet['cfg'][param]
+                            break
+                    #cfg = network_metrics_data[key]['cfg']
+                    try:
+                        permuted_value = round(permuted_value, 3)
+                    except:
+                        pass
+                    axs[row_idx, key].set_title(f'@{permuted_value}', fontsize=14)
+                except Exception as e:
+                    print(f"Error loading plot for key {key}: {e}")
+            #print(f"Plotted {param} in row {row_idx}")
+
+            # remove axes for all subplots, even if nothing plotted
+            for col_idx in range(levels + 1):
+                axs[row_idx, col_idx].axis('off')
+                
+        plt.tight_layout()
+        plt.subplots_adjust(left=0.15, right=0.90, top=0.925)
+        for row_idx, (param, summary_paths) in enumerate(clean_grid.items()):
+            pos = axs[row_idx, 0].get_position()
+            x = pos.x0 - 0.025
+            fig.text(x, pos.y0 + pos.height / 2, param, va='center', ha='right', fontsize=14, rotation=0)
+        
+        # Add colorbar
+        # NOTE: sm generated with norm based on original_metric = nan will result in stack overrflow when trying to generate the colorbar - to deal with this,
+        # to deal with this, norm has a special case above for when original_metric is nan. norm will be set to a norm that is not centered on original simulaiton value.
+        sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
+        sm.set_array([])
+        cbar_ax = fig.add_axes([0.91, 0.15, 0.03, 0.7])
+        fig.colorbar(sm, cax=cbar_ax)
+        
+        # Add title and save
+        fig.suptitle(f'Heatmap: {metric_name}', fontsize=16)
+        output_path = os.path.join(output_dir, f'_heatmap_{metric_name}.png')
+        plt.savefig(output_path, dpi=100)
+        pdf_path = os.path.join(output_dir, f'_heatmap_{metric_name}.pdf')
+        plt.savefig(pdf_path)
+        print(f'Saved heatmap to {output_path}')
+        print(f'Saved heatmap to {pdf_path}')
+        #print(f'Saved heatmap to {output_path}')
+        return output_path
+    
+    def find_metric_paths(network_metrics_data, parent_path="network_metrics"):
+        """
+        Recursively find paths that resolve to a single float/int 
+        or a list of floats/ints, while treating dicts with only numeric keys as lists.
+        """
+        keys_to_ignore = [
+            "std", 
+            "cov",
+            "median",
+            "burst_ids",
+            "burst_part",
+            "burst_parts",
+            ".data",
+            "num_bursts", # burst rate is more informative with variable durations
+            "unit_metrics",
+            "gids",
+            "spiking_metrics_by_unit",
+            "spiking_times_by_unit",
+            ".unit_metrics",
+            "unit_types",
+            "min",
+            "max",
+            "simData",
+            "popData",
+            "cellData",
+            
+            # fix this later
+            'E_diam_mean',
+            'I_diam_mean',
+            'E_L_mean',
+            'I_L_mean',
+            'E_Ra_mean',
+            'I_Ra_mean',
+            
+            ]
+        metric_paths = set()
+
+        def is_numeric_key_dict(d):
+            """Check if all keys in the dictionary are numeric (i.e., should be treated as a list)."""
+            return isinstance(d, dict) and all(re.match(r"^\d+$", str(k)) for k in d.keys())
+
+        def recurse(d, path):
+            if isinstance(d, dict):
+                if is_numeric_key_dict(d):  # Treat as a list and stop recursion
+                    if not any(ign in path for ign in keys_to_ignore):          
+                        print(f"Found metric path: {path}")
+                        metric_paths.add(path)
+                    return
+                for key, value in d.items():
+                    new_path = f"{path}.{key}"
+                    recurse(value, new_path)
+            elif isinstance(d, (int, float)) or (isinstance(d, list) and all(isinstance(i, (int, float)) for i in d)):
+                if not any(ign in path for ign in keys_to_ignore):          
+                    print(f"Found metric path: {path}")
+                    metric_paths.add(path)
+
+            # metric paths
+
+        # prep
+        list_network_data = []
+        for data in network_metrics_data:
+            try:
+                list_network_data.append(data['data'])
+            except Exception as e:
+                print(f"Error loading network data: {e}")
+                continue     
+        
+        # 
+        count = 0
+        data = list_network_data
+        for entry in data:  # Assuming network_metrics_data is a list of dicts
+            recurse(entry, parent_path)
+            count += 1
+            if count > 3: break # really only need to do this once - but will do it three times to be sure
+            #break # really only need to do this once
+        return sorted(metric_paths)
+
+    # main ===================================================================================================
+    # get dict of paths for matrix
+    clean_grid = get_clean_grid(input_dir, query='network_data.npy') # prepare grid of network_data.npy file paths
+    network_metrics_data = load_network_metrics_v3(input_dir, num_workers=num_workers, use_threads=True, use_memmap=False) # Collect network_metrics.npy files and process #NOTE: parallel processing is used here
+    metric_paths = find_metric_paths(network_metrics_data)
+    print(f'{len(metric_paths)} metric paths found')
+    
+    # testing
+    for metric_path in metric_paths:
+        try:
+            metric_path_parts = metric_path.split('.')
+            metric_name = '_'.join(metric_path_parts)
+            #plot_metric_heatmap(output_dir, metric_path_parts, metric_name, network_metrics_data, clean_grid, levels)
+            #plot_metric_heatmap_v2(output_dir, metric_path_parts, metric_name, network_metrics_data, clean_grid, levels) #TODO: add reference data...
+            plot_metric_heatmap_v3(output_dir, metric_path_parts, metric_name, network_metrics_data, clean_grid, levels)
+        except Exception as e:
+            traceback.print_exc()
+            print(f"Error plotting heatmap for {metric_path}: {e}")
+            continue
+        
+    print('done.')
+
+def plot_sensitivity_analysis_v3(kwargs):    
+    """
+    Plots a grid of summary plots with color-modulated cells based on changes in burst rates.
+    """    
+    # main ===================================================================================================
+    
+    #unpack kwargs    
+    og_simulation_data_path = kwargs['sim_data_path']
+    sensitvity_analysis_output_dir = kwargs['output_dir']
+    num_workers = kwargs['max_workers']
+    levels = kwargs['levels']
+    plot_heatmaps = kwargs['plot_heatmaps']
+    
+    # Set up paths and parameters
+    input_dir = sensitvity_analysis_output_dir
+    output_dir = os.path.join(sensitvity_analysis_output_dir, 'summary_plots')
+    sim_data_path = og_simulation_data_path
+    
+    # assertions
+    assert os.path.exists(input_dir), f'Input directory {input_dir} does not exist.'
+    assert os.path.exists(sim_data_path), f'Simulation data path {sim_data_path} does not exist.'
+    
+    # make output directory if it doesn't exist
+    os.makedirs(output_dir, exist_ok=True)
+        
+    # plot summary grid
+    hkwargs = {
+        'output_dir': output_dir,
+        'input_dir': input_dir,
+        'num_workers': num_workers,
+        'levels': levels
+    }
+    if plot_heatmaps: plot_heat_maps(**hkwargs)
+    
 def metrics_loader_v2(network_metrics_file):
     """
     Helper function to process network metrics files and extract burst rate information.
@@ -482,7 +1431,11 @@ def plot_sensitivity_grid_plots_v2(
             fig.suptitle(f'Heatmap: {metric_name}', fontsize=16)
             output_path = os.path.join(output_dir, f'_heatmap_{metric_name}.png')
             plt.savefig(output_path, dpi=100)
+            pdf_path = os.path.join(output_dir, f'_heatmap_{metric_name}.pdf')
+            plt.savefig(pdf_path)
             print(f'Saved heatmap to {output_path}')
+            print(f'Saved heatmap to {pdf_path}')
+            #print(f'Saved heatmap to {output_path}')
             return output_path
         
         # main ===================================================================================================
@@ -947,7 +1900,93 @@ def prepare_permuted_sim_v2(pkwargs):
     # load netparams and permute
     sim.load(sim_data_path, simConfig=cfg) # load og sim_data w/ permuted cfg
     simConfig = specs.SimConfig(simConfigDict=cfg)
+    # # comment out later.
+    # # # netParams_eioverride = sim.loadNetParams(
+    # # #     "/pscratch/sd/a/adammwea/workspace/RBS_network_models/RBS_network_models/Organoid_RTT_R270X/DIV112_WT/src/netParams.py", 
+    # # #     setLoaded=False
+    # # #     )
+    # _, netParams_eioverride = sim.readCmdLineArgs(
+    #                 simConfigDefault="/pscratch/sd/a/adammwea/workspace/RBS_network_models/RBS_network_models/Organoid_RTT_R270X/DIV112_WT/src/cfg.py",
+    #                 netParamsDefault="/pscratch/sd/a/adammwea/workspace/RBS_network_models/RBS_network_models/Organoid_RTT_R270X/DIV112_WT/src/netParams.py", 
+    #             )
+    # # comment out later
+    
     netParams = sim.loadNetParams(sim_data_path, setLoaded=False)
+    
+    # # #comment out later
+    # # #make strategic deits to netparams
+    
+    
+    # # Extract relevant sections
+    # cellParams_or = netParams_eioverride.cellParams  # Override version
+    # popParams_or = netParams_eioverride.popParams
+    # cellParams = netParams.cellParams  # Original version
+    # popParams = netParams.popParams
+
+    # # Define variables to track count
+    # num_e_cells = len([cell for cell in cellParams if 'E' in cell])
+    # num_i_cells = len([cell for cell in cellParams if 'I' in cell])
+
+    # # Adjust the balance: remove excess E cells, add missing I cells
+    # num_e_target = len([cell for cell in cellParams_or if 'E' in cell])
+    # num_i_target = len([cell for cell in cellParams_or if 'I' in cell])
+
+    # # Remove excess E cells
+    # if num_e_cells > num_e_target:
+    #     excess = num_e_cells - num_e_target
+    #     cellParams = {k: v for i, (k, v) in enumerate(cellParams.items()) if 'E' not in k or i >= excess}
+
+    # final_num_e_cells = len([cell for cell in cellParams if 'E' in cell])
+    
+    # # Add missing I cells from override
+    # if num_i_cells < num_i_target:
+    #     needed = num_i_target - num_i_cells
+    #     #only add the first needed cells
+    #     i_cells_to_add = {k: v for k, v in cellParams_or.items() if 'I' in k}
+    #     i_cells_to_add = dict(list(i_cells_to_add.items())[:needed])
+    #     cellParams.update(i_cells_to_add)
+    
+    # final_num_i_cells = len([cell for cell in cellParams if 'I' in cell])       
+
+    # # Align cell lists in popParams
+    # cell_lists_E_or = popParams_or['E']['cellsList']
+    # cell_lists_I_or = popParams_or['I']['cellsList']
+    # cell_lists_E = popParams['E']['cellsList']
+    # cell_lists_I = popParams['I']['cellsList']
+
+    # # Ensure `cellType` and `cellLabel` in `cellsList` match `cell_label` in `cellParams`
+    # for pop_label, pop in popParams.items():
+    #     if 'cellsList' in pop:
+    #         to_remove = []  # Collect cells to remove
+    #         for cell in pop['cellsList']:
+    #             cell_id = cell.get('cellLabel', None)  # Get the label if it exists
+    #             if cell_id not in cellParams:  # If it's not in cellParams, remove it
+    #                 to_remove.append(cell)
+
+    #         # Now remove items safely after iterating
+    #         for cell in to_remove:
+    #             pop['cellsList'].remove(cell)
+    #             print(f"Removed {cell.get('cellLabel', 'Unknown')} from {pop_label} cellsList")
+
+    # # Ensure all cells from popParams_or exist in popParams
+    # for pop_label, pop in popParams_or.items():
+    #     if 'cellsList' in pop:
+    #         for cell in pop['cellsList']:
+    #             cell_id = cell.get('cellLabel', None)  # Get the label
+    #             if cell_id in cellParams and cell not in popParams[pop_label]['cellsList']:
+    #                 popParams[pop_label]['cellsList'].append(cell)
+    #                 print(f"Added {cell_id} to {pop_label} cellsList")
+                    
+                    
+    # # finally update pop params with the correct num cells
+    # for pop_label, pop in popParams.items():
+    #     if 'numCells' in pop:
+    #         if 'E' in pop_label:
+    #             pop['numCells'] = final_num_e_cells
+    #         elif 'I' in pop_label:
+    #             pop['numCells'] = final_num_i_cells
+    
+    # comment out later
     
     cfg_to_netparams_mapping, strategy = map_cfg_to_netparams_v2({cfg_param: cfg_val}, netParams.__dict__.copy())
     mapped_paths = cfg_to_netparams_mapping[cfg_param]
@@ -1139,7 +2178,7 @@ def run_permutations_v2(kwargs):
         # Print number of workers
         print(f'Using {num_workers} workers out of {available_cpus} available CPUs.')
         permuted_paths = [] # collect pkl data paths from each permutation
-        #num_workers = 1 # DEBUG - force to 1
+        #num_workers = 2 # DEBUG - force to 1
         with ProcessPoolExecutor(max_workers=num_workers) as executor:
             futures = {executor.submit(run_permutation_v2, *task): task for task in tasks}
             for future in as_completed(futures):
@@ -1520,7 +2559,7 @@ def run_sensitivity_analysis_v2(kwargs):
         assert 'levels' in kwargs, 'levels not in kwargs'
         assert 'conv_params' in kwargs, 'conv_params not in kwargs'
         assert 'mega_params' in kwargs, 'mega_params not in kwargs'
-        assert 'fitnessFuncArgs' in kwargs, 'fitnessFuncArgs not in kwargs'
+        #assert 'fitnessFuncArgs' in kwargs, 'fitnessFuncArgs not in kwargs'
         assert 'max_workers' in kwargs, 'max_workers not in kwargs'
         assert 'run_parallel' in kwargs, 'run_parallel not in kwargs'
         assert 'duration_seconds' in kwargs, 'duration_seconds not in kwargs'
@@ -1543,7 +2582,7 @@ def run_sensitivity_analysis_v2(kwargs):
         assert isinstance(kwargs['levels'], int), 'levels must be an integer'
         assert isinstance(kwargs['conv_params'], dict), 'conv_params must be a dictionary'
         assert isinstance(kwargs['mega_params'], dict), 'mega_params must be a dictionary'
-        assert isinstance(kwargs['fitnessFuncArgs'], dict), 'fitnessFuncArgs must be a dictionary'
+        #assert isinstance(kwargs['fitnessFuncArgs'], dict), 'fitnessFuncArgs must be a dictionary'
         assert isinstance(kwargs['max_workers'], int), 'max_workers must be an integer'
         assert isinstance(kwargs['run_parallel'], bool), 'run_parallel must be a boolean'
     
