@@ -1,34 +1,63 @@
-print('Running test_dtw.py')
-import numpy
-from RBS_network_models.feature_struct import dtw_analysis_v3
+print('Initializing...')
+# =================== #
+# Import Libraries
+import numpy as np
+from fastdtw import fastdtw
+from scipy.spatial.distance import euclidean
+import multiprocessing
+import time
+import random
+import pandas as pd
+# =================== #
 
-# load data - reciprocal to this saving script
-    ## =================== ##
-    ## save test data for easier debugging
-    # path = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/tests/dtw_test_data/'
-    # time_sequence_dict = {i: time_sequence_mat[i] for i in range(len(time_sequence_mat))}
-    # cat_sequence_dict = {i: cat_sequence_mat[i] for i in range(len(cat_sequence_mat))}
-    # np.save(path + 'time_sequence_dict.npy', time_sequence_dict)
-    # np.save(path + 'cat_sequence_dict.npy', cat_sequence_dict)
-    # np.save(path + 'sequence_stacks.npy', sequence_stacks)
-    # np.save(path + 'bursting_data.npy', bursting_data)
+# Main Test Function
+# if __name__ == "__main__": # aw 2025-02-23 17:08:59 - older implementation of dtw_analysis_dynamic
 
-print('Loading test data')    
-path = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/tests/dtw_test_data/'
-time_sequence_dict = numpy.load(path + 'time_sequence_dict.npy', allow_pickle=True).item()
-cat_sequence_dict = numpy.load(path + 'cat_sequence_dict.npy', allow_pickle=True).item()
-sequence_stacks = numpy.load(path + 'sequence_stacks.npy', allow_pickle=True).item()
-bursting_data = numpy.load(path + 'bursting_data.npy', allow_pickle=True).item()
+#     # init lock
+#     # Global Lock (outside function)
+#     lock = None  # Initialize as None so it doesn't get pickled
 
-# test dtw
-print('Running dtw')
-dtw_results = dtw_analysis_v3(
-    time_sequence_dict, cat_sequence_dict, sequence_stacks, bursting_data
-)
+#     # Run Tests
+#     print('Running test_dtw.py')
+#     print('Loading test data')    
+#     path = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/tests/dtw_test_data/'
+#     sequence_stacks = np.load(path + 'sequence_stacks.npy', allow_pickle=True).item()
 
+#     # test dtw # aw 2025-02-23 14:52:22 - this probably won't work anymore due to changes of input data
+#         # print('Running dtw')
+#         # dtw_results = dtw_analysis_v3(
+#         #     time_sequence_dict, cat_sequence_dict, sequence_stacks, bursting_data
+#         # )
+
+#     # test dynamic dtw
+#     print('Running dynamic dtw')
+#     #previous_computed_data = np.load(path + 'dtw_analysis_dynamic_results.npy', allow_pickle=True).item()
+#     data_path = path
+#     mean_dtw, std_dtw, variance_dtw, global_matrix = dtw_analysis_dynamic(sequence_stacks, data_path,
+#                                                                         #confidence_threshold=0.99, min_samples=500
+#                                                                         )
+# aw 2025-02-23 17:09:19 - newer implementation of dtw_analysis_dynamic
+if __name__ == "__main__":
+    print('Running test_dtw.py')
+    print('Loading test data')
+
+    path = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/tests/dtw_test_data/'
+    sequence_stacks = np.load(path + 'sequence_stacks.npy', allow_pickle=True).item()
+
+    print('Running dynamic DTW...')
+    data_path = path
+    mean_dtw, std_dtw, variance_dtw, global_matrix = dtw_analysis_dynamic_v2(sequence_stacks, 
+                                                                             data_path,
+                                                                             cv_threshold=0.05,
+                                                                             moving_avg_window=500,
+                                                                             moving_avg_threshold=0.01,
+                                                                             )
+    print('DTW Analysis Complete!')
 '''
-salloc -A m2043 -q interactive -C gpu -t 04:00:00 --nodes=1 --image=adammwea/axonkilo_docker:v7
+salloc -A m2043 -q interactive -C cpu -t 04:00:00 --nodes=1 --image=adammwea/axonkilo_docker:v7
 module load conda
 conda activate netsims_env
+pip install -e /pscratch/sd/a/adammwea/workspace/RBS_network_models
+pip install -e /pscratch/sd/a/adammwea/workspace/MEA_Analysis
 python /pscratch/sd/a/adammwea/workspace/RBS_network_models/tests/test_dtw.py
 '''

@@ -6,4 +6,4 @@ from . import extract_features
 from .utils import *
 
 #models
-from .CDKL5 import *
+from .models.CDKL5_E6D_T2_C1_05212024 import *
