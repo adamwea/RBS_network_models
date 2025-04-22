@@ -338,7 +338,14 @@ if version == 3.0:
         #print(type(posE))
         print('positions generated') 
     elif cfg.locations_known is True:
-        unit_locations = cfg.unit_locations
+        features_path = cfg.features_path
+        if not os.path.exists(features_path):
+            raise FileNotFoundError(f"Features path {features_path} does not exist.")
+        
+        # Load .npy file at features_path
+        experimental_features = np.load(features_path, allow_pickle=True).item()   
+        
+        unit_locations = experimental_features['unit_locations']        # unit_locations = cfg.unit_locations
         inhib_units = cfg.inhib_units
         excit_units = cfg.excit_units
         

@@ -34,7 +34,8 @@ if version == 3.0:
                                 'importing the params from __main__')
             warnings.warn(warning_message)
             
-            from RBS_network_models.CDKL5.DIV21.src.evol_params import params
+            #from RBS_network_models.CDKL5.DIV21.src.evol_params import params
+            from RBS_network_models.models.CDKL5_E6D_T2_C1_05212024.DIV21_WT.src.evol_params import params
             
             # cycle through params, if any are ranges of values, randomly select one between the range
             print('Randomizing parameters within specified ranges...')
@@ -56,31 +57,22 @@ if version == 3.0:
     # import using import_module_from_path
     
     # features data path
-    #feature_data_path = '/pscratch/sd/a/adammwea/workspace/RBS_network_models/data/CDKL5/DIV21/features'
-    feature_data_path = '/global/homes/a/adammwea/pscratch/zoutputs/CDKL5-E6D_T2_C1_05212024/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/network_analysis/well005/metrics.npy'
-
-    feature_data_path = os.path.abspath(feature_data_path)
-    feature_data_files = [f for f in os.listdir(feature_data_path) if f.endswith('.py')]
-    feature_data_files = sorted(feature_data_files, key=lambda x: os.path.getmtime(os.path.join(feature_data_path, x)))
-    feature_data_file = feature_data_files[-1]
-    feature_data_file = os.path.join(feature_data_path, feature_data_file)
-    feature_data_file = os.path.abspath(feature_data_file)
-    fitness_targets = import_module_from_path(feature_data_file)
+    feature_data_path = '/global/homes/a/adammwea/pscratch/z_analyzed_data/CDKL5-E6D_T2_C1_05212024/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/network_analysis/well005/metrics.npy'
+    assert os.path.exists(feature_data_path), f'{feature_data_path} not found'
     
     # Initialize simulation configuration
     cfg = specs.SimConfig()
-    #cfg.verbose = True # Show detailed messages
     
     #add data from fitness_targets to cfg -> useful in preparing netParams
     cfg.locations_known = True
     cfg.features_path = feature_data_path
     if 'experimental_features' not in globals():
         experimental_features = np.load(cfg.features_path, allow_pickle=True).item()
-    cfg.experimental_features = experimental_features
-    cfg.unit_locations = experimental_features['unit_locations']
-    cfg.unit_types = experimental_features['unit_types']
-    cfg.inhib_units = [gid for gid, x in cfg.unit_types.items() if x == 'I']
-    cfg.excit_units = [gid for gid, x in cfg.unit_types.items() if x == 'E']
+    
+    # unit locations
+    unit_types = experimental_features['unit_types']
+    cfg.inhib_units = [gid for gid, x in unit_types.items() if x == 'I']
+    cfg.excit_units = [gid for gid, x in unit_types.items() if x == 'E']
     cfg.num_excite = len(cfg.excit_units)
     cfg.num_inhib = len(cfg.inhib_units) 
 
@@ -89,7 +81,8 @@ if version == 3.0:
     
     # set simulation duration
     #cfg.duration_seconds = 1  # Duration of the simulation, in seconds
-    cfg.duration_seconds = 15  # Duration of the simulation, in seconds
+    #cfg.duration_seconds = 15  # Duration of the simulation, in seconds
+    cfg.duration_seconds = 65  # Duration of the simulation, in seconds
     
     # set simulation configuration
     cfg.duration = cfg.duration_seconds * 1e3  # Duration of the simulation, in ms
@@ -115,7 +108,7 @@ if version == 3.0:
     I_cells = random.sample(cfg.inhib_units, min(2, cfg.num_inhib))
     assert all([x in cfg.excit_units for x in E_cells]), 'E_cells contains gids not in excitatory population'
     assert all([x in cfg.inhib_units for x in I_cells]), 'I_cells contains gids not in inhibitory population'
-    cfg.recordCells = [('E', E_cells), ('I', I_cells)]
+    #cfg.recordCells = [('E', E_cells), ('I', I_cells)]
 
     #testing new params
     #cfg.coreneuron = True
@@ -131,7 +124,7 @@ if version == 3.0:
     #cfg.validateDataSaveOptions = True
     cfg.verbose = False
     #cfg.verbose = True
-
+    
     # success message
     print('cfg.py script completed successfully.')   
 elif version == 2.0:

@@ -15,10 +15,10 @@ This script uses the extract_network_features module to perform network analyis 
 # Imports =====================================================================
 import os
 from RBS_network_models import extract_features as ef
-from RBS_network_models.Organoid_RTT_R270X.DIV112_WT.src.conv_params import conv_params, mega_params
+from RBS_network_models.models.CDKL5_E6D_T2_C1_05212024.DIV21_WT.src.conv_params import conv_params, mega_params
 
 # Paths =============================================================================
-sorted_data_dirs = ['/global/homes/a/adammwea/pscratch/zoutputs/CDKL5-E6D_T2_C1_05212024/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/sorted/well005',
+sorted_data_dirs = ['/global/homes/a/adammwea/pscratch/z_analyzed_data/CDKL5-E6D_T2_C1_05212024/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/sorted/well005',
                     ] # NOTE: this is a list of paths to sorted data files that you want to extract features from.
 output_dirs = [sorted_dir.replace('sorted', 'network_analysis') for sorted_dir in sorted_data_dirs
                ] # NOTE: this is a list of output directories for each network analysis of each sorted data file.
@@ -57,5 +57,5 @@ print("Network Analysis Complete.")
 #run in interactive node
 salloc -A m2043 -q interactive -C cpu -t 04:00:00 --nodes=1 --image=adammwea/axonkilo_docker:v7
 shifter --image=adammwea/axonkilo_docker:v7 /bin/bash
-python /global/homes/a/adammwea/workspace/aw_scripts/Organoid_RTT_R270X_models/DIV112_WT/analyze_sorted.py
+python /global/homes/a/adammwea/workspace/repos/RBS_network_models/RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_WT/analyze_sorted.py
 '''

@@ -3,12 +3,18 @@ import os
 from netpyne import sim
 import json
 #===================================================================================================
-# Get and test MPI rank
-from mpi4py import MPI
-mpi_rank = MPI.COMM_WORLD.Get_rank()
-mpi_size = MPI.COMM_WORLD.Get_size()
-rank = mpi_rank
-print("Initiating Rank:", rank) 
+try:
+    # Get and test MPI rank
+    from mpi4py import MPI
+    mpi_rank = MPI.COMM_WORLD.Get_rank()
+    mpi_size = MPI.COMM_WORLD.Get_size()
+    rank = mpi_rank
+    print("Initiating Rank:", rank) 
+except ImportError:
+    print("mpi4py not found, running in serial mode.")
+    rank = 0
+    mpi_size = 1
+
 script_dir = os.path.dirname(os.path.realpath(__file__)) #get current script path and set as working directory
 os.chdir(script_dir)
 print('CWD:', os.getcwd())

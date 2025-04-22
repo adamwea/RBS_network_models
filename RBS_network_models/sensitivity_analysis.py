@@ -26,7 +26,7 @@ import matplotlib.image as mpimg
 from matplotlib.patches import Rectangle
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from netpyne import sim, specs
-from RBS_network_models.CDKL5.DIV21.src.evol_params import params
+#from RBS_network_models.CDKL5.DIV21.src.evol_params import params
 from RBS_network_models.sim_analysis import process_simulation_v2
 import traceback
 from .utils.helper import indent_increase, indent_decrease

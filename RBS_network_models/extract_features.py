@@ -285,8 +285,8 @@ def get_data_obj_groups_v3(h5_paths, sorted_output_folders):
             # waveform_extractor = sorting_analyzer.get_extension("waveforms")
 
         except Exception as e:
-            waveform_extractor = (e, traceback.format_exc())  # put error in waveform_extractor for debugging
-
+            #waveform_extractor = (e, traceback.format_exc())  # put error in waveform_extractor for debugging
+            sorting_analyzer = (e, traceback.format_exc())  # put error in waveform_extractor for debugging
         
         # return paired objects
         # return (rec_segments, sort_obj, waveform_extractor), recording_details

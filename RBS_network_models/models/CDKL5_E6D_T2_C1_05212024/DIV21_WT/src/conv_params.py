@@ -21,13 +21,15 @@ conv_params = {
 
 mega_params = { 
     #'binSize': conv_params['binSize']*15,
-    'binSize': 0.01*15,
+    #'binSize': 0.01*15,
+    'binSize': 0.01*30,
     #'gaussianSigma': conv_params['gaussianSigma']*15,
     ## aw 2025-02-04 17:33:19 - I want to be a little more sensitive to the peaks in the mega data
     #'gaussianSigma': conv_params['gaussianSigma']*15,
-    'gaussianSigma': 0.01*15,
+    #'gaussianSigma': 0.01*15,
+    'gaussianSigma': 0.01*30,
     #'thresholdBurst': 1.0,
     'thresholdBurst': None,
     'min_peak_distance': None, 
-    'prominence': 4,
+    'prominence': 3,
 }

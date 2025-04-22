@@ -8,8 +8,812 @@ from .fitnessCalcs import * # import all comparison helper functions
 import time
 import os
 import subprocess
+import numpy as np
+from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import compute_network_metrics
+from netpyne import sim
 
 # Functions =========================================================================================
+def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
+    """
+    Main logic of the calculate_fitness function.
+    Ensures the function does not crash and always returns a fitness value.
+    """    
+    # subfunctions =================================================================
+    def calculate_fitness(simulated_data, experimental_data, fitness_dict={}, path=None, parent_key=None, **kwargs):
+        """
+        Calculate the fitness value based on the simulated and experimental data.
+        """
+        # subfunctions =========================================================
+        def init_skip_keys():
+            # skip keys of non-interest
+            skip_keys = [
+                'data',
+                'note',                        
+                ]
+            return skip_keys
+        
+        def handle_inclusion(abs_path):
+            include_keys = {
+                'source': False,
+                'spiking_data':{
+                    'spike_times': False,
+                    'spiking_times_by_unit': False,
+                    'spiking_metrics_by_unit': {
+                        'int':{
+                            'num_spikes': False,
+                            'wf_metrics': False,
+                            'fr': True,
+                            'isi': True,
+                            'spike_times': False,
+                            },
+                        },
+                    'frs': True,
+                    'i_frs': True,
+                    'e_frs': True,
+                    'u_frs': False,
+                    'isi': True,
+                    'i_isi': True,
+                    'e_isi': True,
+                    'u_isi': False,
+                    },
+                'sim_data_path': False,
+                'timeVector': False,
+                'sampling_rate': False,
+                'gids': False,
+                'unit_ids': False,
+                'bursting_data':{
+                    'ax': False,
+                    'convolved_data': False, # maybe I could include some of this... but I think its pretty much captured by other metrics
+                    'unit_metrics': {
+                        'int':{
+                            'burst_id': False,
+                            'quiet_id': False,
+                            'bursts': False,
+                            'quiets': False,
+                            'burst_durations': False, # these should be in summary metrics or something... right?
+                            'quiet_durations': False,
+                            'burst_part_rate': True,
+                            'quiet_part_rate': True,
+                            'burst_part_perc': True,
+                            'fr': {
+                                'in_burst': True,
+                                'out_burst': True,
+                                },
+                            'isi': {
+                                'in_burst': True,
+                                'out_burst': True,
+                                },
+                            'spike_counts': {
+                                'in_burst': True,
+                                'out_burst': True,
+                                },
+                            'fano_factor': {
+                                'in_burst': True,
+                                'out_burst': True,
+                                },
+                            },
+                        },
+                    'burst_metrics': {
+                        'num_bursts': False,
+                        'burst_rate': True,
+                        'burst_ids': False,
+                        'ibi': True,
+                        'burst_amp': True,
+                        'burst_duration': True,
+                        'burst_parts': False,
+                        'num_units_per_burst': True,
+                        'in_burst_fr': True,                        
+                        },
+                    'warnings': False,
+                },
+                'mega_bursting_data':{
+                    'ax': False,
+                    'convolved_data': False, # maybe I could include some of this... but I think its pretty much captured by other metrics
+                    'unit_metrics': {
+                        'int':{
+                            'burst_id': False,
+                            'quiet_id': False,
+                            'bursts': False,
+                            'quiets': False,
+                            'burst_durations': False, # these should be in summary metrics or something... right?
+                            'quiet_durations': False,
+                            'burst_part_rate': True,
+                            'quiet_part_rate': True,
+                            'burst_part_perc': True,
+                            'fr': {
+                                'in_burst': True,
+                                'out_burst': True,
+                                },
+                            'isi': {
+                                'in_burst': True,
+                                'out_burst': True,
+                                },
+                            'spike_counts': {
+                                'in_burst': True,
+                                'out_burst': True,
+                                },
+                            'fano_factor': {
+                                'in_burst': True,
+                                'out_burst': True,
+                                },
+                            },
+                        },
+                    'burst_metrics': {
+                        'num_bursts': False,
+                        'burst_rate': True,
+                        'burst_ids': False,
+                        'ibi': True,
+                        'burst_amp': True,
+                        'burst_duration': True,
+                        'burst_parts': False,
+                        'num_units_per_burst': True,
+                        'in_burst_fr': True,                        
+                        },
+                    'warnings': False,
+                },
+                'unit_types': False,
+                'unit_locations': False,
+                'simData': False,
+                'popData': False,
+                'cellData': False,
+            }
+            
+            # logic ==============================================================
+            # manage inclusions
+            #include = include_keys.get(key, False)
+            #include_key = include_keys.get(key, False)
+            
+            # split abs_path into parts if it contains '.'
+            if '.' in abs_path:
+                # split into parts, replace any ints with 'int'
+                parts = abs_path.split('.')
+                parts = ['int' if part.isdigit() else part for part in parts]
+                
+                # dig into the dictionary
+                for part in parts: # dig into the dictionary
+                    if part in include_keys:
+                        include_keys = include_keys[part]
+                    else:
+                        include_key = False
+                    
+                    # break if include_keys is a boolean
+                    if isinstance(include_keys, bool):
+                        include = include_keys
+                        return include
+                
+                if isinstance(include_keys, dict):
+                    include = True
+                    return include
+            else:
+                include_key = include_keys[abs_path]
+                if isinstance(include_key, dict): include = True
+                elif isinstance(include_key, bool): include = include_key
+                return include
+            
+        def handle_nans_and_infs(score, simulated_data, target, key):
+            # handle NaN scores
+            if np.isnan(score):
+                # print(f'NaN score for key {key}.')
+                # fitness_dict[key]['fit'] = 1000
+                if np.isnan(simulated_data[key]) and not np.isnan(target):
+                    # if simulated data is NaN and target is not, set score to 1000
+                    #fitness_dict[key]['fit'] = 1000
+                    score = 1000
+                elif not np.isnan(simulated_data[key]) and np.isnan(target):
+                    # if simulated data is not NaN and target is, set score to 1000
+                    #fitness_dict[key]['fit'] = 1000
+                    score = 1000
+                elif np.isnan(simulated_data[key]) and np.isnan(target):
+                    # if both are NaN, set score to 1
+                    score = 1
+                elif not np.isnan(simulated_data[key]) and not np.isnan(target):
+                    if simulated_data[key] == target:
+                        # if both are equal, set score to 1
+                        score = 1
+                    else:
+                        print(f'Unknown NaN case for key {key}.')
+                else:
+                    print(f'Unknown NaN case for key {key}.')
+            elif np.isinf(np.abs(score)):
+                print(f'Infinite score for key {key}.')
+                
+            return score  
+        
+        def handle_list_comparison(simulated_data, experimental_data, key, fitness_dict):
+            # compare lists
+            if 'participating_units' in key:
+                def compare_participating_units(simulated_data, experimental_data, key, fitness_dict):
+                    # compare the set of both lists - get percent overlap
+                    simulated_set = set(simulated_data[key])
+                    experimental_set = set(experimental_data[key])
+                    overlap = len(simulated_set.intersection(experimental_set))
+                    percent_overlap = overlap / len(experimental_set)
+                    return percent_overlap
+                
+                percent_overlap = compare_participating_units(simulated_data, experimental_data, key, fitness_dict)
+                
+                # score
+                target = 1 # best possible overlap is 1
+                weight = 1 # penalty for deviation from target
+                maxFitness = 1000 # maximum fitness score
+                min_val = 0 # minimum value allowed
+                max_val = 1
+                #score = the_scoring_function(percent_overlap, target, weight, maxFitness, min_val=min_val, max_val=max_val)
+                score = the_scoring_function_quadratic_smooth_sigmoid(percent_overlap, target, maxFitness, weight, min_val=min_val, max_val=max_val)
+                score = handle_nans_and_infs(score, simulated_data, target, key)
+                fitness_dict[key]['fit'] = score
+                
+                #return fitness_dict
+            else:
+                raise ValueError(f'Unknown list for key {key}.')
+            # elif any(exclude_logic):
+            #     pass
+            # else:
+            #     raise ValueError(f'Unknown list for key {key}.')
+            
+            return fitness_dict
+        
+        def handle_numpy_array_comparison(simulated_data, experimental_data, key, fitness_dict):
+            # # compare numpy arrays
+            # print(f'Comparing numpy array for key {key}.')
+            # #abs_path = f'{path}.{key}'
+            # dtw_list = ['time', 'bursts', 'quiets', 'sequence_stack']
+            
+            #
+            dtw_compare_keys = [
+                'spike_times',
+                'spiking_times_by_unit',
+                'spiking_metrics_by_unit',
+                'bursts',
+                'quiets',
+                
+            ]
+            
+            if any(item in abs_path for item in dtw_compare_keys):
+            #if 'times' in abs_path:
+                #start = time.time()
+                if len(simulated_data[key]) > 0 and len(experimental_data[key]) > 0:
+                    # distance
+                    distance = event_times_dtw_distance(simulated_data[key], experimental_data[key])
+                    fitness_dict[key]['distance'] = distance
+                    
+                    #score
+                    target = 0 # best possible distance is the same
+                    weight = 1 # penalty for deviation from target
+                    maxFitness = 1000 # maximum fitness score
+                    min_val = 0 # minimum value allowed
+                    max_val = 1000 # TODO: set max val based on experimental data. 
+                                    #May need to work into regular network_metrics to make this easy
+                    #score = the_scoring_function(distance, target, weight, maxFitness, min_val=min_val, max_val=max_val)
+                    score = the_scoring_function_quadratic_smooth_sigmoid(distance, target, maxFitness, weight, min_val=min_val, max_val=max_val)
+                    fitness_dict[key]['fit'] = score
+                    
+                    # handle NaN scores
+                    if np.isnan(score):
+                        print(f'NaN score for key {key}.')
+                        fitness_dict[key]['fit'] = 1000
+                    
+                else:
+                    #continue
+                    raise ValueError(f'Empty numpy array for key {key}.')
+                #time_elapsed = time.time() - start
+                #print(f'DTW distance: {distance}')
+                #print(f'DTW time elapsed: {time_elapsed} seconds.')
+                
+            else:
+                raise ValueError(f'Unknown numpy array for key {key}.')
+                
+            return fitness_dict
+        
+        def handle_float_or_int_comparison(simulated_data, experimental_data, key, fitness_dict):
+
+            min_zero_list = [
+                'fr', 
+                'mean', 
+                'median', 
+                'std', 
+                'cov', 
+                'max', 
+                'min', 
+                'burst_rate', 
+                'num_units_participating', 
+                'duration',
+                'spike_rate',
+                ]
+            zero_to_one_list = [
+                'burst_part_rate', 
+                'quiet_part_rate', 
+                'burst_part_perc'
+                ]
+            
+            if key in min_zero_list:
+                weight = 1
+                min_val = 0
+                max_val = None
+            elif key in zero_to_one_list:
+                weight = 1
+                min_val = 0
+                max_val = 1
+            elif 'fano_factor' in abs_path:
+                weight = 1
+                min_val = 0
+                max_val = None
+            else:
+                print(f'warning: No min/max/weight defined for key {key}. Using default values.')
+            
+            #HACK modify weights for burst_amp, burst_duration, and burst_rate
+            if 'burst_amp' in abs_path:
+                weight = 3
+            elif 'burst_duration' in abs_path:
+                weight = 3
+            elif 'burst_rate' in abs_path:
+                weight = 5
+            
+            # compute score
+            target = experimental_data[key]
+            maxFitness = 1000 # maximum fitness score
+            score = the_scoring_function_quadratic_smooth_sigmoid(simulated_data[key], target, maxFitness, weight, min_val=min_val, max_val=max_val)
+            score = handle_nans_and_infs(score, simulated_data, target, key)                           
+                    
+            #update fitness dict and return
+            fitness_dict[key]['fit'] = score            
+            return fitness_dict
+        
+        def handle_string_comparison(simulated_data, experimental_data, key, fitness_dict):
+            # compare strings
+            str_list = []
+            if any(item in abs_path for item in str_list):
+                # simple comparison
+                if simulated_data[key] == experimental_data[key]: 
+                    fitness_dict[key]['fit'] = 1
+                else: 
+                    fitness_dict[key]['fit'] = 1000
+            else:
+                print(simulated_data[key])
+                #raise ValueError(f'Unknown string for key {key}.')
+                
+            return fitness_dict
+        
+        def handle_unit_mapping(path, key, kwargs):
+            
+            # define abs_path
+            if path is not None: abs_path = f'{path}.{key}'
+            else: abs_path = key
+            
+            # init paths, they may be updated later as needed
+            exp_id = None
+            sim_id = None
+            exp_path = abs_path
+            sim_path = abs_path
+            
+            # modulate path as needed if it contains 'by_unit'
+            if 'by_unit' in abs_path:
+                #check if any part is a number
+                parts = abs_path.split('.')  # split abs_path by .
+                success_int = False
+                for i, part in enumerate(parts):
+                    try:
+                        int(part)
+                        #exp_id = int(part)
+                        sim_id = int(part)
+                        success_int = True
+                        break
+                    except:
+                        pass
+                
+                # if a number was found, replace it with the mapped value
+                if success_int:                
+                    # make sure experimental_to_simulated_mapping is in kwargs
+                    # experimental_to_simulated_mapping = kwargs.get('experimental_to_simulated_mapping', {})
+                    # assert experimental_to_simulated_mapping is not None, 'No experimental to simulated mapping found in kwargs.'
+                    
+                    # reconstruct abs_path, repalce int with mapped int, get int value, get mapped value, replace in abs_path
+                    #sim_id = experimental_to_simulated_mapping.get(exp_id, None)
+                    # exp_path = abs_path
+                    # sim_path = abs_path.replace(str(exp_id), str(sim_id)) if sim_id is not None else abs_path
+                    
+                    # had it backwards above.
+                    simulated_to_experimental_mapping = kwargs.get('simulated_to_experimental_mapping', {})
+                    assert simulated_to_experimental_mapping is not None, 'No simulated to experimental mapping found in kwargs.'
+                    exp_transform = simulated_to_experimental_mapping.get(sim_id, None)
+                    exp_id = exp_transform['closest_exp_unit_id'] if exp_transform is not None else None
+                    assert exp_id is not None, f'No experimental id found for simulated id {sim_id}.'                    
+                    exp_path = abs_path.replace(str(sim_id), str(exp_id)) if exp_id is not None else abs_path
+                    sim_path = abs_path
+                                
+            # get the last item in sim and exp paths to get the keys
+            if sim_path is not None: 
+                try: sim_key = int(sim_path.split('.')[-1])
+                except: sim_key = sim_path.split('.')[-1]
+            if exp_path is not None: 
+                try: exp_key = int(exp_path.split('.')[-1])
+                except: exp_key = exp_path.split('.')[-1]
+            
+            return key, exp_key, sim_key, exp_id, sim_id, abs_path, exp_path, sim_path
+                
+        # main logic =============================================================
+        
+        # init include keys and skip keys
+        skip_keys = init_skip_keys()
+        #include_keys = init_include_keys()
+        
+        # update path
+        if parent_key is not None and path is not None: 
+            path += f'.{parent_key}'
+            #fitness_dict[parent_key] = {}
+        elif parent_key is not None and path is None: 
+            path = parent_key
+            #fitness_dict[parent_key] = {}
+        elif parent_key is None and path is not None: pass
+        else: path = None
+        if path is not None: print(f'Path: {path}')
+        
+        # loop through all paths in both dictionaries and compare the values of the keys
+        for key in simulated_data:
+            if key in skip_keys: continue # skip keys of non-interest          
+            if key in experimental_data:
+                
+                # handle unit mapping
+                key, exp_key, sim_key, exp_id, sim_id, abs_path, exp_path, sim_path = handle_unit_mapping(path, key, kwargs)
+                if exp_id is not None and sim_id is None: continue # dont score units if not mapped               
+                assert key==sim_key, f'Key mismatch: {key} != {sim_key}' # quality check
+                
+                include = handle_inclusion(abs_path)
+                if not include: continue # only include keys of interest  
+                
+                # update fit dict
+                if key not in fitness_dict:
+                    fitness_dict[sim_key] = {}
+                
+                if isinstance(simulated_data[key], dict):
+                    fitness_dict[sim_key] = calculate_fitness(simulated_data[sim_key], experimental_data[exp_key], fitness_dict[sim_key], path=path, parent_key=sim_key, **kwargs)
+                elif isinstance(simulated_data[sim_key], list):
+                    fitness_dict = handle_list_comparison(simulated_data, experimental_data, key, fitness_dict)
+                elif isinstance(simulated_data[sim_key], np.ndarray): 
+                    continue
+                    #fitness_dict = handle_numpy_array_comparison(simulated_data, experimental_data, key, fitness_dict)
+                elif isinstance(simulated_data[sim_key], (float, int, np.int64, np.float64)):
+                    fitness_dict = handle_float_or_int_comparison(simulated_data, experimental_data, key, fitness_dict)
+                elif isinstance(simulated_data[sim_key], str): 
+                    continue
+                    #fitness_dict = handle_string_comparison(simulated_data, experimental_data, key, fitness_dict)
+                elif isinstance(simulated_data[sim_key], set):
+                    continue # ignore sets for now
+                    #raise ValueError(f'Unknown data type for key {key}.')
+                elif isinstance(simulated_data[sim_key], tuple):
+                    continue # ignore tuples for now
+                    #raise ValueError(f'Unknown data type for key {key}.')
+                elif simulated_data[sim_key] is None:
+                    continue
+                    #raise ValueError(f'Key {key} is None.')
+                else:
+                    # other data types
+                    try: 
+                        print(type(simulated_data[key]))
+                    except: 
+                        print(f'Unknown data type for key {key}.')
+                    raise ValueError(f'Unknown data type for key {key}.')
+            else:
+                #print(f'Key {key} not found in experimental data.')
+                pass
+            
+        # # recurse through all keys in fitness_dict and delete empty dictionaries
+        # for key in fitness_dict:
+        #     if fitness_dict[key] == {}: del fitness_dict[key]
+        
+        # return fitness dictionary
+        return fitness_dict
+    
+    def clean_fitness_dict(fitness_dict, path=None, parent_key=None):
+       
+        # Create a list of keys to delete to avoid modifying the dictionary while iterating
+        keys_to_delete = [key for key in fitness_dict if isinstance(fitness_dict[key], dict) and not fitness_dict[key]]
+
+        # Delete empty dictionaries
+        for key in keys_to_delete:
+            #if key in unscored_keys:
+            del fitness_dict[key] # if key is unscored, delete it
+            # else:
+            #     fitness_dict[key] = {'fit': 1000} # if key is scored, set it to 1000 if empty
+
+        # Recurse through remaining dictionary values
+        for key, value in list(fitness_dict.items()):  # Use list() to avoid RuntimeError due to dict size change
+            if path is not None: abs_path = f'{path}.{key}'
+            else: abs_path = key
+            
+            if isinstance(value, dict):
+                clean_fitness_dict(value, path=abs_path, parent_key=key)  # Recurse into nested dictionaries
+                # If the nested dictionary becomes empty after recursion, delete it as well
+                if not value:
+                    #if key in unscored_keys:
+                    del fitness_dict[key] # if key is unscored, delete it
+                    # else:
+                    #     fitness_dict[key] = {'fit': 1000}
+                    
+        # return cleaned fitness dictionary            
+        return fitness_dict
+
+    def get_avg_fitness_weighted(fitness_dict):
+        """
+        Recursively folds up the fitness values in a nested dictionary.
+        Computes weighted averages from the deepest level up, where the weight is the number
+        of contributing leaf 'fit' values. Stores the computed average at each node.
+        """
+
+        def fold_up(d, abs_path=None):
+            if 'fit' in d:
+                fit_val = d['fit']
+                if isinstance(fit_val, (int, float)) and not np.isnan(fit_val):
+                    return fit_val, 1
+                else:
+                    return 0.0, 0  # ignore invalid or NaN
+
+            total_sum = 0.0
+            total_count = 0
+
+            for key, value in d.items():
+                if isinstance(value, dict):
+                    # track pathing just for debugging
+                    if abs_path is not None: abs_path = f'{abs_path}.{key}'
+                    else: abs_path = key
+                    
+                    # recurse into child dictionaries
+                    child_sum, child_count = fold_up(value, abs_path)
+                    total_sum += child_sum
+                    total_count += child_count
+
+            if total_count > 0:
+                weighted_avg = total_sum / total_count
+                d['fit'] = weighted_avg  # store computed fitness at this level
+                return total_sum, total_count
+
+            # No fitness values found, assign default
+            return 1000.0, 0
+
+        try:
+            total_sum, total_count = fold_up(fitness_dict)
+            avg_fitness = total_sum / total_count if total_count else 1000.0
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            print(f"Error folding up fitness values: {e}")
+            avg_fitness = 1000.0  # default fallback
+
+        #avg_fitness = fitness_dict.get('fit', 1000.0)  # get the final average fitness
+        # at top level
+        #total_sum, total_count = fold_up(fitness_dict)
+        #avg_fitness = total_sum / total_count if total_count else 1000.0
+        return avg_fitness, fitness_dict  # return the average fitness and the updated dictionary
+
+    def get_avg_fitness(fitness_dict):
+        """
+        Recursively folds up the fitness values in a nested dictionary.
+        It computes averages from the deepest level up and assigns an averaged 
+        fitness value at each level.
+        """
+        
+        #abs_path = ''
+
+        def fold_up(fitness_dict, abs_path=''):
+            # Check if current level contains 'fit' values
+            if 'fit' in fitness_dict:
+                return fitness_dict['fit'], 1  # Return fitness and count 1 comparison
+            
+            # Collect fitness values from child dictionaries
+            fitness_values = []
+            num_comparisons = 0  # Track number of fitness values aggregated
+
+            for key, value in fitness_dict.items():
+                if isinstance(value, dict):
+                    prev_path = abs_path
+                    abs_path = f'{abs_path}.{key}'
+                    child_fitness, child_count = fold_up(value, abs_path)
+                    abs_path = prev_path
+                    fitness_values.append(child_fitness)
+                    #fitness_dict[key]['count'] = child_count  # Store count of comparisons
+                    num_comparisons += child_count
+
+            # If we collected fitness values, compute weighted average
+            if fitness_values:
+                avg_fitness = np.nanmean(fitness_values)
+                #fitness_dict['count'] = num_comparisons  # Store count of comparisons
+                fitness_dict['fit'] = avg_fitness  # Store computed fitness at this level
+                return avg_fitness, num_comparisons
+
+            #return 0, 0  # If no fitness values exist, return 0 (or another default)
+            return 1000, 0 #fitness_dict  # If no fitness values exist, return 1000 (or another default)
+
+        try:
+            avg_fitness, _ = fold_up(fitness_dict)  # Start recursion
+        except Exception as e:
+            import traceback
+            traceback.print_exc()
+            print(f"Error folding up fitness values: {e}")
+            avg_fitness = 1000  # Default error value
+
+        return avg_fitness, fitness_dict
+    
+    def get_sim_data_from_call_stack(kwargs):
+        """
+        Get the candidate and job path from the call stack.
+        """
+        #simData = kwargs.get('simData', None)
+        #if simData is None: raise ValueError('No simulated data found in kwargs.')
+        
+        # get candidate and job path from call stack
+        from .utils.extract_simulated_data import get_candidate_and_job_path_from_call_stack, retrieve_sim_data_from_call_stack, extract_data_of_interest_from_sim
+        candidate_path, candidate_label = get_candidate_and_job_path_from_call_stack() #NOTE this part specifcally only works in batch processing, not in single candidate processing
+        fitness_save_path = f'{candidate_path}_fitness.json'
+        pkl_path = f'{candidate_path}_data.pkl'
+        cfg_path = f'{candidate_path}_cfg.json'
+        metrics_path = f'{candidate_path}_metrics.npy'
+        
+        # load simulated data
+        sim.load(pkl_path)
+        simData = sim.allSimData.todict().copy()
+        popData = sim.net.allPops.copy()
+        cellData = sim.net.allCells.copy()        
+        simCfg = sim.cfg.todict().copy()
+        netparams = sim.net.params.todict().copy()
+        
+        # update kwargs
+        kwargs.update({
+            'simData': simData,
+            'cellData': cellData,
+            'popData': popData,
+            'simCfg': simCfg,
+            'netParams': netparams,
+            'simLabel': candidate_label,
+            'data_file_path': pkl_path,
+            'cfg_file_path': cfg_path,
+            'fitness_save_path': fitness_save_path, #output
+            'metrics_save_path': metrics_path, #output
+        })
+        
+        # 
+        print(f'data retrieved from {candidate_path}')
+        return kwargs
+    
+    def get_sim_data_from_simData_pkl(kwargs):
+        """
+        Get the candidate and job path from simulated data object.
+        """        
+        # load simulated data pkl 
+        sim_data_path = kwargs.get('sim_data_path', None)
+        assert sim_data_path is not None, 'No simulated data path found in kwargs.'
+        sim.load(sim_data_path)
+        
+        # setup paths
+        candidate_path = sim_data_path.replace('_data.pkl', '')
+        candidate_label = os.path.basename(candidate_path)
+        fitness_save_path = f'{candidate_path}_fitness.json'
+        pkl_path = f'{candidate_path}_data.pkl'
+        cfg_path = f'{candidate_path}_cfg.json'
+        metrics_path = f'{candidate_path}_metrics.npy'
+        
+        # load simulated data
+        #sim.load(pkl_path)
+        simData = sim.allSimData.todict().copy()
+        popData = sim.net.allPops.copy()
+        cellData = sim.net.allCells.copy()        
+        simCfg = sim.cfg.todict().copy()
+        netparams = sim.net.params.todict().copy()
+        
+        # update kwargs
+        kwargs.update({
+            'simData': simData,
+            'cellData': cellData,
+            'popData': popData,
+            'simCfg': simCfg,
+            'netParams': netparams,
+            'simLabel': candidate_label,
+            'data_file_path': pkl_path,
+            'cfg_file_path': cfg_path,
+            'fitness_save_path': fitness_save_path, #output
+            'metrics_save_path': metrics_path, #output
+        })
+        
+        # return kwargs
+        print(f'data retrieved from {candidate_path}')
+        return kwargs
+    
+    def map_unit_locations(simulated_metrics, experimental_metrics, **kwargs):
+        # TODO: MAP SIMULATED UNITS TO EXPERIMENTAL UNITS BY XY COORDINATES
+        experimental_unit_locations = experimental_metrics['unit_locations']
+        simulated_unit_locations = simulated_metrics['unit_locations']
+        
+        simulated_to_experimental_mapping = {}
+        for sim_unit_id, sim_loc in simulated_unit_locations.items():
+            closest_exp_unit_id = None
+            closest_distance = float('inf')
+            for exp_unit_id, exp_loc in experimental_unit_locations.items():
+                distance = np.linalg.norm(np.array(sim_loc) - np.array(exp_loc))
+                if distance < closest_distance:
+                    closest_distance = distance
+                    closest_exp_unit_id = exp_unit_id
+                if distance == 0:
+                    closest_exp_unit_id = exp_unit_id
+                    break
+            if distance != 0: print(f'Warning: No exact match for unit {sim_unit_id}. Closest match is {closest_exp_unit_id} with distance {closest_distance}.')
+            simulated_to_experimental_mapping[sim_unit_id] = {
+                'closest_exp_unit_id': closest_exp_unit_id,
+                'distance': closest_distance
+            }
+            
+        # reorient
+        experimental_to_simulated_mapping = {v['closest_exp_unit_id']: k for k, v in simulated_to_experimental_mapping.items()}
+            
+        kwargs['simulated_to_experimental_mapping'] = simulated_to_experimental_mapping
+        kwargs['experimental_to_simulated_mapping'] = experimental_to_simulated_mapping
+        
+        # return
+        return kwargs
+    
+    def get_sim_data(kwargs):
+        # check if batching - if so, kwargs need to be expanded to include all simulated data instead of just simData
+        if kwargs.get('batching', False):
+            kwargs = get_sim_data_from_call_stack(kwargs)
+        else:
+            kwargs = get_sim_data_from_simData_pkl(kwargs)
+        return kwargs
+    
+    def get_simulated_metrics(kwargs):
+        # try loading simulated data if its already been computed
+        simulated_metrics = None
+        metrics_save_path = kwargs.get('metrics_save_path', None)
+        if kwargs.get('try_load', False):
+            if os.path.exists(metrics_save_path):
+                simulated_metrics = np.load(metrics_save_path, allow_pickle=True).item()
+                print(f'Loaded metrics from {metrics_save_path}')
+            
+        # if simulated metrics is still None, compute them
+        if simulated_metrics is None:
+            simulated_metrics = compute_network_metrics(**kwargs)
+        
+        # save simulated metrics to .npy file
+        if metrics_save_path is not None: # save metrics to .npy file
+            np.save(metrics_save_path, simulated_metrics)
+            print(f'Saved metrics to {metrics_save_path}')
+            
+        return simulated_metrics
+    
+    # main logic =================================================================
+    try:
+        time_start = time.time() # start timer
+        experimental_metrics = np.load(reference_data_path, allow_pickle=True).item() # load experimental data for reference      
+        kwargs['source'] = 'simulated' # set source to simulated
+        kwargs = get_sim_data(kwargs) # fully define kwargs depending on run case
+        simulated_metrics = get_simulated_metrics(kwargs) # load or compute simulated metrics
+        kwargs = map_unit_locations(simulated_metrics, experimental_metrics, **kwargs) # map unit locations of experimental units to simulated units
+        
+        # calculate fitness
+        fitness_dict = calculate_fitness(simulated_metrics, experimental_metrics, {}, **kwargs)
+        #fitness_dict = clean_fitness_dict(fitness_dict)
+        
+        # ensure three main keys are present
+        main_fits = ['spiking_data', 'bursting_data', 'mega_bursting_data']
+        for key in main_fits:
+            if key not in fitness_dict: 
+                fitness_dict[key] = {}
+                fitness_dict[key]['fit'] = 1000
+            #if 'fit' not in fitness_dict[key]: fitness_dict[key]['fit'] = 1000        
+        
+        #avg_fitness, fitness_dict = get_avg_fitness(fitness_dict)
+        avg_fitness, fitness_dict = get_avg_fitness_weighted(fitness_dict)
+        fitness_save_path = kwargs.get('fitness_save_path', None)
+        if fitness_save_path is not None: # save fitness to .json file
+            with open(fitness_save_path, 'w') as f:
+                json.dump(fitness_dict, f, indent=4)
+            print(f'Saved fitness to {fitness_save_path}')
+        elapsed_time = time.time() - time_start
+        print(f'Elapsed time: {elapsed_time} seconds.')        
+        return avg_fitness        
+    except Exception as e:
+        # handle errors
+        traceback.print_exc()
+        print(f'Error calculating fitness: {e}')
+        avg_fitness = 1000
+        return avg_fitness
 
 def the_scoring_function_quadratic_smooth_sigmoid(val, target_val, maxFitness, weight, min_val=None, max_val=None):
     """
@@ -43,7 +847,9 @@ def the_scoring_function_quadratic_smooth_sigmoid(val, target_val, maxFitness, w
         """
         shift = direction * abs(target_val)  # Shift proportional to the target value magnitude
         scale = 0.1 / weight  # Higher weight makes the transition steeper
-        return maxFitness - (maxFitness - 1) / (1 + np.exp(direction * scale * (x - (target_val + shift))))
+        score = maxFitness - (maxFitness - 1) / (1 + np.exp(direction * scale * (x - (target_val + shift))))
+        return score
+        #return maxFitness - (maxFitness - 1) / (1 + np.exp(direction * scale * (x - (target_val + shift))))
 
     # Case 2: One bound is missing, apply the adaptive shifted sigmoid
     if min_val is None and max_val is not None:
@@ -66,11 +872,13 @@ def the_scoring_function_quadratic_smooth_sigmoid(val, target_val, maxFitness, w
             return shifted_sigmoid(val, 1)
         #return shifted_sigmoid(val, -1) if val < target_val else shifted_sigmoid(val, 1)
 
-def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
+def fitnessFunc_v2(simulated_data, reference_data_path, **kwargs): #def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
     """
     Main logic of the calculate_fitness function.
     Ensures the function does not crash and always returns a fitness value.
     """
+    experimental_metrics = np.load(reference_data_path, allow_pickle=True).item()
+    
     # subfunctions =================================================================
     def calculate_fitness(simulated_data, experimental_data, fitness_dict={}, path=None, parent_key=None, **kwargs):
         """
@@ -82,6 +890,10 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
         def init_skip_keys():
             # skip keys of non-interest
             skip_keys = [
+                
+                #not sure about this, skipping for now, unidentifed units
+                'u_frs',
+                'u_isi',
                 
                 # dicts
                 'convolved_data', # the fitness of these data are interrogated elsewhere
@@ -110,7 +922,7 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
                 # 'spiking_data_by_unit', # aw 2025-03-05 10:15:05 - deprecated key
                 # 'wf_metrics', # # aw 2025-03-05 10:15:05 - not implmented yet for simulated data
                 # 'data', # # aw 2025-03-05 13:08:43 anything with a data key has summary statistics to be compared
-                # 'warnings', 
+                'warnings', 
                 # 'ax',
                 # 'convolved_data', #ignore this, summary metrics are available 
                 # 'burst_id', 
@@ -120,7 +932,7 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
                 # 'burst_durations',
                 # 'quiet_durations',
                 # 'note',
-                # 'num_bursts', #skip these raw data keys because they're recording duration dependent
+                'num_bursts', #skip these raw data keys because they're recording duration dependent
                 # 'num_spikes',
                 # 'burst_start',
                 # 'burst_end',
@@ -128,7 +940,15 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
                 # 'time_sequence',
                 # 'classified_sequence',
                 # 'cat_sequence',
-                # 'spike_times',
+                'spike_times',
+                'spiking_times_by_unit',
+                
+                'unit_ids',
+                'unit_locations',
+                'unit_types',
+                
+                'wf_metrics',
+                
                 # 'classification_output',
                 # 'classification_data',
                 # 'unit_types',
@@ -144,6 +964,8 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
                 # 'dtw_output',
                 # 'mega_dtw_output',
                 # 'sim_data_path',
+                'source',
+                'sampling_rate',
 
                         
                         ]
@@ -526,12 +1348,30 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
         return fitness_dict
     
     def clean_fitness_dict(fitness_dict):
+        # unscored keys
+        unscored_keys = [
+            # 'source',
+            # 'sampling_rate',
+            # 'unit_ids',
+            # 'unit_locations',
+            # 'warnings',
+            # 'u_isi',
+            # 'u_frs',
+            # 'spike_times',
+            # 'spiking_times_by_unit',
+            # 'wf_metrics',
+        ]
+            
+        
         # Create a list of keys to delete to avoid modifying the dictionary while iterating
         keys_to_delete = [key for key in fitness_dict if isinstance(fitness_dict[key], dict) and not fitness_dict[key]]
 
         # Delete empty dictionaries
         for key in keys_to_delete:
-            del fitness_dict[key]
+            if key in unscored_keys:
+                del fitness_dict[key] # if key is unscored, delete it
+            else:
+                fitness_dict[key] = {'fit': 1000} # if key is scored, set it to 1000 if empty
 
         # Recurse through remaining dictionary values
         for key, value in list(fitness_dict.items()):  # Use list() to avoid RuntimeError due to dict size change
@@ -539,7 +1379,10 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
                 clean_fitness_dict(value)
                 # If the nested dictionary becomes empty after recursion, delete it as well
                 if not value:
-                    del fitness_dict[key]
+                    if key in unscored_keys:
+                        del fitness_dict[key] # if key is unscored, delete it
+                    else:
+                        fitness_dict[key] = {'fit': 1000}
                     
         # return cleaned fitness dictionary            
         return fitness_dict
@@ -578,7 +1421,7 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
                 return avg_fitness, num_comparisons
 
             #return 0, 0  # If no fitness values exist, return 0 (or another default)
-            return 1000, 0, fitness_dict  # If no fitness values exist, return 1000 (or another default)
+            return 1000, 0 #fitness_dict  # If no fitness values exist, return 1000 (or another default)
 
         try:
             avg_fitness, _ = fold_up(fitness_dict)  # Start recursion
@@ -589,16 +1432,72 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
             avg_fitness = 1000  # Default error value
 
         return avg_fitness, fitness_dict
-
+    
+    def get_sim_data_from_call_stack(kwargs):
+        """
+        Get the candidate and job path from the call stack.
+        """
+        #simData = kwargs.get('simData', None)
+        #if simData is None: raise ValueError('No simulated data found in kwargs.')
+        
+        # get candidate and job path from call stack
+        from .utils.extract_simulated_data import get_candidate_and_job_path_from_call_stack, retrieve_sim_data_from_call_stack, extract_data_of_interest_from_sim
+        candidate_path, candidate_label = get_candidate_and_job_path_from_call_stack() #NOTE this part specifcally only works in batch processing, not in single candidate processing
+        fitness_save_path = f'{candidate_path}_fitness.json'
+        pkl_path = f'{candidate_path}_data.pkl'
+        cfg_path = f'{candidate_path}_cfg.json'
+        metrics_path = f'{candidate_path}_metrics.npy'
+        
+        # load simulated data
+        sim.load(pkl_path)
+        simData = sim.allSimData.todict().copy()
+        popData = sim.net.allPops.copy()
+        cellData = sim.net.allCells.copy()        
+        simCfg = sim.cfg.todict().copy()
+        netparams = sim.net.params.todict().copy()
+        
+        # update kwargs
+        kwargs.update({
+            'simData': simData,
+            'cellData': cellData,
+            'popData': popData,
+            'simCfg': simCfg,
+            'netParams': netparams,
+            'simLabel': candidate_label,
+            'data_file_path': pkl_path,
+            'cfg_file_path': cfg_path,
+            'fitness_save_path': fitness_save_path, #output
+            'metrics_save_path': metrics_path, #output
+        })
+        
+        # 
+        print(f'data retrieved from {candidate_path}')
+        return kwargs
+    
     # main logic =================================================================
     try:
+        # start timer
+        time_start = time.time()
+        kwargs['source'] = 'simulated'
+        #kwargs['simData'] = simulated_data
+        
+        # check if batching - if so, kwargs need to be expanded to include all simulated data instead of just simData
+        if kwargs.get('batching', False):
+            kwargs = get_sim_data_from_call_stack(kwargs)
+        
+        # compute network metrics for simulated data
+        simulated_metrics = compute_network_metrics(**kwargs)
+        metrics_save_path = kwargs.get('metrics_save_path', None)
+        if metrics_save_path is not None: # save metrics to .npy file
+            np.save(metrics_save_path, simulated_metrics)
+            print(f'Saved metrics to {metrics_save_path}')        
+        
         # calculate fitness
         #fitness_dict = {}
-        time_start = time.time()
         
         # TODO: MAP SIMULATED UNITS TO EXPERIMENTAL UNITS BY XY COORDINATES
-        experimental_unit_locations = experimental_data['unit_locations']
-        simulated_unit_locations = simulated_data['unit_locations']
+        experimental_unit_locations = experimental_metrics['unit_locations']
+        simulated_unit_locations = simulated_metrics['unit_locations']
         
         simulated_to_experimental_mapping = {}
         for sim_unit_id, sim_loc in simulated_unit_locations.items():
@@ -624,9 +1523,29 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
         kwargs['simulated_to_experimental_mapping'] = simulated_to_experimental_mapping
         kwargs['experimental_to_simulated_mapping'] = experimental_to_simulated_mapping
         
-        fitness_dict = calculate_fitness(simulated_data, experimental_data, {}, **kwargs)
+        fitness_dict = calculate_fitness(simulated_metrics, experimental_metrics, {}, **kwargs)
         fitness_dict = clean_fitness_dict(fitness_dict)
+        
+        # # add important keys back to fitness to avoid skewing results in data that dont have them
+        # if 'spiking_data' not in fitness_dict:
+        #     fitness_dict['spiking_data'] = {'fit':1000}
+        # elif 'spiking_data' is in fitness_dict:
+        #     if 'frs' not in fitness_dict['spiking_data']: fitness_dict['spiking_data']['frs'] = {'fit':1000}
+        #     if 'i_frs' not in fitness_dict['spiking_data']: fitness_dict['spiking_data']['i_frs'] = {'fit':1000}
+        #     if 'e_frs' not in fitness_dict['spiking_data']: fitness_dict['spiking_data']['e_frs'] = {'fit':1000}
+        #     if 'isi' not in fitness_dict['spiking_data']: fitness_dict['spiking_data']['isi'] = {'fit':1000}
+        #     if 'i_isi' not in fitness_dict['spiking_data']: fitness_dict['spiking_data']['i_isi'] = {'fit':1000}
+        #     if 'e_isi' not in fitness_dict['spiking_data']: fitness_dict['spiking_data']['e_isi'] = {'fit':1000}
+        
+        
+        
+        
         avg_fitness, fitness_dict = get_avg_fitness(fitness_dict)
+        fitness_save_path = kwargs.get('fitness_save_path', None)
+        if fitness_save_path is not None: # save fitness to .json file
+            with open(fitness_save_path, 'w') as f:
+                json.dump(fitness_dict, f, indent=4)
+            print(f'Saved fitness to {fitness_save_path}')
         elapsed_time = time.time() - time_start
         print(f'Elapsed time: {elapsed_time} seconds.')        
         return avg_fitness        
@@ -636,7 +1555,6 @@ def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
         print(f'Error calculating fitness: {e}')
         avg_fitness = 1000
         return avg_fitness
-
 
 ''' Everything below this point is deprecated or not used in the current version of the code.'''
 
