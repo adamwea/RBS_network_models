@@ -35,6 +35,7 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
         def handle_inclusion(abs_path):
             include_keys = {
                 'source': False,
+                'trimmed': False,
                 'spiking_data':{
                     'spike_times': False,
                     'spiking_times_by_unit': False,
@@ -70,7 +71,7 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                             'quiet_id': False,
                             'bursts': False,
                             'quiets': False,
-                            'burst_durations': False, # these should be in summary metrics or something... right?
+                            'burst_durations': False, # these should be in summary metrics or something... right? # aw 2025-04-28 11:35:07 yes, these are in burst_metrics
                             'quiet_durations': False,
                             'burst_part_rate': True,
                             'quiet_part_rate': True,
@@ -446,7 +447,7 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
             #fitness_dict[parent_key] = {}
         elif parent_key is None and path is not None: pass
         else: path = None
-        if path is not None: print(f'Path: {path}')
+        #if path is not None: print(f'Path: {path}')
         
         # loop through all paths in both dictionaries and compare the values of the keys
         for key in simulated_data:
@@ -572,7 +573,26 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
 
         try:
             total_sum, total_count = fold_up(fitness_dict)
-            avg_fitness = total_sum / total_count if total_count else 1000.0
+            
+            # # ensure three main keys are present
+            main_fits = ['spiking_data', 'bursting_data', 'mega_bursting_data']
+            for key in main_fits:
+                if key not in fitness_dict: 
+                    fitness_dict[key] = {}
+                if 'fit' not in fitness_dict[key]: 
+                    fitness_dict[key]['fit'] = 1000  
+            
+            #avg_fitness = total_sum / total_count if total_count else 1000.0
+            # aw 2025-04-23 01:05:10 on second thought, equally weight the three main keys, top level
+            spiking_data_fit = fitness_dict['spiking_data']['fit']
+            bursting_data_fit = fitness_dict['bursting_data']['fit']
+            mega_bursting_data_fit = fitness_dict['mega_bursting_data']['fit']
+            # avg_fitness = (spiking_data_fit + bursting_data_fit + mega_bursting_data_fit) / 3.0
+            
+            # aw 2025-04-23 03:34:59 temporarily prioritize bursting_metrics over spiking_metrics
+            avg_fitness = (spiking_data_fit + 2.0 * bursting_data_fit + 2.0 * mega_bursting_data_fit) / 5.0
+            
+            fitness_dict['fit'] = avg_fitness  # store computed fitness at this level
         except Exception as e:
             import traceback
             traceback.print_exc()
@@ -769,6 +789,10 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
         # if simulated metrics is still None, compute them
         if simulated_metrics is None:
             simulated_metrics = compute_network_metrics(**kwargs)
+            
+        # if simulated metrics is still none, there was an error
+        if simulated_metrics is None:
+            return None
         
         # save simulated metrics to .npy file
         if metrics_save_path is not None: # save metrics to .npy file
@@ -784,19 +808,15 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
         kwargs['source'] = 'simulated' # set source to simulated
         kwargs = get_sim_data(kwargs) # fully define kwargs depending on run case
         simulated_metrics = get_simulated_metrics(kwargs) # load or compute simulated metrics
+        if simulated_metrics is None:
+            print('Error: simulated metrics is None.')
+            return 1000
+        
         kwargs = map_unit_locations(simulated_metrics, experimental_metrics, **kwargs) # map unit locations of experimental units to simulated units
         
         # calculate fitness
         fitness_dict = calculate_fitness(simulated_metrics, experimental_metrics, {}, **kwargs)
-        #fitness_dict = clean_fitness_dict(fitness_dict)
-        
-        # ensure three main keys are present
-        main_fits = ['spiking_data', 'bursting_data', 'mega_bursting_data']
-        for key in main_fits:
-            if key not in fitness_dict: 
-                fitness_dict[key] = {}
-                fitness_dict[key]['fit'] = 1000
-            #if 'fit' not in fitness_dict[key]: fitness_dict[key]['fit'] = 1000        
+        #fitness_dict = clean_fitness_dict(fitness_dict)      
         
         #avg_fitness, fitness_dict = get_avg_fitness(fitness_dict)
         avg_fitness, fitness_dict = get_avg_fitness_weighted(fitness_dict)
@@ -810,9 +830,22 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
         return avg_fitness        
     except Exception as e:
         # handle errors
-        traceback.print_exc()
+        #traceback.print_exc()
         print(f'Error calculating fitness: {e}')
         avg_fitness = 1000
+        fitness_save_path = kwargs.get('fitness_save_path', None)
+        if fitness_save_path is not None: # save fitness to .json file
+            with open(fitness_save_path, 'w') as f:
+                if fitness_dict is not None:
+                    json.dump(fitness_dict, f, indent=4)
+                else:
+                    json.dump({
+                        'error': str(e),
+                        'fit': 1000,
+                        }, f, indent=4)
+            print(f'Saved fitness to {fitness_save_path}')
+        else:
+            print('No fitness save path found.')
         return avg_fitness
 
 def the_scoring_function_quadratic_smooth_sigmoid(val, target_val, maxFitness, weight, min_val=None, max_val=None):

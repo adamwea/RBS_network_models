@@ -74,7 +74,11 @@ def batchEvol_v2(**kwargs):
             # compute_network_metrics args
             'try_load': True, # try to load .npy metrics file if it exists
             'run_parallel': True,
-            'max_workers': 4, #NOTE: this should match the number of cores per node, would probably risk oversubscribing the node if set too high
+            #'max_workers': 4, #NOTE: this should match the number of cores per node, would probably risk oversubscribing the node if set too high
+            #'max_workers': 8, #NOTE: this should match the number of cores per node, would probably risk oversubscribing the node if set too high
+            
+            # nvm these run in series for now, just use 128 
+            'max_workers': 128, 
             'burst_sequencing': True,       
         }
         return fitnessFuncArgs  
@@ -87,9 +91,14 @@ def batchEvol_v2(**kwargs):
         #b.batchLabel = 'evol' #NOTE: if left unset, batchLabel will be set to datetime at runtime
         
         # pop size options
-        pop_size = 256        
+        pop_size = 512
+        #pop_size = 256        
+        #pop_size = 128
+        
         # num elites options
-        num_elites = 50
+        #num_elites = 50
+        #num_elites = 75
+        num_elites = 128
         
         kwargs.update({
             'time_sleep': time_sleep,
@@ -149,7 +158,14 @@ def batchEvol_v2(**kwargs):
                 # So if I want to put 4 simulations on each node, 2 per socket.
                 # nodes should be set to 1, and tasks_per_node should be set to cores_per_node / 4                                        
             #'coresPerNode': 16,
-            'coresPerNode': 4, #i.e., 4 mpi tasks per sim, @256 cands per gen, @1 cpu per task = 1024 cores. 4 nodes, each with 256 logical cores, allows 1024 cores to be used.
+            #'coresPerNode': 4, #i.e., 4 mpi tasks per sim, @256 cands per gen, @1 cpu per task = 1024 cores. 4 nodes, each with 256 logical cores, allows 1024 cores to be used.
+            
+            # aw 2025-04-22 13:17:37 4 is too slow. going to try more. allow srun commands to queue
+            #'coresPerNode': 16, #i.e., 4 mpi tasks per sim, @256 cands per gen, @1 cpu per task = 1024 cores. 4 nodes, each with 256 logical cores, allows 1024 cores to be used.
+            
+            # # aw 2025-04-23 03:37:46 lets try maximizing for 1 sim / socket (i.e. 64 tasks per node)
+            'coresPerNode': 64,
+            
             'reservation': None,
             #'skip': False, #if rerunning, skip if output files already exist
             'skip': True, #if rerunning, skip if output files already exist
@@ -203,7 +219,8 @@ def batchEvol_v2(**kwargs):
             'time_sleep': kwargs.get('time_sleep', 5),
             'maxiter_wait': kwargs.get('maxiter_wait', 10),
             'defaultFitness': 1000,
-            'seeds': seeds_iterable, #requires params to put candidates in correct order
+            'seeds': seeds_iterable, #requires params to put candidates in correct order,
+            #'startGeneration': 8, #NOTE: dont used this. 
         }
         
         # init runcfg

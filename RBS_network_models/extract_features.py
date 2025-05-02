@@ -418,6 +418,11 @@ def analyze_network_data(
             with open(json_path, 'r') as f:
                 recording_details = json.load(f)
             h5_path = recording_details['kwargs']['file_path']
+            
+            #HACK stupid patch to fix old sorting path
+            if 'zinputs' in h5_path:
+                h5_path = h5_path.replace('zinputs', 'z_raw_data')
+                
             h5_paths.append(h5_path)
         return h5_paths
     
@@ -992,27 +997,74 @@ def plot_network_metrics(
     # TODO: blend with plot comparison plot? I think.
     # aw 2025-02-21 00:57:16 - pretty sure this is done.
     
-    from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_network_summary
+    #from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_network_summary
+    from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_network_summary_v3 as plot_network_summary
     
     # plot network activity
-    plot_network_summary(network_metrics, bursting_plot_path, bursting_fig_path, 
-                         save_path=save_path, mode=mode,
-                         limit_seconds=limit_seconds, plot_class=plot_class,
-                         )   
+    # plot_network_summary(network_metrics, 
+    #                      bursting_plot_path, 
+    #                      bursting_fig_path, 
+    #                      save_path=save_path, 
+    #                      mode=mode,
+    #                      limit_seconds=limit_seconds, 
+    #                      plot_class=plot_class,
+    #                      )  
+    
+    kwargs = {
+        'bursting_plot_path': bursting_plot_path,
+        'bursting_fig_path': bursting_fig_path,
+        #'save_path': save_path,
+        'mode': mode,
+        'y_lim': (0, 16),
+        'x_lim': (0, limit_seconds),
+        'plot_class': plot_class,
+        }
+    plot_network_summary(network_metrics, **kwargs)
     
     # plot shorter plots for better view of bursting identification
-    save_path_35s = save_path.replace('.pdf', '_35s.pdf')
-    plot_network_summary(network_metrics, bursting_plot_path, bursting_fig_path, 
-                        save_path=save_path_35s, mode=mode,
-                        limit_seconds=35, plot_class=plot_class,
-                        ) 
+    # save_path_35s = save_path.replace('.pdf', '_35s.pdf')
+    # plot_network_summary(network_metrics, 
+    #                      bursting_plot_path, 
+    #                      bursting_fig_path, 
+    #                      save_path=save_path_35s, 
+    #                      mode=mode,
+    #                      limit_seconds=35, 
+    #                      plot_class=plot_class,
+    #                     ) 
+    
+    #save_path_35s = save_path.replace('.pdf', '_35s.pdf')
+    kwargs={
+        'bursting_plot_path': bursting_plot_path,
+        'bursting_fig_path': bursting_fig_path,
+        #'save_path': save_path_35s,
+        'mode': mode,
+        'x_lim': (0, 35),
+        'y_lim': (0, 16),
+        'plot_class': plot_class,
+    }
+    plot_network_summary(network_metrics, **kwargs)
     
     # plot shorter plots for better view of bursting identification
-    save_path_60s = save_path.replace('.pdf', '_60s.pdf')
-    plot_network_summary(network_metrics, bursting_plot_path, bursting_fig_path, 
-                        save_path=save_path_60s, mode=mode,
-                        limit_seconds=60, plot_class=plot_class,
-                        )
+    # save_path_60s = save_path.replace('.pdf', '_60s.pdf')
+    # plot_network_summary(network_metrics, 
+    #                      bursting_plot_path, 
+    #                      bursting_fig_path, 
+    #                      save_path=save_path_60s, 
+    #                      mode=mode,
+    #                      limit_seconds=60,
+    #                      plot_class=plot_class,
+    #                     )
+    #save_path_60s = save_path.replace('.pdf', '_60s.pdf')
+    kwargs = {
+        'bursting_plot_path': bursting_plot_path,
+        'bursting_fig_path': bursting_fig_path,
+        #'save_path': save_path_60s,
+        'mode': mode,
+        'x_lim': (0, 60),
+        'y_lim': (0, 16),
+        'plot_class': plot_class,
+    }
+    plot_network_summary(network_metrics, **kwargs)
 
 ''' Functions below this point predate 2025-02-11 21:11:58'''
 # =============================================================================

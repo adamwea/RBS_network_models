@@ -38,8 +38,8 @@ feature_data = ef.analyze_network_data(
     conv_params=conv_params,
     mega_params=mega_params,
     limit_seconds = None, # Specify some limit in seconds to only plot a portion of the data
-    #plot_wfs = False, # plot waveforms while classifying neurons
-    plot_wfs = True, # plot waveforms while classifying neurons
+    plot_wfs = False, # plot waveforms while classifying neurons
+    #plot_wfs = True, # plot waveforms while classifying neurons
     
     #max_workers=64,
     max_workers=256, # full node

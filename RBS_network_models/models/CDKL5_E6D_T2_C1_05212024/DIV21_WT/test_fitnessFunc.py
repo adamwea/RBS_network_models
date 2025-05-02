@@ -12,7 +12,8 @@ from RBS_network_models.models.CDKL5_E6D_T2_C1_05212024.DIV21_WT.src.conv_params
 reference_data_path = '/global/homes/a/adammwea/pscratch/z_analyzed_data/CDKL5-E6D_T2_C1_05212024/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/network_analysis/well005/metrics.npy'
 
 # load sim data
-sim_data_path = '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-21/gen_0/gen_0_cand_0_data.pkl'
+#sim_data_path = '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-21/gen_0/gen_0_cand_0_data.pkl'
+sim_data_path = '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-22/gen_1/gen_1_cand_8_data.pkl'
 sim.load(sim_data_path)
 simData = sim.allSimData.todict().copy()
 
@@ -27,7 +28,8 @@ fitnessFuncArgs = {
     'sim_data_path': sim_data_path, # needed if batching is False
     
     # compute_network_metrics args
-    'try_load': True,
+    #'try_load': True,
+    'try_load': False,
     'run_parallel': True,
     'max_workers': 16,
     'burst_sequencing': True,       

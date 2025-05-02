@@ -16,7 +16,8 @@ conv_params = {
     #'thresholdBurst': 1.0,
     'thresholdBurst': None, # no threshold - given the prominence method used in the burst detection, this should be fine...I hope
     'min_peak_distance': None, # no minimum peak distance - given the prominence method used in the burst detection, this should be fine...I hope
-    'prominence': 2,
+    #'prominence': 2,
+    'prominence': 1, 
 }
 
 mega_params = { 
@@ -31,5 +32,6 @@ mega_params = {
     #'thresholdBurst': 1.0,
     'thresholdBurst': None,
     'min_peak_distance': None, 
-    'prominence': 3,
+    #'prominence': 3,
+    'prominence': 2,
 }

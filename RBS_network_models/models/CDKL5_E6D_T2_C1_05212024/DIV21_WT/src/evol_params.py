@@ -87,13 +87,18 @@ if version == 2.0:
         'probII': [0, 1],  # Inhibitory to Inhibitory connection probability ranges from 0 to 1.
         'probEI': [0, 1],  # Excitatory to Inhibitory connection probability ranges from 0 to 1.
 
-        'weightEI': [0, 10],  # [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
+        # 'weightEI': [0, 10],  # [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
 
-        'weightIE': [0, 10],  # [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
+        # 'weightIE': [0, 10],  # [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
 
-        'weightEE': [0, 10],  # [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
+        # 'weightEE': [0, 10],  # [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
 
-        'weightII': [0, 10],  # [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
+        # 'weightII': [0, 10],  # [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
+        
+        'weightEI': [0, 1000],  # Weight for Excitatory to Inhibitory connections can range from 0 to 1000 pA, depending on synaptic strength and receptor types. [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
+        'weightIE': [0, 1000],  # Weight for Inhibitory to Excitatory connections can range from 0 to 1000 pA, depending on synaptic strength and receptor types. [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
+        'weightEE': [0, 1000],  # Weight for Excitatory to Excitatory connections can range from 0 to 1000 pA, depending on synaptic strength and receptor types. [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
+        'weightII': [0, 1000],  # Weight for Inhibitory to Inhibitory connections can range from 0 to 1000 pA, depending on synaptic strength and receptor types. [Source: PMC - Determination of effective synaptic conductances](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6420044/)
     })
 
     # Sodium (gnabar) and Potassium (gkbar) Conductances

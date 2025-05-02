@@ -1,282 +1,355 @@
-#!/usr/bin/env python3
 import os
 import glob
 import io
 import json
-
-from PyPDF2 import PdfReader, PdfWriter, PageObject, Transformation
+import re
+import argparse
+from multiprocessing import Pool, cpu_count
+from PyPDF2 import PdfReader, PdfWriter, Transformation
 from reportlab.pdfgen import canvas
-import subprocess
 import fitz  # PyMuPDF
-import re # for regex
+from RBS_network_models.models.CDKL5_E6D_T2_C1_05212024.DIV21_WT.src.evol_params import params
 
-# List all batch directories you want to process
-batch_paths = [
-    '/global/homes/a/adammwea/pscratch/z_simulated_data/'
-    'CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-21',
-    # add more batch dirs here if needed
-]
+# ----------------------------- CLI Setup -----------------------------
+def parse_args():
+    parser = argparse.ArgumentParser(description="Annotate, flatten, and merge PDFs in batch directories.")
+    parser.add_argument('--parallel', action='store_true', help="Enable multiprocessing.")
+    parser.add_argument('--workers', type=int, default=cpu_count(), help="Number of parallel workers to use.")
+    parser.add_argument('--batches', nargs='+', required=True, help="List of batch directories to process.")
+    return parser.parse_args()
 
-from PyPDF2 import PdfReader, PageObject
-import io
-from reportlab.pdfgen import canvas
-
-def annotate_and_collect(pdf_path, candidate, fit, bottom_margin=40):
-    """
-    Read pdf_path, create a taller page with bottom_margin,
-    shift original content up, and draw candidate+fit in the margin.
-    Returns a list of new PageObjects.
-    """
-    reader = PdfReader(pdf_path)
-    annotated_pages = []
-
-    for page in reader.pages:
-        # original size
-        w = float(page.mediabox.width)
-        h = float(page.mediabox.height)
-        new_h = h + bottom_margin
-
-        # 1) Create a blank page that’s taller
-        new_page = PageObject.create_blank_page(width=w, height=new_h)
-
-        # 2) shift the original page up by bottom_margin
-        #    (this mutates 'page' in place—safe since we won't reuse it)
-        page.add_transformation(Transformation().translate(0, bottom_margin))
-        
-        # 3) merge the shifted page onto our new_page, expanding if needed
-        new_page.merge_page(page, expand=True)
-
-        # 3) Draw the footer text in the bottom_margin
-        packet = io.BytesIO()
-        c = canvas.Canvas(packet, pagesize=(w, new_h))
-        text = f"{candidate}    fit: {fit}"
-        c.setFont("Helvetica-Bold", 12)
-        c.drawString(40, 20, text)  # 20 points from the very bottom
-        c.save()
-        packet.seek(0)
-        watermark = PdfReader(packet).pages[0]
-
-        # 5) stamp the text watermark onto new_page
-        new_page.merge_page(watermark)
-
-        annotated_pages.append(new_page)
-
-    return annotated_pages
-
-def flatten_pdf(input_path, output_path, dpi=150):
-    """
-    Raster‑flatten each page of input_path into a new PDF at ~dpi,
-    saving the result to output_path.
-    """
-    src = fitz.open(input_path)
-    dst = fitz.open()  # new empty PDF
-
-    for page in src:
-        # render page to a pixmap
-        zoom = dpi / 72  # PyMuPDF uses 72 dpi as its base
-        mat = fitz.Matrix(zoom, zoom)
-        pix = page.get_pixmap(matrix=mat, alpha=False)
-
-        # size of the original page in points
-        rect = page.rect
-        # create a new blank page with the same dimensions
-        new_page = dst.new_page(width=rect.width, height=rect.height)
-
-        # insert the rasterized image across the entire page
-        img_bytes = pix.tobytes("png")
-        new_page.insert_image(rect, stream=img_bytes)
-        print(f"Flattened page {page.number + 1} of {src.page_count}")
-
-    # save the flattened document
-    dst.save(output_path)
-    src.close()
-    dst.close()
-
-def merge_pdfs_in_dir(batch_dir,
-                      pattern='**/*_3p.pdf',
-                      output_name='batch_report.pdf'):
-    """
-    Find all PDFs matching pattern under batch_dir, annotate each page
-    with its candidate path & fit, then write one combined PDF.
-    """
-    # Find all .pdf files (exclude our eventual output)
-    pdf_paths = [
+# --------------------------- File Helpers ----------------------------
+def find_pdf_files(batch_dir, pattern='**/*_3p.pdf', exclude_name='batch_report.pdf'):
+    return sorted([
         p for p in glob.glob(os.path.join(batch_dir, pattern), recursive=True)
-        if os.path.basename(p) != output_name
-    ]
-    if not pdf_paths:
-        print(f"No PDFs found in {batch_dir} with pattern {pattern}")
-        return
-    
-    # initial sort alphanumerically
-    pdf_paths.sort()
+        if os.path.basename(p) != exclude_name
+    ])
 
-    # make sure filepaths are specifically sorted by gen and cand numbers. such that 10 doesnt follow 1. 0 should be before 1. etc. 
-    # pdf_test = pdf_paths[0].split('_')
-    # sorted_pdf_paths = sorted(pdf_paths, key=lambda x: (int(x.split('_')[1]), int(x.split('_')[3])))
+def group_and_sort_pdfs(pdf_paths, exclude_gen=0):
     sorted_pdfs = {}
     for pdf in pdf_paths:
-        # get number after gen_ using regex
-        match = re.search(r'gen_(\d+)', pdf)
-        if match: gen_num = int(match.group(1))
-        
-        if gen_num not in sorted_pdfs:
-            sorted_pdfs[gen_num] = {}
-        
-        # get number after cand_ using regex
-        match = re.search(r'cand_(\d+)', pdf)
-        if match: cand_num = int(match.group(1))
-        
-        if cand_num not in sorted_pdfs[gen_num]:
-            sorted_pdfs[gen_num][cand_num] = [pdf]
-        else:
-            sorted_pdfs[gen_num][cand_num].append(pdf)       
-    
-    # flatten the dict into a list following sequence of gen and cand numbers
+        match_gen = re.search(r'gen_(\d+)', pdf)
+        match_cand = re.search(r'cand_(\d+)', pdf)
+        if match_gen and match_cand:
+            gen = int(match_gen.group(1))
+            cand = int(match_cand.group(1))
+            
+            # exclude gen 0 - avoid reporting seeded candidates
+            # if gen == exclude_gen:
+            #     print(f"⚠️  Excluding gen {gen} from {pdf}")
+            #     continue
+            
+            sorted_pdfs.setdefault(gen, {}).setdefault(cand, []).append(pdf)
     sorted_pdf_paths = []
-    for gen_num in sorted(sorted_pdfs.keys()):
-        for cand_num in sorted(sorted_pdfs[gen_num].keys()):
-            # add the pdfs to the list
-            sorted_pdf_paths += sorted_pdfs[gen_num][cand_num]
+    for gen in sorted(sorted_pdfs):
+        for cand in sorted(sorted_pdfs[gen]):
+            sorted_pdf_paths.extend(sorted_pdfs[gen][cand])
+    return sorted_pdf_paths
+
+def filter_top_n_candidates(job_args, top_n=10):
+    """
+    Given job_args [(pdf_path, candidate_path, fit_value), ...],
+    keep only the top N candidates based on best (lowest) fitness,
+    but restore original generation/candidate ordering afterward.
+    """
+    if not job_args:
+        return []
+
+    # Sort by fitness value (ascending)
+    job_args_sorted_by_fit = sorted(job_args, key=lambda x: x[2])
+
+    # Take top N
+    top_jobs = job_args_sorted_by_fit[:top_n]
+
+    # Extract gen and cand numbers from the filename to re-sort
+    def get_gen_cand_key(job):
+        pdf_path = job[0]
+        match_gen = re.search(r'gen_(\d+)', pdf_path)
+        match_cand = re.search(r'cand_(\d+)', pdf_path)
+        if match_gen and match_cand:
+            gen = int(match_gen.group(1))
+            cand = int(match_cand.group(1))
+            return (gen, cand)
+        else:
+            return (9999, 9999)  # put invalid entries last
+
+    # Now re-sort the top_jobs by (gen, cand)
+    #top_jobs_sorted = sorted(top_jobs, key=get_gen_cand_key)
+
+    print(f"✅ Selected top {top_n} candidates based on fitness and sorted by gen/cand order.")
+    #return top_jobs_sorted
+    return top_jobs
+
+def flag_param_violation(job_args=None):
+    """
+    Given job_args [(pdf_path, candidate_path, fit_value), ...],
+    check for parameter violations and flag them.
+    """
+    if not job_args:
+        return []
+
+    print("⚠️  Checking for parameter violations...")
+    #print(job_args)
     
-    # Build list of (pdf, candidate_dir, fit)
-    jobs = []
-    for pdf in sorted_pdf_paths:
-        parent_dir = os.path.dirname(pdf)
-        # assume fitness json is named <parent>_fitness.json
-        fitness_json = os.path.join(parent_dir + '_fitness.json')
-        if not os.path.exists(fitness_json):
-            print(f"Warning: {fitness_json} not found; skipping {pdf}")
-            continue
+    flagged_jobs = []
+    for pdf_path, candidate_path, fit_value, cfg in job_args:
+        # Check for parameter violations
+        param_violations = {}
+        for param_name, param_value in params.items():
+            param_hi = param_value[1]
+            param_lo = param_value[0]
+            if param_name not in cfg:
+                #param_violations[param_name] = True  # missing parameter is a violation
+                pass
+            else:
+                if cfg[param_name] < param_lo or cfg[param_name] > param_hi:
+                    param_violations[param_name] = True
+                else:
+                    param_violations[param_name] = False
+
+                    
+        updated_job_args = (pdf_path, candidate_path, fit_value, cfg, param_violations)
+        flagged_jobs.append(updated_job_args)
+            
+    return flagged_jobs
         
-        # load json
+# --------------------------- Annotation and Flattening ------------------------------
+def load_job_info(pdf):
+    parent_dir = os.path.dirname(pdf)
+    fitness_json = parent_dir + '_fitness.json'
+    cfg_json = parent_dir + '_cfg.json'
+    if not os.path.exists(fitness_json):
+        print(f"⚠️  Missing: {fitness_json}")
+        return None
+    try:
         with open(fitness_json) as f:
-            data = json.load(f)
-        fit = data.get('fit', 'N/A')
+            fit = json.load(f).get('fit', None)
+        with open(cfg_json) as f:
+            cfg = json.load(f)
+            cfg = cfg['simConfig']
+        if fit is not None and fit < 1000:
+            return (pdf, parent_dir, fit, cfg)
+        else:
+            print(f"⚠️  Skipping {pdf} (fit={fit})")
+    except Exception as e:
+        print(f"⚠️  Error reading {fitness_json}: {e}")
+    return None
+
+def annotate_and_flatten_dep(args):
+    pdf_path, candidate, fit = args
+    try:
+        reader = PdfReader(pdf_path)
+        bottom_margin = 20
+        scale_factor = 0.96
+
+        writer = PdfWriter()
+        for page in reader.pages:
+            w, h = float(page.mediabox.width), float(page.mediabox.height)
+            new_h = h + bottom_margin
+
+            writer.add_blank_page(width=w, height=new_h)
+            new_page = writer.pages[-1]
+
+            try:
+                transform = (
+                    Transformation()
+                    .scale(1, scale_factor)
+                    .translate(0, bottom_margin + (h * (1 - scale_factor) / 2))
+                )
+                page.add_transformation(transform)
+                new_page.merge_page(page)
+            except Exception as e:
+                print(f"⚠️ Skipped page due to transformation error: {e}")
+                continue
+
+            packet = io.BytesIO()
+            c = canvas.Canvas(packet, pagesize=(w, new_h))
+            c.setFont("Helvetica-Bold", 12)
+            c.drawString(40, 20, f"{candidate}    fit: {fit}")
+            c.save()
+            packet.seek(0)
+            watermark = PdfReader(packet).pages[0]
+
+            try:
+                new_page.merge_page(watermark)
+            except Exception as e:
+                print(f"⚠️ Skipped page due to watermarking error: {e}")
+
+        annotated_path = pdf_path.replace('.pdf', '_annotated.pdf')
+        with open(annotated_path, 'wb') as f:
+            writer.write(f)
+        print(f"✅ Annotated: {annotated_path}")
+
+        # Now flatten it immediately
+        flat_path = annotated_path.replace('_annotated.pdf', '_annotated_flat.pdf')
+        flatten_pdf_task_safe((annotated_path, flat_path, 75))
+
+        return flat_path
+
+    except Exception as e:
+        print(f"❌ Error processing {pdf_path}: {e}")
+        return None
+
+def annotate_and_flatten(args):
+    #pdf_path, candidate, fit = args
+    pdf_path, candidate, fit, cfg, param_violations = args
+    try:
+        doc = fitz.open(pdf_path)
+        new_doc = fitz.open()
+
+        for page in doc:
+            # Rasterize the original page
+            mat = fitz.Matrix(1, 1)  # 72 dpi native, or scale higher if needed
+            pix = page.get_pixmap(matrix=mat, alpha=False)
+
+            # Create new page
+            rect = page.rect
+            new_page = new_doc.new_page(width=rect.width, height=rect.height + 40)  # 40 points bottom margin
+
+            # Insert original page as image, shifted up by 40
+            img_rect = fitz.Rect(0, 40, rect.width, rect.height + 40)
+            new_page.insert_image(img_rect, stream=pix.tobytes("png"))
+
+            # Draw footer text
+            footer = f"{candidate}    fit: {fit}"
+            new_page.insert_text(
+                point=(40, 20),  # 20 points from bottom
+                text=footer,
+                fontsize=12,
+                fontname="helv",
+                color=(0, 0, 0)
+            )
+            
+            # if any parameter violations, just add a red asterisk
+            if any(param_violations.values()):
+                new_page.insert_text(
+                    point=(rect.width - 40, 50),  # 20 points from bottom
+                    text="*",
+                    fontsize=48,
+                    fontname="helv",
+                    color=(1, 0, 0)  # Red color
+                )
+            
+            # add smalle text with param violations
+            if any(param_violations.values()):
+                violation_text = "Param violations: " + ", ".join([f"{k}: {v}" for k, v in param_violations.items() if v])
+                new_page.insert_text(
+                    point=(40, 50),  # 50 points from bottom
+                    text=violation_text,
+                    fontsize=8,
+                    fontname="helv",
+                    color=(1, 0, 0)  # Red color
+                )
+
+        annotated_flat_path = pdf_path.replace(".pdf", "_annotated_flat.pdf")
+        new_doc.save(annotated_flat_path)
+        doc.close()
+        new_doc.close()
+
+        print(f"✅ Annotated + Flattened: {annotated_flat_path}")
+        return annotated_flat_path
+
+    except Exception as e:
+        print(f"❌ Error processing {pdf_path}: {e}")
+        return None
+
+# ---------------------------- Flattening -----------------------------
+def flatten_pdf_task(task):
+    input_path, output_path, dpi = task
+    try:
+        src = fitz.open(input_path)
+        dst = fitz.open()
+
+        for page in src:
+            mat = fitz.Matrix(dpi / 72, dpi / 72)
+            pix = page.get_pixmap(matrix=mat, alpha=False)
+            rect = page.rect
+            new_page = dst.new_page(width=rect.width, height=rect.height)
+            new_page.insert_image(rect, stream=pix.tobytes("png"))
+
+        dst.save(output_path)
+        src.close()
+        dst.close()
+        print(f"✅ Flattened: {output_path}")
+    except Exception as e:
+        print(f"❌ Error flattening {input_path}: {e}")
+
+def flatten_pdf_task_safe(task):
+    input_path, output_path, dpi = task
+    try:
+        src = fitz.open(input_path)
+        dst = fitz.open()
+
+        for page in src:
+            mat = fitz.Matrix(dpi / 72, dpi / 72)
+            pix = page.get_pixmap(matrix=mat, alpha=False)
+            rect = page.rect
+            new_page = dst.new_page(width=rect.width, height=rect.height)
+            new_page.insert_image(rect, stream=pix.tobytes("png"))
+
+        dst.save(output_path)
+        src.close()
+        dst.close()
+        print(f"✅ Flattened: {output_path}")
+    except Exception as e:
+        print(f"❌ Error flattening {input_path}: {e}")
+
+# -------------------------- Processing Loop --------------------------
+def process_batch(batch_dir, parallel=False, workers=4):
+    print(f"\n📁 Processing: {batch_dir}")
+    pdf_paths = find_pdf_files(batch_dir)
+    sorted_pdfs = group_and_sort_pdfs(pdf_paths)
+
+    print(f"Processing {len(sorted_pdfs)} PDFs using {workers} workers...")
+    with Pool(workers) if parallel else DummyContext() as pool:
+        job_args = list(filter(None, pool.map(load_job_info, sorted_pdfs)))
+        #top_n = 150  # <-- You can make this a CLI argument too if you want
+        top_n = 256
+        job_args = filter_top_n_candidates(job_args, top_n=top_n)
+        job_args = flag_param_violation(job_args)
         
-        # check if fit is smaller than 1000
-        if fit>=1000:
-            print(f"Warning: {fitness_json} has fit >= 1000; skipping {pdf}")
-            continue
         
-        # append to jobs list      
-        jobs.append((pdf, parent_dir, fit))
+        if not job_args:
+            print(f"⚠️  No valid PDF + JSON pairs in {batch_dir}")
+            return
 
-    if not jobs:
-        print(f"No valid (PDF + JSON) pairs in {batch_dir}")
-        return
+        flattened_pdfs = pool.map(annotate_and_flatten, job_args)
 
-    # Annotate and merge
-    writer = PdfWriter()
-    for pdf, candidate, fit in jobs:
-        print(f"Annotating {pdf}\n  -> candidate={candidate}, fit={fit}")
-        pages = annotate_and_collect(pdf, candidate, fit)
-        for pg in pages:
-            writer.add_page(pg)
-
-    # Write out combined PDF
-    out_path = os.path.join(batch_dir, output_name)
-    with open(out_path, 'wb') as out_f:
-        writer.write(out_f)
-
-    print(f"\n✅ Merged report written to: {out_path}")
+    # Merge flattened PDFs
+    print("Merging flattened PDFs...")
     
-    # now flatten it - for easier viewing
-    base, ext = os.path.splitext(output_name)
-    flat_name = f"{base}_flat{ext}"
-    flat_path = os.path.join(batch_dir, flat_name)
+    # filter out None values
+    flattened_pdfs = [pdf for pdf in flattened_pdfs if pdf is not None and os.path.exists(pdf)]
 
-    # … inside merge_pdfs_in_dir, after writing batch_report.pdf …
-    in_pdf  = os.path.join(batch_dir, output_name)
-    flat_pdf = os.path.join(batch_dir, output_name.replace('.pdf','_flat.pdf'))
-    flatten_pdf(in_pdf, flat_pdf, dpi=150)
-    print(f"Flattened PDF written to: {flat_pdf}")
+    writer = PdfWriter()
+    for flat_pdf in flattened_pdfs:
+        reader = PdfReader(flat_pdf)
+        for page in reader.pages:
+            writer.add_page(page)
 
+    final_output = os.path.join(batch_dir, "batch_report_flat.pdf")
+    with open(final_output, 'wb') as f:
+        writer.write(f)
+    print(f"✅ Final flattened report written to: {final_output}")
+
+# --------------------- Dummy Context for Serial Fallback ---------------------
+class DummyContext:
+    def __enter__(self): return self
+    def __exit__(self, *args): pass
+    def map(self, func, iterable): return list(map(func, iterable))
+
+# --------------------------- Main Entry Point ---------------------------
 if __name__ == '__main__':
-    for batch in batch_paths:
-        merge_pdfs_in_dir(batch)
-
-# #!/usr/bin/env python3
-# import os
-# import glob
-# from PyPDF2 import PdfMerger
-# import json
-
-# # List all batch directories you want to process
-# batch_paths = [
-#     '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024'
-#     '/DIV21_WT/batch_runs/batch_2025-04-21',
-#     # add more batch dirs here if needed
-# ]
-
-# def merge_pdfs_in_dir(batch_dir,
-#                       #pattern='**/*_summary_*.pdf',
-#                       pattern='**/**.pdf',
-#                       output_name='batch_report.pdf'
-#                       ):
-#     """
-#     Find all PDFs matching pattern under batch_dir, sort them,
-#     and write a single merged PDF to batch_dir/output_name.
-#     """
-#     # Recursively collect
-#     pdf_paths = glob.glob(os.path.join(batch_dir, pattern), recursive=True)
-#     if not pdf_paths:
-#         print(f'No PDFs found in {batch_dir} with pattern {pattern}')
-#         return
-
-#     # remove output_name from pdf_paths if it exists
-#     pdf_paths = [p for p in pdf_paths if os.path.basename(p) != output_name]
-
-#     # Sort by filename (you can customize this key)
-#     pdf_paths.sort()
-#     print(f'Found {len(pdf_paths)} PDFs in {batch_dir}, eg:')
-#     for p in pdf_paths[:5]:
-#         print('  ', os.path.relpath(p, batch_dir))
-#     if len(pdf_paths) > 5:
-#         print('  ...')
-        
-#     # corresponding fitness.json files for each pdf
-#     fitness_jsons = []
-#     fits = []
-#     candidate_paths = []
-#     for pdf in pdf_paths:
-#         # replace .pdf with _fitness.json
-        
-#         parent = os.path.dirname(pdf)
-#         candidate_paths.append(parent)
-#         fitness_json = parent+'_fitness.json'
-#         #fitness_json = pdf.replace('.pdf', '_fitness.json')
-#         if os.path.exists(fitness_json):
-#             fitness_jsons.append(fitness_json)
+    #debug = True
+    debug = False
+    if not debug:
+        # regualr use:
+        args = parse_args()    
+        for batch_dir in args.batches:
+            process_batch(batch_dir, parallel=args.parallel, workers=args.workers)
+    else:
+        # debug use:
+        batch_dir = '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-26'
+        process_batch(batch_dir, parallel=False, workers=1)
             
-#             #load json
-#             with open(fitness_json, 'r') as f:
-#                 fitness_data = json.load(f)
-#                 #print(fitness_data)
-                
-#             fit = fitness_data['fit']
-#             fits.append(fit)
-#             #print(f'Loaded {fitness_json}')
-                
-#         else:
-#             print(f'Warning: {fitness_json} not found')
-            
-#             # remove pdf from pdf_paths
-#             pdf_paths.remove(pdf)            
-
-#     # Merge
-#     merger = PdfMerger()
-#     for pdf in pdf_paths:
-#         merger.append(pdf)
-
-#     # Write out
-#     out_path = os.path.join(batch_dir, output_name)
-#     with open(out_path, 'wb') as f_out:
-#         merger.write(f_out)
-#     merger.close()
-
-#     print(f'Merged PDF written to: {out_path}')
-
-# if __name__ == '__main__':
-#     for batch in batch_paths:
-#         merge_pdfs_in_dir(batch)
+    
