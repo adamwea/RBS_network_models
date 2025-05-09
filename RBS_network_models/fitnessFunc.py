@@ -11,6 +11,7 @@ import subprocess
 import numpy as np
 from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import compute_network_metrics
 from netpyne import sim
+from matplotlib import pyplot as plt
 
 # Functions =========================================================================================
 def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessFunc_v2(simulated_data, experimental_data, **kwargs):
@@ -39,15 +40,19 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                 'spiking_data':{
                     'spike_times': False,
                     'spiking_times_by_unit': False,
-                    'spiking_metrics_by_unit': {
-                        'int':{
-                            'num_spikes': False,
-                            'wf_metrics': False,
-                            'fr': True,
-                            'isi': True,
-                            'spike_times': False,
-                            },
-                        },
+                    
+                    'spiking_metrics_by_unit': False,
+                    # 2025-05-08 22:52:48 - removing unit metrics from fitness scoring for now
+                    # 'spiking_metrics_by_unit': {
+                    #     'int':{
+                    #         'num_spikes': False,
+                    #         'wf_metrics': False,
+                    #         'fr': True,
+                    #         'isi': True,
+                    #         'spike_times': False,
+                    #         },
+                    #     },
+                    
                     'frs': True,
                     'i_frs': True,
                     'e_frs': True,
@@ -62,83 +67,92 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                 'sampling_rate': False,
                 'gids': False,
                 'unit_ids': False,
-                'bursting_data':{
-                    'ax': False,
-                    'convolved_data': False, # maybe I could include some of this... but I think its pretty much captured by other metrics
-                    'unit_metrics': {
-                        'int':{
-                            'burst_id': False,
-                            'quiet_id': False,
-                            'bursts': False,
-                            'quiets': False,
-                            'burst_durations': False, # these should be in summary metrics or something... right? # aw 2025-04-28 11:35:07 yes, these are in burst_metrics
-                            'quiet_durations': False,
-                            'burst_part_rate': True,
-                            'quiet_part_rate': True,
-                            'burst_part_perc': True,
-                            'fr': {
-                                'in_burst': True,
-                                'out_burst': True,
-                                },
-                            'isi': {
-                                'in_burst': True,
-                                'out_burst': True,
-                                },
-                            'spike_counts': {
-                                'in_burst': True,
-                                'out_burst': True,
-                                },
-                            'fano_factor': {
-                                'in_burst': True,
-                                'out_burst': True,
-                                },
-                            },
-                        },
-                    'burst_metrics': {
-                        'num_bursts': False,
-                        'burst_rate': True,
-                        'burst_ids': False,
-                        'ibi': True,
-                        'burst_amp': True,
-                        'burst_duration': True,
-                        'burst_parts': False,
-                        'num_units_per_burst': True,
-                        'in_burst_fr': True,                        
-                        },
-                    'warnings': False,
-                },
+
+                'bursting_data': False,
+                # 2025-05-08 23:04:26 - in the case of bursting data, this wont be fit at all for now.
+                # 'bursting_data':{
+                #     'ax': False,
+                #     'convolved_data': False, # maybe I could include some of this... but I think its pretty much captured by other metrics
+                #     'unit_metrics': False,
+                #     'unit_metrics': {
+                #         'int':{
+                #             'burst_id': False,
+                #             'quiet_id': False,
+                #             'bursts': False,
+                #             'quiets': False,
+                #             'burst_durations': False, # these should be in summary metrics or something... right? # aw 2025-04-28 11:35:07 yes, these are in burst_metrics
+                #             'quiet_durations': False,
+                #             'burst_part_rate': True,
+                #             'quiet_part_rate': True,
+                #             'burst_part_perc': True,
+                #             'fr': {
+                #                 'in_burst': True,
+                #                 'out_burst': True,
+                #                 },
+                #             'isi': {
+                #                 'in_burst': True,
+                #                 'out_burst': True,
+                #                 },
+                #             'spike_counts': {
+                #                 'in_burst': True,
+                #                 'out_burst': True,
+                #                 },
+                #             'fano_factor': {
+                #                 'in_burst': True,
+                #                 'out_burst': True,
+                #                 },
+                #             },
+                #         },
+                #     'burst_metrics': {
+                #         'num_bursts': False,
+                #         'burst_rate': True,
+                #         'burst_ids': False,
+                #         'ibi': True,
+                #         'burst_amp': True,
+                #         'burst_duration': True,
+                #         'burst_parts': False,
+                #         'num_units_per_burst': True,
+                #         'in_burst_fr': True,                        
+                #         },
+                #     'warnings': False,
+                # },
+
                 'mega_bursting_data':{
                     'ax': False,
                     'convolved_data': False, # maybe I could include some of this... but I think its pretty much captured by other metrics
-                    'unit_metrics': {
-                        'int':{
-                            'burst_id': False,
-                            'quiet_id': False,
-                            'bursts': False,
-                            'quiets': False,
-                            'burst_durations': False, # these should be in summary metrics or something... right?
-                            'quiet_durations': False,
-                            'burst_part_rate': True,
-                            'quiet_part_rate': True,
-                            'burst_part_perc': True,
-                            'fr': {
-                                'in_burst': True,
-                                'out_burst': True,
-                                },
-                            'isi': {
-                                'in_burst': True,
-                                'out_burst': True,
-                                },
-                            'spike_counts': {
-                                'in_burst': True,
-                                'out_burst': True,
-                                },
-                            'fano_factor': {
-                                'in_burst': True,
-                                'out_burst': True,
-                                },
-                            },
-                        },
+                    
+                    'unit_metrics': False,
+                    # 2025-05-08 22:53:26 - removing unit metrics from fitness scoring for now
+                    # 'unit_metrics': {
+                    #     'int':{
+                    #         'burst_id': False,
+                    #         'quiet_id': False,
+                    #         'bursts': False,
+                    #         'quiets': False,
+                    #         'burst_durations': False, # these should be in summary metrics or something... right?
+                    #         'quiet_durations': False,
+                    #         'burst_part_rate': True,
+                    #         'quiet_part_rate': True,
+                    #         'burst_part_perc': True,
+                    #         'fr': {
+                    #             'in_burst': True,
+                    #             'out_burst': True,
+                    #             },
+                    #         'isi': {
+                    #             'in_burst': True,
+                    #             'out_burst': True,
+                    #             },
+                    #         'spike_counts': {
+                    #             'in_burst': True,
+                    #             'out_burst': True,
+                    #             },
+                    #         'fano_factor': {
+                    #             'in_burst': True,
+                    #             'out_burst': True,
+                    #             },
+                    #         },
+                    #     },
+
                     'burst_metrics': {
                         'num_bursts': False,
                         'burst_rate': True,
@@ -220,7 +234,7 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                 
             return score  
         
-        def handle_list_comparison(simulated_data, experimental_data, key, fitness_dict):
+        def handle_list_comparison(simulated_data, experimental_data, key, fitness_dict, plot_fit_curve=False):
             # compare lists
             if 'participating_units' in key:
                 def compare_participating_units(simulated_data, experimental_data, key, fitness_dict):
@@ -254,7 +268,7 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
             
             return fitness_dict
         
-        def handle_numpy_array_comparison(simulated_data, experimental_data, key, fitness_dict):
+        def handle_numpy_array_comparison(simulated_data, experimental_data, key, fitness_dict, plot_fit_curve=False, fit_curve_dir=None):
             # # compare numpy arrays
             # print(f'Comparing numpy array for key {key}.')
             # #abs_path = f'{path}.{key}'
@@ -306,7 +320,7 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                 
             return fitness_dict
         
-        def handle_float_or_int_comparison(simulated_data, experimental_data, key, fitness_dict):
+        def handle_float_or_int_comparison(simulated_data, experimental_data, key, fitness_dict, plot_fit_curve=False, fit_curve_dir=None):
 
             min_zero_list = [
                 'fr', 
@@ -353,7 +367,11 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
             # compute score
             target = experimental_data[key]
             maxFitness = 1000 # maximum fitness score
-            score = the_scoring_function_quadratic_smooth_sigmoid(simulated_data[key], target, maxFitness, weight, min_val=min_val, max_val=max_val)
+            #fit_curve_path = os.path.join(fit_curve_dir, f'{key}_fit_curve.png') if fit_curve_dir is not None else None
+            abs_path_underscored = abs_path.replace('.', '_')
+            fit_curve_path = os.path.join(fit_curve_dir, f'{abs_path_underscored}_fit_curve.png') if fit_curve_dir is not None else None
+            os.makedirs(fit_curve_dir, exist_ok=True) if fit_curve_dir is not None else None
+            score = the_scoring_function_quadratic_smooth_sigmoid(simulated_data[key], target, maxFitness, weight, min_val=min_val, max_val=max_val, plot_fit_curve=plot_fit_curve, fit_curve_path=fit_curve_path)
             score = handle_nans_and_infs(score, simulated_data, target, key)                           
                     
             #update fitness dict and return
@@ -434,6 +452,12 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                 
         # main logic =============================================================
         
+        # decide to plot_fit_curve or not
+        plot_fit_curve = kwargs.get('plot_fit_curve', False)
+        fitness_save_path = kwargs.get('fitness_save_path', None)
+        # remove ness.json at the end - make that a folder - this is where we put fit_curve plots
+        fit_curve_dir = fitness_save_path.replace('_fitness.json', '_fit_curves') if fitness_save_path is not None else None
+
         # init include keys and skip keys
         skip_keys = init_skip_keys()
         #include_keys = init_include_keys()
@@ -469,12 +493,12 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                 if isinstance(simulated_data[key], dict):
                     fitness_dict[sim_key] = calculate_fitness(simulated_data[sim_key], experimental_data[exp_key], fitness_dict[sim_key], path=path, parent_key=sim_key, **kwargs)
                 elif isinstance(simulated_data[sim_key], list):
-                    fitness_dict = handle_list_comparison(simulated_data, experimental_data, key, fitness_dict)
+                    fitness_dict = handle_list_comparison(simulated_data, experimental_data, key, fitness_dict, plot_fit_curve=plot_fit_curve, plot_fit_curve_dir=fit_curve_dir)
                 elif isinstance(simulated_data[sim_key], np.ndarray): 
                     continue
                     #fitness_dict = handle_numpy_array_comparison(simulated_data, experimental_data, key, fitness_dict)
                 elif isinstance(simulated_data[sim_key], (float, int, np.int64, np.float64)):
-                    fitness_dict = handle_float_or_int_comparison(simulated_data, experimental_data, key, fitness_dict)
+                    fitness_dict = handle_float_or_int_comparison(simulated_data, experimental_data, key, fitness_dict, plot_fit_curve=plot_fit_curve, fit_curve_dir=fit_curve_dir)
                 elif isinstance(simulated_data[sim_key], str): 
                     continue
                     #fitness_dict = handle_string_comparison(simulated_data, experimental_data, key, fitness_dict)
@@ -565,6 +589,11 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
 
             if total_count > 0:
                 weighted_avg = total_sum / total_count
+                
+                # sometimes the weighted average can be greater than 1000.0, so cap it
+                if weighted_avg > 1000.0:
+                    weighted_avg = 1000.0
+
                 d['fit'] = weighted_avg  # store computed fitness at this level
                 return total_sum, total_count
 
@@ -575,7 +604,9 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
             total_sum, total_count = fold_up(fitness_dict)
             
             # # ensure three main keys are present
-            main_fits = ['spiking_data', 'bursting_data', 'mega_bursting_data']
+            main_fits = ['spiking_data', 
+                         #'bursting_data', 2025-05-08 23:22:12 - removing bursting data from fit for now
+                         'mega_bursting_data']
             for key in main_fits:
                 if key not in fitness_dict: 
                     fitness_dict[key] = {}
@@ -585,12 +616,17 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
             #avg_fitness = total_sum / total_count if total_count else 1000.0
             # aw 2025-04-23 01:05:10 on second thought, equally weight the three main keys, top level
             spiking_data_fit = fitness_dict['spiking_data']['fit']
-            bursting_data_fit = fitness_dict['bursting_data']['fit']
+            #bursting_data_fit = fitness_dict['bursting_data']['fit']
             mega_bursting_data_fit = fitness_dict['mega_bursting_data']['fit']
             # avg_fitness = (spiking_data_fit + bursting_data_fit + mega_bursting_data_fit) / 3.0
             
             # aw 2025-04-23 03:34:59 temporarily prioritize bursting_metrics over spiking_metrics
-            avg_fitness = (spiking_data_fit + 2.0 * bursting_data_fit + 2.0 * mega_bursting_data_fit) / 5.0
+            #avg_fitness = (spiking_data_fit + 2.0 * bursting_data_fit + 2.0 * mega_bursting_data_fit) / 5.0
+            avg_fitness = (spiking_data_fit + 2.0 * mega_bursting_data_fit) / 3.0
+
+            # cap the average fitness to 1000.0
+            if avg_fitness > 1000.0:
+                avg_fitness = 1000.0
             
             fitness_dict['fit'] = avg_fitness  # store computed fitness at this level
         except Exception as e:
@@ -848,7 +884,96 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
             print('No fitness save path found.')
         return avg_fitness
 
-def the_scoring_function_quadratic_smooth_sigmoid(val, target_val, maxFitness, weight, min_val=None, max_val=None):
+def the_scoring_function_quadratic_smooth_sigmoid(val, target_val, maxFitness, weight, 
+                                                  min_val=None, max_val=None, plot_fit_curve=False, fit_curve_path=None):
+    if val is None:
+        return maxFitness
+
+    def shifted_sigmoid(x, direction):
+        shift = direction * abs(target_val)
+        scale = 0.1 / weight
+        score = maxFitness - (maxFitness - 1) / (1 + np.exp(direction * scale * (x - (target_val + shift))))
+        return score
+
+    def compute_score(x):
+        if min_val is not None and max_val is not None:
+            a_left = (maxFitness - 1) / ((target_val - min_val) ** 2 / weight) if target_val != min_val else float('inf')
+            a_right = (maxFitness - 1) / ((max_val - target_val) ** 2 / weight) if target_val != max_val else float('inf')
+            if x <= target_val:
+                return min(a_left * (x - target_val) ** 2 + 1, maxFitness)
+            else:
+                return min(a_right * (x - target_val) ** 2 + 1, maxFitness)
+        if min_val is None and max_val is not None:
+            if x >= target_val:
+                return min((maxFitness - 1) / ((max_val - target_val) ** 2 / weight) * (x - target_val) ** 2 + 1, maxFitness)
+            else:
+                return shifted_sigmoid(x, -1)
+        elif max_val is None and min_val is not None:
+            if x <= target_val:
+                return min((maxFitness - 1) / ((target_val - min_val) ** 2 / weight) * (x - target_val) ** 2 + 1, maxFitness)
+            else:
+                return shifted_sigmoid(x, 1)
+        else:
+            return shifted_sigmoid(x, -1) if x < target_val else shifted_sigmoid(x, 1)
+
+    # if plot_fit_curve:
+    #     if min_val is not None and max_val is not None:
+    #         x_range = np.linspace(min_val - 0.1 * abs(min_val), max_val + 0.1 * abs(max_val), 500)
+    #     else:
+    #         span = abs(target_val) * 2 if abs(target_val) > 1 else 2
+    #         x_range = np.linspace(target_val - span, target_val + span, 500)
+
+    #     y_range = [compute_score(x) for x in x_range]
+
+    #     plt.figure(figsize=(8, 4))
+    #     plt.plot(x_range, y_range, label="Scoring Curve")
+    #     plt.axvline(target_val, color='green', linestyle='--', label='Target Value')
+    #     plt.axvline(val, color='red', linestyle=':', label='Actual Value')
+    #     plt.xlabel("Input Value")
+    #     plt.ylabel("Score")
+    #     plt.title("Fit Curve")
+    #     plt.legend()
+    #     plt.grid(True)
+    #     plt.tight_layout()
+        #plt.show()
+    if plot_fit_curve:
+        relevant_vals = [v for v in [min_val, max_val, val, target_val] if v is not None]
+        min_x = min(relevant_vals)
+        max_x = max(relevant_vals)
+        span = max(0.1 * abs(min_x), 0.1 * abs(max_x), 1)
+        x_start = min_x - span
+        x_end = max_x + span
+
+        x_range = np.linspace(x_start, x_end, 500)
+        y_range = [compute_score(x) for x in x_range]
+
+        plt.figure(figsize=(8, 4))
+        plt.plot(x_range, y_range, label="Scoring Curve")
+        plt.axvline(target_val, color='green', linestyle='--', label='Target Value')
+        plt.axvline(val, color='red', linestyle=':', label='Actual Value')
+        if min_val is not None:
+            plt.axvline(min_val, color='blue', linestyle='-.', label='Min Bound')
+        if max_val is not None:
+            plt.axvline(max_val, color='purple', linestyle='-.', label='Max Bound')
+        plt.xlabel("Input Value")
+        plt.ylabel("Score")
+        plt.title("Fitness Scoring Curve")
+        plt.legend()
+        plt.grid(True)
+        plt.tight_layout()
+
+        #save as png and svg
+        if fit_curve_path is not None:
+            plt.savefig(fit_curve_path, dpi=300)
+            print(f'Saved fit curve to {fit_curve_path}')
+            plt.savefig(fit_curve_path.replace('.png', '.svg'))
+            print(f'Saved fit curve to {fit_curve_path.replace(".png", ".svg")}')
+        plt.close()
+
+    return compute_score(val)
+
+
+def the_scoring_function_quadratic_smooth_sigmoid_dep(val, target_val, maxFitness, weight, min_val=None, max_val=None, plot_fit_curve=False):
     """
     Quadratic scoring function with a smoothly adjusted sigmoid penalty:
     - If both bounds exist, use a quadratic function with sharper slopes based on weight.

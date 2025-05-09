@@ -15,7 +15,10 @@ batch_paths = [
     # 'CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-26/'
     
     # aw 2025-04-29 10:17:12
-    '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-28/'
+    #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-28/'
+
+    # # aw 2025-05-09 13:27:55
+    '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-09/'
 ]
 
 def find_cfg_jsons(batch_paths):

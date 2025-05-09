@@ -2,8 +2,8 @@
 #SBATCH -A m2043                            
 #SBATCH -q regular                          # regular or shared queue
 #SBATCH -C cpu                              # cpu or gpu nodes
-#SBATCH -t 24:00:00                         # walltime
-#SBATCH --nodes=24                          # number of nodes
+#SBATCH -t 12:00:00                         # walltime
+#SBATCH --nodes=8                          # number of nodes
 #SBATCH --ntasks-per-node=256               # max tasks per node
 #SBATCH --cpus-per-task=1                   # logical CPUs per task
 #SBATCH --image=adammwea/netsims_docker:v1

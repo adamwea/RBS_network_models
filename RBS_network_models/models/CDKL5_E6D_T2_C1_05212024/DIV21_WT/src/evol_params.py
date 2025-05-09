@@ -53,7 +53,7 @@ if version == 2.0:
         'I_diam_mean': [4, 15],  # Mean diameter of inhibitory neurons (µm). Inhibitory interneurons have soma diameters averaging around 10 µm, with some variability. [Source: Golgi cell](https://en.wikipedia.org/wiki/Golgi_cell)
         'I_L_mean': [50, 500],  # Mean length of inhibitory neurons (µm). Inhibitory neurons typically have shorter dendrites compared to excitatory neurons.
         'I_Ra_mean': [80, 200],  # Mean axial resistance of inhibitory neurons (Ω·cm). Due to their generally smaller diameters, inhibitory neurons exhibit higher axial resistance. [Source: Length constant](https://en.wikipedia.org/wiki/Length_constant)
-        
+
         # NOTE:# Morphology Parameters (Excitatory and Inhibitory Cells) Parsed by Source
             # params.update({
 
@@ -103,32 +103,48 @@ if version == 2.0:
 
     # Sodium (gnabar) and Potassium (gkbar) Conductances
     params.update({
-        'gnabar_E': [0, 0.12],  # Sodium conductance in excitatory neurons can range up to 0.12 S/cm². [Source: Hodgkin–Huxley model](https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model)
+        # 'gnabar_E': [0, 0.12],  # Sodium conductance in excitatory neurons can range up to 0.12 S/cm². [Source: Hodgkin–Huxley model](https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model)
+        'gnabar_E': [0, 12],  # Widening the range significantly to account for variability and unknowns in sodium conductance for excitatory neurons.
 
-        'gnabar_E_std': [0, 0.04],  # Standard deviation of sodium conductance in excitatory neurons can be up to 0.04 S/cm², reflecting variability in channel expression.
+        # 'gnabar_E_std': [0, 0.04],  # Standard deviation of sodium conductance in excitatory neurons can be up to 0.04 S/cm², reflecting variability in channel expression.
+        'gnabar_E_std': [0, 4],  # Widening the range significantly to account for variability and unknowns in standard deviation of sodium conductance.
 
-        'gkbar_E': [0, 0.036],  # Potassium conductance in excitatory neurons can reach up to 0.036 S/cm². [Source: Hodgkin–Huxley model](https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model)
+        # 'gkbar_E': [0, 0.036],  # Potassium conductance in excitatory neurons can reach up to 0.036 S/cm². [Source: Hodgkin–Huxley model](https://en.wikipedia.org/wiki/Hodgkin%E2%80%93Huxley_model)
+        'gkbar_E': [0, 4],  # Widening the range significantly to account for variability and unknowns in potassium conductance for excitatory neurons.
 
-        'gkbar_E_std': [0, 0.01],  # Standard deviation of potassium conductance in excitatory neurons can be up to 0.01 S/cm², accounting for differences in channel distribution.
+        # 'gkbar_E_std': [0, 0.01],  # Standard deviation of potassium conductance in excitatory neurons can be up to 0.01 S/cm², accounting for differences in channel distribution.
+        'gkbar_E_std': [0, 1],  # Widening the range significantly to account for variability and unknowns in standard deviation of potassium conductance.
 
-        'gnabar_I': [0, 0.1],  # Sodium conductance in inhibitory neurons can range up to 0.1 S/cm², higher than in excitatory neurons due to different channel compositions. [Source: The influence of sodium and potassium dynamics on excitability](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2951284/)
+        # 'gnabar_I': [0, 0.1],  # Sodium conductance in inhibitory neurons can range up to 0.1 S/cm², higher than in excitatory neurons due to different channel compositions. [Source: The influence of sodium and potassium dynamics on excitability](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2951284/)
+        'gnabar_I': [0, 10],  # Widening the range significantly to account for variability and unknowns in sodium conductance for inhibitory neurons.
 
-        'gnabar_I_std': [0, 0.03],  # Standard deviation of sodium conductance in inhibitory neurons can be up to 0.03 S/cm², indicating variability in sodium channel expression.
+        # 'gnabar_I_std': [0, 0.03],  # Standard deviation of sodium conductance in inhibitory neurons can be up to 0.03 S/cm², indicating variability in sodium channel expression.
+        'gnabar_I_std': [0, 3],  # Widening the range significantly to account for variability and unknowns in standard deviation of sodium conductance.
 
-        'gkbar_I': [0, 0.05],  # Potassium conductance in inhibitory neurons can reach up to 0.05 S/cm², slightly higher than in excitatory neurons. [Source: The influence of sodium and potassium dynamics on excitability](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2951284/)
+        # 'gkbar_I': [0, 0.05],  # Potassium conductance in inhibitory neurons can reach up to 0.05 S/cm², slightly higher than in excitatory neurons. [Source: The influence of sodium and potassium dynamics on excitability](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC2951284/)
+        'gkbar_I': [0, 5],  # Widening the range significantly to account for variability and unknowns in potassium conductance for inhibitory neurons.
 
-        'gkbar_I_std': [0, 0.015],  # Standard deviation of potassium conductance in inhibitory neurons can be up to 0.015 S/cm², reflecting variability in potassium channel expression.
+        # 'gkbar_I_std': [0, 0.015],  # Standard deviation of potassium conductance in inhibitory neurons can be up to 0.015 S/cm², reflecting variability in potassium channel expression.
+        'gkbar_I_std': [0, 2],  # Widening the range significantly to account for variability and unknowns in standard deviation of potassium conductance.
     })
 
     # Synaptic Time Constants
     params.update({
-        'tau1_exc': [0.1, 2],  # Rise time of excitatory synaptic conductance typically ranges from 0.1 to 2 ms, depending on receptor subtype. [Source: Estimating the Time Course of the Excitatory Synaptic Conductance](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6793890/)
+        #'tau1_exc': [0.1, 2],  # Rise time of excitatory synaptic conductance typically ranges from 0.1 to 2 ms, depending on receptor subtype. [Source: Estimating the Time Course of the Excitatory Synaptic Conductance](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6793890/)
+        # 2025-05-08 22:39:44 - same here. I dont think we actually know enough about the rise time of excitatory synaptic conductance to set such a tight range.
+        'tau1_exc': [0.1, 100],  # Rise time of excitatory synaptic conductance can range from 0.1 to 10 ms, depending on receptor types and synaptic dynamics. [Source: Estimating the Time Course of the Excitatory Synaptic Conductance](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6793890/)
 
-        'tau2_exc': [1, 50],  # Decay time of excitatory synaptic conductance varies between 1 and 50 ms, influenced by receptor kinetics. [Source: Neuronal Dynamics online book](https://neuronaldynamics.epfl.ch/online/Ch3.S1.html)
+        #'tau2_exc': [1, 50],  # Decay time of excitatory synaptic conductance varies between 1 and 50 ms, influenced by receptor kinetics. [Source: Neuronal Dynamics online book](https://neuronaldynamics.epfl.ch/online/Ch3.S1.html)
+        # 2025-05-08 22:37:58 - I dont think we actually know enough about the decay time of excitatory synaptic conductance to set such a tight range.
+        'tau2_exc': [0.1, 500],  # Decay time of excitatory synaptic conductance can range from 1 to 100 ms, depending on receptor types and synaptic dynamics. [Source: Estimating the Time Course of the Excitatory Synaptic Conductance](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC6793890/)
 
-        'tau1_inh': [0.3, 10],  # Rise time of inhibitory synaptic conductance ranges from 0.3 to 10 ms, reflecting GABA_A receptor dynamics. [Source: Neurotransmitter Time Constants (PSCs)](https://compneuro.uwaterloo.ca/research/constants-constraints/neurotransmitter-time-constants-pscs.html)
-
-        'tau2_inh': [5, 100],  # Decay time of inhibitory synaptic conductance can range from 5 to 100 ms, depending on GABA_A and GABA_B receptor contributions. [Source: Neurotransmitter Time Constants (PSCs)](https://compneuro.uwaterloo.ca/research/constants-constraints/neurotransmitter-time-constants-pscs.html)
+        #'tau1_inh': [0.3, 10],  # Rise time of inhibitory synaptic conductance ranges from 0.3 to 10 ms, reflecting GABA_A receptor dynamics. [Source: Neurotransmitter Time Constants (PSCs)](https://compneuro.uwaterloo.ca/research/constants-constraints/neurotransmitter-time-constants-pscs.html)
+        # 2025-05-08 22:40:38 - same here. I dont think we actually know enough about the rise time of inhibitory synaptic conductance to set such a tight range.
+        'tau1_inh': [0.1, 100],  # Rise time of inhibitory synaptic conductance can range from 0.3 to 10 ms, depending on GABA_A and GABA_B receptor contributions. [Source: Neurotransmitter Time Constants (PSCs)](https://compneuro.uwaterloo.ca/research/constants-constraints/neurotransmitter-time-constants-pscs.html)
+        
+        #'tau2_inh': [5, 100],  # Decay time of inhibitory synaptic conductance can range from 5 to 100 ms, depending on GABA_A and GABA_B receptor contributions. [Source: Neurotransmitter Time Constants (PSCs)](https://compneuro.uwaterloo.ca/research/constants-constraints/neurotransmitter-time-constants-pscs.html)
+        # 2025-05-08 22:41:29 - same here. I dont think we actually know enough about the decay time of inhibitory synaptic conductance to set such a tight range.
+        'tau2_inh': [0.1, 1000],  # Decay time of inhibitory synaptic conductance can range from 5 to 100 ms, depending on GABA_A and GABA_B receptor contributions. [Source: Neurotransmitter Time Constants (PSCs)](https://compneuro.uwaterloo.ca/research/constants-constraints/neurotransmitter-time-constants-pscs.html)
     })
 
 

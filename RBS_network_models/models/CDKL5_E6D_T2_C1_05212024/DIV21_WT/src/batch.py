@@ -91,14 +91,14 @@ def batchEvol_v2(**kwargs):
         #b.batchLabel = 'evol' #NOTE: if left unset, batchLabel will be set to datetime at runtime
         
         # pop size options
-        pop_size = 512
+        #pop_size = 512
         #pop_size = 256        
-        #pop_size = 128
+        pop_size = 128
         
         # num elites options
-        #num_elites = 50
+        num_elites = 50
         #num_elites = 75
-        num_elites = 128
+        #num_elites = 128
         
         kwargs.update({
             'time_sleep': time_sleep,
@@ -112,6 +112,19 @@ def batchEvol_v2(**kwargs):
     def get_seed_cfgs(params, **kwargs):
         seeds_iterable = []
         seeds = kwargs.get('seeds', None)
+
+        # reverse the order of seeds, if limited, use the newest seeds before the oldest
+        if seeds is None: raise ValueError("seeds must be provided in kwargs")
+        seeds = seeds[::-1]
+
+        # get number of elites, only use this many seeds if less than the number of seeds
+        num_elites = kwargs.get('num_elites', None)
+        if num_elites is None: raise ValueError("num_elites must be provided in kwargs")
+        if len(seeds) > num_elites:
+            seeds = seeds[:num_elites]
+            print(f'Using {num_elites} seeds: {seeds}')
+
+        # format the seeds into a list of lists, where each list is a candidate - as netpyne expects  
         evol_params = params.copy()
         for i, seed in enumerate(seeds):
             #load simcfg from seed

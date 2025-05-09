@@ -3,9 +3,9 @@ from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.run_sorter import run_sorter
 import glob
 
 # prepare paths =============================================================================
-input_dir = '/global/homes/a/adammwea/pscratch/zinputs/' #dir where all raw data are stored in pscratch (data should be copied here from long term storage before running for optimal I/O)
+input_dir = '/global/homes/a/adammwea/pscratch/z_raw_data/' #dir where all raw data are stored in pscratch (data should be copied here from long term storage before running for optimal I/O)
 raw_data_path = 'CDKL5-E6D_T2_C1_05212024/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/data.raw.h5' # path to raw data within inputs_dir
-output_dir = '/global/homes/a/adammwea/pscratch/zoutputs/' #dir where all analyzed data are stored in pscratch (use data transfer bash script to copy to long term storage as needed)
+output_dir = '/global/homes/a/adammwea/pscratch/z_analyzed_data/' #dir where all analyzed data are stored in pscratch (use data transfer bash script to copy to long term storage as needed)
 input_path = os.path.join(input_dir, raw_data_path) # absolute path to raw data
 sorted_output_dir = os.path.join(output_dir, os.path.dirname(raw_data_path), 'sorted') # path to sorted data within outputs_dir
 waveform_output_dir = os.path.join(output_dir, os.path.dirname(raw_data_path), 'waveforms') # path to waveform data within outputs_dir

@@ -32,33 +32,6 @@ def find_fitness_jsons(batch_paths):
 
 def load_fit_file(entry):
     gen, cand, fpath = entry
-    fit_values = []
-    try:
-        with open(fpath, 'r') as f:
-            data = json.load(f)
-            fit_values = extract_fitness_paths(data)
-    except Exception as e:
-        print(f'⚠️ Failed to load {fpath}: {e}')
-    return (gen, cand, fit_values)
-
-def extract_fitness_paths(data, prefix=""):
-    """Recursively find all paths to 'fit' values in a nested dictionary."""
-    results = []
-    if isinstance(data, dict):
-        for key, val in data.items():
-            new_prefix = f"{prefix}.{key}" if prefix else key
-            if key == 'fit' and isinstance(val, (int, float)):
-                results.append((new_prefix, val))
-            else:
-                results.extend(extract_fitness_paths(val, new_prefix))
-    elif isinstance(data, list):
-        for idx, item in enumerate(data):
-            list_prefix = f"{prefix}.{idx}" if prefix else str(idx)
-            results.extend(extract_fitness_paths(item, list_prefix))
-    return results
-
-
-    gen, cand, fpath = entry
     try:
         with open(fpath, 'r') as f:
             fitness = json.load(f).get('fit', np.nan)
@@ -69,19 +42,17 @@ def extract_fitness_paths(data, prefix=""):
 
 def group_by_generation(fitness_entries):
     grouped = {}
-    for gen, cand, fit_list in fitness_entries:
-        for path, fit in fit_list:
-            grouped.setdefault(path, {}).setdefault(gen, []).append(fit)
+    for gen, cand, fit in fitness_entries:
+        grouped.setdefault(gen, []).append(fit)
     return grouped
 
 from scipy.stats import norm
 
-def plot_histogram_with_gaussian(grouped_fits, output_dir, tag="default"):
+def plot_histogram_with_gaussian(grouped_fits, output_dir):
     from scipy.stats import norm
 
     all_fitness = [fit for gen_fits in grouped_fits.values() for fit in gen_fits]
-    filename = f"fitness_histogram_{tag.replace('.', '_')}.png"
-    hist_path = os.path.join(output_dir, filename)
+    hist_path = os.path.join(output_dir, "fitness_histogram.png")
     plt.figure(figsize=(12, 4))
     n, bins, patches = plt.hist(all_fitness, bins=50, color='gray', alpha=0.7, edgecolor='black')
 
@@ -93,18 +64,13 @@ def plot_histogram_with_gaussian(grouped_fits, output_dir, tag="default"):
     plt.xlabel('Fitness')
     plt.ylabel('Count')
     plt.legend()
-    ax = plt.gca()
-    #ax.xaxis.get_major_formatter().set_useOffset(False)
-    #ax.xaxis.get_major_formatter().set_scientific(False)
-    ax.yaxis.get_major_formatter().set_useOffset(False)
-    ax.yaxis.get_major_formatter().set_scientific(False)
     plt.tight_layout()
     plt.savefig(hist_path, dpi=300)
     plt.close()
     
     return hist_path
 
-def plot_fitness_boxplots(grouped_fits, output_dir, tag="default"):
+def plot_fitness_boxplots(grouped_fits, output_dir):
     gens = sorted(grouped_fits.keys())
     data = [grouped_fits[gen] for gen in gens]
 
@@ -155,16 +121,9 @@ def plot_fitness_boxplots(grouped_fits, output_dir, tag="default"):
     plt.ylabel('Fitness')
     plt.grid(True, axis='y')
     plt.legend()
-    #plt.ticklabel_format(style='plain', axis='both')
-    ax = plt.gca()
-    #ax.xaxis.get_major_formatter().set_useOffset(False)
-    #ax.xaxis.get_major_formatter().set_scientific(False)
-    ax.yaxis.get_major_formatter().set_useOffset(False)
-    ax.yaxis.get_major_formatter().set_scientific(False)
     plt.tight_layout()
 
-    filename = f"fitness_evolution_plot_{tag.replace('.', '_')}.png"
-    png_path = os.path.join(output_dir, filename)
+    png_path = os.path.join(output_dir, "fitness_evolution_plot.png")
     plt.savefig(png_path, dpi=300)
     # Save boxplot
     plt.close()
@@ -229,57 +188,12 @@ if __name__ == "__main__":
     with Pool(processes=num_workers) as pool:
         fitness_entries = pool.map(load_fit_file, fitness_jsons)
 
-    grouped_paths = group_by_generation(fitness_entries)
+    grouped_fits = group_by_generation(fitness_entries)
     output_dir = os.path.join(batch_paths[0], 'evolution_reports')
     os.makedirs(output_dir, exist_ok=True)
 
-    from PIL import Image
-    from reportlab.pdfgen.canvas import Canvas
-    from reportlab.lib.pagesizes import letter
+    plot_path, coeffs = plot_fitness_boxplots(grouped_fits, output_dir)
+    hist_path = plot_histogram_with_gaussian(grouped_fits, output_dir)
+    generate_pdf_report(output_dir, plot_path, hist_path, grouped_fits, coeffs)
 
-    pdf_path = os.path.join(output_dir, "fitness_evolution_report.pdf")
-    c = Canvas(pdf_path, pagesize=letter)
-    width, height = letter
-
-    for path, grouped_fits in sorted(grouped_paths.items()):
-        # Create a new page for each path
-        print(f"Processing {path}...")
-        
-        # Set up the page
-        c.setFont("Helvetica-Bold", 14)
-        c.drawCentredString(width / 2, height - 1 * inch, f"Fitness Report for: {path}")
-
-        try:
-            plot_path, coeffs = plot_fitness_boxplots(grouped_fits, output_dir, tag=path)
-            hist_path = plot_histogram_with_gaussian(grouped_fits, output_dir, tag=path)
-
-            # Draw polynomial info
-            c.setFont("Helvetica", 10)
-            poly_str = ' + '.join([f"{coeff:.3g}x^{i}" for i, coeff in enumerate(reversed(coeffs))])
-            c.drawString(1 * inch, height - 1.3 * inch, f"3rd Order Polynomial Fit: y = {poly_str}")
-
-            # Load and position boxplot
-            img = Image.open(plot_path)
-            img_width, img_height = img.size
-            aspect = img_height / img_width
-            max_width = 6.5 * inch
-            scaled_height = max_width * aspect
-            x = 1 * inch
-            y = height - 2.0 * inch - scaled_height
-            c.drawImage(plot_path, x, y, width=max_width, height=scaled_height)
-
-            # Load and position histogram below
-            img2 = Image.open(hist_path)
-            img2_width, img2_height = img2.size
-            aspect2 = img2_height / img2_width
-            scaled_height2 = max_width * aspect2
-            y2 = y - scaled_height2 - 0.3 * inch
-            c.drawImage(hist_path, x, y2, width=max_width, height=scaled_height2)
-        except Exception as e:
-            c.drawString(1 * inch, height - 5 * inch, f"⚠️ Error for {path}: {e}")
-
-        c.showPage()
-
-    c.save()
-    print(f"✅ Multipage PDF report generated at: {pdf_path}")
     print("✅ Done!")

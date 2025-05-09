@@ -41,12 +41,13 @@ for sim_data_path in sim_data_paths:
         'sim_data_path': sim_data_path, # needed if batching is False
         
         # compute_network_metrics args
-        #'try_load': True,
-        'try_load': False,
+        'try_load': True,
+        #'try_load': False,
         'run_parallel': True,
         'max_workers': 16,
         #'max_workers': 256,
-        'burst_sequencing': True,       
+        'burst_sequencing': True,
+        'plot_fit_curve': True,      
     } 
 
     #run fitness function
