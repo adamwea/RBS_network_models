@@ -3,6 +3,7 @@ from RBS_network_models.models.CDKL5_E6D_T2_C1_05212024.DIV21_WT.src.evol_params
 from RBS_network_models.models.CDKL5_E6D_T2_C1_05212024.DIV21_WT.src.conv_params import conv_params
 from RBS_network_models.models.CDKL5_E6D_T2_C1_05212024.DIV21_WT.src.conv_params import mega_params
 from RBS_network_models.models.CDKL5_E6D_T2_C1_05212024.DIV21_WT.seeds import seeds
+from RBS_network_models.models.CDKL5_E6D_T2_C1_05212024.DIV21_WT.src.fitness_schema.schema_1 import fit_schema
 import netpyne
 
 try:
@@ -31,6 +32,7 @@ kwargs = {
     "conv_params": conv_params,
     "mega_params": mega_params,
     "seeds": seeds,
+    "fit_schema": fit_schema,
     }
 
 batchEvol(**kwargs)
