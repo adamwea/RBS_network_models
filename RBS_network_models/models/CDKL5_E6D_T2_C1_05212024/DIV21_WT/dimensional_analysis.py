@@ -18,7 +18,7 @@ from datetime import datetime
 
 def find_fitness_jsons(batch_paths):
     fitness_jsons = []
-    today = datetime.now().date()
+    #today = datetime.now().date()
 
     for batch_path in batch_paths:
         fitness_jsons += glob.glob(f'{batch_path}/**/*_fitness.json', recursive=True)
@@ -26,8 +26,8 @@ def find_fitness_jsons(batch_paths):
     json_info = []
     for fpath in fitness_jsons:
         # Check if the file was modified today
-        if datetime.fromtimestamp(os.path.getmtime(fpath)).date() != today:
-            continue
+        # if datetime.fromtimestamp(os.path.getmtime(fpath)).date() != today:
+        #     continue
 
         match = re.search(r'gen_(\d+)_cand_(\d+)', fpath)
         if match:
@@ -639,8 +639,18 @@ if __name__ == "__main__":
     batch_paths = [
         
         # aw 2025-04-29 11:03:23
-        '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-26/',
+        #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-26/',
         #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-28/'
+
+        ## aw 2025-05-16 09:31:55
+        #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-15/',
+
+
+        # aw 2025-05-16 12:03:29
+        #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-16/',
+
+        # aw 2025-05-20 15:08:54
+        '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-19_BRandFRratios/',
     ]
     
     # ─── run the dimensional analysis ───────────────────────────────────────────────

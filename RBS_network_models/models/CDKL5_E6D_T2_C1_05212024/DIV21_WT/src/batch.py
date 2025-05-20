@@ -86,20 +86,25 @@ def batchEvol_v2(**kwargs):
     def init_batch_attributes(kwargs):
         # simulation max iteration options -- max iterations before stopping generation
         time_sleep = 5 # seconds
-        max_wait = 15 # minutes
+        max_wait = 25 # minutes
         maxiter_wait = max_wait * 60 / time_sleep # convert to number of iterations
         #b.batchLabel = 'evol' #NOTE: if left unset, batchLabel will be set to datetime at runtime
         
         # pop size options
         #pop_size = 512
         #pop_size = 256        
-        pop_size = 128
-        
+        #pop_size = 128
+        #pop_size = 8
+        pop_size = 64
+
         # num elites options
-        num_elites = 50
+        #num_elites = 50
         #num_elites = 75
         #num_elites = 128
-        
+        #num_elites = 4
+        #num_elites = 16
+        num_elites = 32
+
         kwargs.update({
             'time_sleep': time_sleep,
             #'max_wait': max_wait,
@@ -118,11 +123,18 @@ def batchEvol_v2(**kwargs):
         seeds = seeds[::-1]
 
         # get number of elites, only use this many seeds if less than the number of seeds
-        num_elites = kwargs.get('num_elites', None)
-        if num_elites is None: raise ValueError("num_elites must be provided in kwargs")
-        if len(seeds) > num_elites:
-            seeds = seeds[:num_elites]
-            print(f'Using {num_elites} seeds: {seeds}')
+        # num_elites = kwargs.get('num_elites', None)
+        # if num_elites is None: raise ValueError("num_elites must be provided in kwargs")
+        # if len(seeds) > num_elites:
+        #     seeds = seeds[:num_elites]
+        #     print(f'Using {num_elites} seeds: {seeds}')
+
+        # limit to pop size instead #aw 2025-05-19 17:49:46
+        pop_size = kwargs.get('pop_size', None)
+        if pop_size is None: raise ValueError("pop_size must be provided in kwargs")
+        if len(seeds) > pop_size:
+            seeds = seeds[:pop_size]
+            print(f'Using {pop_size} seeds: {seeds}')
 
         # format the seeds into a list of lists, where each list is a candidate - as netpyne expects  
         evol_params = params.copy()
@@ -239,6 +251,16 @@ def batchEvol_v2(**kwargs):
         # init runcfg
         print('setting run configuration...')
         b = init_runCfg(b, **kwargs)
+
+        # append tag to batch label for easy identification if desired
+        tag = kwargs.get('tag', None)
+        # HACK
+        #tag = 'test'
+        #tag = 'BRandFRs' # 2025-05-19 18:04:50 just setting this up because I will start running multiple batches per day and need to distinguish
+        tag = 'BRandFRratios' # 2025-05-19 21:05:05 just targeting frs didnt go too well...need to start by getting ratios right I think...
+        #TODO: will need to move this to bash argument or something to make sure python code remains unchanged across runs
+        if tag is not None:
+            b.batchLabel = b.batchLabel + f'_{tag}'
                 
         # set save folder
         batchFolder = kwargs.get('batchFolder', None)
@@ -246,6 +268,9 @@ def batchEvol_v2(**kwargs):
         b.saveFolder = os.path.join(batchFolder, b.batchLabel)
         os.makedirs(b.saveFolder, exist_ok=True)
         print(f'b.saveFolder = {b.saveFolder}')
+
+        # import sys
+        # sys.exit()
         
         # return batch object
         print('batch object initialized.')

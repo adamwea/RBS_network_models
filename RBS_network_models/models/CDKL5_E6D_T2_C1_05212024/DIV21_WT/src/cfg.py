@@ -82,8 +82,10 @@ if version == 3.0:
     # set simulation duration
     #cfg.duration_seconds = 1  # Duration of the simulation, in seconds
     #cfg.duration_seconds = 15  # Duration of the simulation, in seconds
-    cfg.duration_seconds = 65  # Duration of the simulation, in seconds
-    
+    #cfg.duration_seconds = 65  # Duration of the simulation, in seconds
+    cfg.duration_seconds = 140 # Duration of the simulation, in seconds  #aw 2025-05-18 19:35:47 - now that we're cutting the first 20s of data, I want to make sure I have enough time to get the full response - especially for bursting metrics
+
+
     # set simulation configuration
     cfg.duration = cfg.duration_seconds * 1e3  # Duration of the simulation, in ms
     cfg.cache_efficient = True  # Use CVode cache_efficient option to optimize load on many cores

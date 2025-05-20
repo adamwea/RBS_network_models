@@ -44,8 +44,8 @@ feature_data = ef.analyze_network_data(
     #plot_wfs = True, # plot waveforms while classifying neurons
     
     #max_workers=64,
-    max_workers=256, # full node
-    #max_workers=16, # 1/4 node
+    #max_workers=256, # full node
+    max_workers=32, # 1/4 node
     #max_workers = 100, # number of parallel processes to use
     #max_workers = os.cpu_count(), # use all available cores
     #max_workers = max_workers, # use all available cores

@@ -40,7 +40,12 @@ def filter_top_n_candidates(json_files, top_n=10):
     return top_fits
 
 if __name__ == "__main__":
-    batch_dir = ['/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-26']
+    batch_dir = [
+        #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-26'
+        
+        #aw 2025-05-19 17:16:53
+        '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-18'    
+        ]
     json_files = find_json_files(batch_dir[0])
     top_n = 256
     top_fits = filter_top_n_candidates(json_files, top_n=top_n)

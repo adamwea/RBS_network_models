@@ -33,5 +33,5 @@ mega_params = {
     'thresholdBurst': None,
     'min_peak_distance': None, 
     #'prominence': 3,
-    'prominence': 2,
+    'prominence': 1,
 }

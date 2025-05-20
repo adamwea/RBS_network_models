@@ -20,7 +20,8 @@ from RBS_network_models.models.CDKL5_E6D_T2_C1_05212024.DIV21_WT.src.conv_params
 # === Constants ===
 REFERENCE_DATA_PATH = '/global/homes/a/adammwea/pscratch/z_analyzed_data/CDKL5-E6D_T2_C1_05212024/CDKL5-E6D_T2_C1_05212024/240611/M08029/Network/000091/network_analysis/well005/metrics.npy'
 #BATCH_PATH = '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-26'
-BATCH_PATH = '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-28'
+#BATCH_PATH = '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-28'
+BATCH_PATH = '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-15'
 
 CHILD_MAX_WORKERS = 64
 
@@ -117,16 +118,19 @@ def run_manual_process_pool():
         corresponding_npy_paths = [str(Path(p).with_name(Path(p).stem.replace('_data', '_metrics') + '.npy')) for p in sim_data_paths]
         
         # If both _data and _fitness have been modified today, remove corresponding sim_data_paths
-        today = datetime.now().date()
-        for data_path, fitness_path in zip(sim_data_paths, corresponding_npy_paths):
-            if os.path.exists(data_path) and os.path.exists(fitness_path):
-                data_mtime = datetime.fromtimestamp(os.path.getmtime(data_path)).date()
-                fitness_mtime = datetime.fromtimestamp(os.path.getmtime(fitness_path)).date()
-                if data_mtime == today and fitness_mtime == today:
-                    sim_data_paths.remove(data_path)
-                    print(f"Removing {data_path} because both {data_path} and {fitness_path} were modified today.")
+        # today = datetime.now().date()
+        # for data_path, fitness_path in zip(sim_data_paths, corresponding_npy_paths):
+        #     if os.path.exists(data_path) and os.path.exists(fitness_path):
+        #         data_mtime = datetime.fromtimestamp(os.path.getmtime(data_path)).date()
+        #         fitness_mtime = datetime.fromtimestamp(os.path.getmtime(fitness_path)).date()
+        #         if data_mtime == today and fitness_mtime == today:
+        #             sim_data_paths.remove(data_path)
+        #             print(f"Removing {data_path} because both {data_path} and {fitness_path} were modified today.")
                 
         total_tasks = len(sim_data_paths)
+        console.print(f"[bold blue]Found {total_tasks} simulation files to process.")
+        # import sys
+        # sys.exit(0)
 
     if total_tasks == 0:
         console.print("[bold red]No valid simulation files found.")

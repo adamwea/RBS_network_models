@@ -32,7 +32,20 @@ if __name__ == "__main__":
 
         # aw 2025-05-09 12:03:42
         #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-04-28'
-        '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-09'
+        #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-09'
+        #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-15'
+
+        # aw 2025-05-16 12:07:00
+        #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-16/'
+    
+        # aw 2025-05-18 21:40:45
+        #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-18/'
+
+        # aw 2025-05-19 20:08:27
+        #'/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-19_BRandFRs/'
+    
+        # aw 2025-05-19 22:40:55
+        '/global/homes/a/adammwea/pscratch/z_simulated_data/CDKL5-E6D_T2_C1_05212024/DIV21_WT/batch_runs/batch_2025-05-19_BRandFRratios/'
     ]
 
     # get all files ending in _metrics.npy
@@ -67,19 +80,32 @@ if __name__ == "__main__":
     # get the top n metrics files
     top_n = 256
     #top_n = 1
+    #top_n = 16
+    #top_n = 128
     metrics_files = np.array(metrics_files)[sorted_idx][:top_n]
     #paired_files = np.array(paired_files)[sorted_idx][:top_n]
     fitness_values = fitness_values[sorted_idx][:top_n]
     
     #
     num_workers = 256
+    #num_workers = 16
     #num_workers = 1
     # metrics_files is your list of .npy paths
     with Pool(processes=num_workers) as pool:
         npy_list = pool.map(load_metrics_file, metrics_files)
 
-    kwargs = {}    
+    # re_analyze = True
+    # if re_analyze:
+    #     #sim_data_path = ''
+    #     for npy in npy_list:
+    #         sim_data_path = npy['sim_data_path']
+    #         pass
+
+    kwargs = {
+        'y_lim': (0, 16),
+    }    
     plot_network_metrics_v2(npy_list, kwargs, parallel=True, num_workers=num_workers)
+    #plot_network_metrics_v2(npy_list, kwargs, parallel=False, num_workers=num_workers)
     print('Done plotting network metrics')
     #print(f'Found {len(metrics_files)} metrics files')
 
