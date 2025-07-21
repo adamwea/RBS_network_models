@@ -6,7 +6,7 @@ packages = find_packages(where=".")
 # }
 setup(
     name="RBS_network_models",
-    version="0.0.3",
+    version="0.0.4",
     packages=find_packages(where="."),  # Explicitly search from the root
     package_dir={"": "."},  # Map the root directory as the base
     include_package_data=True,  # Ensure all package data is included

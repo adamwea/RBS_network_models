@@ -29,7 +29,7 @@ from netpyne import sim, specs
 #from RBS_network_models.CDKL5.DIV21.src.evol_params import params
 from RBS_network_models.sim_analysis import process_simulation_v2
 import traceback
-from .utils.helper import indent_increase, indent_decrease
+#from .utils.helper import indent_increase, indent_decrease
 from concurrent.futures import ProcessPoolExecutor, as_completed
 from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import compute_network_metrics
 from MEA_Analysis.NetworkAnalysis.awNetworkAnalysis.network_analysis import plot_network_summary_v2
@@ -41,8 +41,373 @@ import os
 import glob
 from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor, as_completed
 import json
+from copy import deepcopy
 # functions ===================================================================================================
 '''newer functions'''
+def compute_permutation_network_metrics(kwargs):
+    
+    def _run_computations(permuted_sim_paths, tkwargs):
+        perm_network_data = []
+        perm_network_paths = []  # collect paths of computed network data
+        completed = 0
+        failed = 0
+        loaded = 0
+        for path in permuted_sim_paths:
+            try:
+                #loading
+                print(f'Computing network metrics for {path}...')
+                print(f'Loading...')
+                
+                # logic
+                expected_network_data_path = path.replace('_data.pkl', '/network_data.npy')
+                exists = os.path.exists(expected_network_data_path)
+                try_load_network = tkwargs.get('try_load_network_data', False)
+                network_data_loaded = False # init success flag
+                
+                # try loading network data
+                if try_load_network and exists:
+                    try:
+                        print(f'Network data for {path} already exists at {expected_network_data_path}. Attempting to load...')
+                        network_data = np.load(expected_network_data_path, allow_pickle=True).item()
+                        #network_data = network_data.item()
+                        #print(f'Network data for {path} loaded successfully.')
+                        print('Network data loaded successfully.')                            
+                        perm_network_data.append(network_data)
+                        network_data_loaded = True
+                        loaded += 1
+                    except Exception as e:
+                        traceback.print_exc()
+                        print(f'Error loading network data for {path}: {e}')
+                        print(f'Will attempt to compute network metrics instead.')
+                        pass
+                              
+                # do computations?
+                if not network_data_loaded:
+                    source = 'simulated'
+                    try:
+                        sim.clearAll()
+                    except:
+                        pass # ignore if sim is not defined
+                    sim.load(path)
+                    
+                    #unpack tkwargs
+                    conv_params = tkwargs['conv_params']
+                    mega_params = tkwargs['mega_params']
+                    nkwargs = {
+                        'simData': deepcopy(sim.allSimData.todict()),
+                        'popData': sim.net.allPops.copy(), 
+                        'cellData': sim.net.allCells.copy(),
+                        'run_parallel': True,
+                        'debug_mode': False,
+                        'max_workers': tkwargs.get('max_workers', None),
+                        'sim_data_path': path,
+                        'burst_sequencing': tkwargs.get('burst_sequencing', False),
+                        'dtw_matrix': tkwargs.get('dtw_matrix', False),
+                    }
+                    
+                    # compute network metrics
+                    network_data = compute_network_metrics(conv_params, mega_params, source, **nkwargs)
+                    
+                    #remove the .pkl extension
+                    perm_dir = path.replace('_data.pkl', '')
+                    
+                    # create the directory if it does not exist
+                    if not os.path.exists(perm_dir): os.makedirs(perm_dir)
+                    perm_path = os.path.join(perm_dir, 'network_data.npy')
+                    
+                    # save network data
+                    np.save(perm_path, network_data)
+                    print(f'Computed network metrics for {path}')
+                    print(f'Saved network metrics to {perm_path}')
+                
+                    # append network data and path
+                    perm_network_data.append(network_data)
+                    perm_network_paths.append(perm_path)  # collect paths of computed network data
+                    completed += 1
+            except Exception as e:
+                print(f'Error computing network metrics for {path}: {e}')
+                traceback.print_exc()
+                perm_network_data.append(e)
+                failed += 1
+                
+            #print()
+            print(f'Completed: {completed}')
+            print(f'Loaded: {loaded}')
+            print(f'Failed: {failed}')
+            print(f'Remain: {len(permuted_sim_paths) - completed - failed}')
+            print()
+                
+        return perm_network_data, perm_network_paths  # return the computed network data and paths    
+    
+    # main ===================================================================================================
+    
+    #init
+    available_cpus = os.cpu_count()
+    num_workers = kwargs.get('max_workers', None)
+    cfg_permutations = kwargs.get('cfg_permutations', None)
+    if cfg_permutations is None: raise ValueError('cfg_permutations not in kwargs')
+    if num_workers is None: num_workers = min(len(cfg_permutations), available_cpus)
+    else: num_workers = min(num_workers, len(cfg_permutations))
+    
+    # prep tkwargs - task kwargs
+    tkwargs = {
+        'sim_data_path': kwargs.get('sim_data_path', None),
+        'reference_data_path': kwargs.get('reference_data_path', None),
+        'output_dir': kwargs.get('output_dir', None),
+        'plot_permutations': kwargs.get('plot_permutations', False),
+        'debug_mode': kwargs.get('debug_mode', False),
+        'conv_params': kwargs.get('conv_params', None),
+        'mega_params': kwargs.get('mega_params', None),
+        'fitnessFuncArgs': kwargs.get('fitnessFuncArgs', None),
+        #'try_loading': kwargs.get('try_loading', True),
+        #'try_load_sim_data': kwargs.get('try_load_sim', True),
+        'try_load_sim_data': kwargs.get('try_load_sim_data', False),
+        'try_load_network_data': kwargs.get('try_load_network_data', False),
+        'try_load_network_summary': kwargs.get('try_load_network_summary', False),
+        'num_workers': num_workers,
+        'max_workers': kwargs.get('max_workers', None),
+        'burst_sequencing': kwargs.get('burst_sequencing', False),
+        'dtw_matrix': kwargs.get('dtw_matrix', False),
+        }
+    
+    # run computation tasks
+    permuted_sim_paths = kwargs.get('permuted_sim_paths', None)
+    if permuted_sim_paths is None:
+        raise ValueError('permuted_sim_paths not in kwargs')
+    print(f'Running network metrics computation for {len(permuted_sim_paths)} permutations...')
+    perm_network_data, perm_network_paths = _run_computations(permuted_sim_paths, tkwargs)  # run computations
+
+    # return the computed network data and paths
+    print('Network metrics computation complete!')
+    return perm_network_paths, perm_network_data  # return the paths of the computed network data and the data itself
+    
+def _run_simulation_permutations(kwargs):
+    """
+    Run all configuration permutations in parallel, limited by logical CPU availability.
+    """
+    # subfuncs ===================================================================================================
+    def _run_process_pool(tkwargs):
+        #unpack tkwargs
+        debug_mode = tkwargs.get('debug_mode', False)
+        num_workers = tkwargs.get('num_workers', None)
+        
+        # force debug for now..
+        # debug_mode = True
+        
+        # Prepare tasks
+        tasks = []
+        for cfg_tuple in cfg_permutations:
+            if isinstance(cfg_tuple, tuple) and len(cfg_tuple) == 5: # aw 2025-03-04 12:55:40 added simLable and simFolder
+            #if isinstance(cfg_tuple, tuple) and len(cfg_tuple) == 3:
+                #cfg, cfg_param, cfg_val = cfg_tuple
+                simLable, simFolder, cfg, cfg_param, cfg_val = cfg_tuple
+                #tasks.append((cfg, cfg_param, cfg_val, tkwargs))
+                tasks.append((simLable, simFolder, cfg, cfg_param, cfg_val, tkwargs))
+            else: raise ValueError(f"Unexpected structure in cfg_permutations: {cfg_tuple}")
+            
+        # if debug mode, only run the first five tasks
+        if debug_mode: tasks = tasks[:5]
+        
+        # if tasks is less than num_workers, set num_workers to len(tasks)
+        if len(tasks) < num_workers: num_workers = len(tasks)
+
+        # prepare for parallel processing
+        # for debug
+        #num_workers = 1
+
+        # Evenly distribute threads among processes
+        # NOTE: idek if this is necessary, but it's here.
+        threads_per_worker = max(1, available_cpus // num_workers)
+        os.environ["OMP_NUM_THREADS"] = str(threads_per_worker)
+        os.environ["MKL_NUM_THREADS"] = str(threads_per_worker)
+        os.environ["OPENBLAS_NUM_THREADS"] = str(threads_per_worker)
+        os.environ["NUMEXPR_NUM_THREADS"] = str(threads_per_worker)
+        
+        # Run tasks in parallel
+        print(f'Running {len(tasks)} permutations...')
+        # Print number of workers
+        print(f'Using {num_workers} workers out of {available_cpus} available CPUs.')
+        permuted_paths = [] # collect pkl data paths from each permutation
+        #num_workers = 2 # DEBUG - force to 1
+        with ProcessPoolExecutor(max_workers=num_workers) as executor:
+            futures = {executor.submit(run_permutation_v2, *task): task for task in tasks}
+            for future in as_completed(futures):
+                task = futures[future]
+                try: 
+                    result = future.result()  # This will raise any exceptions from the worker
+                    permuted_paths.append(result)
+                except Exception as e:
+                    cfg = task[1]  # Access the configuration from the task
+                    sim_label = cfg.get("simLabel", "unknown") if isinstance(cfg, dict) else "unknown"
+                    print(f"Unhandled exception in permutation {sim_label}: {e}")
+                    traceback.print_exc()
+                    permuted_paths.append(e)
+        print(f'Permutations complete!')
+        
+        return permuted_paths
+    
+    # main ===================================================================================================    
+    #init
+    ##indent_increase()
+    available_cpus = os.cpu_count()
+    num_workers = kwargs.get('max_workers', None)
+    cfg_permutations = kwargs.get('cfg_permutations', None)
+    if cfg_permutations is None: raise ValueError('cfg_permutations not in kwargs')
+    if num_workers is None: num_workers = min(len(cfg_permutations), available_cpus)
+    else: num_workers = min(num_workers, len(cfg_permutations))
+    
+    # prep tkwargs - task kwargs
+    tkwargs = {
+        'sim_data_path': kwargs.get('sim_data_path', None),
+        'reference_data_path': kwargs.get('reference_data_path', None),
+        'output_dir': kwargs.get('output_dir', None),
+        'plot_permutations': kwargs.get('plot_permutations', False),
+        'debug_mode': kwargs.get('debug_mode', False),
+        'conv_params': kwargs.get('conv_params', None),
+        'mega_params': kwargs.get('mega_params', None),
+        'fitnessFuncArgs': kwargs.get('fitnessFuncArgs', None),
+        #'try_loading': kwargs.get('try_loading', True),
+        #'try_load_sim_data': kwargs.get('try_load_sim', True),
+        'try_load_sim_data': kwargs.get('try_load_sim_data', False),
+        'try_load_network_data': kwargs.get('try_load_network_data', False),
+        'try_load_network_summary': kwargs.get('try_load_network_summary', False),
+        'num_workers': num_workers,
+        'max_workers': kwargs.get('max_workers', None),
+        'burst_sequencing': kwargs.get('burst_sequencing', False),
+        'dtw_matrix': kwargs.get('dtw_matrix', False),
+        }
+
+    # main processing steps
+    permuted_sim_paths = _run_process_pool(tkwargs) # run permutations in parallel
+    #perm_network_data = compute_netmets(permuted_sim_paths, tkwargs) # compute network metrics for each permutation
+    
+    # plot permutations
+    # plot = kwargs.get('plot_permutations', False)
+    # if plot:
+    #     print('Plotting permutations...')
+    #     pkwargs = kwargs.copy()
+    #     # pkwargs['permuted_paths'] = permuted_sim_paths
+    #     pkwargs['perm_network_data'] = perm_network_data
+    #     plot_permutations(perm_network_data, pkwargs)   
+    
+    # end func
+    ##indent_decrease()
+    print('All permutationed simulations completed.')
+    return permuted_sim_paths  # return the paths of the permuted data files
+    
+def run_simulation_permutations(kwargs):
+    # subfuncs ===================================================================================================
+    def _validate_inputs(kwargs):
+        """
+        Ensure that all required keys are present in kwargs and have the correct type/format.
+        Raises:
+            KeyError:    missing required key
+            TypeError:   wrong type for a given key
+            ValueError:  wrong format/value for a given key
+        """
+        # 1. define what we expect
+        required_keys = {
+            'sim_data_path',
+            #'output_dir', # not required, will be derived from sim_data_path if not provided
+            # derive_output_dir, # not required, automatically true if output_dir is not provided
+            'reference_data_path',
+            'run_analysis',
+            'plot_analysis',
+            'plot_grid',
+            'plot_heatmaps',
+            'levels',
+            'conv_params',
+            'mega_params',
+            'evol_params',
+            'max_workers',
+            'run_parallel',
+            'duration_seconds',
+            'try_load_sim_data',
+            'try_load_network_data',
+            'try_load_network_summary',
+            'debug_mode',
+        }
+        
+        # 2. check presence
+        missing = required_keys - set(kwargs)
+        if missing:
+            raise KeyError(f"Missing required input(s): {', '.join(sorted(missing))}")
+        
+        # 3. check types
+        expected_types = {
+            'sim_data_path': str,
+            'reference_data_path': str,
+            'run_analysis': bool,
+            'plot_analysis': bool,
+            'plot_grid': bool,
+            'plot_heatmaps': bool,
+            'levels': int,
+            'conv_params': dict,
+            'mega_params': dict,
+            'evol_params': dict,
+            'max_workers': int,
+            'run_parallel': bool,
+            'duration_seconds': (int, float),
+            'try_load_sim_data': bool,
+            'try_load_network_data': bool,
+            'try_load_network_summary': bool,
+            'debug_mode': bool,
+        }
+        
+        for key, expected in expected_types.items():
+            val = kwargs[key]
+            if not isinstance(val, expected):
+                type_names = (
+                    expected.__name__
+                    if isinstance(expected, type)
+                    else " or ".join(t.__name__ for t in expected)
+                )
+                raise TypeError(f"'{key}' must be {type_names}; got {type(val).__name__!r}")
+        
+        # 4. check formats / value constraints
+        path_fields = {
+            'sim_data_path': lambda p: p.endswith('_data.pkl'),
+        }
+        for key, validator in path_fields.items():
+            if not validator(kwargs[key]):
+                raise ValueError(f"'{key}' must end with '_data.pkl'; got {kwargs[key]!r}")
+    
+        # (If you later want to validate other paths or numeric ranges, just add more validators above.)
+    
+    # main ===================================================================================================
+    
+    # validate inputs
+    _validate_inputs(kwargs)
+    
+    #init paths
+    
+    # derive output_dir from sim_data_path if not provided
+    derive_output_dir = kwargs.get('derive_output_dir', True)
+    if 'output_dir' not in kwargs or derive_output_dir:
+        print('output_dir not in kwargs, deriving from sim_data_path...')
+        sim_data_path = kwargs['sim_data_path']
+        #output_dir = os.path.dirname(sim_data_path)
+        sim_batch_dir = os.path.dirname(os.path.dirname(sim_data_path))  # two levels up from sim_data_path
+        sim_run_type_dir = os.path.dirname(sim_batch_dir)  # one level up from sim_data_path
+        sim_run_type = os.path.basename(sim_run_type_dir)  # e.g., 'sensitivity_analysis'
+        output_dir = sim_data_path.replace('_data.pkl', '')  # remove .pkl extension
+        output_dir = output_dir.replace(sim_run_type, 'sensitivity_analysis')  # replace run type with 'sensitivity_analysis'
+        #output_dir = os.path.join(output_dir, 'sensitivity_analysis')
+        kwargs['output_dir'] = output_dir        
+    
+    sim_output_dir = os.path.join(kwargs['output_dir'], 'simulations')
+    if not os.path.exists(sim_output_dir): os.makedirs(sim_output_dir)
+    kwargs['sim_output_dir'] = sim_output_dir
+    
+    # main analysis steps
+    cfg_permutations = generate_permutations_v2(kwargs) # generate permutations
+    kwargs['cfg_permutations'] = cfg_permutations # add to kwargs
+    #run_permutations_v2(kwargs)  # run permutations
+    permuted_sim_paths = _run_simulation_permutations(kwargs)  # run all permutations
+    
+    return permuted_sim_paths  # return the paths of the permuted data files
+
+# # aw 2025-06-25 11:15:31 refactoring a bit above.
 
 def metrics_loader_v3(network_metrics_file, use_memmap=True):
     """
@@ -57,9 +422,22 @@ def metrics_loader_v3(network_metrics_file, use_memmap=True):
     """
     try:
         start = time.time()
+        print(f'Loading network metrics from {network_metrics_file}...')
         
         # Load network data with optional memory mapping
         network_data = np.load(network_metrics_file, mmap_mode='r' if use_memmap else None, allow_pickle=True).item()
+        
+        # if sim_data_path is not in network_data, add it
+        sim_data_path = network_data.get('sim_data_path', None)
+        if sim_data_path is None:
+            sim_data_dir = os.path.dirname(os.path.dirname(network_metrics_file))
+            # find a file in sim_data_dir that ends with '_data.pkl'
+            sim_data_files = glob.glob(os.path.join(sim_data_dir, '*_data.pkl'))
+            if sim_data_files:
+                sim_data_path = sim_data_files[0]
+            else:
+                raise FileNotFoundError(f'No simulation data file found in {sim_data_dir} matching *_data.pkl')
+            network_data['sim_data_path'] = sim_data_path
         
         # Locate configuration file
         perm_dir_parent = os.path.dirname(network_metrics_file)
@@ -78,8 +456,10 @@ def metrics_loader_v3(network_metrics_file, use_memmap=True):
             if not sim_file:
                 raise FileNotFoundError(f'No alternative config found for {network_metrics_file}')
             from netpyne import sim  # Ensure netpyne is imported properly
-            sim.loadSimCfg(sim_file[0])
-            cfg_file = sim.cfg
+            #sim.loadSimCfg(sim_file[0])
+            sim.load(sim_file[0])
+            cfg_file = deepcopy(sim.cfg.todict())
+            sim.clearAll()
         
         return {
             'data': network_data,
@@ -89,7 +469,7 @@ def metrics_loader_v3(network_metrics_file, use_memmap=True):
         print(f'Error loading {network_metrics_file}: {e}')
         return {'error': str(e)}
 
-def load_network_metrics_v3(input_dir, num_workers=None, use_threads=False, use_memmap=False):
+def load_network_metrics_v3(input_dir, num_workers=None, use_threads=False, use_memmap=False, debug_limited_load=False):
     """
     Loads network metrics from .npy files in the given directory using either threading or multiprocessing.
     Stores the loaded numpy arrays in a dictionary with filenames as keys.
@@ -107,7 +487,9 @@ def load_network_metrics_v3(input_dir, num_workers=None, use_threads=False, use_
     
     # Locate network metrics files
     #network_metrics_files = glob.glob(os.path.join(input_dir, '**', '**', 'network_data.npy'), recursive=True)
-    network_metrics_files = glob.glob(input_dir + '/**/**/network_data.npy')
+    #network_metrics_files = glob.glob(input_dir + '/**/**/network_data.npy')
+    # recursive
+    network_metrics_files = glob.glob(os.path.join(input_dir, '**', 'network_data.npy'), recursive=True)
     if not network_metrics_files:
         raise ValueError(f"No network metrics files found in {input_dir}")
     
@@ -130,8 +512,18 @@ def load_network_metrics_v3(input_dir, num_workers=None, use_threads=False, use_
     
     #override
     #shorten network_metrics_files for testing
+    
     network_metrics_files = sorted(network_metrics_files)
-    #network_metrics_files = network_metrics_files[:40]
+    # find the file path where a dir starts with '_', move that file path to the front of the list
+    # parse path into dirs and subdirs, check each subdir composing a path
+    network_metrics_files = sorted(network_metrics_files, key=lambda x: x.split('/')[-3].startswith('_'), reverse=True)
+    #network_metrics_files = sorted(network_metrics_files, key=lambda x: x.startswith('_'), reverse=True)
+    
+    #network_metrics_files = network_metrics_files[:10]
+    if debug_limited_load:
+        # Limit the number of files to load for debugging purposes
+        network_metrics_files = network_metrics_files[:5]
+        print(f"Debug mode: limiting to {len(network_metrics_files)} files for testing.")
     num_workers = total_files if total_files < available_cpus else available_cpus
     #override
     results = []
@@ -193,7 +585,7 @@ def load_network_metrics_v2(input_dir, num_workers=None, use_threads=False):
     
     return results
 
-def plot_heat_maps(output_dir, input_dir, num_workers=None, levels=6, **hkwargs):
+def plot_heat_maps(output_dir, input_dir, num_workers=None, levels=6, params=None, **hkwargs):
     
     # subfunctions ===================================================================================================
 
@@ -220,9 +612,36 @@ def plot_heat_maps(output_dir, input_dir, num_workers=None, levels=6, **hkwargs)
         if query is None:
             raise ValueError("query must be specified")
         
-        # Identify the original simulation directory (must contain '.sa_origin' as a subdirectory)
-        found = [root for root, _, _ in os.walk(input_dir) if '.sa_origin' in root]
+        if params is None:
+            raise ValueError("params must be specified")
         
+        # HACK # TODO # aw 2025-06-26 11:01:39 need to implement this automatically during simulation step for origin.
+        #for root, dirs, files in os.walk(input_dir):
+            #root_base = os.path.basename(root)
+        for dir_i in os.listdir(input_dir):
+            #root_base = os.path.basename(dir_i)
+            # if root begins with '_' add subdir '.sa_origin' to it
+            if dir_i.startswith('_'):
+                #if root.startswith('_') and '.sa_origin' not in dirs:
+                # create the .sa_origin directory
+                sa_origin_dir = os.path.join(input_dir, dir_i, '.sa_origin')
+                os.makedirs(sa_origin_dir, exist_ok=True)
+                print(f'HACK Created .sa_origin directory at {sa_origin_dir}')    
+        # HACK
+        
+        # Identify the original simulation directory (must contain '.sa_origin' as a subdirectory)
+        #found = [root for root, _, _ in os.walk(input_dir) if '.sa_origin' in root]
+        found = []
+        for root, dirs, files in os.walk(input_dir):
+            if '_origin' in dirs:
+                # if the directory contains '_origin', we assume it's the original summary plot directory
+                found.append(os.path.join(root, '_origin'))
+            # if '.sa_origin' in dirs:
+            #     found.append(root)
+        
+        # make sure found has unique paths
+        #found = list(set(found)) # HACK consequence of the HACK above, we may have multiple .sa_origin dirs
+                
         # Ensure there is exactly one original summary directory
         assert len(found) == 1, f"Expected 1 original summary plot directory, found {len(found)}"
         origin_marker_path = found[0]
@@ -238,7 +657,7 @@ def plot_heat_maps(output_dir, input_dir, num_workers=None, levels=6, **hkwargs)
         grid = {}
         
         params_to_exclude = [
-            'E_diam_mean', 'I_diam_mean', 'E_L_mean', 'I_L_mean', 'E_Ra_mean', 'I_Ra_mean',
+            #'E_diam_mean', 'I_diam_mean', 'E_L_mean', 'I_L_mean', 'E_Ra_mean', 'I_Ra_mean',
         ]
         
         for param_name, param_value in params.items():
@@ -375,7 +794,18 @@ def plot_heat_maps(output_dir, input_dir, num_workers=None, levels=6, **hkwargs)
         Plots heatmaps for a specified network metric.
         """
         print(f"Plotting summary grid for {metric_name} with color gradient")
-        data_list = [data['data'] for data in network_metrics_data]
+        #data_list = [data['data'] for data in network_metrics_data]
+        data_list = []
+        for netmet in network_metrics_data:
+            try:
+                data_list.append(netmet['data'])
+            except Exception as e:
+                #print(f"KeyError in network_metrics_data: {e}")
+                print(f"Error accessing data in network_metrics_data: {e}")
+                continue
+        if len(data_list) == 0:
+            print(f"No data found for {metric_name} in network_metrics_data")
+            raise ValueError(f"No data found for {metric_name} in network_metrics_data")
         original_key, original_metric = extract_original_metric(data_list, metric_path)
         
         #metric_values = [float(data.get(path_part, np.nan)) for data in data_list for path_part in metric_path if 'network_metrics' not in path_part]
@@ -398,6 +828,12 @@ def plot_heat_maps(output_dir, input_dir, num_workers=None, levels=6, **hkwargs)
             for key, data in clean_grid[param]['data'].items():
                 try:
                     metric_value = data.copy()
+                    sim_data_path = data['sim_data_path']
+                    sim_cfg_path = sim_data_path.replace('_data.pkl', '_cfg.json')
+                    with open(sim_cfg_path, 'r') as f:
+                        sim_cfg = json.load(f)
+                    param_value = sim_cfg.get(param, None)
+                        
                     for path_part in metric_path:
                         if 'network_metrics' in path_part:
                             continue
@@ -406,17 +842,46 @@ def plot_heat_maps(output_dir, input_dir, num_workers=None, levels=6, **hkwargs)
                     color = cmap(norm(metric_value))
                     axs[row_idx, key].add_patch(plt.Rectangle((0, 0), 1, 1, color=color))
                     #axs[row_idx, key].text(0.5, 0.5, f'{metric_value:.2f}', ha='center', va='center', fontsize=12)
+                    
+                    # inside your loop, after you’ve defined param_value and metric_value…
+
+                    # format each part (2-decimal for numbers, else str)
+                    if isinstance(param_value, (int, float)):
+                        #p_str = f"{param_value:.2f}"
+                        # do scientific notation if necessary
+                        p_str = f"{param_value:.2e}" if abs(param_value) < 1e-3 or abs(param_value) > 1e3 else f"{param_value:.2f}"
+                    else:
+                        p_str = str(param_value)
+
+                    if isinstance(metric_value, (int, float)):
+                        #m_str = f"{metric_value:.2f}"
+                        m_str = f"{metric_value:.2e}" if abs(metric_value) < 1e-3 or abs(metric_value) > 1e3 else f"{metric_value:.2f}"
+                    else:
+                        m_str = str(metric_value)
+
+                    # single label with arrow mapping
+                    label = "param → metric\n" + f"{p_str} → {m_str}"
+
+                    # draw it centered in the box
+                    axs[row_idx, key].text(
+                        0.5, 0.5, label,
+                        ha="center", va="center",
+                        fontsize=12
+                    )
+
                     axs[row_idx, key].axis('off')
                     
                     sim_data_path = data['sim_data_path']
                     permuted_value = next((netmet['cfg'].get(param, None) for netmet in network_metrics_data if netmet['data']['sim_data_path'] == sim_data_path), None)
                     
+                    middle_level = levels // 2
                     if row_idx == 0: # only on first ?
                         if permuted_value is not None:
                             #axs[row_idx, key].set_title(f'@{round(permuted_value, 3)}', fontsize=14)
                             # get the column position relative to origin (in the middle) and show that instead of perm_value
                             #level_pos = int(re.search(r'\d+$', key).group())
-                            level_diff = key - 3
+                            #level_diff = key - 3
+                            level_diff = key - middle_level
                             #if level_pos >= levels // 2: level_pos += 1
                             #level_diff = level_pos - levels // 2
                             if level_diff != 0: 
@@ -429,9 +894,13 @@ def plot_heat_maps(output_dir, input_dir, num_workers=None, levels=6, **hkwargs)
                     print(f"Error loading plot for key {key}: {e}")
                     
             #if any expected keys are missing from the row, fill them with black rectangles
-            expected_keys = [0, 1, 2, 3, 4, 5, 6]
+            #expected_keys = [0, 1, 2, 3, 4, 5, 6]
+            expected_keys = list(range(levels + 1))
+            # get middle most key of expected_keys
+            middle_key = expected_keys[len(expected_keys) // 2]
             for key in expected_keys:
-                if key == 3:
+                #if key == 3:
+                if key == middle_key:
                     # offwhite rect
                     axs[row_idx, key].add_patch(plt.Rectangle((0, 0), 1, 1, color=(0.875, 0.875, 0.875)))
                     axs[row_idx, key].axis('off')
@@ -551,6 +1020,9 @@ def plot_heat_maps(output_dir, input_dir, num_workers=None, levels=6, **hkwargs)
         #plt.tight_layout()
         
         output_path = os.path.join(output_dir, f'_heatmap_{metric_name}.png')
+        output_dir = os.path.dirname(output_path)
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
         plt.savefig(output_path, dpi=100)
         pdf_path = os.path.join(output_dir, f'_heatmap_{metric_name}.pdf')
         plt.savefig(pdf_path)
@@ -935,7 +1407,11 @@ def plot_heat_maps(output_dir, input_dir, num_workers=None, levels=6, **hkwargs)
     # main ===================================================================================================
     # get dict of paths for matrix
     clean_grid = get_clean_grid(input_dir, query='network_data.npy') # prepare grid of network_data.npy file paths
-    network_metrics_data = load_network_metrics_v3(input_dir, num_workers=num_workers, use_threads=True, use_memmap=False) # Collect network_metrics.npy files and process #NOTE: parallel processing is used here
+    network_metrics_data = load_network_metrics_v3(input_dir, 
+                                                   num_workers=num_workers, 
+                                                   use_threads=True, 
+                                                   use_memmap=False, 
+                                                   debug_limited_load = hkwargs.get('debug_limited_heatmap', False)) # Collect network_metrics.npy files and process #NOTE: parallel processing is used here
     metric_paths = find_metric_paths(network_metrics_data)
     print(f'{len(metric_paths)} metric paths found')
     
@@ -1628,7 +2104,7 @@ def plot_permutations(perm_network_data, kwargs):
     
     # main ===================================================================================================
     # init
-    indent_increase()
+    ##indent_increase()
     for network_data in perm_network_data:
         try:
             kwargs['network_summary_mode'] = '2p' #2 pannel
@@ -1640,7 +2116,7 @@ def plot_permutations(perm_network_data, kwargs):
             traceback.print_exc()
             continue
     # end func
-    indent_decrease()
+    ##indent_decrease()
     return
     #raise NotImplementedError('plot_permutations not implemented yet.')
 
@@ -1765,6 +2241,14 @@ def map_cfg_to_netparams_v2(simConfig, netParams):
         else:
             elements = None
         
+        if 'L' in elements:
+            print(f"Found 'L' in elements: {elements}, setting elements to None")
+            
+        # remove specific elements that are not needed for matching
+        remove_elements = ['mean']
+        if elements is not None:
+            elements = [element for element in elements if element not in remove_elements]
+        
         matching_paths = []
         while stack:
             current_obj, current_path = stack.pop()
@@ -1819,6 +2303,10 @@ def map_cfg_to_netparams_v2(simConfig, netParams):
     mapping = {}
     #for param, value in simConfig.items():
     for param, value in simConfig.items():
+        
+        if 'probLengthConst' in param:
+            print(f'Skipping parameter {param} as it is not relevant for mapping.')
+        
         if strategy == 'by_name':
             #paths = find_value_in_netparams(param, netParams)
             paths = find_name_in_netparams(param, netParams)
@@ -1834,6 +2322,19 @@ def map_cfg_to_netparams_v2(simConfig, netParams):
 def try_load_sim(cfg):
     saveFolder = cfg['saveFolder']
     simLabel = cfg['simLabel']
+    
+    # HACK if simlabel contains these things, dont load, they need to be run again
+    handle_by_name = [
+        #'gnabar', 
+        #'gkbar', 
+        #'L', 
+        #'diam', 
+        #'Ra',
+        ]
+    if any([name in simLabel for name in handle_by_name]):
+        print(f'Simulation label {simLabel} contains a handle_by_name parameter, skipping load.')
+        return False, None
+    
     expected_save_path = os.path.join(saveFolder, f'{simLabel}_data.pkl')
     exists = os.path.exists(expected_save_path)
     if exists: 
@@ -2026,7 +2527,7 @@ def prepare_permuted_sim_v2(pkwargs):
                 after_val = getNestedParam(netParams, mapped_path)
                 assert before_val != after_val, f"Failed to update {mapped_path} from {before_val} to {after_val}"
                 print(f"Updated {mapped_path} from {before_val} to {after_val}")  
-        except:
+        except Exception as e:
             print(f'Error updating {mapped_path}: {e}')
             continue
 
@@ -2057,7 +2558,7 @@ def run_permutation_v2(simLabel, simFolder, cfg, cfg_param, cfg_val, tkwargs):
     # init
     #simLabel = cfg['simLabel']
     print(f'Running permutation {simLabel}...')
-    indent_increase()
+    ##indent_increase()
     
     try:
     
@@ -2120,7 +2621,7 @@ def run_permutation_v2(simLabel, simFolder, cfg, cfg_param, cfg_val, tkwargs):
             raise ValueError('Invalid cfg_param and cfg_val combination.')
         
         # end func    
-        indent_decrease()    
+        ##indent_decrease()    
         print(f'Permutation {simLabel} successfully ran!')
         assert perm_sim_data_path is not None, "Permutation data path is None."
         return perm_sim_data_path
@@ -2128,7 +2629,7 @@ def run_permutation_v2(simLabel, simFolder, cfg, cfg_param, cfg_val, tkwargs):
     except Exception as e:
         print(f'Error running permutation {simLabel}: {e}')
         traceback.print_exc()
-        indent_decrease()
+        ##indent_decrease()
         return e  
 
 def run_permutations_v2(kwargs):
@@ -2237,8 +2738,8 @@ def run_permutations_v2(kwargs):
                 if try_load_network and exists:
                     try:
                         print(f'Network data for {path} already exists at {expected_network_data_path}. Attempting to load...')
-                        network_data = np.load(expected_network_data_path, allow_pickle=True)
-                        network_data = network_data.item()
+                        network_data = np.load(expected_network_data_path, allow_pickle=True).item()
+                        #network_data = network_data.item()
                         print(f'Network data for {path} loaded successfully.')                            
                         perm_network_data.append(network_data)
                         network_data_loaded = True
@@ -2267,9 +2768,14 @@ def run_permutations_v2(kwargs):
                     conv_params = tkwargs['conv_params']
                     mega_params = tkwargs['mega_params']
                     nkwargs = {
-                        'simData': sim.allSimData,
-                        'popData': sim.net.allPops,
-                        'cellData': sim.net.allCells,
+                        # 'simData': sim.allSimData,
+                        # 'popData': sim.net.allPops,
+                        # 'cellData': sim.net.allCells,
+                        # # aw 2025-06-25 10:30:21 should probably deep copy simData, popData, and cellData
+                        # i think this is causing issues with saving and laoding...
+                        'simData': deepcopy(sim.allSimData.todict()),
+                        'popData': sim.net.allPops.copy(), 
+                        'cellData': sim.net.allCells.copy(),
                         'run_parallel': True,
                         'debug_mode': False,
                         'max_workers': tkwargs.get('max_workers', None),
@@ -2317,7 +2823,7 @@ def run_permutations_v2(kwargs):
     
     # main ===================================================================================================    
     #init
-    indent_increase()
+    ##indent_increase()
     available_cpus = os.cpu_count()
     num_workers = kwargs.get('max_workers', None)
     cfg_permutations = kwargs.get('cfg_permutations', None)
@@ -2351,16 +2857,16 @@ def run_permutations_v2(kwargs):
     perm_network_data = compute_netmets(permuted_data_paths, tkwargs) # compute network metrics for each permutation
     
     # plot permutations
-    # plot = kwargs.get('plot_permutations', False)
-    # if plot:
-    #     print('Plotting permutations...')
-    #     pkwargs = kwargs.copy()
-    #     # pkwargs['permuted_paths'] = permuted_data_paths
-    #     pkwargs['perm_network_data'] = perm_network_data
-    #     plot_permutations(perm_network_data, pkwargs)   
+    plot = kwargs.get('plot_permutations', False)
+    if plot:
+        print('Plotting permutations...')
+        pkwargs = kwargs.copy()
+        # pkwargs['permuted_paths'] = permuted_data_paths
+        pkwargs['perm_network_data'] = perm_network_data
+        plot_permutations(perm_network_data, pkwargs)   
     
     # end func
-    indent_decrease()
+    ##indent_decrease()
     print('All permutations complete!')
 
 def generate_permutations_v2(kwargs):
@@ -2372,7 +2878,7 @@ def generate_permutations_v2(kwargs):
         # main ===================================================================================================
         # init
         print('Generating permutations...')
-        indent_increase()
+        ##indent_increase()
         evol_params = kwargs['evol_params']
         verbose = kwargs.get('verbose', False)
         
@@ -2391,6 +2897,12 @@ def generate_permutations_v2(kwargs):
                         if verbose: print(f'Skipping permutations for {cfg_param}...')
                         continue
                     
+                    # spec upper and lower bounds to constrain to levels in evol_params
+                    upper_bound = evol_val[1] if len(evol_val) > 1 else None
+                    lower_bound = evol_val[0] if len(evol_val) > 0 else None
+                    kwargs['upper_bound'] = upper_bound
+                    kwargs['lower_bound'] = lower_bound
+                    
                     # generate permutations
                     print(f'Generating permutations for {cfg_param}...')
                     cfg_permutations = append_permutation_levels(cfg_param, cfg_val, simConfig, kwargs)                    
@@ -2404,7 +2916,7 @@ def generate_permutations_v2(kwargs):
         """
         #init
         #print('Appending permutations...')
-        indent_increase()
+        #indent_increase()
         levels = kwargs['levels']
         upper_bound = kwargs.get('upper_bound', 1.8)
         lower_bound = kwargs.get('lower_bound', 0.2)
@@ -2441,7 +2953,7 @@ def generate_permutations_v2(kwargs):
             assert original_cfg != cfg_permutation, f'Failed to permute {cfg_param} to {permuted_vals[i]}'
                    
         # end func
-        indent_decrease()
+        #indent_decrease()
         return cfg_permutations
     
     def permute_param(cfg_permutation, cfg_param, cfg_val, upper_bound, lower_bound, level, levels):                         
@@ -2451,29 +2963,45 @@ def generate_permutations_v2(kwargs):
         # if verbose: print(f'Skipping permutations for {cfg_param}...')
         # return cfg_permutations
         # special cases
+        # aw 2025-06-24 14:55:50 upper bound and lower bound are now discretely set.
+        #   Helps with setting them based on evol_param bounds - and testing physiologically relevant ranges.
+        
         #print(f'Generating levels for {cfg_param}...')
         if 'LengthConst' in cfg_param:
             # got to typical case, this isnt actually a probability based param
             # TODO: rename this to just length constant later.
-            upper_value = cfg_val * upper_bound
-            lower_value = cfg_val * lower_bound                       
+            #upper_value = cfg_val * upper_bound
+            #lower_value = cfg_val * lower_bound
+            upper_value = upper_bound
+            lower_value = lower_bound
+            assert cfg_val > lower_value, f'cfg_val {cfg_val} is not greater than lower_value {lower_value}'
+            assert cfg_val < upper_value, f'cfg_val {cfg_val} is not less than upper_value {upper_value}'
+        #elif 'tau' in cfg_param:                     
         elif 'prob' in cfg_param:
             #modify upper and lower bounds such that probability based params 
             #dont go below 0 or above 1
-            upper_value = cfg_val * upper_bound
-            lower_value = cfg_val * lower_bound
+            #upper_value = cfg_val * upper_bound
+            #lower_value = cfg_val * lower_bound
+            upper_value = upper_bound
+            lower_value = lower_bound
             if upper_value > 1:
                 upper_value = 1
             if lower_value < 0:
                 lower_value = 0
+            assert cfg_val > lower_value, f'cfg_val {cfg_val} is not greater than lower_value {lower_value}'
+            assert cfg_val < upper_value, f'cfg_val {cfg_val} is not less than upper_value {upper_value}'
             
             # #calculate new upper and lower bounds to be used in the permutations
             # upper_bound = 1 / cfg_val
             # lower_bound = 0 / cfg_val
         else:
             #typical case
-            upper_value = cfg_val * upper_bound
-            lower_value = cfg_val * lower_bound
+            #upper_value = cfg_val * upper_bound
+            #lower_value = cfg_val * lower_bound
+            upper_value = upper_bound
+            lower_value = lower_bound
+            assert cfg_val > lower_value, f'cfg_val {cfg_val} is not greater than lower_value {lower_value}'
+            assert cfg_val < upper_value, f'cfg_val {cfg_val} is not less than upper_value {upper_value}'
             
         # do two linspaces and stitch them together to ensure cfg_val is centered.
         permuted_vals_1 = np.linspace(lower_value, cfg_val, levels // 2 + 1)[:-1] # returns all but the last value (exclude cfg_val)
@@ -2495,15 +3023,30 @@ def generate_permutations_v2(kwargs):
     # main ===================================================================================================
     
     # init
-    indent_increase()
+    ##indent_increase()
     sim_data_path = kwargs['sim_data_path']
     cfg_permutations = []
     saveFolder = kwargs['output_dir']
     duration_seconds = kwargs['duration_seconds']
-    evol_params = kwargs['evol_params']    
+    evol_params = kwargs['evol_params']
     
-    #apparently need to modify simcfg before loading
-    simConfig = sim.loadSimCfg(sim_data_path, setLoaded=False)
+    try:
+        # derive cfg_path from sim_data_path
+        cfg_path = sim_data_path.replace('_data.pkl', '_cfg.json')
+        if not os.path.exists(cfg_path):
+            raise FileNotFoundError(f'Configuration file {cfg_path} does not exist. Please provide a valid sim_data_path.')    
+        
+        #apparently need to modify simcfg before loading
+        #simConfig = sim.loadSimCfg(sim_data_path, setLoaded=False)
+        simConfig = sim.loadSimCfg(cfg_path, setLoaded=False) # load simConfig from cfg_path
+        assert simConfig is not None, f'Failed to load simConfig from {cfg_path}. Please check the file.'
+    except:
+        #if simConfig is None:
+        print(f'No simConfig found in {cfg_path}. Trying to load from sim_data_path {sim_data_path}...')
+        sim.load(sim_data_path)
+        simConfig = specs.SimConfig(sim.cfg.todict())  # create a new SimConfig object from sim.cfg
+        sim.clearAll()  # clear sim object to avoid conflicts later
+        
     simLabel = simConfig.simLabel
     simLabel = '_'+simLabel # add underscore to simLabel so that original sim is easy to find in file system - 
                             # NOTE: this is only applied to the original simConfig - only because it isnt overwritten later when generating permutations.
@@ -2542,50 +3085,86 @@ def generate_permutations_v2(kwargs):
     
     # end func
     print(f'Generated {len(cfg_permutations)} cfg permutations.')
-    indent_decrease()
+    ##indent_decrease()
     return cfg_permutations
 
 def run_sensitivity_analysis_v2(kwargs):
     # subfuncs ===================================================================================================
     def validate_inputs(kwargs):
-        # validate inputs
-        assert 'sim_data_path' in kwargs, 'sim_data_path not in kwargs'
-        assert 'output_dir' in kwargs, 'output_dir not in kwargs'
-        assert 'reference_data_path' in kwargs, 'reference_data_path not in kwargs'
-        assert 'run_analysis' in kwargs, 'run_analysis not in kwargs'
-        assert 'plot_analysis' in kwargs, 'plot_analysis not in kwargs'
-        assert 'plot_grid' in kwargs, 'plot_grid not in kwargs'
-        assert 'plot_heatmaps' in kwargs, 'plot_heatmaps not in kwargs'
-        assert 'levels' in kwargs, 'levels not in kwargs'
-        assert 'conv_params' in kwargs, 'conv_params not in kwargs'
-        assert 'mega_params' in kwargs, 'mega_params not in kwargs'
-        #assert 'fitnessFuncArgs' in kwargs, 'fitnessFuncArgs not in kwargs'
-        assert 'max_workers' in kwargs, 'max_workers not in kwargs'
-        assert 'run_parallel' in kwargs, 'run_parallel not in kwargs'
-        assert 'duration_seconds' in kwargs, 'duration_seconds not in kwargs'
-        #assert 'try_loading' in kwargs, 'try_loading not in kwargs'
+        """
+        Ensure that all required keys are present in kwargs and have the correct type/format.
+        Raises:
+            KeyError:    missing required key
+            TypeError:   wrong type for a given key
+            ValueError:  wrong format/value for a given key
+        """
+        # 1. define what we expect
+        required_keys = {
+            'sim_data_path',
+            'reference_data_path',
+            'run_analysis',
+            'plot_analysis',
+            'plot_grid',
+            'plot_heatmaps',
+            'levels',
+            'conv_params',
+            'mega_params',
+            'evol_params',
+            'max_workers',
+            'run_parallel',
+            'duration_seconds',
+            'try_load_sim_data',
+            'try_load_network_data',
+            'try_load_network_summary',
+            'debug_mode',
+        }
         
-        # aw 2025-03-01 16:23:45 replacing try_loading with try_load_sim_data and try_load_** anything else
-        assert 'try_load_sim_data' in kwargs, 'try_load_sim_data not in kwargs'
-        assert 'try_load_network_summary' in kwargs, 'try_load_network_summary not in kwargs'
+        # 2. check presence
+        missing = required_keys - set(kwargs)
+        if missing:
+            raise KeyError(f"Missing required input(s): {', '.join(sorted(missing))}")
         
-        assert 'debug_mode' in kwargs, 'debug_mode not in kwargs'
+        # 3. check types
+        expected_types = {
+            'sim_data_path': str,
+            'reference_data_path': str,
+            'run_analysis': bool,
+            'plot_analysis': bool,
+            'plot_grid': bool,
+            'plot_heatmaps': bool,
+            'levels': int,
+            'conv_params': dict,
+            'mega_params': dict,
+            'evol_params': dict,
+            'max_workers': int,
+            'run_parallel': bool,
+            'duration_seconds': (int, float),
+            'try_load_sim_data': bool,
+            'try_load_network_data': bool,
+            'try_load_network_summary': bool,
+            'debug_mode': bool,
+        }
         
-        # validate types
-        assert isinstance(kwargs['sim_data_path'], str), 'sim_data_path must be a string'
-        assert isinstance(kwargs['output_dir'], str), 'output_dir must be a string'
-        assert isinstance(kwargs['reference_data_path'], str), 'reference_data_path must be a string'
-        assert isinstance(kwargs['run_analysis'], bool), 'run_analysis must be a boolean'
-        assert isinstance(kwargs['plot_analysis'], bool), 'plot_analysis must be a boolean'
-        assert isinstance(kwargs['plot_grid'], bool), 'plot_grid must be a boolean'
-        assert isinstance(kwargs['plot_heatmaps'], bool), 'plot_heatmaps must be a boolean'
-        assert isinstance(kwargs['levels'], int), 'levels must be an integer'
-        assert isinstance(kwargs['conv_params'], dict), 'conv_params must be a dictionary'
-        assert isinstance(kwargs['mega_params'], dict), 'mega_params must be a dictionary'
-        #assert isinstance(kwargs['fitnessFuncArgs'], dict), 'fitnessFuncArgs must be a dictionary'
-        assert isinstance(kwargs['max_workers'], int), 'max_workers must be an integer'
-        assert isinstance(kwargs['run_parallel'], bool), 'run_parallel must be a boolean'
+        for key, expected in expected_types.items():
+            val = kwargs[key]
+            if not isinstance(val, expected):
+                type_names = (
+                    expected.__name__
+                    if isinstance(expected, type)
+                    else " or ".join(t.__name__ for t in expected)
+                )
+                raise TypeError(f"'{key}' must be {type_names}; got {type(val).__name__!r}")
+        
+        # 4. check formats / value constraints
+        path_fields = {
+            'sim_data_path': lambda p: p.endswith('_data.pkl'),
+        }
+        for key, validator in path_fields.items():
+            if not validator(kwargs[key]):
+                raise ValueError(f"'{key}' must end with '_data.pkl'; got {kwargs[key]!r}")
     
+        # (If you later want to validate other paths or numeric ranges, just add more validators above.)
+
     def label_pdf(pdf_path, perm_label):
         """
         Adds a bookmark with `perm_label` to each page of the given PDF.
@@ -2692,6 +3271,22 @@ def run_sensitivity_analysis_v2(kwargs):
     validate_inputs(kwargs)
     
     #init paths
+    
+    # derive output_dir from sim_data_path if not provided
+    if 'output_dir' not in kwargs:
+        print('output_dir not in kwargs, deriving from sim_data_path...')
+        sim_data_path = kwargs['sim_data_path']
+        #output_dir = os.path.dirname(sim_data_path)
+        sim_batch_dir = os.path.dirname(os.path.dirname(sim_data_path))  # two levels up from sim_data_path
+        sim_run_type_dir = os.path.dirname(sim_batch_dir)  # one level up from sim_data_path
+        sim_run_type = os.path.basename(sim_run_type_dir)  # e.g., 'sensitivity_analysis'
+        output_dir = sim_data_path.replace('_data.pkl', '')  # remove .pkl extension
+        output_dir = output_dir.replace(sim_run_type, 'sensitivity_analysis')  # replace run type with 'sensitivity_analysis'
+        #output_dir = os.path.join(output_dir, 'sensitivity_analysis')
+        kwargs['output_dir'] = output_dir
+        
+    
+    
     sim_output_dir = os.path.join(kwargs['output_dir'], 'simulations')
     if not os.path.exists(sim_output_dir): os.makedirs(sim_output_dir)
     kwargs['sim_output_dir'] = sim_output_dir
@@ -3436,7 +4031,8 @@ def plot_sensitivity_analysis(
     format_option='long',
     levels=6,
     plot_grid=True,
-    plot_heatmaps=True
+    plot_heatmaps=True,
+    **swargs
     ):
     
     plot_sensitivity_grid_plots(

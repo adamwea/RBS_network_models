@@ -53,6 +53,9 @@ def the_scoring_function_asymmetric_parabola(val, target_val, maxFitness, weight
             return min(a_right * (x - target_val) ** 2, maxFitness)
 
     if plot_fit_curve:
+        #os.makedirs(fit_curve_dir, exist_ok=True) if fit_curve_dir is not None else None
+        os.makedirs(os.path.dirname(fit_curve_path), exist_ok=True) if fit_curve_path is not None else None
+
         # Range for plotting
         span = max(abs(val - target_val), abs(max_val - min_val)) * 1.2
         x_range = np.linspace(target_val - span, target_val + span, 500)
@@ -64,7 +67,11 @@ def the_scoring_function_asymmetric_parabola(val, target_val, maxFitness, weight
         plt.axvline(target_val, color='green', linestyle='--', label='Target Value ({:.2f}, Score=0)'.format(target_val))
         score_val = compute_score(val)
         #plt.axvline(val, color='red', linestyle=':', label='Input Value (Score={:.2f})'.format(score_val))
-        plt.axvline(score_val, color='red', linestyle=':', label='Input Value ({:.2f}, Score={:.2f})'.format(val, score_val))
+        #plt.axvline(score_val, color='red', linestyle=':', label='Input Value ({:.2f}, Score={:.2f})'.format(val, score_val))
+
+        # lets do input value as a red dot
+        plt.scatter(val, score_val, color='red', label='Input Value ({:.2f}, Score={:.2f})'.format(val, score_val), zorder=5)
+
         #plt.axvline(val, color='red', linestyle=':', label='Actual Value')
 
         if default_min:
@@ -100,7 +107,7 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
     Ensures the function does not crash and always returns a fitness value.
     """    
     # subfunctions =================================================================
-    def calculate_fitness(simulated_data, experimental_data, fitness_dict={}, path=None, parent_key=None, **kwargs):
+    def calculate_fitness(simulated_data, experimental_data, fit_schema=None, fitness_dict={}, path=None, parent_key=None, **kwargs):
         """
         Calculate the fitness value based on the simulated and experimental data.
         """
@@ -113,7 +120,7 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                 ]
             return skip_keys
         
-        def handle_inclusion(abs_path):
+        def handle_inclusion_dep(abs_path):
             # include_keys = {
             #     'source': False,
             #     'trimmed': False,
@@ -373,7 +380,64 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                 if isinstance(include_key, dict): include = True
                 elif isinstance(include_key, bool): include = include_key
                 return include
+        
+        def handle_inclusion(abs_path, fit_schema):
             
+            include_keys = fit_schema # aw 2025-05-20 15:44:59 now defining this dynamically as part of the model and batching process outside of the function.
+            
+            # defaults
+            include = False
+            max_val = None
+            min_val = None
+            normalize = False
+            weight = 1
+
+            # logic ==============================================================
+            # manage inclusions
+            #include = include_keys.get(key, False)
+            #include_key = include_keys.get(key, False)
+            
+            # split abs_path into parts if it contains '.'
+            if '.' in abs_path:
+                # split into parts, replace any ints with 'int'
+                parts = abs_path.split('.')
+                parts = ['int' if part.isdigit() else part for part in parts]
+                
+                # dig into the dictionary
+                for part in parts: # dig into the dictionary
+                    if part in include_keys:
+                        include_keys = include_keys[part]
+                    else:
+                        include_key = False
+                    
+                    # break if include_keys is a boolean
+                    if isinstance(include_keys, bool):
+                        include = include_keys
+                        return include, max_val, min_val, normalize, weight
+                    # else:
+                    #     raise ValueError(f'Unknown key {part} in include_keys.')
+                
+                if isinstance(include_keys, dict):
+                    if 'include' in include_keys:
+                        include = include_keys['include']
+                        if 'max_val' in include_keys:
+                            max_val = include_keys['max_val']
+                        if 'min_val' in include_keys:
+                            min_val = include_keys['min_val']
+                        if 'normalize' in include_keys:
+                            normalize = include_keys['normalize']
+                        if 'weight' in include_keys:
+                            weight = include_keys['weight']
+                        return include, max_val, min_val, normalize, weight
+                    else:
+                        include = True
+                        return include, max_val, min_val, normalize, weight
+            else:
+                include_key = include_keys[abs_path]
+                if isinstance(include_key, dict): include = True
+                elif isinstance(include_key, bool): include = include_key
+                return include, max_val, min_val, normalize, weight
+
         def handle_nans_and_infs(score, simulated_data, target, key):
             # handle NaN scores
             if np.isnan(score):
@@ -492,54 +556,12 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                 
             return fitness_dict
         
-        def handle_float_or_int_comparison(simulated_data, experimental_data, key, fitness_dict, plot_fit_curve=False, fit_curve_dir=None):
+        def handle_float_or_int_comparison(simulated_data, experimental_data, key, fitness_dict, plot_fit_curve=False, fit_curve_dir=None, **ckwargs):
 
-            min_zero_list = [
-                'fr', 
-                'mean', 
-                'median', 
-                'std', 
-                'cov', 
-                'max', 
-                'min', 
-                'burst_rate', 
-                'num_units_participating', 
-                'duration',
-                'spike_rate',
-                ]
-            zero_to_one_list = [
-                'burst_part_rate', 
-                'quiet_part_rate', 
-                'burst_part_perc'
-                ]
-            
-            if key in min_zero_list:
-                weight = 1
-                min_val = 0
-                max_val = None
-            elif key in zero_to_one_list:
-                weight = 1
-                min_val = 0
-                max_val = 1
-            elif 'fano_factor' in abs_path:
-                weight = 1
-                min_val = 0
-                max_val = None
-            else:
-                weight = 1
-                min_val = None
-                max_val = None
-                print(f'warning: No min/max/weight defined for key {key}. Using default values.')
-            
-            #HACK modify weights for burst_amp, burst_duration, and burst_rate
-            if 'burst_amp' in abs_path:
-                weight = 3
-            elif 'burst_duration' in abs_path:
-                weight = 3
-            elif 'burst_rate' in abs_path:
-                weight = 5
-            else:
-                weight = 1
+            max_val = ckwargs.get('max_val', None)
+            min_val = ckwargs.get('min_val', None)
+            weight = ckwargs.get('weight', 1)
+            normalize = ckwargs.get('normalize', False)
             
             # compute score
             target = experimental_data[key]
@@ -547,16 +569,52 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
             #fit_curve_path = os.path.join(fit_curve_dir, f'{key}_fit_curve.png') if fit_curve_dir is not None else None
             abs_path_underscored = abs_path.replace('.', '_')
             fit_curve_path = os.path.join(fit_curve_dir, f'{abs_path_underscored}_fit_curve.png') if fit_curve_dir is not None else None
-            os.makedirs(fit_curve_dir, exist_ok=True) if fit_curve_dir is not None else None
-            #score = the_scoring_function_quadratic_smooth_sigmoid(simulated_data[key], target, maxFitness, weight, min_val=min_val, max_val=max_val, plot_fit_curve=plot_fit_curve, fit_curve_path=fit_curve_path)
-            #score = the_scoring_function_blended_sigmoid(simulated_data[key], target, maxFitness, weight, min_val=min_val, max_val=max_val, plot_fit_curve=plot_fit_curve, fit_curve_path=fit_curve_path)
-            #score = the_scoring_function_symmetric_sigmoid(simulated_data[key], target, maxFitness, weight, min_val=min_val, max_val=max_val, plot_fit_curve=plot_fit_curve, fit_curve_path=fit_curve_path)
-            #score = the_scoring_function_bounded_parabola(simulated_data[key], target, maxFitness, weight, min_val=min_val, max_val=max_val, plot_fit_curve=plot_fit_curve, fit_curve_path=fit_curve_path)
+
+            #TODO: implement normalize later # 2025-05-20 16:15:36
+            #aw 2025-05-22 19:12:02 finished below
+            # if simulated_data[key] is None:
+            #     print(f'No simulated data for key {key}. Setting score to 1000.')
+            #     score = 1000
+            # if 'EI_spike_ratios' in abs_path_underscored:
+            #     print(f'Key {key} is EI_spike_ratios. Setting score to 1000.')
+            #     #score = 1000
+            #     if key == 'min':
+            #         print(f'Key {key} is min. Setting score to 1000.')
             score = the_scoring_function_asymmetric_parabola(simulated_data[key], target, maxFitness, weight, min_val=min_val, max_val=max_val, plot_fit_curve=plot_fit_curve, fit_curve_path=fit_curve_path)
-            score = handle_nans_and_infs(score, simulated_data, target, key)                           
+            score = handle_nans_and_infs(score, simulated_data, target, key)
+
+            if normalize:
+                print(f'Normalizing score for key {key}.')
+                seed_fitness = kwargs.get('seed_fitness', None)
+                fit_list = []
+                for seed in seed_fitness:
+                    # parse abs_path to get series of keys to navigate the dictionary
+                    keys = abs_path.split('.')
+                    try:
+                        for k in keys:
+                            seed = seed[k]
+                        fit_list.append(seed['fit'])
+                    except Exception as e:
+                        pass
+                if len(fit_list) == 0:
+                    print(f'No fitness values found for key {key}. Unable to normalize score. Using raw score.')
+                    pass
+                else:                    
+                    max_fit = max(fit_list)
+                    if max_fit > 1000: max_fit = 1000 # cap max fitness to 1000
+                    normalized_score = score / max_fit * 1000 # normalize score to max fitness within seeds and scale to 1000
+                    print(f'Raw score for key {key}: {score}')
+                    score = normalized_score
+                    print(f'Normalized score for key {key}: {score}')                           
                     
             #update fitness dict and return
-            fitness_dict[key]['fit'] = score            
+            fitness_dict[key]['fit'] = score
+            fitness_dict[key]['value'] = simulated_data[key]
+            fitness_dict[key]['target'] = target
+            #fitness_dict[key]['max_val'] = max_val
+            #fitness_dict[key]['min_val'] = min_val
+            #fitness_dict[key]['weight'] = weight
+            #fitness_dict[key]['normalize'] = normalize            
             return fitness_dict
         
         def handle_string_comparison(simulated_data, experimental_data, key, fitness_dict):
@@ -664,22 +722,34 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                 if exp_id is not None and sim_id is None: continue # dont score units if not mapped               
                 assert key==sim_key, f'Key mismatch: {key} != {sim_key}' # quality check
                 
-                include = handle_inclusion(abs_path)
-                if not include: continue # only include keys of interest  
+                #include = handle_inclusion(abs_path)
+                try:
+                    include, max_val, min_val, normalize, weight = handle_inclusion(abs_path, fit_schema)
+                    if not include: continue # only include keys of interest 
+                except:
+                    print(f'Key {key} not found in fitness schema. Skipping key.')
+                    continue 
                 
                 # update fit dict
                 if key not in fitness_dict:
                     fitness_dict[sim_key] = {}
                 
-                if isinstance(simulated_data[key], dict):
-                    fitness_dict[sim_key] = calculate_fitness(simulated_data[sim_key], experimental_data[exp_key], fitness_dict[sim_key], path=path, parent_key=sim_key, **kwargs)
+                #if isinstance(simulated_data[key], dict):
+                if isinstance(simulated_data[sim_key], dict):
+                    fitness_dict[sim_key] = calculate_fitness(simulated_data[sim_key], experimental_data[exp_key], fit_schema, fitness_dict[sim_key], path=path, parent_key=sim_key, **kwargs)
                 elif isinstance(simulated_data[sim_key], list):
                     fitness_dict = handle_list_comparison(simulated_data, experimental_data, key, fitness_dict, plot_fit_curve=plot_fit_curve, plot_fit_curve_dir=fit_curve_dir)
                 elif isinstance(simulated_data[sim_key], np.ndarray): 
                     continue
                     #fitness_dict = handle_numpy_array_comparison(simulated_data, experimental_data, key, fitness_dict)
                 elif isinstance(simulated_data[sim_key], (float, int, np.int64, np.float64)):
-                    fitness_dict = handle_float_or_int_comparison(simulated_data, experimental_data, key, fitness_dict, plot_fit_curve=plot_fit_curve, fit_curve_dir=fit_curve_dir)
+                    ckwargs = {}
+                    ckwargs['max_val'] = max_val
+                    ckwargs['min_val'] = min_val
+                    ckwargs['normalize'] = normalize
+                    ckwargs['weight'] = weight
+                    ckwargs['seed_fitness'] = kwargs.get('seed_fitness', {})
+                    fitness_dict = handle_float_or_int_comparison(simulated_data, experimental_data, key, fitness_dict, plot_fit_curve=plot_fit_curve, fit_curve_dir=fit_curve_dir, **ckwargs)
                 elif isinstance(simulated_data[sim_key], str): 
                     continue
                     #fitness_dict = handle_string_comparison(simulated_data, experimental_data, key, fitness_dict)
@@ -690,7 +760,20 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
                     continue # ignore tuples for now
                     #raise ValueError(f'Unknown data type for key {key}.')
                 elif simulated_data[sim_key] is None:
-                    continue
+                    if experimental_data[exp_key] is not None:
+                        fitness_dict[sim_key]['fit'] = 1000 # if simulated data is None, set score to 1000
+                        fitness_dict[sim_key]['value'] = None
+                        fitness_dict[sim_key]['target'] = experimental_data[exp_key]
+                    elif experimental_data[exp_key] is None:
+                        fitness_dict[sim_key]['fit'] = 0
+                        fitness_dict[sim_key]['value'] = None
+                        fitness_dict[sim_key]['target'] = None
+                    else:
+                        fitness_dict[sim_key]['fit'] = 1000 # if experimental data is None, set score to 1000
+                        fitness_dict[sim_key]['value'] = None
+                        fitness_dict[sim_key]['target'] = experimental_data[exp_key]
+                        fitness_dict[sim_key]['warnings'] = f'Some error occurred here'
+                    #continue
                     #raise ValueError(f'Key {key} is None.')
                 else:
                     # other data types
@@ -802,7 +885,12 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
             mega_bursting_data_fit = fitness_dict['mega_bursting_data']['fit']
             # avg_fitness = (spiking_data_fit + bursting_data_fit + mega_bursting_data_fit) / 3.0
             # avg_fitness = mega_bursting_data_fit
-            avg_fitness = (spiking_data_fit + mega_bursting_data_fit) / 2.0
+            
+            only_spiking = True
+            if not only_spiking:
+                avg_fitness = (spiking_data_fit + mega_bursting_data_fit) / 2.0
+            else:
+                avg_fitness = spiking_data_fit
 
             # aw 2025-04-23 03:34:59 temporarily prioritize bursting_metrics over spiking_metrics
             #avg_fitness = (spiking_data_fit + 2.0 * bursting_data_fit + 2.0 * mega_bursting_data_fit) / 5.0
@@ -1021,6 +1109,131 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
             
         return simulated_metrics
     
+    def break_deals(fitness_dict, simulated_metrics, kwargs):
+        """
+        Deal breaker function to handle errors and return a high fitness value.
+        """
+        # import traceback
+        # print('Error in fitness calculation. Returning high fitness value.')
+        # traceback.print_exc()
+        # fitness_save_path = kwargs.get('fitness_save_path', None)
+        
+        # init
+        deal_broken = False
+
+        # unpack
+        mega_bursting_data = fitness_dict.get('mega_bursting_data', {})
+        burst_metrics = mega_bursting_data.get('burst_metrics', {})
+        spike_data = fitness_dict.get('spiking_data', {})
+
+        # baseline and burst amplitude must both be below 1000
+        baseline_fit = mega_bursting_data.get('baseline', {}).get('fit', 1000)
+        burst_amp_fit = burst_metrics.get('burst_amp', {}).get('fit', 1000)
+
+        #fr and ei ratio fits
+        frs_fit = spike_data.get('frs', {}).get('fit', 1000)
+        EI_ratio_fit = spike_data.get('EI_fr_ratios', {}).get('fit', 1000)
+
+        # TODO: migrate this into metrics later, #HACK
+        # # aw 2025-05-27 13:09:02 done, going to leave this in here for now and just remove some of the deal breakers
+        sim_spike_data = simulated_metrics.get('spiking_data', {})
+        e_frs = sim_spike_data.get('e_frs', {}).get('data', [])
+        i_frs = sim_spike_data.get('i_frs', {}).get('data', [])
+
+        # get number of non-nan values in e_frs and i_frs
+        num_e_frs = np.count_nonzero(~np.isnan(e_frs))
+        num_i_frs = np.count_nonzero(~np.isnan(i_frs))
+
+        # 
+        if num_e_frs == 0 or num_i_frs == 0:
+            deal_broken = True
+            print(f'Warning: No excitatory or inhibitory firing rates found. Deal broken.')
+            return deal_broken
+
+        # total expected number of excitatory and inhibitory units
+        tot = len(e_frs) + len(i_frs)
+        total_firing = num_e_frs + num_i_frs
+
+        #
+        spiking_metrics_by_unit = sim_spike_data.get('spiking_metrics_by_unit', {})
+        Espikes = 0
+        Ispikes = 0
+        for unit, unit_type in simulated_metrics.get('unit_types', {}).items():
+            if unit_type == 'E':
+                # if unit not in e_frs: e_frs.append(unit)
+                num_spikes = spiking_metrics_by_unit.get(unit, {}).get('num_spikes', 0)
+                Espikes += num_spikes
+            elif unit_type == 'I':
+                #if unit not in i_frs: i_frs.append(unit)
+                num_spikes = spiking_metrics_by_unit.get(unit, {}).get('num_spikes', 0)
+                Ispikes += num_spikes
+        Espikes_per_unit = Espikes / num_e_frs if num_e_frs > 0 else 0
+        Ispikes_per_unit = Ispikes / num_i_frs if num_i_frs > 0 else 0
+
+        # if Espikes_per_unit > Ispikes_per_unit:
+        #     print(f'Warning: More excitatory spikes per unit ({Espikes_per_unit}) than inhibitory spikes per unit ({Ispikes_per_unit}). Deal broken.')
+        #     deal_broken = True
+        #     return deal_broken
+        
+        # if num_e_frs < num_i_frs:
+        #     # if there are more inhibitory units than excitatory units, then the deal is broken
+        #     print(f'Warning: More inhibitory units ({num_i_frs}) than excitatory units ({num_e_frs}). Deal broken.')
+        #     deal_broken = True
+        #     return deal_broken
+
+        # if total_firing/tot < 0.5:
+        #     # if the total firing rate is less than 50% of the expected total firing rate, then the deal is broken
+        #     print(f'Warning: Total units firing ({total_firing}) is less than 50% of expected total units ({tot}). Deal broken.')
+        #     deal_broken = True
+        #     return deal_broken
+
+        # amplitude and baseline must both be below 1000
+        # if baseline_fit < 1000 and burst_amp_fit < 1000:
+        #     pass
+        # else:
+        #     deal_broken = True
+        #     print(f'Warning: Baseline fit ({baseline_fit}) or burst amplitude fit ({burst_amp_fit}) is above 1000. Deal broken.')
+        #     return deal_broken
+
+        # if burst_amp_fit < 1000, baseline_fit must also be below 1000
+        # accepting baseline_fit < 1000 even if burst_amp_fit is above 1000
+        # if burst_amp_fit < 1000:
+        #     try: assert baseline_fit < 1000, f'Baseline fit ({baseline_fit}) is above 1000.'
+        #     except AssertionError as e:
+        #         print(f'Warning: {e}. Deal broken.')
+        #         deal_broken = True
+        #         return deal_broken
+        # else:
+        #     pass
+        
+        # frs and EI ratio must both be below 1000
+        # if frs_fit < 1000 and EI_ratio_fit < 1000:
+        #     pass
+        # else:
+        #     deal_broken = True
+        #     return deal_broken
+
+
+        # test conns, reject any simulation having a neuron with zero cons
+        cell_data = simulated_metrics.get('cellData', {})
+        for cell in cell_data:
+            gid = cell.get('gid', None)
+            if gid is None: continue # skip if no gid...but this should not happen
+            conns = cell_data[gid].get('conns', None)
+            if conns is not None:
+                if len(conns) == 0:
+                    print(f'Warning: Neuron {gid} has no connections. Deal broken.')
+                    deal_broken = True
+                    return deal_broken
+            else:
+                print(f'Warning: Neuron {gid} has no connections data. Deal broken.')
+                deal_broken = True
+                return deal_broken
+
+        # all tests passed
+        deal_broken = False
+        return deal_broken
+    
     # main logic =================================================================
     try:
         time_start = time.time() # start timer
@@ -1035,11 +1248,26 @@ def fitnessFunc_v3(simulated_data, reference_data_path, **kwargs): #def fitnessF
         kwargs = map_unit_locations(simulated_metrics, experimental_metrics, **kwargs) # map unit locations of experimental units to simulated units
         
         # calculate fitness
-        fitness_dict = calculate_fitness(simulated_metrics, experimental_metrics, {}, **kwargs)
-        #fitness_dict = clean_fitness_dict(fitness_dict)      
+        fit_schema = kwargs.get('fit_schema', None)
+        if fit_schema is None:
+            raise ValueError('No fitness schema found in kwargs.')
+        fitness_dict = calculate_fitness(simulated_metrics, experimental_metrics, fitness_dict={}, **kwargs)
+        #fitness_dict = clean_fitness_dict(fitness_dict)    
         
         #avg_fitness, fitness_dict = get_avg_fitness(fitness_dict)
         avg_fitness, fitness_dict = get_avg_fitness_weighted(fitness_dict)
+
+        #TODO: implement deal breakers??
+        # dealbreakers
+        # broken = False
+        broken = break_deals(fitness_dict, simulated_metrics, kwargs)
+        if broken:
+            print('Deal broken. Returning high fitness value.')
+            fitness_dict['broken'] = True
+            fitness_dict['unbroken_fit'] = avg_fitness
+            avg_fitness = 1000 #redefine avg_fitness to be high if deal is broken
+            fitness_dict['fit'] = avg_fitness 
+
         fitness_save_path = kwargs.get('fitness_save_path', None)
         if fitness_save_path is not None: # save fitness to .json file
             with open(fitness_save_path, 'w') as f:

@@ -50,6 +50,9 @@ def process_simulation_v3(kwargs): # aw 2025-03-12 09:51:10 - updated to use new
         **kwargs
     )
     
+    # HACK
+    simulated_network_metrics['sim_data_path'] = sim_data_path
+    
     perm_network_data = []
     perm_network_data.append(simulated_network_metrics)
     from RBS_network_models.sensitivity_analysis import plot_permutations
