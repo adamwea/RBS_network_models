@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>table_2_key_model_parameters_with_units</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<h1
+id="table-2-alternate-key-model-parameters-units-focused-compact">Table
+2 (alternate): Key Model Parameters (units-focused, compact)</h1>
+<p>This is an alternate, manuscript-friendly version of Table 2 that
+emphasizes <strong>biophysical interpretation and units</strong>.</p>
+<ul>
+<li>Model folder:
+<code>RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_FxHET</code></li>
+<li>Evolutionary parameter space (min/max ranges):
+<code>RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_FxHET/src/evol_params.py</code></li>
+<li>Network implementation (where parameters are applied):
+<code>RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_FxHET/src/netParams.py</code></li>
+</ul>
+<blockquote>
+<p>Notes on units: In this model, positions are specified in
+culture-scale coordinates (on the order of 0–4000 in X and 0–2100 in Y),
+which are most naturally interpreted as <strong>µm</strong>. As
+implemented, connection delays are computed as
+<code>delay = dist_3D / propVelocity</code>, so
+<code>propVelocity</code> must be in <strong>µm/ms</strong> when
+<code>dist_3D</code> is in µm.</p>
+</blockquote>
+<table>
+<colgroup>
+<col style="width: 42%" />
+<col style="width: 57%" />
+</colgroup>
+<thead>
+<tr>
+<th>Parameter</th>
+<th style="text-align: right;">Range / value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Propagation velocity<br>— <small>Conduction velocity used to map
+distance → delay, with delay computed as
+<code>dist_3D / propVelocity</code> (µm/ms, assuming
+<code>dist_3D</code> in µm and delay in ms)</small></td>
+<td style="text-align: right;">0.1 → 0.3</td>
+</tr>
+<tr>
+<td>Connection distance length constant<br>— <small>Length constant for
+distance-dependent connection probability in
+<code>exp(-dist_3D / probLengthConst)</code> (µm)</small></td>
+<td style="text-align: right;">1 → 5000</td>
+</tr>
+<tr>
+<td>E→E connection probability scale<br>— <small>Baseline multiplicative
+scale for excitatory→excitatory connection probability
+(dimensionless)</small></td>
+<td style="text-align: right;">0 → 1</td>
+</tr>
+<tr>
+<td>E→I connection probability scale<br>— <small>Baseline multiplicative
+scale for excitatory→inhibitory connection probability
+(dimensionless)</small></td>
+<td style="text-align: right;">0 → 1</td>
+</tr>
+<tr>
+<td>I→E connection probability scale<br>— <small>Baseline multiplicative
+scale for inhibitory→excitatory connection probability
+(dimensionless)</small></td>
+<td style="text-align: right;">0 → 1</td>
+</tr>
+<tr>
+<td>I→I connection probability scale<br>— <small>Baseline multiplicative
+scale for inhibitory→inhibitory connection probability
+(dimensionless)</small></td>
+<td style="text-align: right;">0 → 1</td>
+</tr>
+<tr>
+<td>E→E synaptic weight<br>— <small>Synaptic weight scalar for
+excitatory→excitatory connections (NetPyNE/NEURON model weight
+units)</small></td>
+<td style="text-align: right;">0 → 1000</td>
+</tr>
+<tr>
+<td>E→I synaptic weight<br>— <small>Synaptic weight scalar for
+excitatory→inhibitory connections (NetPyNE/NEURON model weight
+units)</small></td>
+<td style="text-align: right;">0 → 1000</td>
+</tr>
+<tr>
+<td>I→E synaptic weight<br>— <small>Synaptic weight scalar for
+inhibitory→excitatory connections (NetPyNE/NEURON model weight
+units)</small></td>
+<td style="text-align: right;">0 → 1000</td>
+</tr>
+<tr>
+<td>I→I synaptic weight<br>— <small>Synaptic weight scalar for
+inhibitory→inhibitory connections (NetPyNE/NEURON model weight
+units)</small></td>
+<td style="text-align: right;">0 → 1000</td>
+</tr>
+<tr>
+<td>Excitatory synapse rise time constant<br>— <small>Rise time constant
+of excitatory <code>Exp2Syn</code> (ms)</small></td>
+<td style="text-align: right;">0.1 → 100</td>
+</tr>
+<tr>
+<td>Excitatory synapse decay time constant<br>— <small>Decay time
+constant of excitatory <code>Exp2Syn</code> (ms)</small></td>
+<td style="text-align: right;">0.1 → 500</td>
+</tr>
+<tr>
+<td>Inhibitory synapse rise time constant<br>— <small>Rise time constant
+of inhibitory <code>Exp2Syn</code> (ms)</small></td>
+<td style="text-align: right;">0.1 → 100</td>
+</tr>
+<tr>
+<td>Inhibitory synapse decay time constant<br>— <small>Decay time
+constant of inhibitory <code>Exp2Syn</code> (ms)</small></td>
+<td style="text-align: right;">0.1 → 1000</td>
+</tr>
+<tr>
+<td>Excitatory reversal potential (fixed)<br>— <small>Reversal potential
+of excitatory synapses (mV)</small></td>
+<td style="text-align: right;">0</td>
+</tr>
+<tr>
+<td>Inhibitory reversal potential (fixed)<br>— <small>Reversal potential
+of inhibitory synapses (mV)</small></td>
+<td style="text-align: right;">-75</td>
+</tr>
+<tr>
+<td>E-cell Na⁺ conductance density, mean<br>— <small>Mean maximal sodium
+conductance density in soma HH mechanism for excitatory cells
+(S·cm⁻²)</small></td>
+<td style="text-align: right;">0 → 12</td>
+</tr>
+<tr>
+<td>E-cell Na⁺ conductance density, std<br>— <small>Std of maximal
+sodium conductance density for excitatory cells (S·cm⁻²)</small></td>
+<td style="text-align: right;">0 → 4</td>
+</tr>
+<tr>
+<td>E-cell K⁺ conductance density, mean<br>— <small>Mean maximal
+potassium conductance density in soma HH mechanism for excitatory cells
+(S·cm⁻²)</small></td>
+<td style="text-align: right;">0 → 4</td>
+</tr>
+<tr>
+<td>E-cell K⁺ conductance density, std<br>— <small>Std of maximal
+potassium conductance density for excitatory cells (S·cm⁻²)</small></td>
+<td style="text-align: right;">0 → 1</td>
+</tr>
+<tr>
+<td>I-cell Na⁺ conductance density, mean<br>— <small>Mean maximal sodium
+conductance density in soma HH mechanism for inhibitory cells
+(S·cm⁻²)</small></td>
+<td style="text-align: right;">0 → 10</td>
+</tr>
+<tr>
+<td>I-cell Na⁺ conductance density, std<br>— <small>Std of maximal
+sodium conductance density for inhibitory cells (S·cm⁻²)</small></td>
+<td style="text-align: right;">0 → 3</td>
+</tr>
+<tr>
+<td>I-cell K⁺ conductance density, mean<br>— <small>Mean maximal
+potassium conductance density in soma HH mechanism for inhibitory cells
+(S·cm⁻²)</small></td>
+<td style="text-align: right;">0 → 5</td>
+</tr>
+<tr>
+<td>I-cell K⁺ conductance density, std<br>— <small>Std of maximal
+potassium conductance density for inhibitory cells (S·cm⁻²)</small></td>
+<td style="text-align: right;">0 → 2</td>
+</tr>
+<tr>
+<td>Leak conductance density (fixed)<br>— <small>Leak conductance
+density in soma HH mechanism (S·cm⁻²)</small></td>
+<td style="text-align: right;">0.003</td>
+</tr>
+<tr>
+<td>Leak reversal potential (fixed)<br>— <small>Leak reversal potential
+in soma HH mechanism (mV)</small></td>
+<td style="text-align: right;">-70</td>
+</tr>
+<tr>
+<td>E-cell soma length, mean / std<br>— <small>Soma length for
+excitatory cells (µm); mean and heterogeneity</small></td>
+<td style="text-align: right;">50 → 1000 / 0 → 150</td>
+</tr>
+<tr>
+<td>E-cell soma diameter, mean / std<br>— <small>Soma diameter for
+excitatory cells (µm); mean and heterogeneity</small></td>
+<td style="text-align: right;">5 → 30 / 0 → 12</td>
+</tr>
+<tr>
+<td>E-cell axial resistance, mean / std<br>— <small>Axial resistance for
+excitatory cells (Ω·cm); mean and heterogeneity</small></td>
+<td style="text-align: right;">70 → 200 / 0 → 50</td>
+</tr>
+<tr>
+<td>I-cell soma length, mean / std<br>— <small>Soma length for
+inhibitory cells (µm); mean and heterogeneity</small></td>
+<td style="text-align: right;">50 → 500 / 0 → 100</td>
+</tr>
+<tr>
+<td>I-cell soma diameter, mean / std<br>— <small>Soma diameter for
+inhibitory cells (µm); mean and heterogeneity</small></td>
+<td style="text-align: right;">4 → 15 / 0 → 6</td>
+</tr>
+<tr>
+<td>I-cell axial resistance, mean / std<br>— <small>Axial resistance for
+inhibitory cells (Ω·cm); mean and heterogeneity</small></td>
+<td style="text-align: right;">80 → 200 / 0 → 40</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>

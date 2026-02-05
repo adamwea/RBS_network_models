@@ -1,0 +1,57 @@
+# Table 2: Key Model Parameters
+
+This table summarizes key parameters (and their optimization ranges / fixed values) used by the **DIV21_FxHET** network model.
+
+- Model folder: `RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_FxHET`
+- Evolutionary parameter space (min/max ranges): `RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_FxHET/src/evol_params.py`
+- Network implementation (where parameters are applied): `RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_FxHET/src/netParams.py`
+
+**How parameters are used:**
+- During batch optimization, values are drawn from the `params` ranges and injected into the NetPyNE `cfg` object (see `cfg.py` and batch scripts).
+- `netParams.py` then uses `cfg.<param>` to construct cell rules, synaptic mechanisms, and distance-dependent connectivity.
+
+| Parameter (cfg key) | What it controls | Range / value | Where applied | Notes |
+|---|---|---:|---|---|
+| `propVelocity` (Propagation / delay) | Connection delay as a function of distance | 0.1 → 0.3 | `connParams[*].delay = dist_3D / propVelocity` | Delay is computed directly from `dist_3D` (unit consistency depends on position units) |
+| `probLengthConst` (Connectivity) | Distance-decay length constant for connection probability | 1 → 5000 | `connParams[*].probability = exp(-dist_3D / probLengthConst) * probXY` | Implements distance-dependent wiring density |
+| `probEE` (Connectivity) | Baseline E→E connection probability multiplier | 0 → 1 | `connParams['E->E'].probability` | Scaled by the exponential distance-decay term |
+| `probEI` (Connectivity) | Baseline E→I connection probability multiplier | 0 → 1 | `connParams['E->I'].probability` | Scaled by the exponential distance-decay term |
+| `probIE` (Connectivity) | Baseline I→E connection probability multiplier | 0 → 1 | `connParams['I->E'].probability` | Scaled by the exponential distance-decay term |
+| `probII` (Connectivity) | Baseline I→I connection probability multiplier | 0 → 1 | `connParams['I->I'].probability` | Scaled by the exponential distance-decay term |
+| `weightEE` (Synaptic strength) | E→E synaptic weight | 0 → 1000 | `connParams['E->E'].weight` | Units are whatever NetPyNE/NEURON interprets for the chosen synapse + cell model |
+| `weightEI` (Synaptic strength) | E→I synaptic weight | 0 → 1000 | `connParams['E->I'].weight` | — |
+| `weightIE` (Synaptic strength) | I→E synaptic weight | 0 → 1000 | `connParams['I->E'].weight` | — |
+| `weightII` (Synaptic strength) | I→I synaptic weight | 0 → 1000 | `connParams['I->I'].weight` | — |
+| `tau1_exc` (Synaptic kinetics) | Rise time of excitatory `Exp2Syn` | 0.1 → 100 | `synMechParams['exc']` | `Exp2Syn` parameters are `tau1`, `tau2`, `e` |
+| `tau2_exc` (Synaptic kinetics) | Decay time of excitatory `Exp2Syn` | 0.1 → 500 | `synMechParams['exc']` | — |
+| `tau1_inh` (Synaptic kinetics) | Rise time of inhibitory `Exp2Syn` | 0.1 → 100 | `synMechParams['inh']` | — |
+| `tau2_inh` (Synaptic kinetics) | Decay time of inhibitory `Exp2Syn` | 0.1 → 1000 | `synMechParams['inh']` | — |
+| *(fixed)* `synMechParams['exc'].e` (Synaptic kinetics) | Excitatory reversal potential | 0 | `synMechParams['exc']` | Fixed |
+| *(fixed)* `synMechParams['inh'].e` (Synaptic kinetics) | Inhibitory reversal potential | -75 | `synMechParams['inh']` | Fixed |
+| `gnabar_E` (Intrinsic (HH)) | Mean Na conductance (E cells) | 0 → 12 | `cellParams[*].secs.soma.mechs.hh.gnabar` | Values are sampled per-cell from a truncated normal using mean and std |
+| `gnabar_E_std` (Intrinsic (HH)) | Std of Na conductance (E cells) | 0 → 4 | Per-cell sampling | Controls heterogeneity of E excitability |
+| `gkbar_E` (Intrinsic (HH)) | Mean K conductance (E cells) | 0 → 4 | `cellParams[*].secs.soma.mechs.hh.gkbar` | Per-cell truncated normal |
+| `gkbar_E_std` (Intrinsic (HH)) | Std of K conductance (E cells) | 0 → 1 | Per-cell sampling | — |
+| `gnabar_I` (Intrinsic (HH)) | Mean Na conductance (I cells) | 0 → 10 | `cellParams[*].secs.soma.mechs.hh.gnabar` | Per-cell truncated normal |
+| `gnabar_I_std` (Intrinsic (HH)) | Std of Na conductance (I cells) | 0 → 3 | Per-cell sampling | — |
+| `gkbar_I` (Intrinsic (HH)) | Mean K conductance (I cells) | 0 → 5 | `cellParams[*].secs.soma.mechs.hh.gkbar` | Per-cell truncated normal |
+| `gkbar_I_std` (Intrinsic (HH)) | Std of K conductance (I cells) | 0 → 2 | Per-cell sampling | — |
+| *(fixed)* `gl` (Intrinsic (HH)) | Leak conductance in soma `hh` mechanism | 0.003 | `cellParams[*].secs.soma.mechs.hh.gl` | Fixed |
+| *(fixed)* `el` (Intrinsic (HH)) | Leak reversal potential in soma `hh` mechanism | -70 | `cellParams[*].secs.soma.mechs.hh.el` | Fixed |
+| `E_L_mean` / `E_L_stdev` (Morphology) | Mean/std of E soma length `L` | 50 → 1000 / 0 → 150 | `cellParams[*].secs.soma.geom.L` | Per-cell truncated normal |
+| `E_diam_mean` / `E_diam_stdev` (Morphology) | Mean/std of E soma diameter | 5 → 30 / 0 → 12 | `cellParams[*].secs.soma.geom.diam` | Per-cell truncated normal |
+| `E_Ra_mean` / `E_Ra_stdev` (Morphology) | Mean/std of E axial resistance `Ra` | 70 → 200 / 0 → 50 | `cellParams[*].secs.soma.geom.Ra` | Per-cell truncated normal |
+| `I_L_mean` / `I_L_stdev` (Morphology) | Mean/std of I soma length `L` | 50 → 500 / 0 → 100 | `cellParams[*].secs.soma.geom.L` | Per-cell truncated normal |
+| `I_diam_mean` / `I_diam_stdev` (Morphology) | Mean/std of I soma diameter | 4 → 15 / 0 → 6 | `cellParams[*].secs.soma.geom.diam` | Per-cell truncated normal |
+| `I_Ra_mean` / `I_Ra_stdev` (Morphology) | Mean/std of I axial resistance `Ra` | 80 → 200 / 0 → 40 | `cellParams[*].secs.soma.geom.Ra` | Per-cell truncated normal |
+
+## Related (analysis) parameters used for network-burst detection
+
+These do not change the biophysics directly, but they affect how bursts/“mega-bursts” are detected from spiking when computing network metrics for calibration.
+
+- File: `RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_FxHET/src/conv_params.py`
+
+| Parameter group | Purpose | Values |
+|---|---|---|
+| `conv_params` | Convolution settings for population activity | `binSize=0.075`, `gaussianSigma=0.075`, `prominence=1`, `thresholdBurst=None`, `min_peak_distance=None` |
+| `mega_params` | Coarser-scale (“mega”) burst detection settings | `binSize=0.01*30`, `gaussianSigma=0.01*30`, `prominence=1`, `thresholdBurst=None`, `min_peak_distance=None` |

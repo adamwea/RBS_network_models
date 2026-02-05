@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>table_2_key_model_parameters</title>
+  <style>
+    /* Default styles provided by pandoc.
+    ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+    */
+    html {
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      overflow-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 12px;
+      }
+      h1 {
+        font-size: 1.8em;
+      }
+    }
+    @media print {
+      html {
+        background-color: white;
+      }
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    svg {
+      height: auto;
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, Consolas, 'Lucida Console', monospace;
+      font-size: 85%;
+      margin: 0;
+      hyphens: manual;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+      overflow-wrap: normal;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      border: none;
+      border-top: 1px solid #1a1a1a;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC ul {
+      padding-left: 1.3em;
+    }
+    #TOC > ul {
+      padding-left: 0;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+</head>
+<body>
+<h1 id="table-2-key-model-parameters">Table 2: Key Model Parameters</h1>
+<p>This table summarizes key parameters (and their optimization ranges /
+fixed values) used by the <strong>DIV21_FxHET</strong> network
+model.</p>
+<ul>
+<li>Model folder:
+<code>RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_FxHET</code></li>
+<li>Evolutionary parameter space (min/max ranges):
+<code>RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_FxHET/src/evol_params.py</code></li>
+<li>Network implementation (where parameters are applied):
+<code>RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_FxHET/src/netParams.py</code></li>
+</ul>
+<p><strong>How parameters are used:</strong> - During batch
+optimization, values are drawn from the <code>params</code> ranges and
+injected into the NetPyNE <code>cfg</code> object (see
+<code>cfg.py</code> and batch scripts). - <code>netParams.py</code> then
+uses <code>cfg.&lt;param&gt;</code> to construct cell rules, synaptic
+mechanisms, and distance-dependent connectivity.</p>
+<table>
+<colgroup>
+<col style="width: 18%" />
+<col style="width: 18%" />
+<col style="width: 25%" />
+<col style="width: 18%" />
+<col style="width: 18%" />
+</colgroup>
+<thead>
+<tr>
+<th>Parameter (cfg key)</th>
+<th>What it controls</th>
+<th style="text-align: right;">Range / value</th>
+<th>Where applied</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>propVelocity</code> (Propagation / delay)</td>
+<td>Connection delay as a function of distance</td>
+<td style="text-align: right;">0.1 → 0.3</td>
+<td><code>connParams[*].delay = dist_3D / propVelocity</code></td>
+<td>Delay is computed directly from <code>dist_3D</code> (unit
+consistency depends on position units)</td>
+</tr>
+<tr>
+<td><code>probLengthConst</code> (Connectivity)</td>
+<td>Distance-decay length constant for connection probability</td>
+<td style="text-align: right;">1 → 5000</td>
+<td><code>connParams[*].probability = exp(-dist_3D / probLengthConst) * probXY</code></td>
+<td>Implements distance-dependent wiring density</td>
+</tr>
+<tr>
+<td><code>probEE</code> (Connectivity)</td>
+<td>Baseline E→E connection probability multiplier</td>
+<td style="text-align: right;">0 → 1</td>
+<td><code>connParams['E-&gt;E'].probability</code></td>
+<td>Scaled by the exponential distance-decay term</td>
+</tr>
+<tr>
+<td><code>probEI</code> (Connectivity)</td>
+<td>Baseline E→I connection probability multiplier</td>
+<td style="text-align: right;">0 → 1</td>
+<td><code>connParams['E-&gt;I'].probability</code></td>
+<td>Scaled by the exponential distance-decay term</td>
+</tr>
+<tr>
+<td><code>probIE</code> (Connectivity)</td>
+<td>Baseline I→E connection probability multiplier</td>
+<td style="text-align: right;">0 → 1</td>
+<td><code>connParams['I-&gt;E'].probability</code></td>
+<td>Scaled by the exponential distance-decay term</td>
+</tr>
+<tr>
+<td><code>probII</code> (Connectivity)</td>
+<td>Baseline I→I connection probability multiplier</td>
+<td style="text-align: right;">0 → 1</td>
+<td><code>connParams['I-&gt;I'].probability</code></td>
+<td>Scaled by the exponential distance-decay term</td>
+</tr>
+<tr>
+<td><code>weightEE</code> (Synaptic strength)</td>
+<td>E→E synaptic weight</td>
+<td style="text-align: right;">0 → 1000</td>
+<td><code>connParams['E-&gt;E'].weight</code></td>
+<td>Units are whatever NetPyNE/NEURON interprets for the chosen synapse
++ cell model</td>
+</tr>
+<tr>
+<td><code>weightEI</code> (Synaptic strength)</td>
+<td>E→I synaptic weight</td>
+<td style="text-align: right;">0 → 1000</td>
+<td><code>connParams['E-&gt;I'].weight</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>weightIE</code> (Synaptic strength)</td>
+<td>I→E synaptic weight</td>
+<td style="text-align: right;">0 → 1000</td>
+<td><code>connParams['I-&gt;E'].weight</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>weightII</code> (Synaptic strength)</td>
+<td>I→I synaptic weight</td>
+<td style="text-align: right;">0 → 1000</td>
+<td><code>connParams['I-&gt;I'].weight</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>tau1_exc</code> (Synaptic kinetics)</td>
+<td>Rise time of excitatory <code>Exp2Syn</code></td>
+<td style="text-align: right;">0.1 → 100</td>
+<td><code>synMechParams['exc']</code></td>
+<td><code>Exp2Syn</code> parameters are <code>tau1</code>,
+<code>tau2</code>, <code>e</code></td>
+</tr>
+<tr>
+<td><code>tau2_exc</code> (Synaptic kinetics)</td>
+<td>Decay time of excitatory <code>Exp2Syn</code></td>
+<td style="text-align: right;">0.1 → 500</td>
+<td><code>synMechParams['exc']</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>tau1_inh</code> (Synaptic kinetics)</td>
+<td>Rise time of inhibitory <code>Exp2Syn</code></td>
+<td style="text-align: right;">0.1 → 100</td>
+<td><code>synMechParams['inh']</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>tau2_inh</code> (Synaptic kinetics)</td>
+<td>Decay time of inhibitory <code>Exp2Syn</code></td>
+<td style="text-align: right;">0.1 → 1000</td>
+<td><code>synMechParams['inh']</code></td>
+<td>—</td>
+</tr>
+<tr>
+<td><em>(fixed)</em> <code>synMechParams['exc'].e</code> (Synaptic
+kinetics)</td>
+<td>Excitatory reversal potential</td>
+<td style="text-align: right;">0</td>
+<td><code>synMechParams['exc']</code></td>
+<td>Fixed</td>
+</tr>
+<tr>
+<td><em>(fixed)</em> <code>synMechParams['inh'].e</code> (Synaptic
+kinetics)</td>
+<td>Inhibitory reversal potential</td>
+<td style="text-align: right;">-75</td>
+<td><code>synMechParams['inh']</code></td>
+<td>Fixed</td>
+</tr>
+<tr>
+<td><code>gnabar_E</code> (Intrinsic (HH))</td>
+<td>Mean Na conductance (E cells)</td>
+<td style="text-align: right;">0 → 12</td>
+<td><code>cellParams[*].secs.soma.mechs.hh.gnabar</code></td>
+<td>Values are sampled per-cell from a truncated normal using mean and
+std</td>
+</tr>
+<tr>
+<td><code>gnabar_E_std</code> (Intrinsic (HH))</td>
+<td>Std of Na conductance (E cells)</td>
+<td style="text-align: right;">0 → 4</td>
+<td>Per-cell sampling</td>
+<td>Controls heterogeneity of E excitability</td>
+</tr>
+<tr>
+<td><code>gkbar_E</code> (Intrinsic (HH))</td>
+<td>Mean K conductance (E cells)</td>
+<td style="text-align: right;">0 → 4</td>
+<td><code>cellParams[*].secs.soma.mechs.hh.gkbar</code></td>
+<td>Per-cell truncated normal</td>
+</tr>
+<tr>
+<td><code>gkbar_E_std</code> (Intrinsic (HH))</td>
+<td>Std of K conductance (E cells)</td>
+<td style="text-align: right;">0 → 1</td>
+<td>Per-cell sampling</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>gnabar_I</code> (Intrinsic (HH))</td>
+<td>Mean Na conductance (I cells)</td>
+<td style="text-align: right;">0 → 10</td>
+<td><code>cellParams[*].secs.soma.mechs.hh.gnabar</code></td>
+<td>Per-cell truncated normal</td>
+</tr>
+<tr>
+<td><code>gnabar_I_std</code> (Intrinsic (HH))</td>
+<td>Std of Na conductance (I cells)</td>
+<td style="text-align: right;">0 → 3</td>
+<td>Per-cell sampling</td>
+<td>—</td>
+</tr>
+<tr>
+<td><code>gkbar_I</code> (Intrinsic (HH))</td>
+<td>Mean K conductance (I cells)</td>
+<td style="text-align: right;">0 → 5</td>
+<td><code>cellParams[*].secs.soma.mechs.hh.gkbar</code></td>
+<td>Per-cell truncated normal</td>
+</tr>
+<tr>
+<td><code>gkbar_I_std</code> (Intrinsic (HH))</td>
+<td>Std of K conductance (I cells)</td>
+<td style="text-align: right;">0 → 2</td>
+<td>Per-cell sampling</td>
+<td>—</td>
+</tr>
+<tr>
+<td><em>(fixed)</em> <code>gl</code> (Intrinsic (HH))</td>
+<td>Leak conductance in soma <code>hh</code> mechanism</td>
+<td style="text-align: right;">0.003</td>
+<td><code>cellParams[*].secs.soma.mechs.hh.gl</code></td>
+<td>Fixed</td>
+</tr>
+<tr>
+<td><em>(fixed)</em> <code>el</code> (Intrinsic (HH))</td>
+<td>Leak reversal potential in soma <code>hh</code> mechanism</td>
+<td style="text-align: right;">-70</td>
+<td><code>cellParams[*].secs.soma.mechs.hh.el</code></td>
+<td>Fixed</td>
+</tr>
+<tr>
+<td><code>E_L_mean</code> / <code>E_L_stdev</code> (Morphology)</td>
+<td>Mean/std of E soma length <code>L</code></td>
+<td style="text-align: right;">50 → 1000 / 0 → 150</td>
+<td><code>cellParams[*].secs.soma.geom.L</code></td>
+<td>Per-cell truncated normal</td>
+</tr>
+<tr>
+<td><code>E_diam_mean</code> / <code>E_diam_stdev</code>
+(Morphology)</td>
+<td>Mean/std of E soma diameter</td>
+<td style="text-align: right;">5 → 30 / 0 → 12</td>
+<td><code>cellParams[*].secs.soma.geom.diam</code></td>
+<td>Per-cell truncated normal</td>
+</tr>
+<tr>
+<td><code>E_Ra_mean</code> / <code>E_Ra_stdev</code> (Morphology)</td>
+<td>Mean/std of E axial resistance <code>Ra</code></td>
+<td style="text-align: right;">70 → 200 / 0 → 50</td>
+<td><code>cellParams[*].secs.soma.geom.Ra</code></td>
+<td>Per-cell truncated normal</td>
+</tr>
+<tr>
+<td><code>I_L_mean</code> / <code>I_L_stdev</code> (Morphology)</td>
+<td>Mean/std of I soma length <code>L</code></td>
+<td style="text-align: right;">50 → 500 / 0 → 100</td>
+<td><code>cellParams[*].secs.soma.geom.L</code></td>
+<td>Per-cell truncated normal</td>
+</tr>
+<tr>
+<td><code>I_diam_mean</code> / <code>I_diam_stdev</code>
+(Morphology)</td>
+<td>Mean/std of I soma diameter</td>
+<td style="text-align: right;">4 → 15 / 0 → 6</td>
+<td><code>cellParams[*].secs.soma.geom.diam</code></td>
+<td>Per-cell truncated normal</td>
+</tr>
+<tr>
+<td><code>I_Ra_mean</code> / <code>I_Ra_stdev</code> (Morphology)</td>
+<td>Mean/std of I axial resistance <code>Ra</code></td>
+<td style="text-align: right;">80 → 200 / 0 → 40</td>
+<td><code>cellParams[*].secs.soma.geom.Ra</code></td>
+<td>Per-cell truncated normal</td>
+</tr>
+</tbody>
+</table>
+<h2
+id="related-analysis-parameters-used-for-network-burst-detection">Related
+(analysis) parameters used for network-burst detection</h2>
+<p>These do not change the biophysics directly, but they affect how
+bursts/“mega-bursts” are detected from spiking when computing network
+metrics for calibration.</p>
+<ul>
+<li>File:
+<code>RBS_network_models/models/CDKL5_E6D_T2_C1_05212024/DIV21_FxHET/src/conv_params.py</code></li>
+</ul>
+<table>
+<colgroup>
+<col style="width: 33%" />
+<col style="width: 33%" />
+<col style="width: 33%" />
+</colgroup>
+<thead>
+<tr>
+<th>Parameter group</th>
+<th>Purpose</th>
+<th>Values</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>conv_params</code></td>
+<td>Convolution settings for population activity</td>
+<td><code>binSize=0.075</code>, <code>gaussianSigma=0.075</code>,
+<code>prominence=1</code>, <code>thresholdBurst=None</code>,
+<code>min_peak_distance=None</code></td>
+</tr>
+<tr>
+<td><code>mega_params</code></td>
+<td>Coarser-scale (“mega”) burst detection settings</td>
+<td><code>binSize=0.01*30</code>, <code>gaussianSigma=0.01*30</code>,
+<code>prominence=1</code>, <code>thresholdBurst=None</code>,
+<code>min_peak_distance=None</code></td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
